@@ -1,0 +1,29 @@
+@use 'theme' as *;
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+body {
+  margin: 0;
+  background: $primary !important;
+  color: $white !important;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+app-root,
+dashboard-page,
+main-layout,
+auth-layout {
+  height: 100%;
+  width: 100%;
+}

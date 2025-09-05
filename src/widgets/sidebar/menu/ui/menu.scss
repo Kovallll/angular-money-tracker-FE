@@ -1,0 +1,21 @@
+@use 'theme' as *;
+
+.sidebar {
+  display: flex;
+  width: 280px;
+  height: 100%;
+  border-right: 1px solid $tertiary;
+}
+
+.logo {
+  width: 200px;
+}
+
+.logo-wrapper {
+  border-bottom: 1px solid $tertiary;
+  height: 100px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

@@ -1,0 +1,52 @@
+@use 'theme' as *;
+
+@use '@angular/material' as mat;
+
+.tabs {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.button {
+  width: 100%;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  align-items: center;
+  justify-content: start;
+  display: flex;
+  padding: 24px 32px;
+
+  font-size: 16px;
+
+  @include mat.button-overrides(
+    (
+      filled-label-text-color: $gray,
+      filled-container-color: transparent,
+    )
+  );
+
+  &:hover {
+    @include mat.button-overrides(
+      (
+        filled-label-text-color: $white,
+        filled-container-color: $light-primary,
+      )
+    );
+  }
+}
+
+.active {
+  border: 1px solid $accent;
+  @include mat.button-overrides(
+    (
+      filled-label-text-color: $white,
+      filled-container-color: $light-primary,
+    )
+  );
+}
+
+.icon {
+  transform: scale(1.4);
+  margin-right: 16px !important;
+}

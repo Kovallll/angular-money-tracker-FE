@@ -1,0 +1,52 @@
+<div class="container">
+  <img src="../../assets/logo.png" alt="logo" class="logo" />
+  <div class="controls">
+    <mat-form-field appearance="outline" class="input-wrapper">
+      <mat-label>Name</mat-label>
+      <input
+        type="text"
+        matInput
+        [formControl]="name"
+        [errorStateMatcher]="matcher"
+        placeholder="Enter name"
+        class="input"
+      />
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="input-wrapper">
+      <mat-label>Email</mat-label>
+      <input
+        type="email"
+        matInput
+        [formControl]="email"
+        [errorStateMatcher]="matcher"
+        placeholder="Enter email"
+        class="input"
+      />
+      @if(email.invalid && email.touched) {
+      <mat-error> {{ getErrorEmailMessage() }} </mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="input-wrapper">
+      <mat-label>Password</mat-label>
+      <input
+        type="password"
+        matInput
+        [formControl]="password"
+        [errorStateMatcher]="matcher"
+        placeholder="Enter password"
+        class="input"
+      />
+      @if (password.invalid && password.touched) {
+      <mat-error> {{ getErrorPasswordMessage() }} </mat-error>
+      }
+    </mat-form-field>
+  </div>
+  <button
+    (click)="register(name.value, email.value, password.value)"
+    matButton="filled"
+    color="accent"
+    class="button"
+  >
+    Register
+  </button>
+</div>

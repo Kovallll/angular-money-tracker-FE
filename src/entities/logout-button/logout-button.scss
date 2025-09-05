@@ -1,0 +1,25 @@
+@use 'theme' as *;
+@use '@angular/material' as mat;
+
+.logout-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 32px;
+  justify-content: start;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 12px;
+  width: 100%;
+
+  @include mat.button-overrides(
+    (
+      filled-label-text-color: $white,
+      filled-container-color: $light-primary,
+    )
+  );
+}
+
+.icon {
+  margin-right: 12px;
+}

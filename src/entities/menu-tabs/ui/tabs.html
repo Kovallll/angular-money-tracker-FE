@@ -1,0 +1,13 @@
+<div class="tabs">
+  @for (item of items(); track item.id) {
+  <button
+    matButton="filled"
+    (click)="onRedirect(item.path)"
+    class="button"
+    [class.active]="activePath === item.path"
+  >
+    <mat-icon class="icon">{{item.icon}}</mat-icon>
+    {{ item.title }}
+  </button>
+  }
+</div>

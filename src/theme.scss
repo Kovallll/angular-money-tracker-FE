@@ -1,0 +1,268 @@
+@use '@angular/material' as mat;
+
+$primary: #0f172a;
+$secondary: #1d283a;
+$tertiary: #334155;
+$accent: #3b82f6;
+$gray: #94a3b8;
+$success: #22c55e;
+$error: #ef4444;
+$white: #ffffff;
+$light-primary: #1e2535;
+
+$my-primary: (
+  50: #f1f5f9,
+  100: #e2e8f0,
+  200: #cbd5e1,
+  300: #94a3b8,
+  400: #64748b,
+  500: #0f172a,
+  600: #0d1525,
+  700: #0a101c,
+  800: #080c13,
+  900: #05080c,
+  contrast: (
+    50: black,
+    100: black,
+    200: black,
+    300: black,
+    400: white,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+  ),
+);
+
+$my-light-primary: (
+  50: #f1f5f9,
+  100: #e2e8f0,
+  200: #cbd5e1,
+  300: #94a3b8,
+  400: #64748b,
+  500: #1e2535,
+  600: #0d1525,
+  700: #0a101c,
+  800: #080c13,
+  900: #05080c,
+  contrast: (
+    50: black,
+    100: black,
+    200: black,
+    300: black,
+    400: white,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+  ),
+);
+
+// 🎨 Accent (синий акцент)
+$my-accent: (
+  50: #eff6ff,
+  100: #dbeafe,
+  200: #bfdbfe,
+  300: #93c5fd,
+  400: #60a5fa,
+  500: #3b82f6,
+  // твой $accent
+  600: #2563eb,
+  700: #1d4ed8,
+  800: #1e40af,
+  900: #1e3a8a,
+  contrast: (
+    50: black,
+    100: black,
+    200: black,
+    300: black,
+    400: black,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+  ),
+);
+
+// 🎨 Warn/Error
+$my-error: (
+  50: #fee2e2,
+  100: #fecaca,
+  200: #fca5a5,
+  300: #f87171,
+  400: #ef4444,
+  500: #dc2626,
+  // твой $error (приближен)
+  600: #b91c1c,
+  700: #991b1b,
+  800: #7f1d1d,
+  900: #450a0a,
+  contrast: (
+    50: black,
+    100: black,
+    200: black,
+    300: black,
+    400: white,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+  ),
+);
+
+// 🎨 Success (зелёный)
+$my-success: (
+  50: #ecfdf5,
+  100: #d1fae5,
+  200: #a7f3d0,
+  300: #6ee7b7,
+  400: #34d399,
+  500: #22c55e,
+
+  600: #16a34a,
+  700: #15803d,
+  800: #166534,
+  900: #14532d,
+  contrast: (
+    50: black,
+    100: black,
+    200: black,
+    300: black,
+    400: black,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+  ),
+);
+
+$my-success: (
+  50: #ecfdf5,
+  100: #d1fae5,
+  200: #a7f3d0,
+  300: #6ee7b7,
+  400: #34d399,
+  500: #22c55e,
+  600: #16a34a,
+  700: #15803d,
+  800: #166534,
+  900: #14532d,
+  contrast: (
+    50: black,
+    100: black,
+    200: black,
+    300: black,
+    400: black,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+  ),
+);
+
+$my-gray: (
+  50: #f9fafb,
+  100: #f3f4f6,
+  200: #e5e7eb,
+  300: #d1d5db,
+  400: #9ca3af,
+  500: #94a3b8,
+  600: #4b5563,
+  700: #374151,
+  800: #1f2937,
+  900: #111827,
+  contrast: (
+    50: black,
+    100: black,
+    200: black,
+    300: black,
+    400: white,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+  ),
+);
+
+$my-secondary: (
+  50: #f0f4f8,
+  100: #d9e2ec,
+  200: #bcccdc,
+  300: #9fb3c8,
+  400: #829ab1,
+  500: #1d283a,
+  600: #52667a,
+  700: #3e4c59,
+  800: #2c3743,
+  900: #1c252f,
+  contrast: (
+    50: black,
+    100: black,
+    200: black,
+    300: black,
+    400: white,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+  ),
+);
+
+$my-tertiary: (
+  50: #f5f5f5,
+  100: #e0e0e0,
+  200: #c2c2c2,
+  300: #a3a3a3,
+  400: #858585,
+  500: #334155,
+  600: #525252,
+  700: #3d3d3d,
+  800: #292929,
+  900: #141414,
+  contrast: (
+    50: black,
+    100: black,
+    200: black,
+    300: black,
+    400: white,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+  ),
+);
+
+$primary-palette: mat.m2-define-palette($my-primary, 500);
+$light-primary-palette: mat.m2-define-palette($my-light-primary, 500);
+$accent-palette: mat.m2-define-palette($my-accent, 500);
+$error-palette: mat.m2-define-palette($my-error, 500);
+$success-palette: mat.m2-define-palette($my-success, 500);
+$gray-palette: mat.m2-define-palette($my-gray, 500);
+$secondary-palette: mat.m2-define-palette($my-secondary, 500);
+$tertiary-palette: mat.m2-define-palette($my-tertiary, 500);
+
+$my-theme: mat.m2-define-light-theme(
+  (
+    color: (
+      primary: $primary-palette,
+      light-primary: $light-primary-palette,
+      accent: $accent-palette,
+      error: $error-palette,
+      success: $success-palette,
+      gray: $gray-palette,
+      secondary: $secondary-palette,
+    ),
+    typography: mat.m2-define-typography-config(),
+    density: 0,
+  )
+);
+@include mat.all-component-themes($my-theme);

@@ -1,0 +1,44 @@
+@use 'theme' as *;
+@use '@angular/material' as mat;
+
+.sidebar {
+  display: flex;
+  width: 280px;
+  height: 100%;
+  border-right: 1px solid $tertiary;
+  flex-direction: column;
+}
+
+.sidebar-content {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.logo {
+  width: 200px;
+}
+
+.logo-wrapper {
+  border-bottom: 1px solid $tertiary;
+  height: 100px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+.account {
+  margin: 96px 0 24px 0;
+  border-top: 1px solid $tertiary;
+  width: 100%;
+}
