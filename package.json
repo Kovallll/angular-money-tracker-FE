@@ -1,11 +1,16 @@
 {
   "name": "angular.dev",
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "watch": "ng build --watch --configuration development"
+    "watch": "ng build --watch --configuration development",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write \"src/**/*.{ts,html,scss,css,json,md}\"",
+    "prepare": "husky"
   },
   "private": true,
   "dependencies": {
@@ -17,16 +22,27 @@
     "@angular/material": "^20.2.0",
     "@angular/platform-browser": "^20.1.0-next",
     "@angular/router": "^20.1.0-next",
+    "chart.js": "^4.3.0",
+    "ng2-charts": "^8.0.0",
     "prettier": "^3.6.2",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
+    "@angular-eslint/eslint-plugin": "^20.2.0",
+    "@angular-eslint/eslint-plugin-template": "^20.2.0",
+    "@angular-eslint/template-parser": "^20.2.0",
     "@angular/build": "^20.1.0-next",
     "@angular/cli": "^20.1.0-next",
     "@angular/compiler-cli": "^20.1.0-next",
     "@types/node": "^16.11.35",
+    "@typescript-eslint/eslint-plugin": "^8.43.0",
+    "@typescript-eslint/parser": "^8.43.0",
+    "eslint": "^9.35.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "husky": "^9.1.7",
     "sass": "^1.92.0",
     "ts-node": "~10.9.0",
     "typescript": "~5.8.0"

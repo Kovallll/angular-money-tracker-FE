@@ -1,0 +1,54 @@
+@use 'theme' as *;
+@use '@angular/material' as mat;
+
+:host {
+  display: flex;
+  width: 100%;
+}
+
+.header {
+  height: 90px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  border-bottom: 1px solid $tertiary;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.date {
+  margin-left: 24px;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.date-text {
+  display: flex;
+  align-items: center;
+  margin-left: 8px;
+  margin-top: 2px;
+}
+
+.export {
+  border-radius: 12px;
+  font-size: 20px;
+  padding: 20px;
+  @include mat.button-overrides(
+    (
+      filled-label-text-color: $white,
+      filled-container-color: $accent,
+    )
+  );
+
+  .icon {
+    margin-right: 12px;
+    transform: scale(1.5);
+  }
+}

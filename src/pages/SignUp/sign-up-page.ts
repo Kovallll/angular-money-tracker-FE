@@ -8,24 +8,16 @@ import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-sign-up-page',
-  imports: [
-    ReactiveFormsModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-  ],
+  imports: [ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatInputModule],
   templateUrl: './sign-up-page.html',
   styleUrl: `./sign-up-page.scss`,
 })
-export class SignUpPage {
+export class SignUpPageComponent {
   private router = inject(Router);
 
   name = new FormControl('', [Validators.required]);
   email = new FormControl('', [Validators.required, Validators.email]);
-  password = new FormControl('', [
-    Validators.required,
-    Validators.minLength(4),
-  ]);
+  password = new FormControl('', [Validators.required, Validators.minLength(4)]);
 
   getErrorEmailMessage() {
     if (this.email.hasError('required')) {

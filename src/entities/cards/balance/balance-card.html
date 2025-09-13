@@ -1,0 +1,26 @@
+<dashboard-card [title]="title">
+  <card-header class="header">
+    <p>{{ totalBalance | currency}}</p>
+    <p>All accounts</p>
+  </card-header>
+
+  <card-body class="body">
+    <app-slider [items]="items">
+      @for (item of items; track item.id) {
+      <app-slide class="card">
+        <div class="left-side">
+          <p>{{ item.cardName }}</p>
+          <p>{{ item.cardNumber }}</p>
+        </div>
+        <div class="right-side">
+          <img
+            src="../../../assets/mastercard-logo.png"
+            alt="mastercard-logo"
+          />
+          <p>{{ item.cardBalance | currency}}</p>
+        </div>
+      </app-slide>
+      }
+    </app-slider>
+  </card-body>
+</dashboard-card>

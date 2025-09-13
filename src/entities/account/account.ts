@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
+import { User } from '@/shared';
+import { UserService } from '@/features/user/user.service';
 
 @Component({
   selector: 'account',
@@ -10,4 +12,12 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './account.html',
   styleUrls: ['./account.scss'],
 })
-export class Account {}
+export class AccountComponent implements OnInit {
+  user: User | null = null;
+
+  constructor(private userService: UserService) {}
+
+  ngOnInit() {
+    this.user = this.userService.getUser();
+  }
+}

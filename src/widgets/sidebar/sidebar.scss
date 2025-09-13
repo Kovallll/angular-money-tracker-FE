@@ -3,7 +3,7 @@
 
 .sidebar {
   display: flex;
-  width: 280px;
+  width: 320px;
   height: 100%;
   border-right: 1px solid $tertiary;
   flex-direction: column;
@@ -18,12 +18,14 @@
 }
 
 .logo {
-  width: 200px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 32px;
 }
 
 .logo-wrapper {
   border-bottom: 1px solid $tertiary;
-  height: 100px;
+  height: 120px;
   width: 100%;
   display: flex;
   align-items: center;

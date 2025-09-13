@@ -7,4 +7,4 @@ import { RouterModule } from '@angular/router';
   templateUrl: './layout.html',
   styleUrls: ['./layout.scss'],
 })
-export class AuthLayout {}
+export class AuthLayoutComponent {}

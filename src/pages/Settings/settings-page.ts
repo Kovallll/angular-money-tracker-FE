@@ -6,4 +6,4 @@ import { Component } from '@angular/core';
   templateUrl: './settings-page.html',
   styleUrl: `./settings-page.scss`,
 })
-export class SettingsPage {}
+export class SettingsPageComponent {}

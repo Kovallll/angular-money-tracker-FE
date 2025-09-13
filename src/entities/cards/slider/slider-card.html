@@ -1,0 +1,40 @@
+<div class="slider-wrapper">
+  <div
+    class="slides"
+    [style.transform]="'translateX(-' + currentIndex * 348 + 'px)'"
+  >
+    <ng-content></ng-content>
+  </div>
+
+  @if (items().length > 1) {
+  <div class="pagination">
+    <button
+      class="prev"
+      (click)="handlePrev()"
+      [disabled]="!canPrev"
+      [class.disabled]="!canPrev"
+    >
+      < Prev
+    </button>
+
+    <div class="dots">
+      @for (item of items(); let i = $index; track item.id ?? i) {
+      <button
+        class="circle"
+        [class.active]="currentIndex === i"
+        (click)="goTo(i)"
+      ></button>
+      }
+    </div>
+
+    <button
+      class="next"
+      (click)="handleNext()"
+      [disabled]="!canNext"
+      [class.disabled]="!canNext"
+    >
+      Next >
+    </button>
+  </div>
+  }
+</div>

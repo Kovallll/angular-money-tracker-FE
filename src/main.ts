@@ -1,11 +1,13 @@
-import {
-  bootstrapApplication,
-  provideProtractorTestingSupport,
-} from '@angular/platform-browser';
+import { bootstrapApplication, provideProtractorTestingSupport } from '@angular/platform-browser';
 import { App } from './app/app';
 import { provideRouter } from '@angular/router';
 import routeConfig from './app/routes';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 bootstrapApplication(App, {
-  providers: [provideProtractorTestingSupport(), provideRouter(routeConfig)],
+  providers: [
+    provideProtractorTestingSupport(),
+    provideRouter(routeConfig),
+    provideCharts(withDefaultRegisterables()),
+  ],
 }).catch((err) => console.error(err));

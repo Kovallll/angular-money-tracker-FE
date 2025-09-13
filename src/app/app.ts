@@ -6,4 +6,4 @@ import { RouterModule } from '@angular/router';
   templateUrl: './app.html',
   styleUrls: ['./app.scss'],
 })
-export class App {}
+export class AppComponent {}

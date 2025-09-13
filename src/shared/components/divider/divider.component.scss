@@ -1,0 +1,13 @@
+@use 'theme' as *;
+
+.divider {
+  height: 2px;
+  width: 100%;
+  margin: 12px 0;
+}
+.accent {
+  background-color: $accent;
+}
+.tertiary {
+  background-color: $tertiary;
+}

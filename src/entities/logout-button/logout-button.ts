@@ -10,7 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './logout-button.html',
   styleUrls: ['./logout-button.scss'],
 })
-export class LogoutButton {
+export class LogoutButtonComponent {
   private router = inject(Router);
 
   logout() {

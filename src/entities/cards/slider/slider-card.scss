@@ -1,0 +1,66 @@
+@use 'theme' as *;
+
+:host {
+  height: 100%;
+}
+
+.slider-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  overflow: hidden;
+  width: 100%;
+}
+
+.slides {
+  display: flex;
+  transition: transform 0.4s ease;
+  gap: 16px;
+  width: 332px;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+}
+
+.dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.circle {
+  width: 10px;
+  height: 10px;
+  background: $white;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+
+  &:not(:last-child) {
+    margin-right: 8px;
+  }
+}
+
+.active {
+  background: $accent;
+}
+
+.prev,
+.next {
+  cursor: pointer;
+  color: $white;
+  background: transparent;
+  border: none;
+  margin: 8px;
+  font-weight: 700;
+}
+
+.disabled {
+  color: $tertiary;
+  cursor: no-drop;
+}

@@ -9,24 +9,15 @@ import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login-page',
-  imports: [
-    ReactiveFormsModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    RouterLink,
-  ],
+  imports: [ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatInputModule, RouterLink],
   templateUrl: `./login-page.html`,
   styleUrl: `./login-page.scss`,
 })
-export class LoginPage {
+export class LoginPageComponent {
   private router = inject(Router);
 
   email = new FormControl('', [Validators.required, Validators.email]);
-  password = new FormControl('', [
-    Validators.required,
-    Validators.minLength(4),
-  ]);
+  password = new FormControl('', [Validators.required, Validators.minLength(4)]);
 
   getErrorEmailMessage() {
     if (this.email.hasError('required')) {
@@ -52,6 +43,11 @@ export class LoginPage {
 
   login(email: string | null, password: string | null) {
     //loginUser(email, password);
+    if (!email || !password) {
+      throw new Error('Email and password are required');
+    }
+    const user = { email, password };
+    localStorage.setItem('user', JSON.stringify(user));
     this.router.navigate(['/dashboard']);
   }
 

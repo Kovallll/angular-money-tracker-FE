@@ -6,4 +6,4 @@ import { Component } from '@angular/core';
   templateUrl: './subscriptions-page.html',
   styleUrl: `./subscriptions-page.scss`,
 })
-export class SubscriptionsPage {}
+export class SubscriptionsPageComponent {}

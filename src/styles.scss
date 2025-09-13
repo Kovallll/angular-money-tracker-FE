@@ -12,16 +12,18 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
 }
 body {
   margin: 0;
   background: $primary !important;
   color: $white !important;
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  font-family:
+    'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+    'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
 app-root,
-dashboard-page,
 main-layout,
 auth-layout {
   height: 100%;

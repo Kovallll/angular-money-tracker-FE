@@ -9,6 +9,7 @@ $success: #22c55e;
 $error: #ef4444;
 $white: #ffffff;
 $light-primary: #1e2535;
+$balance-card-color: #178075;
 
 $my-primary: (
   50: #f1f5f9,
@@ -250,6 +251,21 @@ $gray-palette: mat.m2-define-palette($my-gray, 500);
 $secondary-palette: mat.m2-define-palette($my-secondary, 500);
 $tertiary-palette: mat.m2-define-palette($my-tertiary, 500);
 
+$custom-typography: mat.m2-define-typography-config(
+  $font-family: 'Inter, sans-serif',
+  $headline-1: mat.m2-define-typography-level(96px, 96px, 300),
+  $headline-2: mat.m2-define-typography-level(60px, 60px, 300),
+  $headline-3: mat.m2-define-typography-level(48px, 48px, 400),
+  $headline-4: mat.m2-define-typography-level(34px, 40px, 400),
+  $headline-5: mat.m2-define-typography-level(24px, 32px, 400),
+  $headline-6: mat.m2-define-typography-level(20px, 32px, 500),
+  $body-1: mat.m2-define-typography-level(16px, 24px, 400),
+  $body-2: mat.m2-define-typography-level(14px, 20px, 400),
+  $button: mat.m2-define-typography-level(14px, 14px, 500),
+  $caption: mat.m2-define-typography-level(12px, 20px, 400),
+  $overline: mat.m2-define-typography-level(10px, 16px, 400),
+);
+
 $my-theme: mat.m2-define-light-theme(
   (
     color: (
@@ -261,7 +277,7 @@ $my-theme: mat.m2-define-light-theme(
       gray: $gray-palette,
       secondary: $secondary-palette,
     ),
-    typography: mat.m2-define-typography-config(),
+    typography: $custom-typography,
     density: 0,
   )
 );

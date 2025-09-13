@@ -1,0 +1,32 @@
+<dashboard-card [title]="title" [isWithSeeAll]="true" [seeAllPath]="seeAllPath">
+  <card-header class="header">
+    <mat-tab-group
+      [selectedIndex]="tabs.indexOf(tabFilter())"
+      (selectedIndexChange)="onSelectedIndexChange($event)"
+      class="tabs"
+    >
+      @for(tab of tabs; track tab) {
+      <mat-tab [label]="tab" />
+      }
+    </mat-tab-group>
+  </card-header>
+  <card-body class="body">
+    @for (item of currentItems(); track item.id) {
+    <div class="card">
+      <div class="left-content">
+        <div class="category-icon">
+          <mat-icon>category</mat-icon>
+        </div>
+        <div class="text">
+          <p class="title">{{ item.title }}</p>
+          <p class="category">{{ item.category }}</p>
+        </div>
+      </div>
+      <div class="right-content">
+        <p class="cost">{{ item.cost | currency }}</p>
+        <p class="date">{{ item.date | date }}</p>
+      </div>
+    </div>
+    }
+  </card-body>
+</dashboard-card>

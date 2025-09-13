@@ -1,4 +1,8 @@
 <div class="container">
-  <h2>Name</h2>
-  <p>Email</p>
+  @if (user) {
+  <div class="name">{{ user.name }}</div>
+  <div class="email">{{ user.email }}</div>
+  } @else {
+  <p>Пользователь не найден</p>
+  }
 </div>

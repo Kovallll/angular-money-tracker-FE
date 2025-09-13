@@ -10,13 +10,6 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './tabs.html',
   styleUrls: ['./tabs.scss'],
 })
-export class MenuTabs {
-  private router = inject(Router);
+export class MenuTabsComponent {
   items = input<Items[]>([]);
-  activePath = '/dashboard';
-
-  onRedirect(path: string) {
-    this.activePath = path;
-    this.router.navigate([path]);
-  }
 }
