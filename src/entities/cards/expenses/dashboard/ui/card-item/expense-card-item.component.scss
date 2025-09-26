@@ -1,0 +1,39 @@
+@use 'theme' as *;
+
+.card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  border: 1px solid $tertiary;
+  box-sizing: border-box;
+  padding: 16px 32px;
+}
+
+.left-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.category-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 8px;
+  background-color: $tertiary;
+}
+
+.button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.icon {
+  color: $accent;
+  font-size: 48px;
+  width: 48px;
+  height: 40px;
+}

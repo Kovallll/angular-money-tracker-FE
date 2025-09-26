@@ -1,0 +1,20 @@
+:host {
+  width: 100%;
+}
+
+.conteiner {
+  display: flex;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  width: 100%;
+  gap: 24px;
+}

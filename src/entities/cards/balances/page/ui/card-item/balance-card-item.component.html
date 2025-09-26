@@ -1,0 +1,24 @@
+<div class="card">
+  <div class="header">
+    <p class="card-type">
+      {{ item().cardType }}
+    </p>
+    <div class="card-name">
+      <img src="assets/mastercard-logo.png" alt="MasterCard logo" loading="lazy" />
+      <p>{{ item().cardName }}</p>
+    </div>
+  </div>
+  <div class="body">
+    <div class="body-item">
+      {{ item().cardNumber }}
+      <p>Account Number</p>
+    </div>
+    <div class="body-item">
+      {{ item().cardBalance | currency }}
+      <p>Total amount</p>
+    </div>
+  </div>
+  <div class="footer">
+    <button class="details-button" (click)="handleCheckDetails()">Details</button>
+  </div>
+</div>

@@ -1,0 +1,16 @@
+<dashboard-card [title]="title">
+  <card-header class="header">
+    <p>{{ totalBalance() | currency}}</p>
+    <p>All accounts</p>
+  </card-header>
+
+  <card-body class="body">
+    <app-slider [items]="items()" class="slider">
+      @for (item of items(); track item.id) {
+      <app-slide class="card">
+        <balance-card-item [item]="item" />
+      </app-slide>
+      }
+    </app-slider>
+  </card-body>
+</dashboard-card>

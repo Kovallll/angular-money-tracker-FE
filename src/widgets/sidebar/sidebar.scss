@@ -6,6 +6,11 @@
   width: 320px;
   height: 100%;
   border-right: 1px solid $tertiary;
+}
+
+.content {
+  height: 100vh;
+  display: flex;
   flex-direction: column;
 }
 
@@ -40,7 +45,7 @@
 }
 
 .account {
-  margin: 96px 0 24px 0;
+  margin: 24px 0 24px 0;
   border-top: 1px solid $tertiary;
   width: 100%;
 }

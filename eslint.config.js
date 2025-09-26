@@ -7,7 +7,7 @@ import angularTemplateParser from '@angular-eslint/template-parser';
 
 export default [
   {
-    ignores: ['dist', 'node_modules', 'projects/**/*'],
+    ignores: ['dist', 'node_modules', 'projects/**/*', '.angular'],
   },
   {
     files: ['**/*.ts'],

@@ -1,0 +1,19 @@
+<dashboard-card [title]="title" [isWithSeeAll]="true" [seeAllPath]="seeAllPath">
+  <card-header class="header">
+    <mat-tab-group
+      [selectedIndex]="tabs.indexOf(tabFilter())"
+      (selectedIndexChange)="onSelectedIndexChange($event)"
+      class="tabs"
+    >
+      @for (tab of tabs; track tab) {
+      <mat-tab [label]="tab" class="tab" />
+      }
+    </mat-tab-group>
+  </card-header>
+
+  <card-body class="body">
+    @for (item of currentItems(); track item.id) {
+    <transaction-card-item [item]="item" />
+    }
+  </card-body>
+</dashboard-card>

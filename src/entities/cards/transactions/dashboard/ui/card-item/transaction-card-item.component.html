@@ -1,0 +1,15 @@
+<div class="card">
+  <div class="left-content">
+    <div class="category-icon">
+      <mat-icon>category</mat-icon>
+    </div>
+    <div class="text">
+      <p class="title">{{ item().title }}</p>
+      <p class="category">{{ item().category }}</p>
+    </div>
+  </div>
+  <div class="right-content">
+    <p class="amount">{{ item().amount | currency }}</p>
+    <p class="date">{{ item().date | date }}</p>
+  </div>
+</div>

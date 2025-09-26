@@ -1,0 +1,7 @@
+<dashboard-card [title]="title" [isWithSeeAll]="true" [seeAllPath]="seeAllPath">
+  <card-body class="body">
+    @for (expense of expenses(); track expense.id) {
+      <expense-card-item [expense]="expense" />
+    }
+  </card-body>
+</dashboard-card>

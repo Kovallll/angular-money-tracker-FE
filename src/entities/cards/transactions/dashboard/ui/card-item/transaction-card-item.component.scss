@@ -1,0 +1,28 @@
+@use 'theme' as *;
+
+.card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.left-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.category-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 8px;
+  background-color: $tertiary;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 600;
+}

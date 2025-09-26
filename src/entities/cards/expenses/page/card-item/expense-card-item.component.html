@@ -1,0 +1,9 @@
+<div class="card" (click)="handleCheckDetails()">
+  <div class="left-content">
+    <p class="title">{{ expense.title }}</p>
+  </div>
+  <div class="right-content">
+    <p class="cost">{{ expense.amount | currency }}</p>
+    <p class="date">{{ expense.date | date }}</p>
+  </div>
+</div>

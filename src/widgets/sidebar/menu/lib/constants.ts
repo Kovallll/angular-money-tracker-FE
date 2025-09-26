@@ -1,24 +1,27 @@
+import { RoutePaths } from '@/shared';
+
 export const menuItems = [
-  { id: 1, path: '/dashboard', title: 'Dashboard', icon: 'dashboard' },
+  { id: 1, path: RoutePaths.DASHBOARD, title: 'Dashboard', icon: 'dashboard' },
   {
     id: 2,
-    path: '/transactions',
+    path: RoutePaths.TRANSACTIONS,
     title: 'Transactions',
     icon: 'compare_arrows',
   },
   {
     id: 3,
-    path: '/balances',
+    path: RoutePaths.BAlANCES,
     title: 'Balances',
     icon: 'account_balance_wallet',
   },
-  { id: 4, path: '/expenses', title: 'Expenses', icon: 'attach_money' },
-  { id: 5, path: '/goals', title: 'Goals', icon: 'check_box' },
+  { id: 4, path: RoutePaths.EXPENSES, title: 'Expenses', icon: 'attach_money' },
+  { id: 5, path: RoutePaths.GOALS, title: 'Goals', icon: 'check_box' },
+  { id: 5, path: RoutePaths.STATISTICS, title: 'Statistics', icon: 'bar_chart' },
   {
     id: 6,
-    path: '/subscriptions',
+    path: RoutePaths.SUBSCRIPTIONS,
     title: 'Subscriptions',
     icon: 'subscriptions',
   },
-  { id: 7, path: '/settings', title: 'Settings', icon: 'settings' },
+  { id: 7, path: RoutePaths.SETTINGS, title: 'Settings', icon: 'settings' },
 ];

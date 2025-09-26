@@ -1,0 +1,11 @@
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 24px;
+}
+
+.card {
+  max-width: 352px;
+  width: 100%;
+}

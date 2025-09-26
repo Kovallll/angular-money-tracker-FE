@@ -1,0 +1,11 @@
+<dashboard-card [title]="title">
+  <card-body class="body">
+    <app-slider [items]="items">
+      @for (item of items; track item.id) {
+      <app-slide>
+        <goal-card-item [item]="item" />
+      </app-slide>
+      }
+    </app-slider>
+  </card-body>
+</dashboard-card>

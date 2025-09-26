@@ -1,0 +1,23 @@
+@use 'theme' as *;
+
+.table {
+  width: 100%;
+  height: 100%;
+}
+
+.mat-mdc-row .mat-mdc-cell {
+  border-bottom: 1px solid $primary;
+  border-top: 1px solid $primary;
+  background: $secondary;
+  color: $white;
+  cursor: pointer;
+}
+
+th.mat-mdc-header-cell {
+  background: $secondary;
+  color: $white;
+}
+
+.mat-mdc-row:hover .mat-mdc-cell {
+  border-color: $gray;
+}

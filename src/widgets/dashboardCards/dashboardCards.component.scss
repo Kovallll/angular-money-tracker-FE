@@ -1,0 +1,30 @@
+:host {
+  width: 100%;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  gap: 24px;
+}
+
+.top-cards {
+  display: flex;
+  width: 100%;
+  gap: 24px;
+}
+
+.bottom-cards {
+  display: flex;
+  width: 100%;
+  gap: 24px;
+}
+
+.columns-card {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 24px;
+}

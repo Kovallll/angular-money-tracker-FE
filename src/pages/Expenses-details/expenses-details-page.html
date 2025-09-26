@@ -1,0 +1,8 @@
+<div class="container">
+  <h2>{{category()?.title}}</h2>
+  <table-component
+    [dataSource]="expenses()"
+    [isEmpty]="isEmpty"
+    [displayedCells]="displayedCells()"
+  />
+</div>

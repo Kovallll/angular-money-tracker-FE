@@ -1,0 +1,30 @@
+<dashboard-card [title]="title">
+  <card-body class="body">
+    <div class="content">
+      <div class="bank-content">
+        <p class="title">Bank Name</p>
+        <p class="text">{{ card()?.bankName }}</p>
+      </div>
+      <div class="account-type-content">
+        <p class="title">Account Type</p>
+        <p class="text">{{ card()?.cardType }}</p>
+      </div>
+      <div class="balance-content">
+        <p class="title">Balance</p>
+        <p class="text">{{ card()?.cardBalance }}</p>
+      </div>
+      <div class="branch-name-content">
+        <p class="title">Branch Name</p>
+        <p class="text">{{ card()?.branchName }}</p>
+      </div>
+      <div class="account-number-content">
+        <p class="title">Account Number</p>
+        <p class="text">{{ card()?.cardNumber }}</p>
+      </div>
+    </div>
+    <div class="buttons">
+      <button class="edit-button">Edit</button>
+      <button class="remove-button">Remove</button>
+    </div>
+  </card-body>
+</dashboard-card>

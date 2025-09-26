@@ -1,0 +1,15 @@
+<dashboard-card [title]="title">
+  <card-body class="body">
+    <app-slider [items]="pairsItems">
+      @for (items of pairsItems; track items) {
+      <app-slide>
+        <div class="card">
+          @for (item of items; track item.id) {
+          <subscribe-card-item [item]="item" [isLast]="item.id === items.at(-1).id" />
+          }
+        </div>
+      </app-slide>
+      }
+    </app-slider>
+  </card-body>
+</dashboard-card>

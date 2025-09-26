@@ -5,8 +5,11 @@ export enum RoutePaths {
   NOT_FOUND = '404',
   SETTINGS = 'settings',
   TRANSACTIONS = 'transactions',
+  STATISTICS = 'statistics',
   EXPENSES = 'expenses',
   GOALS = 'goals',
   SUBSCRIPTIONS = 'subscriptions',
   BAlANCES = 'balances',
+  BALANCE_DETAILS = 'balance-details',
+  EXPENSES_DETAILS = 'expenses-details',
 }

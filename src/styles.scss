@@ -3,11 +3,11 @@
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 html,
 body {
-  height: 100%;
   width: 100%;
   display: flex;
   align-items: center;
@@ -19,8 +19,8 @@ body {
   background: $primary !important;
   color: $white !important;
   font-family:
-    'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
-    'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana,
+    sans-serif;
 }
 
 app-root,

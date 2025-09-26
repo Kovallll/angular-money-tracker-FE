@@ -1,0 +1,10 @@
+<div class="card">
+  <div class="left-side">
+    <p>{{ item().cardName }}</p>
+    <p>{{ item().cardNumber }}</p>
+  </div>
+  <div class="right-side">
+    <img src="assets/mastercard-logo.png" alt="MasterCard logo" loading="lazy" />
+    <p>{{ item().cardBalance | currency }}</p>
+  </div>
+</div>

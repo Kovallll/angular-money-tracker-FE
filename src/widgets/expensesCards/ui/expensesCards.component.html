@@ -1,0 +1,8 @@
+<div class="container">
+  <p class="title">Expenses Breakdown</p>
+  <div class="content">
+    @for (category of categories; track category.id) {
+      <expense-card [category]="category" />
+    }
+  </div>
+</div>

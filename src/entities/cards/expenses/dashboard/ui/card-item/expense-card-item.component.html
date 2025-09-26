@@ -1,0 +1,16 @@
+<div class="card">
+  <div class="left-content">
+    <div class="category-icon">
+      <mat-icon>category</mat-icon>
+    </div>
+    <div class="text">
+      <p class="category">{{ expense().category.title }}</p>
+      <p class="cost">{{ expense().amount | currency }}</p>
+    </div>
+  </div>
+  <div class="right-content">
+    <button class="button">
+      <mat-icon class="icon">arrow_right_alt</mat-icon>
+    </button>
+  </div>
+</div>

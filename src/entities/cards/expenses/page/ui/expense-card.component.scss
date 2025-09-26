@@ -1,0 +1,60 @@
+@use 'theme' as *;
+
+:host {
+  width: 100%;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  border: 1px solid $tertiary;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.header,
+.body {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.header {
+  background: $tertiary;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+}
+
+.left-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.category-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 8px;
+  background-color: $accent;
+}
+
+.percents {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  gap: 8px;
+}
+
+.compare {
+  font-size: 12px;
+  color: $gray;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+}
