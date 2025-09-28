@@ -48,7 +48,6 @@ export default [
       '@angular-eslint/template/eqeqeq': 'error',
       '@angular-eslint/template/banana-in-box': 'error',
       '@angular-eslint/template/no-negated-async': 'warn',
-      '@angular-eslint/template/click-events-have-key-events': 'warn',
       '@angular-eslint/template/alt-text': 'warn',
     },
   },

@@ -1,0 +1,22 @@
+<dashboard-card [title]="title()" [isWithSeeAll]="isWithSeeAll()" [seeAllPath]="seeAllPath()">
+  <card-body class="body">
+    @if (!fixedView()) {
+      <div class="select-wrapper">
+        <button class="toggle" (click)="handleClickPrev()">
+          <mat-icon>keyboard_arrow_left</mat-icon>
+        </button>
+        <mat-select [(value)]="currentView" class="select">
+          @for (chartView of chartViewChoices; track chartView) {
+            <mat-option class="option" [value]="chartView" (click)="handleClickSelect()">{{
+              chartView
+            }}</mat-option>
+          }
+        </mat-select>
+        <button class="toggle" (click)="handleClickNext()">
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </button>
+      </div>
+    }
+    <canvas class="chart" baseChart [data]="data()" [options]="options" [type]="'bar'"></canvas>
+  </card-body>
+</dashboard-card>

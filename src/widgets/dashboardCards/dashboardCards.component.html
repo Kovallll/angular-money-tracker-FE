@@ -2,6 +2,16 @@
   <div class="top-cards"><dash-balance-card /><dash-goal-card /><dash-subscribe-card /></div>
   <div class="bottom-cards">
     <dash-transaction-card />
-    <div class="columns-card"><dash-statistic-card /> <dash-expense-card /></div>
+    <div class="columns-card">
+      <div class="stats">
+        <budget-statistic-card
+          [fixedView]="'Week'"
+          [title]="'Week statistic'"
+          [isWithSeeAll]="true"
+          [seeAllPath]="seeAllPath"
+        />
+      </div>
+      <dash-expense-card />
+    </div>
   </div>
 </div>

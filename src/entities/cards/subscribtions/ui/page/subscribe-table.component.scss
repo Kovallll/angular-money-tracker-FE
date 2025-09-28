@@ -1,0 +1,58 @@
+@use 'theme' as *;
+
+.table {
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  width: 100%;
+
+  padding: 0px 12px 12px 12px;
+  border-bottom: 1px solid $accent;
+}
+
+.header-title {
+  font-size: 18px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: $gray;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px;
+  border-bottom: 1px solid $tertiary;
+}
+
+.date {
+  background-color: $tertiary;
+  border-radius: 8px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 2px 12px;
+  width: 100%;
+  min-width: 32px;
+  max-width: 64px;
+}
+
+.day {
+  font-weight: 700;
+  color: $accent;
+  font-size: 20px;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 600;
+  text-transform: uppercase;
+}

@@ -1,0 +1,21 @@
+<div class="content">
+  <div class="left">
+    <div class="date">
+      <p>{{ subscribe().subscribeDate | date: 'MMM' }}</p>
+      <p class="day">{{ subscribe().subscribeDate | date: 'dd' }}</p>
+    </div>
+
+    <div class="info">
+      <p class="name">{{ subscribe().subscribeName }} - {{ subscribe().type }}</p>
+      <p>Subscribe - <br />{{ subscribe().subscribeDate | date }}</p>
+    </div>
+  </div>
+
+  <div class="price-block">
+    <p class="price">{{ subscribe().amount | currency }}</p>
+  </div>
+</div>
+
+@if (!isLast()) {
+  <divider />
+}

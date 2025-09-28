@@ -1,0 +1,99 @@
+@use 'theme' as *;
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  min-width: 332px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 100%;
+}
+
+.left-header {
+  display: flex;
+  align-items: center;
+}
+
+.title {
+  display: flex;
+}
+
+.edit-button {
+  border-radius: 8px;
+  background: $accent;
+  color: $white;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  .material-icons {
+    font-size: 16px;
+  }
+  .mat-icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
+
+.left-side {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.text-block {
+  display: flex;
+  align-items: start;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.text {
+  margin-left: 8px;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.goal-title {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.date {
+  color: $gray;
+}
+
+.left-side {
+  gap: 12px;
+}
+
+.button {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  margin-top: 12px;
+}

@@ -1,0 +1,23 @@
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.budget {
+  height: 500px;
+  width: 100%;
+  margin-bottom: 64px;
+}
+
+.expenses {
+  height: 500px;
+  width: 100%;
+  margin-bottom: 64px;
+}
+
+.goals {
+  height: 500px;
+  width: 100%;
+  margin-bottom: 64px;
+}

@@ -7,13 +7,21 @@
   width: 100%;
   border: 1px solid $tertiary;
   box-sizing: border-box;
-  padding: 16px 32px;
+  padding: 16px;
 }
 
 .left-content {
   display: flex;
   align-items: center;
   gap: 16px;
+}
+
+.right-content {
+  display: flex;
+  align-items: end;
+  flex-direction: column;
+  justify-content: center;
+  color: $gray;
 }
 
 .category-icon {
@@ -36,4 +44,9 @@
   font-size: 48px;
   width: 48px;
   height: 40px;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 600;
 }

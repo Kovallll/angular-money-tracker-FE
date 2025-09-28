@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { DashboardStatisticCardComponent } from '@/entities/cards/statistics/dashboard/ui/statistic-card';
 import { ExpensesCardsComponent } from '@/widgets/expensesCards/ui/expensesCards.component';
+import { ExpensesStatisticCardComponent } from '@/entities/cards/statistics/ui/expenses/expenses-stats.component';
 
 @Component({
   selector: 'app-expenses-page',
-  imports: [DashboardStatisticCardComponent, ExpensesCardsComponent],
+  imports: [ExpensesCardsComponent, ExpensesStatisticCardComponent],
   templateUrl: './expenses-page.html',
   styleUrl: `./expenses-page.scss`,
 })

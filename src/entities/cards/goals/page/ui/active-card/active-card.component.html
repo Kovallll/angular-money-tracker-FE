@@ -1,0 +1,48 @@
+<dashboard-card [title]="title">
+  <card-body class="body">
+    <div class="card">
+      <div class="header">
+        <div class="left-header">
+          <p class="goal-title">{{ goal().title }}</p>
+        </div>
+        <p class="date">{{ goal().startDate | date }} - <br />{{ goal().endDate | date }}</p>
+      </div>
+
+      <divider color="tertiary" />
+
+      <div class="wrapper">
+        <div class="content">
+          <div class="left-side">
+            <div class="title">
+              <mat-icon>today</mat-icon>
+              <div class="text-block">
+                <p class="text">Target Budget</p>
+                <p class="price">{{ goal().targetBudget | currency }}</p>
+              </div>
+            </div>
+            <div class="title">
+              <mat-icon>check_circle</mat-icon>
+              <div class="text-block">
+                <p class="text">Goal Budget</p>
+                <p class="price">{{ goal().goalBudget | currency }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="right-side">
+            <canvas
+              baseChart
+              [labels]="labels"
+              [datasets]="getDataset(goal())"
+              [legend]="false"
+              [type]="'doughnut'"
+              [width]="115"
+            ></canvas>
+          </div>
+        </div>
+        <div class="button">
+          <goal-adjust-card-button />
+        </div>
+      </div>
+    </div>
+  </card-body>
+</dashboard-card>

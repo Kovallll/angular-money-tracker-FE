@@ -1,11 +1,13 @@
 import { Component, ContentChild, ChangeDetectionStrategy, input, inject } from '@angular/core';
 import { DividerComponent } from '@/shared/components/divider/divider';
 import { Router } from '@angular/router';
+import { MatIcon, MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'card-header',
   standalone: true,
   template: `<ng-content></ng-content>`,
+  imports: [MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardHeaderComponent {}
@@ -29,7 +31,7 @@ export class CardBodyComponent {}
   templateUrl: './card.html',
   styleUrls: ['./card.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DividerComponent],
+  imports: [DividerComponent, MatIcon],
 })
 export class DashboardCardComponent {
   router = inject(Router);

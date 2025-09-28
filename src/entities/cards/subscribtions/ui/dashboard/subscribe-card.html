@@ -1,0 +1,18 @@
+<dashboard-card [title]="title" [isWithSeeAll]="true" [seeAllPath]="seeAllPath">
+  <card-body class="body">
+    <app-slider [items]="pairsItems">
+      @for (subscribes of pairsItems; track subscribes) {
+      <app-slide>
+        <div class="card">
+          @for (subscribe of subscribes; track subscribe.id) {
+          <subscribe-card-item
+            [subscribe]="subscribe"
+            [isLast]="subscribe.id === subscribes.at(-1)?.id"
+          />
+          }
+        </div>
+      </app-slide>
+      }
+    </app-slider>
+  </card-body>
+</dashboard-card>

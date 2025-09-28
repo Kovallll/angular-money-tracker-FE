@@ -1,9 +1,9 @@
-<dashboard-card [title]="title">
+<dashboard-card [title]="title" [isWithSeeAll]="true" [seeAllPath]="seeAllPath">
   <card-body class="body">
-    <app-slider [items]="items">
-      @for (item of items; track item.id) {
+    <app-slider [items]="goals">
+      @for (goal of goals; track goal.id) {
       <app-slide>
-        <goal-card-item [item]="item" />
+        <goal-card-item [item]="goal" />
       </app-slide>
       }
     </app-slider>

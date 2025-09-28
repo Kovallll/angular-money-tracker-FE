@@ -40,3 +40,22 @@ export interface CategoryItem {
   expensesAmount: number;
   expenses: ExpenseItem[];
 }
+
+export interface GoalItem {
+  id: number;
+  targetBudget: number;
+  goalBudget: number;
+  startDate: string;
+  endDate: string;
+  title: string;
+}
+
+export interface SubscribeItem {
+  id: number;
+  amount: number;
+  subscribeDate: string;
+  subscribeName: string;
+  lastCharge: string;
+  type: string;
+  description?: string;
+}

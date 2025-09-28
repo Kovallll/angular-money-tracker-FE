@@ -33,7 +33,9 @@
 }
 
 .see-all {
-  color: $white;
+  display: flex;
+  align-items: center;
+  color: $gray;
   font-size: 16px;
   background: transparent;
   border: none;

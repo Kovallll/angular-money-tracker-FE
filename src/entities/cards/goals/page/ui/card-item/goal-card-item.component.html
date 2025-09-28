@@ -1,0 +1,14 @@
+<dashboard-card>
+  <card-body class="card">
+    <div class="left-side">
+      <mat-icon class="category-icon"> category</mat-icon>
+      <div class="text-block">
+        <p class="text">{{ goal().title }}</p>
+        <p class="price">{{ goal().goalBudget | currency }}</p>
+      </div>
+    </div>
+    <div class="right-side">
+      <goal-adjust-card-button />
+    </div>
+  </card-body>
+</dashboard-card>

@@ -5,20 +5,20 @@
         <mat-icon>category</mat-icon>
       </div>
       <div class="text">
-        <p class="category">{{ category.title }}</p>
-        <p class="cost">{{ category.expensesAmount | currency }}</p>
+        <p class="category">{{ category?.title }}</p>
+        <p class="cost">{{ category?.expensesAmount | currency }}</p>
       </div>
     </div>
     <div class="right-content">
-      <div class="percents">
-        <p>15%</p>
-        <mat-icon>arrow_upward</mat-icon>
+      <div class="percents-block">
+        <p class="percents">15%</p>
+        <mat-icon class="icon">arrow_upward</mat-icon>
       </div>
       <p class="compare">Compare to last month</p>
     </div>
   </div>
   <div class="body">
-    @for (expense of category.expenses; track expense.id) {
+    @for (expense of expenses(); track expense.id) {
       <expense-card-item [expense]="expense" />
     }
   </div>

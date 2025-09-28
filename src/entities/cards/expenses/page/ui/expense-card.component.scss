@@ -42,11 +42,15 @@
   background-color: $accent;
 }
 
-.percents {
+.percents-block {
   display: flex;
   align-items: center;
   justify-content: end;
   gap: 8px;
+}
+
+.percents {
+  color: $white;
 }
 
 .compare {
@@ -57,4 +61,8 @@
 .body {
   display: flex;
   flex-direction: column;
+}
+
+.icon {
+  color: $success;
 }

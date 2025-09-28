@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { DividerComponent } from '@/shared/components/divider/divider';
+import { SubscribeItem } from '@/shared';
 
 @Component({
   selector: 'subscribe-card-item',
@@ -11,6 +12,6 @@ import { DividerComponent } from '@/shared/components/divider/divider';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubscribeCardItemComponent {
-  item = input.required<any>();
+  subscribe = input.required<SubscribeItem>();
   isLast = input<boolean>(false);
 }

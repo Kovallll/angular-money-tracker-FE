@@ -5,7 +5,7 @@ import { SliderCardComponent } from '../../../slider/slider-card';
 import { SlideComponent } from '../../../slider/slide/slide';
 import { BalanceCardItemComponent } from './card-item/balance-card-item.component';
 import { cards } from '@/shared/constants';
-import { BalanceCard } from '@/shared';
+import { BalanceCard, RoutePaths } from '@/shared';
 
 @Component({
   selector: 'dash-balance-card',
@@ -26,6 +26,7 @@ import { BalanceCard } from '@/shared';
 export class DashboardBalanceCardComponent {
   title = 'Total Balance';
   items = signal<BalanceCard[]>(cards);
+  seeAllPath = RoutePaths.BAlANCES;
 
   totalBalance = computed(() => this.items().reduce((acc, cur) => acc + cur.cardBalance, 0));
 }

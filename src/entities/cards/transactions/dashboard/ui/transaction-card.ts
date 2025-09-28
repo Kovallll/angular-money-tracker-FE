@@ -27,9 +27,7 @@ export class DashboardTransactionCardComponent {
   readonly seeAllPath = RoutePaths.TRANSACTIONS;
 
   readonly currentItems = computed(() =>
-    this.tabFilter() === 'All'
-      ? this.transactionsService.dashboard
-      : this.transactionsService.dashboardTabTransactions(this.tabFilter()),
+    this.transactionsService.dashboardTransactions(this.tabFilter()),
   );
   constructor(private readonly transactionsService: TransactionsService) {}
 

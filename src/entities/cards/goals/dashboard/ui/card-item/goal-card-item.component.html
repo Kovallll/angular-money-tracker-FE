@@ -1,10 +1,9 @@
 <div class="card">
   <div class="header">
     <div class="left-header">
-      <p class="goal-price">{{ item().goalBudget | currency }}</p>
-      <button class="edit-button"><mat-icon>edit</mat-icon></button>
+      <p class="goal-title">{{ item().title }}</p>
+      <p class="date">{{ item().startDate | date }} - {{ item().endDate | date }}</p>
     </div>
-    <p>{{ item().startDate | date }} - {{ item().endDate | date }}</p>
   </div>
 
   <divider color="tertiary" />

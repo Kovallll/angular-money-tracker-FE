@@ -1,0 +1,39 @@
+:host {
+  width: 100%;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 32px;
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 16px;
+}
+
+.chart {
+  height: 360px;
+  margin-bottom: 32px;
+  width: 100%;
+}

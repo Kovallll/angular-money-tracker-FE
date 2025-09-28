@@ -1,0 +1,48 @@
+@use 'theme' as *;
+
+.card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 332px;
+  height: 100%;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.title {
+  display: flex;
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.left-side {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.text-block {
+  display: flex;
+  align-items: start;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.text {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.category-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: $tertiary;
+}

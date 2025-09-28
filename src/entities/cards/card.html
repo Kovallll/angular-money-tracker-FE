@@ -3,7 +3,8 @@
     <h3 class="title">{{ title() }}</h3>
     @if(isWithSeeAll()) {
     <button class="see-all" (click)="onRedirect(seeAllPath())">
-      See All >
+      See All
+      <mat-icon>keyboard_arrow_right</mat-icon>
     </button>
     }
   </div>

@@ -21,7 +21,7 @@ export class TransactionsComponent {
 
   readonly currentTransactions = computed(() =>
     this.tabFilter() === 'All'
-      ? this.transactionsService.all()
+      ? this.transactionsService.all
       : this.transactionsService.tabTransactions(this.tabFilter()),
   );
 

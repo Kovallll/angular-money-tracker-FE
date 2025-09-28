@@ -2,7 +2,9 @@
   <p class="title">Expenses Breakdown</p>
   <div class="content">
     @for (category of categories; track category.id) {
-      <expense-card [category]="category" />
+      @if (category.expenses.length) {
+        <expense-card [category]="category" />
+      }
     }
   </div>
 </div>

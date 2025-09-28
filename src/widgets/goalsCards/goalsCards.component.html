@@ -1,0 +1,16 @@
+<div class="container">
+  <div class="head">
+    <goal-active-card [goal]="activeCard" />
+    <div class="chart">
+      <goals-statistic-card />
+    </div>
+  </div>
+  <div class="content">
+    <div class="title">All Goals</div>
+    <div class="cards">
+      @for (goal of goals; track goal.id) {
+        <goal-card-item [goal]="goal" (click)="handleActiveCardChange(goal.id)" />
+      }
+    </div>
+  </div>
+</div>

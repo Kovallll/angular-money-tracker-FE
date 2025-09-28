@@ -11,37 +11,35 @@
 
 .header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   height: 100%;
   width: 100%;
 }
 
 .left-header {
   display: flex;
+  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  flex-wrap: nowrap;
+  gap: 8px;
 }
 
 .title {
   display: flex;
 }
 
-.edit-button {
-  border-radius: 8px;
-  background: $accent;
+.goal-title {
+  font-size: 20px;
+  font-weight: 600;
   color: $white;
-  padding: 2px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
+  white-space: nowrap;
+  margin-bottom: -12px;
+}
 
-  .material-icons {
-    font-size: 16px;
-  }
-  .mat-icon {
-    width: 20px;
-    height: 20px;
-  }
+.date {
+  font-size: 16px;
+  color: $gray;
 }
 
 .content {
@@ -70,7 +68,10 @@
 }
 
 .goal-price {
-  margin-right: 8px;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  height: 100%;
 }
 
 .left-side {

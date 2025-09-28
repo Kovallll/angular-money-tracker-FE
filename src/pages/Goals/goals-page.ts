@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
+import { GoalsCardsComponent } from '@/widgets/goalsCards/goalsCards.component';
 
 @Component({
   selector: 'app-goals-page',
-  imports: [],
+  imports: [GoalsCardsComponent],
   templateUrl: './goals-page.html',
   styleUrl: `./goals-page.scss`,
 })

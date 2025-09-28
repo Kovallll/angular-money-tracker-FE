@@ -15,6 +15,7 @@ export const expenses: ExpenseItem[] = [
     title: 'Bus ticket',
     category: { id: 1, title: 'Transport' },
   },
+
   {
     id: 2,
     amount: 200,
@@ -65,6 +66,20 @@ export const expenses: ExpenseItem[] = [
     title: 'Shoes',
     category: { id: 3, title: 'Shopping' },
   },
+  {
+    id: 10,
+    amount: 130,
+    date: '2024-11-01',
+    title: 'Socks',
+    category: { id: 3, title: 'Shopping' },
+  },
+  {
+    id: 11,
+    amount: 60,
+    date: '2024-01-11',
+    title: 'Metro ticket',
+    category: { id: 1, title: 'Transport' },
+  },
 ];
 
 export const categories: CategoryItem[] = Object.values(
@@ -86,3 +101,10 @@ export const categories: CategoryItem[] = Object.values(
     return acc;
   }, {}),
 );
+
+categories.push({
+  id: 6,
+  title: 'Courses',
+  expensesAmount: 0,
+  expenses: [],
+});
