@@ -1,0 +1,17 @@
+<dashboard-card>
+  <card-body class="body">
+    <mat-tab-group (selectedTabChange)="onChangeTabContent($event.tab.textLabel)" class="tabs">
+      @for (tab of tabs; track tab) {
+        <mat-tab [label]="tab" class="tab" />
+      }
+    </mat-tab-group>
+    @switch (selectedTab) {
+      @case ('Account') {
+        <settings-account [user]="user()" />
+      }
+      @case ('Security') {
+        <settings-security />
+      }
+    }
+  </card-body>
+</dashboard-card>

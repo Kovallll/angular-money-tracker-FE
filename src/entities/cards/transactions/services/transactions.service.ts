@@ -1,4 +1,4 @@
-import { generateTransactions, Tabs } from '@/shared';
+import { generateTransactions, Tabs, Transaction } from '@/shared';
 import { Injectable } from '@angular/core';
 import dayjs from 'dayjs';
 
@@ -8,7 +8,7 @@ export class TransactionsService {
     .sort((a, b) => dayjs(b.date).diff(dayjs(a.date)))
     .slice(0, 9);
 
-  get all() {
+  getAllTransactions() {
     return this.transactions;
   }
 
@@ -21,12 +21,30 @@ export class TransactionsService {
   }
 
   dashboardAllTransactions() {
-    return this.all;
+    return this.getAllTransactions();
   }
 
   dashboardTransactions(tabFilter: string) {
     return tabFilter === Tabs.All
       ? this.dashboardAllTransactions()
       : this.dashboardTabTransactions(tabFilter);
+  }
+
+  getDisplayedCells() {
+    return [
+      { field: 'date', name: 'Date' },
+      { field: 'title', name: 'Title' },
+      { field: 'category', name: 'Category' },
+      { field: 'type', name: 'Type' },
+      { field: 'paymentMethod', name: 'Payment method' },
+      { field: 'status', name: 'Status' },
+      { field: 'transactionType', name: 'Transaction Type' },
+      { field: 'receipt', name: 'Receipt' },
+      { field: 'amount', name: 'Amount' },
+    ];
+  }
+
+  getCurrentTransactions(tabFilter: string): Transaction[] {
+    return tabFilter === Tabs.All ? this.getAllTransactions() : this.tabTransactions(tabFilter);
   }
 }

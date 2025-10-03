@@ -11,11 +11,15 @@
   background: $secondary;
   color: $white;
   cursor: pointer;
+  padding: 4px 4px;
+  text-align: start;
 }
 
 th.mat-mdc-header-cell {
   background: $secondary;
-  color: $white;
+  color: $gray;
+  padding: 4px 4px;
+  font-size: 18px;
 }
 
 .mat-mdc-row:hover .mat-mdc-cell {

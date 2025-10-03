@@ -1,0 +1,41 @@
+<modal class="modal">
+  <div modal-title class="title">Filters</div>
+  <div modal-content>
+    @for (filter of filters(); track filter.id) {
+      <div class="selectors">
+        <button mat-icon-button class="remove-filter" (click)="removeFilter(filter.id)">
+          <mat-icon>close</mat-icon>
+        </button>
+        <div class="content">
+          <p class="text">Category</p>
+          <select-component
+            [options]="data.categoryOptions()"
+            [value]="filter.category"
+            (valueChange)="onCategoryChange($event, filter.id)"
+          />
+        </div>
+        <div class="content">
+          <p class="text">Value</p>
+          <select-component
+            [options]="filter.valueOptions"
+            [value]="filter.value"
+            (valueChange)="onValueChange($event, filter.id)"
+            [disabled]="!filter.category"
+          />
+        </div>
+      </div>
+    }
+    <div class="bottom-buttons">
+      <button mat-button class="bottom-filter" (click)="addFilter()">
+        <mat-icon>add</mat-icon>Add Filter
+      </button>
+      <button mat-button class="bottom-filter" (click)="clearFilters()">
+        <mat-icon>close</mat-icon>Clear Filters
+      </button>
+    </div>
+  </div>
+  <div modal-actions>
+    <button mat-button class="btn-close" (click)="closeModal()">Close</button>
+    <button mat-button color="primary" class="btn-apply" (click)="applyChanges()">Apply</button>
+  </div>
+</modal>

@@ -12,30 +12,6 @@
   gap: 4px;
 }
 
-.select {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px;
-  font-size: 18px;
-  background: $tertiary;
-  border: 1px solid $accent;
-  color: $white;
-  border-radius: 8px;
-  width: 180px;
-  height: 32px;
-
-  @include mat.select-overrides(
-    (
-      enabled-arrow-color: $accent,
-    )
-  );
-
-  div .mat-mdc-select-panel {
-    background: $tertiary !important;
-  }
-}
-
 .toggle {
   display: flex;
   align-items: center;

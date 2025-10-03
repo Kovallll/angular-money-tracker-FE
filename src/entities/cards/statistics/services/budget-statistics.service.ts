@@ -1,4 +1,4 @@
-import { generateTransactions } from '@/shared';
+import { generateTransactions, TransactionType } from '@/shared';
 import { Injectable } from '@angular/core';
 import { ChartViews } from '../lib';
 import dayjs from 'dayjs';
@@ -17,7 +17,7 @@ export class BudgetStatisticsService {
   }
 
   private aggregateByLabels(labels: string[], start: dayjs.Dayjs, unit: 'day' | 'month') {
-    const income = Array(labels.length).fill(0);
+    const revenue = Array(labels.length).fill(0);
     const expenses = Array(labels.length).fill(0);
 
     this.transactions.forEach((t) => {
@@ -27,15 +27,15 @@ export class BudgetStatisticsService {
       const index = unit === 'day' ? date.diff(start, 'day') : date.diff(start, 'month');
 
       if (index >= 0 && index < labels.length) {
-        if (t.type === 'income') {
-          income[index] += t.amount;
+        if (t.type === TransactionType.Revenue) {
+          revenue[index] += t.amount;
         } else {
           expenses[index] += t.amount;
         }
       }
     });
 
-    return { income, expenses };
+    return { revenue, expenses };
   }
 
   getWeekTransactionsData(offset: number) {
@@ -44,11 +44,11 @@ export class BudgetStatisticsService {
 
     const labels = Array.from({ length: 7 }).map((_, i) => start.add(i, 'day').format('ddd DD'));
 
-    const { income, expenses } = this.aggregateByLabels(labels, start, 'day');
+    const { revenue, expenses } = this.aggregateByLabels(labels, start, 'day');
 
     return {
       labels,
-      income,
+      revenue,
       expenses,
       raw: this.filterByRange(start, end),
     };
@@ -63,11 +63,11 @@ export class BudgetStatisticsService {
       start.add(i, 'day').format('DD.MM'),
     );
 
-    const { income, expenses } = this.aggregateByLabels(labels, start, 'day');
+    const { revenue, expenses } = this.aggregateByLabels(labels, start, 'day');
 
     return {
       labels,
-      income,
+      revenue,
       expenses,
       raw: this.filterByRange(start, end),
     };
@@ -79,11 +79,11 @@ export class BudgetStatisticsService {
 
     const labels = Array.from({ length: 12 }).map((_, i) => start.month(i).format('MMM YYYY'));
 
-    const { income, expenses } = this.aggregateByLabels(labels, start, 'month');
+    const { revenue, expenses } = this.aggregateByLabels(labels, start, 'month');
 
     return {
       labels,
-      income,
+      revenue,
       expenses,
       raw: this.filterByRange(start, end),
     };
@@ -99,6 +99,6 @@ export class BudgetStatisticsService {
     if (view === ChartViews.YEAR) {
       return this.getYearTransactionsData(offset);
     }
-    return { labels: [], income: [], expenses: [], raw: [] };
+    return { labels: [], revenue: [], expenses: [], raw: [] };
   }
 }

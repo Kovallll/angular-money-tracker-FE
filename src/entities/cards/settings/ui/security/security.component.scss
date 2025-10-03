@@ -1,0 +1,35 @@
+@use 'theme' as *;
+
+.container {
+  padding: 0px 32px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.input {
+  background: transparent;
+  border: 1px solid $accent;
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: $white;
+  font-size: 18px;
+  font-weight: 500;
+  width: 320px;
+
+  &::placeholder {
+    color: $tertiary;
+    font-size: 18px;
+    font-weight: 500;
+  }
+}
+
+.title {
+  color: $gray;
+  font-size: 20px;
+  font-weight: 600;
+}

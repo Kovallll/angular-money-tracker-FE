@@ -1,7 +1,12 @@
 import { ChartConfiguration } from 'chart.js';
 import { ChartViews } from './enums';
+import { SelectOption } from '@/entities/select/lib';
 
-export const chartViewChoices = [ChartViews.WEEK, ChartViews.MONTH, ChartViews.YEAR];
+export const chartViewChoices: SelectOption<`${ChartViews}`>[] = [
+  { label: ChartViews.WEEK, value: ChartViews.WEEK, id: 1 },
+  { label: ChartViews.MONTH, value: ChartViews.MONTH, id: 2 },
+  { label: ChartViews.YEAR, value: ChartViews.YEAR, id: 3 },
+];
 
 export const budgetChartOptions: ChartConfiguration<'bar'>['options'] = {
   responsive: true,

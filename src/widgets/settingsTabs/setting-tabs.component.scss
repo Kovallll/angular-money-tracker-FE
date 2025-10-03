@@ -1,0 +1,30 @@
+@use 'theme' as *;
+@use '@angular/material' as mat;
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.tabs {
+  width: 300px;
+  @include mat.tabs-overrides(
+    (
+      active-focus-indicator-color: $accent,
+      active-focus-label-text-color: $accent,
+      active-hover-indicator-color: $accent,
+      active-hover-label-text-color: $accent,
+      active-indicator-color: $accent,
+      active-label-text-color: $accent,
+      inactive-label-text-color: $gray,
+      inactive-hover-label-text-color: $white,
+      inactive-focus-label-text-color: $white,
+      divider-color: $accent,
+    )
+  );
+}
+
+.tab {
+  color: $white;
+}

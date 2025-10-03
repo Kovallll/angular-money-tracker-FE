@@ -1,0 +1,40 @@
+@use 'theme' as *;
+
+:host {
+  overflow: hidden;
+  border-radius: 16px;
+  background: $secondary !important;
+  border: 1px solid $accent !important;
+}
+
+.modal {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  gap: 16px;
+  padding: 20px;
+  width: 100%;
+  border-radius: 12px;
+
+  h2 {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0;
+  }
+
+  mat-dialog-content {
+    flex: 1;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  mat-dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+  }
+}
+::ng-deep .mat-mdc-dialog-surface {
+  border-radius: 16px;
+  background: #000 !important;
+}

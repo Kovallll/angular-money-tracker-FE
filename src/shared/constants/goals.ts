@@ -36,7 +36,7 @@ function randomDate(futureYears: number = 3) {
   return date.toISOString().split('T')[0]; // YYYY-MM-DD
 }
 
-export const goals: GoalItem[] = Array.from({ length: 1000 }, (_, id) => {
+export const goals: GoalItem[] = Array.from({ length: 600 }, (_, id) => {
   const startDate = randomDate(2); // в пределах 2 лет от сегодня
   const endDate = randomDate(5); // в пределах 5 лет от сегодня
 

@@ -12,4 +12,8 @@ export class ExpensesService {
   get expenses() {
     return expenses ?? [];
   }
+
+  getCurrentCategory(id: number) {
+    return this.categories.find((item) => item.id === id);
+  }
 }

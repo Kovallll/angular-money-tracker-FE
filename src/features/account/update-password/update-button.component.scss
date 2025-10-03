@@ -1,0 +1,11 @@
+@use 'theme' as *;
+
+.button {
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  background: $accent;
+  border-radius: 8px;
+  padding: 24px;
+  white-space: nowrap;
+}

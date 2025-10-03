@@ -12,6 +12,8 @@ import { budgetChartOptions, chartViewChoices, ChartViews } from '../../lib';
 import { MatSelectModule } from '@angular/material/select';
 import { BudgetStatisticsService } from '../../services/budget-statistics.service';
 import { MatIconModule } from '@angular/material/icon';
+import { SelectComponent } from '@/entities/select/ui/select.component';
+import { SelectOption } from '@/entities/select/lib';
 
 @Component({
   selector: 'budget-statistic-card',
@@ -22,6 +24,7 @@ import { MatIconModule } from '@angular/material/icon';
     BaseChartDirective,
     MatSelectModule,
     MatIconModule,
+    SelectComponent,
   ],
   templateUrl: './budget-stats.component.html',
   styleUrl: `./budget-stats.component.scss`,
@@ -30,17 +33,17 @@ import { MatIconModule } from '@angular/material/icon';
 export class BudgetStatisticCardComponent {
   isWithSeeAll = input(false);
   seeAllPath = input<string>('');
-  fixedView = input<`${ChartViews}`>();
+  fixedView = input<SelectOption<`${ChartViews}`>>();
   title = input<string>('Budget');
-  chartViewChoices = chartViewChoices;
+  chartViewChoices = signal<SelectOption<`${ChartViews}`>[]>(chartViewChoices);
   options = budgetChartOptions;
 
   offset = signal(0);
 
-  currentView = linkedSignal(() => this.fixedView() || chartViewChoices[0]);
+  currentView = linkedSignal(() => this.fixedView() || this.chartViewChoices()[0]);
 
   chartData = computed(() =>
-    this.budgetStatisticsService.getPeriodTransactionsData(this.currentView(), this.offset()),
+    this.budgetStatisticsService.getPeriodTransactionsData(this.currentView().value, this.offset()),
   );
 
   data = computed(() => ({
@@ -54,7 +57,7 @@ export class BudgetStatisticCardComponent {
       },
       {
         label: 'Revenue',
-        data: this.chartData().income,
+        data: this.chartData().revenue,
         backgroundColor: '#3b82f6',
         borderWidth: 1,
       },
@@ -76,7 +79,9 @@ export class BudgetStatisticCardComponent {
     this.handleOffsetChange(1);
   }
 
-  handleClickSelect() {
+  onValueChange(newValue: string) {
+    const newView = this.chartViewChoices().find((item) => item.value === newValue)!;
+    this.currentView.set(newView);
     this.offset.set(0);
   }
 }

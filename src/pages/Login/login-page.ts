@@ -1,4 +1,4 @@
-import { InputErrorStateMatcher } from '@/shared';
+import { InputErrorStateMatcher, UserService } from '@/shared';
 import { Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -18,6 +18,7 @@ export class LoginPageComponent {
 
   email = new FormControl('', [Validators.required, Validators.email]);
   password = new FormControl('', [Validators.required, Validators.minLength(4)]);
+  constructor(private userService: UserService) {}
 
   getErrorEmailMessage() {
     if (this.email.hasError('required')) {
@@ -46,8 +47,14 @@ export class LoginPageComponent {
     if (!email || !password) {
       throw new Error('Email and password are required');
     }
-    const user = { email, password };
-    localStorage.setItem('user', JSON.stringify(user));
+    const user = this.userService.getUser();
+    if (!user) {
+      throw new Error('User not found');
+    }
+    if (user.email !== email || user.password !== password) {
+      throw new Error('Invalid email or password');
+    }
+
     this.router.navigate(['/dashboard']);
   }
 

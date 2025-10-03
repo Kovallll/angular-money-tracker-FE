@@ -1,0 +1,40 @@
+<modal class="modal">
+  <div modal-title class="title">Sort by</div>
+  <div modal-content class="content">
+    <div class="selectors">
+      <select-component
+        [options]="data.categoryOptions()"
+        [value]="sorter().field"
+        (valueChange)="onCategoryChange($event)"
+      />
+      <div class="sort-buttons">
+        <button
+          mat-button
+          class="sort-button"
+          [class.active]="isAscending()"
+          (click)="onChangeOrder(true)"
+        >
+          <mat-icon>keyboard_arrow_down</mat-icon>
+        </button>
+        <button
+          mat-button
+          class="sort-button"
+          [class.active]="!isAscending()"
+          (click)="onChangeOrder(false)"
+        >
+          <mat-icon>keyboard_arrow_up</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div class="bottom-block">
+      <button mat-button class="clear-sorters" (click)="clearSorter()">
+        <mat-icon>close</mat-icon>Clear Sorters
+      </button>
+    </div>
+  </div>
+
+  <div modal-actions>
+    <button mat-button class="btn-close" (click)="closeModal()">Close</button>
+    <button mat-button color="primary" class="btn-apply" (click)="applySorter()">Apply</button>
+  </div>
+</modal>

@@ -1,23 +1,25 @@
-<dashboard-card [title]="title">
-  <card-body class="table">
-    <div class="header">
-      <p class="header-title">Date</p>
-      <p class="header-title">Title</p>
-      <p class="header-title">Describtion</p>
-      <p class="header-title">Last Charge</p>
-      <p class="header-title">Amount</p>
-    </div>
-    @for (subscribe of subscribes(); track subscribe.id) {
-      <div class="row">
-        <div class="date">
-          <p>{{ subscribe.subscribeDate | date: 'MMM' }}</p>
-          <p class="day">{{ subscribe.subscribeDate | date: 'dd' }}</p>
-        </div>
-        <p class="title">{{ subscribe.subscribeName }}</p>
-        <p class="describtion">{{ subscribe.description }}</p>
-        <p class="last-charge">{{ subscribe.lastCharge | date }}</p>
-        <p class="amount">{{ subscribe.amount | currency }}</p>
+<div class="container">
+  <controls [controlsProps]="controlsProps()" />
+  <dashboard-card title="Subscribtions">
+    <card-body class="table">
+      <div class="header">
+        @for (header of displayedCells(); track header.field) {
+          <p class="header-title">{{ header.name }}</p>
+        }
       </div>
-    }
-  </card-body>
-</dashboard-card>
+      @for (subscribe of subscribes(); track subscribe.id) {
+        <div class="row">
+          <div class="date">
+            <p>{{ subscribe.subscribeDate | date: 'MMM' }}</p>
+            <p class="day">{{ subscribe.subscribeDate | date: 'dd' }}</p>
+          </div>
+          <p class="title">{{ subscribe.subscribeName }}</p>
+          <p class="describtion">{{ subscribe.description }}</p>
+          <p class="type">{{ subscribe.type | titlecase }}</p>
+          <p class="last-charge">{{ subscribe.lastCharge | date }}</p>
+          <p class="amount">{{ subscribe.amount | currency }}</p>
+        </div>
+      }
+    </card-body>
+  </dashboard-card>
+</div>

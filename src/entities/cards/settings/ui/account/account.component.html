@@ -1,0 +1,32 @@
+<div class="container">
+  <div class="info">
+    <div class="content">
+      <p class="title">Name</p>
+      <p class="name">{{ user()?.name }}</p>
+    </div>
+    <div class="content">
+      <p class="title">Lastname</p>
+      <p class="lastname">{{ user()?.lastname }}</p>
+    </div>
+    <div class="content">
+      <p class="title">Email</p>
+      <p class="email">{{ user()?.email }}</p>
+    </div>
+    <div class="content">
+      <p class="title">Phone</p>
+      <p class="phone">{{ user()?.phone }}</p>
+    </div>
+    <div class="button">
+      <update-profile-button />
+    </div>
+  </div>
+  <div class="avatar-upload">
+    <p class="title">Your Profile Picture</p>
+
+    <label for="avatarInput" class="upload-box">
+      <div class="upload-icon">📷 +</div>
+      <span>Upload your photo</span>
+    </label>
+    <input id="avatarInput" type="file" accept="image/*" hidden (change)="onFileSelected($event)" />
+  </div>
+</div>

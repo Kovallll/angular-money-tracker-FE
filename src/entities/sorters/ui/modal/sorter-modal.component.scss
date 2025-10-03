@@ -1,0 +1,114 @@
+@use 'theme' as *;
+
+.modal {
+  background: $tertiary;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 12px;
+
+  overflow: hidden;
+
+  .selectors {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .title {
+    font-size: 20px;
+    font-weight: 600;
+    color: $accent;
+    margin-bottom: 12px;
+  }
+
+  .text {
+    font-size: 16px;
+    color: $white;
+    margin-bottom: 4px;
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-items: end;
+  }
+
+  .sort-buttons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .clear-sorters {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    color: $accent;
+    cursor: pointer;
+    background: transparent;
+    border: 1px solid $accent;
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 16px;
+  }
+
+  .sort-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid $accent;
+    color: $accent;
+    height: 32px;
+    width: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  .active {
+    color: $white;
+    background: $accent;
+  }
+
+  [modal-actions] {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 16px;
+
+    button {
+      border-radius: 12px;
+      padding: 6px 16px;
+      font-weight: 500;
+      transition: all 0.2s ease-in-out;
+
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      }
+    }
+
+    .btn-close {
+      background: transparent;
+      color: $white;
+      border: 1px solid $gray;
+      padding: 8px 24px;
+      font-size: 16px;
+    }
+
+    .btn-apply {
+      background: $accent;
+      color: $white;
+      border: none;
+      padding: 8px 24px;
+      font-size: 16px;
+      &:hover {
+        background: darken($accent, 10%);
+      }
+    }
+  }
+}

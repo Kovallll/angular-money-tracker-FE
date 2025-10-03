@@ -16,12 +16,12 @@ export const menuItems = [
   },
   { id: 4, path: RoutePaths.EXPENSES, title: 'Expenses', icon: 'attach_money' },
   { id: 5, path: RoutePaths.GOALS, title: 'Goals', icon: 'check_box' },
-  { id: 5, path: RoutePaths.STATISTICS, title: 'Statistics', icon: 'bar_chart' },
+  { id: 6, path: RoutePaths.STATISTICS, title: 'Statistics', icon: 'bar_chart' },
   {
-    id: 6,
+    id: 7,
     path: RoutePaths.SUBSCRIPTIONS,
     title: 'Subscriptions',
     icon: 'subscriptions',
   },
-  { id: 7, path: RoutePaths.SETTINGS, title: 'Settings', icon: 'settings' },
+  { id: 8, path: RoutePaths.SETTINGS, title: 'Settings', icon: 'settings' },
 ];

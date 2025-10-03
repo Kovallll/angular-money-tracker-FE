@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { DashboardBalanceCardComponent } from '@/entities/cards/balances/dashboard/ui/balance-card';
 import { DashboardExpenseCardComponent } from '@/entities/cards/expenses/dashboard/ui/expense-card.component';
 import { DashboardGoalCardComponent } from '@/entities/cards/goals/dashboard/ui/goal-card';
@@ -6,6 +6,8 @@ import { DashboardSubscribeCardComponent } from '@/entities/cards/subscribtions/
 import { DashboardTransactionCardComponent } from '@/entities/cards/transactions/dashboard/ui/transaction-card';
 import { BudgetStatisticCardComponent } from '@/entities/cards/statistics/ui/budget/budget-stats.component';
 import { RoutePaths } from '@/shared';
+import { SelectOption } from '@/entities/select/lib';
+import { ChartViews } from '@/entities/cards/statistics/lib';
 
 @Component({
   standalone: true,
@@ -24,4 +26,9 @@ import { RoutePaths } from '@/shared';
 })
 export class DashboardCardsComponent {
   seeAllPath = RoutePaths.STATISTICS;
+  fixedView = signal<SelectOption<`${ChartViews}`>>({
+    label: ChartViews.WEEK,
+    value: ChartViews.WEEK,
+    id: 1,
+  });
 }

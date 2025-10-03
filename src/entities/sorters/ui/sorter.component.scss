@@ -1,0 +1,11 @@
+@use 'theme' as *;
+
+.sorters {
+  cursor: pointer;
+  background: $tertiary;
+  color: $accent;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid $accent;
+}

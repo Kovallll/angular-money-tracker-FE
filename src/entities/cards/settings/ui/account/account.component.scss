@@ -1,0 +1,83 @@
+@use 'theme' as *;
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  padding: 0px 32px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.title {
+  color: $gray;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.name,
+.lastname,
+.email,
+.phone {
+  color: $white;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.avatar-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+
+  .title {
+    font-size: 14px;
+    font-weight: 500;
+    color: #666;
+  }
+
+  .upload-box {
+    width: 140px;
+    height: 140px;
+    border: 2px dashed #ccc;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition:
+      border-color 0.3s,
+      background 0.3s;
+
+    &:hover {
+      border-color: $accent;
+      background: $tertiary;
+    }
+
+    .upload-icon {
+      font-size: 32px;
+      color: #999;
+    }
+
+    span {
+      font-size: 12px;
+      color: #999;
+    }
+  }
+}
+
+.button {
+  margin-top: 16px;
+}

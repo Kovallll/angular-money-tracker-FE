@@ -1,4 +1,4 @@
 export type TableCell = {
-  cellName: string;
-  cellField: string;
+  name: string;
+  field: string;
 };

@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { TransactionsComponent } from '@/entities/cards/transactions/page/ui/transaction-card.component';
+import { TransactionWidgetComponent } from '@/widgets/transactionWidget/transaction-widget.component';
 
 @Component({
   selector: 'app-transactions-page',
-  imports: [TransactionsComponent],
+  imports: [TransactionWidgetComponent],
   templateUrl: './transactions-page.html',
   styleUrl: `./transactions-page.scss`,
 })

@@ -1,29 +1,44 @@
 <div class="container">
   <img src="../../assets/logo.png" alt="logo" class="logo" />
-  <div class="controls">
+  <form class="controls" [formGroup]="form">
     <mat-form-field appearance="outline" class="input-wrapper">
       <mat-label>Name</mat-label>
+      <input type="text" matInput formControlName="name" placeholder="Enter name" class="input" />
+      @if(form.controls['name'].invalid && form.controls['name'].touched) {
+      <mat-error> {{ getErrorNameMessage() }} </mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="input-wrapper">
+      <mat-label>Lastname</mat-label>
       <input
         type="text"
         matInput
-        [formControl]="name"
-        [errorStateMatcher]="matcher"
-        placeholder="Enter name"
+        formControlName="lastname"
+        placeholder="Enter lastname"
         class="input"
       />
+      @if(form.controls['lastname'].invalid && form.controls['lastname'].touched) {
+      <mat-error> {{ getErrorLastnameMessage() }} </mat-error>
+      }
     </mat-form-field>
     <mat-form-field appearance="outline" class="input-wrapper">
       <mat-label>Email</mat-label>
       <input
         type="email"
         matInput
-        [formControl]="email"
-        [errorStateMatcher]="matcher"
+        formControlName="email"
         placeholder="Enter email"
         class="input"
       />
-      @if(email.invalid && email.touched) {
+      @if(form.controls['email'].invalid && form.controls['email'].touched) {
       <mat-error> {{ getErrorEmailMessage() }} </mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="input-wrapper">
+      <mat-label>Phone</mat-label>
+      <input type="tel" matInput formControlName="phone" placeholder="Enter phone" class="input" />
+      @if(form.controls['phone'].invalid && form.controls['phone'].touched) {
+      <mat-error> Invalid phone </mat-error>
       }
     </mat-form-field>
     <mat-form-field appearance="outline" class="input-wrapper">
@@ -31,22 +46,14 @@
       <input
         type="password"
         matInput
-        [formControl]="password"
-        [errorStateMatcher]="matcher"
+        formControlName="password"
         placeholder="Enter password"
         class="input"
       />
-      @if (password.invalid && password.touched) {
+      @if (form.controls['password'].invalid && form.controls['password'].touched) {
       <mat-error> {{ getErrorPasswordMessage() }} </mat-error>
       }
     </mat-form-field>
-  </div>
-  <button
-    (click)="register(name.value, email.value, password.value)"
-    matButton="filled"
-    color="accent"
-    class="button"
-  >
-    Register
-  </button>
+    <register-button [user]="form.getRawValue()" />
+  </form>
 </div>

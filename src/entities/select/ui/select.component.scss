@@ -1,0 +1,37 @@
+@use 'theme' as *;
+@use '@angular/material' as mat;
+
+.select {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  font-size: 18px;
+  background: $tertiary;
+  border: 1px solid $accent;
+  color: $white;
+  border-radius: 8px;
+  width: 180px;
+  height: 32px;
+
+  @include mat.select-overrides(
+    (
+      enabled-arrow-color: $accent,
+    )
+  );
+
+  div .mat-mdc-select-panel {
+    background: $tertiary !important;
+  }
+}
+
+.disabled {
+  opacity: 0.5;
+  border: 1px solid $gray;
+
+  @include mat.select-overrides(
+    (
+      enabled-arrow-color: $gray,
+    )
+  );
+}

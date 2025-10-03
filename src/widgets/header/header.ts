@@ -1,4 +1,4 @@
-import { UserService } from '@/features/user/user.service';
+import { UserService } from '@/shared/services/user/user.service';
 import { User } from '@/shared';
 import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';

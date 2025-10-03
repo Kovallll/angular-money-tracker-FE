@@ -15,12 +15,12 @@ import { TableCell } from '@/entities/table/lib';
 export class TransactionsHistoryComponent {
   title = 'Transactions History';
   displayedCells = signal<TableCell[]>([
-    { cellField: 'date', cellName: 'Date' },
-    { cellField: 'status', cellName: 'Status' },
-    { cellField: 'transactionType', cellName: 'Transaction Type' },
-    { cellField: 'category', cellName: 'Category' },
-    { cellField: 'receipt', cellName: 'Receipt' },
-    { cellField: 'amount', cellName: 'Amount' },
+    { field: 'date', name: 'Date' },
+    { field: 'status', name: 'Status' },
+    { field: 'transactionType', name: 'Transaction Type' },
+    { field: 'category', name: 'Category' },
+    { field: 'receipt', name: 'Receipt' },
+    { field: 'amount', name: 'Amount' },
   ]);
 
   transactions = input<Transaction[]>([]);

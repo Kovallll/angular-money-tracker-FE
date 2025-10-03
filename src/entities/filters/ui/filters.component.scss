@@ -1,0 +1,15 @@
+@use 'theme' as *;
+
+.filters {
+  cursor: pointer;
+  background: $tertiary;
+  color: $accent;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid $accent;
+}
+
+::ng-deep .filter-modal {
+  border-radius: 16px;
+}

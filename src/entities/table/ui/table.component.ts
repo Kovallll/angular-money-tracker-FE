@@ -15,5 +15,5 @@ export class TableComponent {
   @Input() isEmpty = false;
   displayedCells = input.required<TableCell[]>();
 
-  displayedColumns = computed(() => this.displayedCells().map((cell) => cell.cellField));
+  displayedColumns = computed(() => this.displayedCells().map((cell) => cell.field));
 }

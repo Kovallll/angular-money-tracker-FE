@@ -4,7 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { User } from '@/shared';
-import { UserService } from '@/features/user/user.service';
+import { UserService } from '@/shared/services/user/user.service';
 
 @Component({
   selector: 'account',

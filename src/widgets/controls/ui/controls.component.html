@@ -1,0 +1,17 @@
+<div class="container">
+  @if (!withoutSorter()) {
+    <search-input
+      [searchField]="controlsProps()?.searchProps?.searchField ?? ''"
+      [placeholder]="controlsProps()?.searchProps?.placeholder ?? ''"
+    />
+  }
+  @if (!withoutFilter()) {
+    <filters
+      [data]="controlsProps()?.filterProps?.data ?? []"
+      [filterFields]="controlsProps()?.filterProps?.filterFields ?? []"
+    />
+  }
+  @if (!withoutSorter()) {
+    <sorters [sortersFields]="controlsProps()?.sortersProps?.sortersFields ?? []" />
+  }
+</div>

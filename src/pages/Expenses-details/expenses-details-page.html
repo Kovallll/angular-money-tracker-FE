@@ -1,8 +1,12 @@
 <div class="container">
-  <h2>{{category()?.title}}</h2>
-  <table-component
-    [dataSource]="expenses()"
-    [isEmpty]="isEmpty"
-    [displayedCells]="displayedCells()"
-  />
+  <controls [controlsProps]="controlsProps()" />
+  <dashboard-card [title]="category()?.title ?? ''">
+    <card-body>
+      <table-component
+        [dataSource]="expenses()"
+        [isEmpty]="isEmpty"
+        [displayedCells]="displayedCells()"
+      />
+    </card-body>
+  </dashboard-card>
 </div>

@@ -1,48 +1,76 @@
-import { InputErrorStateMatcher } from '@/shared';
 import { Component, inject } from '@angular/core';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { RegisterButtonComponent } from '@/features/account/register-button/register.component';
 
 @Component({
   selector: 'app-sign-up-page',
-  imports: [ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatInputModule],
+  imports: [
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    RegisterButtonComponent,
+    ReactiveFormsModule,
+  ],
   templateUrl: './sign-up-page.html',
   styleUrl: `./sign-up-page.scss`,
+  standalone: true,
 })
 export class SignUpPageComponent {
-  private router = inject(Router);
-
-  name = new FormControl('', [Validators.required]);
-  email = new FormControl('', [Validators.required, Validators.email]);
-  password = new FormControl('', [Validators.required, Validators.minLength(4)]);
+  public form = new FormGroup({
+    name: new FormControl('', { validators: [Validators.required], nonNullable: true }),
+    lastname: new FormControl('', { validators: [Validators.required], nonNullable: true }),
+    email: new FormControl('', {
+      validators: [Validators.required, Validators.email],
+      nonNullable: true,
+    }),
+    phone: new FormControl('', { validators: [Validators.required], nonNullable: true }),
+    password: new FormControl('', {
+      validators: [Validators.required, Validators.minLength(4)],
+      nonNullable: true,
+    }),
+  });
 
   getErrorEmailMessage() {
-    if (this.email.hasError('required')) {
+    const emailCtrl = this.form.controls['email'];
+    if (emailCtrl.hasError('required')) {
       return 'Required field';
     }
-    if (this.email.hasError('email')) {
+    if (emailCtrl.hasError('email')) {
       return 'Invalid email';
     }
     return '';
   }
 
-  getErrorPasswordMessage() {
-    if (this.password.hasError('required')) {
+  getErrorNameMessage() {
+    const name = this.form.controls['name'];
+    if (name.hasError('required')) {
       return 'Required field';
     }
-    if (this.password.hasError('minlength')) {
-      return 'Password must be at least 4 characters';
-    }
+
     return '';
   }
 
-  matcher = new InputErrorStateMatcher();
+  getErrorLastnameMessage() {
+    const lastname = this.form.controls['lastname'];
+    if (lastname.hasError('required')) {
+      return 'Required field';
+    }
 
-  register(name: string | null, email: string | null, password: string | null) {
-    //createUser(name, email, password);
-    this.router.navigate(['/login']);
+    return '';
+  }
+
+  getErrorPasswordMessage() {
+    const password = this.form.controls['password'];
+    if (password.hasError('required')) {
+      return 'Required field';
+    }
+    if (password.hasError('minlength')) {
+      return 'Password must be at least 4 characters';
+    }
+    return '';
   }
 }

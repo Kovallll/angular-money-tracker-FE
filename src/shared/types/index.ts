@@ -1,4 +1,11 @@
-export type User = { name: string; email: string };
+export type User = {
+  name: string;
+  lastname: string;
+  phone: string;
+  email: string;
+  password: string;
+  avatar?: string;
+};
 
 export type Transaction = {
   id: number;

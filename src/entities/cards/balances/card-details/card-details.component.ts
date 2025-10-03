@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { DashboardCardComponent, CardBodyComponent } from '../card';
+import { DashboardCardComponent, CardBodyComponent } from '../../card';
 import { BalanceCard } from '@/shared';
 
 @Component({

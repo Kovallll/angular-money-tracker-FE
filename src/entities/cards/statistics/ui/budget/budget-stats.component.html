@@ -5,13 +5,11 @@
         <button class="toggle" (click)="handleClickPrev()">
           <mat-icon>keyboard_arrow_left</mat-icon>
         </button>
-        <mat-select [(value)]="currentView" class="select">
-          @for (chartView of chartViewChoices; track chartView) {
-            <mat-option class="option" [value]="chartView" (click)="handleClickSelect()">{{
-              chartView
-            }}</mat-option>
-          }
-        </mat-select>
+        <select-component
+          [options]="chartViewChoices()"
+          [value]="currentView().value"
+          (valueChange)="onValueChange($event)"
+        />
         <button class="toggle" (click)="handleClickNext()">
           <mat-icon>keyboard_arrow_right</mat-icon>
         </button>
