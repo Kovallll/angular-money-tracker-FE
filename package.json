@@ -7,8 +7,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "lint": "ng lint",
+    "lint:fix": "ng lint --fix",
     "format": "prettier --write \"src/**/*.{ts,html,scss,css,json,md}\"",
     "prepare": "husky"
   },
@@ -31,8 +31,10 @@
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
-    "@angular-eslint/eslint-plugin": "^20.2.0",
-    "@angular-eslint/eslint-plugin-template": "^20.2.0",
+    "@angular-eslint/builder": "^20.3.0",
+    "@angular-eslint/eslint-plugin": "^20.3.0",
+    "@angular-eslint/eslint-plugin-template": "^20.3.0",
+    "@angular-eslint/schematics": "^20.3.0",
     "@angular-eslint/template-parser": "^20.2.0",
     "@angular/build": "^20.1.0-next",
     "@angular/cli": "^20.1.0-next",
@@ -40,7 +42,7 @@
     "@types/node": "^16.11.35",
     "@typescript-eslint/eslint-plugin": "^8.43.0",
     "@typescript-eslint/parser": "^8.43.0",
-    "eslint": "^9.35.0",
+    "eslint": "^9.37.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
     "husky": "^9.1.7",

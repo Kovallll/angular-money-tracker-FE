@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { SubscribeTableComponent } from '@/entities/cards/subscribtions/ui/page/subscribe-table.component';
+import { SubscribeTableComponent } from '@/entities/cards/subscribtions/ui/page/ui/subscribe-table.component';
 
 @Component({
   selector: 'app-subscriptions-page',

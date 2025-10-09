@@ -37,7 +37,6 @@ export class SearchComponent implements OnInit {
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
       const search = this.searchService.getSearchFromUrlParams(params);
-      console.log(search, 'search');
       if (search) {
         this.search.set(search);
         this.form.get('search')?.setValue(search);

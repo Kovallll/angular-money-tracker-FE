@@ -1,11 +1,10 @@
-import { Component, input, signal, computed, OnInit, inject } from '@angular/core';
+import { Component, input, computed, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 
 import { MatDialog } from '@angular/material/dialog';
 import { FiltersModalComponent } from './modal/filters-modal.component';
 import { DialogData, FilterData, FiltersField } from '../lib';
 import { FiltersService } from '../services/filters.service';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'filters',

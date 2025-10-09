@@ -1,12 +1,6 @@
 <div class="tabs">
   @for (item of items(); track item.id) {
-  <button
-    matButton="filled"
-    [routerLink]="item.path"
-    routerLinkActive="active"
-    [routerLinkActiveOptions]="{ exact: true }"
-    class="button"
-  >
+  <button matButton="filled" [routerLink]="item.path" routerLinkActive="active" class="button">
     <mat-icon class="icon">{{item.icon}}</mat-icon>
     {{ item.title }}
   </button>

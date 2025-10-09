@@ -1,32 +1,47 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CategoryItem, ExpenseItem, UrlSyncService } from '@/shared';
+import { CategoryItem, ExpenseItem, UrlSyncedComponent } from '@/shared';
 import { ExpensesService } from '@/widgets/expensesCards/services/expenses.service';
 import { TableComponent } from '@/entities/table/ui/table.component';
 import { DashboardCardComponent, CardBodyComponent } from '@/entities/cards/card';
 import { ControlsComponent } from '@/widgets/controls/ui/controls.component';
 import { ControlsProps } from '@/widgets/controls/lib';
-import { combineLatest } from 'rxjs';
+import { PaginationComponent } from '@/entities/pagination/ui/pagination.component';
 
 @Component({
   selector: 'expenses-details-page',
-  imports: [TableComponent, DashboardCardComponent, CardBodyComponent, ControlsComponent],
+  imports: [
+    TableComponent,
+    DashboardCardComponent,
+    CardBodyComponent,
+    ControlsComponent,
+    PaginationComponent,
+  ],
   templateUrl: './expenses-details-page.html',
   styleUrl: `./expenses-details-page.scss`,
   standalone: true,
 })
-export class ExpensesDetailsPageComponent implements OnInit {
+export class ExpensesDetailsPageComponent
+  extends UrlSyncedComponent<ExpenseItem>
+  implements OnInit
+{
   private route = inject(ActivatedRoute);
   private expensesService = inject(ExpensesService);
-  private urlSyncService = inject(UrlSyncService);
 
   expenses = signal<ExpenseItem[]>([]);
   category = signal<CategoryItem | null>(null);
 
-  filterData = computed(() => this.category()?.expenses || []);
+  allData = computed(() => this.category()?.expenses || []);
 
-  get isEmpty() {
+  override get isEmpty() {
     return this.expenses().length === 0;
+  }
+
+  constructor() {
+    super();
+    effect(() => {
+      if (this.allData().length > 0) this.sync();
+    });
   }
 
   displayedCells = signal([
@@ -37,7 +52,7 @@ export class ExpensesDetailsPageComponent implements OnInit {
 
   controlsProps = computed<ControlsProps>(() => ({
     filterProps: {
-      data: this.filterData(),
+      data: this.allData(),
       filterFields: this.displayedCells(),
     },
     sortersProps: {
@@ -46,26 +61,20 @@ export class ExpensesDetailsPageComponent implements OnInit {
     searchProps: { searchField: 'title', placeholder: 'Search by title' },
   }));
 
-  ngOnInit(): void {
-    combineLatest([this.route.params, this.route.queryParams]).subscribe(
-      ([routeParams, queryParams]) => {
-        if (!this.category()) {
-          const categoryId = routeParams['id'];
+  setUpdatedData(updatedData: ExpenseItem[]): void {
+    this.expenses.set(updatedData);
+  }
 
-          if (!categoryId) return;
+  override ngOnInit(): void {
+    this.route.params.subscribe((params) => {
+      if (!this.category()) {
+        const categoryId = params['id'];
 
-          const category = this.expensesService.getCurrentCategory(+categoryId);
-          this.category.set(category || null);
-        }
-        if (this.category()) {
-          this.category.set(this.category());
-          const expenses = this.urlSyncService.getSyncData(
-            this.category()?.expenses || [],
-            queryParams,
-          );
-          this.expenses.set(expenses);
-        }
-      },
-    );
+        if (!categoryId) return;
+
+        const category = this.expensesService.getCurrentCategory(+categoryId);
+        this.category.set(category || null);
+      }
+    });
   }
 }

@@ -1,0 +1,15 @@
+@use 'theme' as *;
+@use '@angular/material' as mat;
+.paginator {
+  width: 600px;
+  background: transparent;
+  color: $white;
+  font-size: 18px;
+
+  @include mat.paginator-overrides(
+    (
+      enabled-icon-color: $accent,
+      disabled-icon-color: $gray,
+    )
+  );
+}

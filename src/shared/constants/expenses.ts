@@ -1,87 +1,59 @@
 import { CategoryItem, ExpenseItem } from '../types';
-// Моки расходов
-export const expenses: ExpenseItem[] = [
-  {
-    id: 0,
-    amount: 1000,
-    date: '2024-01-01',
-    title: 'Car repair',
-    category: { id: 0, title: 'Auto' },
-  },
-  {
-    id: 1,
-    amount: 50,
-    date: '2024-01-01',
-    title: 'Bus ticket',
-    category: { id: 1, title: 'Transport' },
-  },
 
-  {
-    id: 2,
-    amount: 200,
-    date: '2024-01-01',
-    title: 'Groceries',
-    category: { id: 2, title: 'Food' },
-  },
-  {
-    id: 3,
-    amount: 300,
-    date: '2024-01-01',
-    title: 'Clothes',
-    category: { id: 3, title: 'Shopping' },
-  },
-  {
-    id: 4,
-    amount: 150,
-    date: '2024-01-01',
-    title: 'Cinema tickets',
-    category: { id: 4, title: 'Entertainments' },
-  },
-  {
-    id: 5,
-    amount: 80,
-    date: '2024-01-01',
-    title: 'Miscellaneous',
-    category: { id: 5, title: 'Other' },
-  },
-  {
-    id: 6,
-    amount: 120,
-    date: '2024-01-01',
-    title: 'Restaurant',
-    category: { id: 2, title: 'Food' },
-  },
-  { id: 7, amount: 400, date: '2024-01-01', title: 'Fuel', category: { id: 0, title: 'Auto' } },
-  {
-    id: 8,
-    amount: 75,
-    date: '2024-01-01',
-    title: 'Office supplies',
-    category: { id: 5, title: 'Other' },
-  },
-  {
-    id: 9,
-    amount: 600,
-    date: '2024-01-01',
-    title: 'Shoes',
-    category: { id: 3, title: 'Shopping' },
-  },
-  {
-    id: 10,
-    amount: 130,
-    date: '2024-11-01',
-    title: 'Socks',
-    category: { id: 3, title: 'Shopping' },
-  },
-  {
-    id: 11,
-    amount: 60,
-    date: '2024-01-11',
-    title: 'Metro ticket',
-    category: { id: 1, title: 'Transport' },
-  },
+// Категории для генерации
+const categoryTitles = [
+  'Auto',
+  'Transport',
+  'Food',
+  'Shopping',
+  'Entertainments',
+  'Other',
+  'Courses',
 ];
 
+// Генерация случайного числа в диапазоне
+const randomAmount = (min: number, max: number) =>
+  Math.floor(Math.random() * (max - min + 1)) + min;
+
+// Генерация случайной даты в 2024 году
+const randomDate = () => {
+  const month = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0');
+  const day = String(Math.floor(Math.random() * 28) + 1).padStart(2, '0');
+  return `2024-${month}-${day}`;
+};
+
+// Генерация случайного названия расхода
+const randomTitle = (category: string) => {
+  const items: Record<string, string[]> = {
+    Auto: ['Car repair', 'Fuel', 'Parking'],
+    Transport: ['Bus ticket', 'Metro ticket', 'Taxi'],
+    Food: ['Groceries', 'Restaurant', 'Coffee'],
+    Shopping: ['Clothes', 'Shoes', 'Accessories'],
+    Entertainments: ['Cinema tickets', 'Concert', 'Games'],
+    Other: ['Miscellaneous', 'Office supplies', 'Subscriptions'],
+    Courses: ['Online course', 'Books', 'Workshop'],
+  };
+  const arr = items[category] || ['Expense'];
+  return arr[Math.floor(Math.random() * arr.length)];
+};
+
+// Количество расходов для генерации
+const NUM_EXPENSES = 500;
+
+export const expenses: ExpenseItem[] = Array.from({ length: NUM_EXPENSES }, (_, i) => {
+  const categoryId = Math.floor(Math.random() * categoryTitles.length);
+  const categoryTitle = categoryTitles[categoryId];
+
+  return {
+    id: i,
+    amount: randomAmount(10, 1000),
+    date: randomDate(),
+    title: randomTitle(categoryTitle),
+    category: { id: categoryId, title: categoryTitle },
+  };
+});
+
+// Формируем категории
 export const categories: CategoryItem[] = Object.values(
   expenses.reduce<Record<number, CategoryItem>>((acc, expense) => {
     const catId = expense.category.id;
@@ -102,9 +74,14 @@ export const categories: CategoryItem[] = Object.values(
   }, {}),
 );
 
-categories.push({
-  id: 6,
-  title: 'Courses',
-  expensesAmount: 0,
-  expenses: [],
+// Добавляем категории без расходов
+categoryTitles.forEach((title, id) => {
+  if (!categories.find((c) => c.id === id)) {
+    categories.push({
+      id,
+      title,
+      expensesAmount: 0,
+      expenses: [],
+    });
+  }
 });

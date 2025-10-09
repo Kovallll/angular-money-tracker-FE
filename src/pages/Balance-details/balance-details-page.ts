@@ -2,7 +2,7 @@ import { cards } from '@/shared/constants';
 import { Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CardDetailsComponent } from '@/entities/cards/balances/card-details/card-details.component';
-import { TransactionsHistoryComponent } from '@/entities/cards/transactions/transactions-history/transactions-history.component';
+import { TransactionsHistoryComponent } from '@/entities/cards/transactions/transactions-history/ui/transactions-history.component';
 
 @Component({
   selector: 'balance-details-page',

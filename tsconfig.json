@@ -31,5 +31,7 @@
     "strictInputAccessModifiers": true,
     "strictTemplates": true,
     "_enabledBlockTypes": ["if", "for"]
-  }
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
 }

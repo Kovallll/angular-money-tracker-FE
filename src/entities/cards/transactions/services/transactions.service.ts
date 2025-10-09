@@ -4,9 +4,9 @@ import dayjs from 'dayjs';
 
 @Injectable({ providedIn: 'root' })
 export class TransactionsService {
-  private readonly transactions = generateTransactions()
-    .sort((a, b) => dayjs(b.date).diff(dayjs(a.date)))
-    .slice(0, 9);
+  private readonly transactions = generateTransactions().sort((a, b) =>
+    dayjs(b.date).diff(dayjs(a.date)),
+  );
 
   getAllTransactions() {
     return this.transactions;
@@ -17,11 +17,11 @@ export class TransactionsService {
   }
 
   dashboardTabTransactions(tabFilter: string) {
-    return this.tabTransactions(tabFilter);
+    return this.tabTransactions(tabFilter).slice(0, 9);
   }
 
   dashboardAllTransactions() {
-    return this.getAllTransactions();
+    return this.getAllTransactions().slice(0, 9);
   }
 
   dashboardTransactions(tabFilter: string) {

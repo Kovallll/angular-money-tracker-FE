@@ -1,6 +1,6 @@
 import { ModalComponent } from '@/entities/cards/modal/modal.component';
 import { SelectComponent } from '@/entities/select/ui/select.component';
-import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { defaultFilters, DialogData, Filter } from '../../lib';
 import { FiltersService } from '../../services/filters.service';
@@ -44,7 +44,6 @@ export class FiltersModalComponent implements OnInit {
   }
 
   onCategoryChange(value: string, index: number) {
-    console.log(value, index);
     this.filtersService.setFilterCategory(value, index);
     this.filters.set(this.filtersService.getFilters());
     this.filtersService.setValueOptions(value, this.data.data(), index);
@@ -67,10 +66,7 @@ export class FiltersModalComponent implements OnInit {
         this.data.data(),
         params,
       );
-      console.log(paramsFilters, 'paramsFilters');
       this.filters.set(paramsFilters);
     });
-
-    console.log(this.filters(), 'this.filters');
   }
 }

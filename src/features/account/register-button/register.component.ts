@@ -18,7 +18,6 @@ export class RegisterButtonComponent {
 
   onRegister() {
     //createUser(name, email, password);
-    console.log(this.user());
     if (
       !this.user()?.email ||
       !this.user()?.name ||

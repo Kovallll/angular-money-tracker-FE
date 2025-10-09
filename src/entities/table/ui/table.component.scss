@@ -25,3 +25,11 @@ th.mat-mdc-header-cell {
 .mat-mdc-row:hover .mat-mdc-cell {
   border-color: $gray;
 }
+
+.no-data {
+  font-size: 18px;
+  font-weight: 600;
+  color: $white;
+  padding: 24px;
+  text-align: center;
+}

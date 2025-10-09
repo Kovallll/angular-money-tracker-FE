@@ -9,6 +9,4 @@ import { AccountComponent } from '@/entities/account/account';
   templateUrl: './sidebar.html',
   styleUrls: ['./sidebar.scss'],
 })
-export class SidebarComponent {
-  logout() {}
-}
+export class SidebarComponent {}

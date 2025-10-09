@@ -1,6 +1,6 @@
 <div class="container">
   <div class="head">
-    <goal-active-card [goal]="activeCard" />
+    <goal-active-card [goal]="activeCard()" />
     <div class="chart">
       <goals-statistic-card />
     </div>
@@ -8,9 +8,10 @@
   <div class="content">
     <div class="title">All Goals</div>
     <div class="cards">
-      @for (goal of goals; track goal.id) {
+      @for (goal of goals(); track goal.id) {
         <goal-card-item [goal]="goal" (click)="handleActiveCardChange(goal.id)" />
       }
     </div>
+    <pagination [pageSize]="pageSize" />
   </div>
 </div>

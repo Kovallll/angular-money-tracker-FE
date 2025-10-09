@@ -1,7 +1,7 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { Items } from '../lib';
 import { MatButtonModule } from '@angular/material/button';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({

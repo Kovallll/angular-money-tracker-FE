@@ -1,13 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { DashboardCardComponent, CardBodyComponent } from '../../../card';
 import { MatTabsModule } from '@angular/material/tabs';
-import { tabs, UrlSyncService } from '@/shared';
+import { tabs, Transaction, UrlSyncedComponent } from '@/shared';
 import { TransactionsService } from '../../services/transactions.service';
 import { TableComponent } from '@/entities/table/ui/table.component';
 import { ControlsComponent } from '@/widgets/controls/ui/controls.component';
-import { ActivatedRoute } from '@angular/router';
 import { ControlsProps } from '@/widgets/controls/lib';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { PaginationComponent } from '@/entities/pagination/ui/pagination.component';
 
 @Component({
   selector: 'transactions',
@@ -18,32 +17,29 @@ import { toSignal } from '@angular/core/rxjs-interop';
     MatTabsModule,
     TableComponent,
     ControlsComponent,
+    PaginationComponent,
   ],
   templateUrl: './transaction-card.component.html',
   styleUrls: ['./transaction-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TransactionsComponent {
-  private route = inject(ActivatedRoute);
-  private urlSyncService = inject(UrlSyncService);
+export class TransactionsComponent extends UrlSyncedComponent<Transaction> {
   private transactionsService = inject(TransactionsService);
-
-  readonly title = 'Transactions';
   readonly tabs = tabs;
 
   readonly tabFilter = signal('All');
-  private queryParams = toSignal(this.route.queryParams, { initialValue: {} });
 
   readonly transactions = computed(() => this.transactionsService.getAllTransactions());
 
-  readonly currentTransactions = computed(() => {
-    const base =
-      this.tabFilter() === 'All'
-        ? this.transactions()
-        : this.transactions().filter((t) => t.type === this.tabFilter());
+  protected base = computed(() =>
+    this.tabFilter() === 'All'
+      ? this.transactions()
+      : this.transactions().filter((t) => t.type === this.tabFilter()),
+  );
 
-    return this.urlSyncService.getSyncData(base, this.queryParams());
-  });
+  allData = this.base;
+
+  readonly currentTransactions = signal(this.base());
 
   readonly displayedCells = signal(this.transactionsService.getDisplayedCells());
 
@@ -62,7 +58,11 @@ export class TransactionsComponent {
     this.tabFilter.set(this.tabs[index] ?? 'All');
   }
 
-  get isEmpty() {
+  override get isEmpty() {
     return this.currentTransactions().length === 0;
+  }
+
+  override setUpdatedData(updatedData: Transaction[]): void {
+    this.currentTransactions.set(updatedData);
   }
 }

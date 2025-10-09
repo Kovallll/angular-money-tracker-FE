@@ -1,0 +1,12 @@
+<div class="container">
+  <dashboard-card title="Transactions History">
+    <card-body class="body">
+      <table-component
+        [dataSource]="currentTransactions()"
+        [displayedCells]="displayedCells()"
+        [isEmpty]="isEmpty"
+      />
+    </card-body>
+  </dashboard-card>
+  <pagination />
+</div>

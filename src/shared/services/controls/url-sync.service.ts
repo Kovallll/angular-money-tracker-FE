@@ -1,10 +1,15 @@
-import { Injectable } from '@angular/core';
-import { Params } from '@angular/router';
+import { PaginationService } from '@/entities/pagination/services/pagination.service';
+import { defaultPage, defaultPageSize } from '@/shared/constants';
+import { inject, Injectable } from '@angular/core';
+import { ActivatedRoute, Params } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UrlSyncService {
+  private route = inject(ActivatedRoute);
+  private paginationService = inject(PaginationService);
+
   private getControlsFilterData(params: Params) {
     try {
       const filtersStr = decodeURIComponent(params['filters'] || '');
@@ -14,6 +19,7 @@ export class UrlSyncService {
         return { category, value };
       });
     } catch (e) {
+      console.error(e);
       return null;
     }
   }
@@ -25,6 +31,7 @@ export class UrlSyncService {
       const [field, order] = sorterStr.split(':');
       return { field, order };
     } catch (e) {
+      console.error(e);
       return null;
     }
   }
@@ -36,20 +43,33 @@ export class UrlSyncService {
       const [field, value] = searchStr.split(':');
       return { field, value };
     } catch (e) {
+      console.error(e);
+      return null;
+    }
+  }
+
+  private getControlsPaginationData(params: Params) {
+    try {
+      const pageStr = decodeURIComponent(params['page'] || '');
+      if (!pageStr) return null;
+      return pageStr;
+    } catch (e) {
+      console.error(e);
       return null;
     }
   }
 
   getFilterSyncData(data: any[], params: Params) {
     const filters = this.getControlsFilterData(params);
-    console.log(data, 'data', filters);
     if (!filters?.length) return data;
+    this.paginationService.setPage(defaultPage);
     return data.filter((item) => filters.every((f) => item[f.category] == f.value)).slice(0);
   }
 
   getSorterSyncData(data: any[], params: Params) {
     const sorter = this.getControlsSorterData(params);
     if (!sorter || !sorter?.field) return data;
+    this.paginationService.setPage(defaultPage);
     if (sorter.order === 'desc')
       return data.sort((a, b) => (a[sorter.field] < b[sorter.field] ? 1 : -1)).slice(0);
     return data.sort((a, b) => (a[sorter.field] > b[sorter.field] ? 1 : -1)).slice(0);
@@ -58,15 +78,35 @@ export class UrlSyncService {
   getSearchSyncData(data: any[], params: Params) {
     const search = this.getControlsSearchData(params);
     if (!search || !search?.value) return data;
+    this.paginationService.setPage(defaultPage);
     return data.filter((item) =>
       item[search.field].toLowerCase().includes(search.value.toLowerCase()),
     );
   }
 
-  getSyncData(data: any[], params: Params) {
-    return this.getFilterSyncData(
-      this.getSorterSyncData(this.getSearchSyncData(data, params), params),
+  getPaginationSyncData(data: any[], params: Params, pageSize: number = defaultPageSize) {
+    const page = this.getControlsPaginationData(params);
+    if (!page) return data;
+    this.paginationService.setLength(data.length);
+    console.log(data.length, 'data.length');
+    return data.slice((+page - 1) * pageSize, +page * pageSize);
+  }
+
+  getSyncData(data: any[], params: Params, pageSize: number = defaultPageSize) {
+    return this.getPaginationSyncData(
+      this.getFilterSyncData(
+        this.getSorterSyncData(this.getSearchSyncData(data, params), params),
+        params,
+      ),
       params,
+      pageSize,
     );
+  }
+
+  syncWithUrl<T>(data: T[], pageSize: number, callback: (updatedData: T[]) => void) {
+    this.route.queryParams.subscribe((params) => {
+      const updatedData = this.getSyncData(data, params, pageSize);
+      callback(updatedData);
+    });
   }
 }
