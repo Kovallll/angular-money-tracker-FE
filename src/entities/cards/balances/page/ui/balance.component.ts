@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { DashboardCardComponent, CardBodyComponent } from '../../../card';
-import { cards } from '@/shared/constants';
 import { BalanceCardItemComponent } from './card-item/balance-card-item.component';
+import { BalancesHttpService } from '@/shared';
 
 @Component({
   selector: 'balance-card',
@@ -12,6 +12,7 @@ import { BalanceCardItemComponent } from './card-item/balance-card-item.componen
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BalanceCardComponent {
+  private balansesHttpService = inject(BalancesHttpService);
   title = 'Balances';
-  items = signal(cards);
+  cards = this.balansesHttpService.cards;
 }

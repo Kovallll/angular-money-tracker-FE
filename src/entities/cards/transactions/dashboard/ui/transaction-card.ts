@@ -3,7 +3,7 @@ import { DashboardCardComponent, CardBodyComponent, CardHeaderComponent } from '
 import { MatTabsModule } from '@angular/material/tabs';
 import { RoutePaths, tabs } from '@/shared';
 import { TransactionCardItemComponent } from './card-item/transaction-card-item.component';
-import { TransactionsService } from '../../services/transactions.service';
+import { DashboardTransactionsService } from '../../services/transactions.service';
 
 @Component({
   selector: 'dash-transaction-card',
@@ -26,10 +26,9 @@ export class DashboardTransactionCardComponent {
   readonly tabs = tabs;
   readonly seeAllPath = RoutePaths.TRANSACTIONS;
 
-  readonly currentItems = computed(() =>
-    this.transactionsService.dashboardTransactions(this.tabFilter()),
-  );
-  constructor(private readonly transactionsService: TransactionsService) {}
+  readonly currentItems = this.transactionsService.dashboardTransactions(this.tabFilter);
+
+  constructor(private readonly transactionsService: DashboardTransactionsService) {}
 
   onSelectedIndexChange(index: number) {
     this.tabFilter.set(this.tabs[index] ?? 'All');

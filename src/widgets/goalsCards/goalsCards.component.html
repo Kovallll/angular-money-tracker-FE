@@ -5,13 +5,18 @@
       <goals-statistic-card />
     </div>
   </div>
-  <div class="content">
-    <div class="title">All Goals</div>
-    <div class="cards">
-      @for (goal of goals(); track goal.id) {
-        <goal-card-item [goal]="goal" (click)="handleActiveCardChange(goal.id)" />
-      }
+  <div class="body">
+    <div class="body-header">
+      <div class="title">All Goals</div>
+      <goal-add-card-button />
     </div>
-    <pagination [pageSize]="pageSize" />
+    <div class="content">
+      <div class="cards">
+        @for (goal of goals(); track goal.id) {
+          <goal-card-item [goal]="goal" (click)="handleActiveCardChange(goal.id)" />
+        }
+      </div>
+      <pagination [pageSize]="pageSize" />
+    </div>
   </div>
 </div>

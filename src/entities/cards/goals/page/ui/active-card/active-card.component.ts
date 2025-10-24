@@ -25,8 +25,7 @@ import { GoalAdjustCardButtonComponent } from '@/features/goal/adjust-goal-card/
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GoalActiveCardComponent {
-  title = 'Active goal';
-  goal = input.required<any>();
+  goal = input<any>();
   labels = ['Target', 'Goal'];
 
   getDataset(item: any) {

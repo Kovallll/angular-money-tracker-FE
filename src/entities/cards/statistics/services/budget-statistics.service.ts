@@ -1,5 +1,5 @@
-import { generateTransactions, TransactionType } from '@/shared';
-import { Injectable } from '@angular/core';
+import { TransactionsHttpService, TransactionType } from '@/shared';
+import { inject, Injectable } from '@angular/core';
 import { ChartViews } from '../lib';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
@@ -10,17 +10,18 @@ dayjs.extend(isBetween);
   providedIn: 'root',
 })
 export class BudgetStatisticsService {
-  private transactions = generateTransactions();
+  private transactionsHttpService = inject(TransactionsHttpService);
+  private transactions = this.transactionsHttpService.transactions;
 
   private filterByRange(start: dayjs.Dayjs, end: dayjs.Dayjs) {
-    return this.transactions.filter((t) => dayjs(t.date).isBetween(start, end, null, '[]'));
+    return this.transactions().filter((t) => dayjs(t.date).isBetween(start, end, null, '[]'));
   }
 
   private aggregateByLabels(labels: string[], start: dayjs.Dayjs, unit: 'day' | 'month') {
     const revenue = Array(labels.length).fill(0);
     const expenses = Array(labels.length).fill(0);
 
-    this.transactions.forEach((t) => {
+    this.transactions().forEach((t) => {
       const date = dayjs(t.date);
       if (!date.isBetween(start, start.add(labels.length - 1, unit), unit, '[]')) return;
 

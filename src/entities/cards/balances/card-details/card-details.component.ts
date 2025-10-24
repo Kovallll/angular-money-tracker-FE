@@ -10,7 +10,5 @@ import { BalanceCard } from '@/shared';
   imports: [DashboardCardComponent, CardBodyComponent],
 })
 export class CardDetailsComponent {
-  title = 'Card Details';
-
   card = input<BalanceCard | null>(null);
 }

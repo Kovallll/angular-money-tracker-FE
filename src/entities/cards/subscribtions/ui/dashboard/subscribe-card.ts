@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { DashboardCardComponent, CardBodyComponent } from '../../../card';
 import { SlideComponent } from '../../../slider/slide/slide';
 import { SliderCardComponent } from '../../../slider/slider-card';
@@ -21,10 +21,9 @@ import { RoutePaths } from '@/shared';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardSubscribeCardComponent {
-  title = 'Upcoming Subscribes';
   seeAllPath = RoutePaths.SUBSCRIPTIONS;
 
-  pairsItems = this.subscribtionsService.getPairsItems();
+  pairsItems = computed(() => this.subscribtionsService.getPairsItems());
 
   constructor(private readonly subscribtionsService: SubscribtionsService) {}
 }

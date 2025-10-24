@@ -1,10 +1,10 @@
 <div class="card">
   <div class="left-side">
-    <p>{{ item().cardName }}</p>
-    <p>{{ item().cardNumber }}</p>
+    <p>{{ card().cardName }}</p>
+    <p>{{ card().cardNumber }}</p>
   </div>
   <div class="right-side">
     <img src="assets/mastercard-logo.png" alt="MasterCard logo" loading="lazy" />
-    <p>{{ item().cardBalance | currency }}</p>
+    <p>{{ card().cardBalance | currency }}</p>
   </div>
 </div>

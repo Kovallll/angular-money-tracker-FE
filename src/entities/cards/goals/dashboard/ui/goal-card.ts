@@ -23,8 +23,6 @@ import { RoutePaths } from '@/shared';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardGoalCardComponent {
-  title = 'Goals';
-
   seeAllPath = RoutePaths.GOALS;
 
   constructor(private readonly goalsService: GoalsService) {}

@@ -1,10 +1,20 @@
 import { UrlSyncService } from '@/shared';
-import { inject, Injectable, OnInit, Signal } from '@angular/core';
+import {
+  AfterContentChecked,
+  AfterContentInit,
+  AfterViewChecked,
+  AfterViewInit,
+  inject,
+  Injectable,
+  OnInit,
+  Signal,
+} from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
-export abstract class UrlSyncedComponent<T> implements OnInit {
+export abstract class UrlSyncedComponent<T> implements OnInit, AfterContentChecked {
   private urlSync = inject(UrlSyncService);
   abstract allData: Signal<T[]>;
+  private prevAllData: T[] = [];
 
   pageSize = 10;
 
@@ -23,7 +33,15 @@ export abstract class UrlSyncedComponent<T> implements OnInit {
   }
 
   ngOnInit(): void {
+    this.prevAllData = this.allData();
     this.sync();
+  }
+
+  ngAfterContentChecked(): void {
+    if (this.allData() !== this.prevAllData) {
+      this.prevAllData = this.allData();
+      this.sync();
+    }
   }
 
   abstract setUpdatedData(updatedData: T[]): void;

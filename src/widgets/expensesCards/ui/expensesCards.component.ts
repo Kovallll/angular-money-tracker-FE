@@ -1,6 +1,6 @@
 import { ExpenseCardPageComponent } from '@/entities/cards/expenses/page/ui/expense-card.component';
-import { Component } from '@angular/core';
-import { ExpensesService } from '../services/expenses.service';
+import { ExpensesHttpService } from '@/shared';
+import { Component, inject } from '@angular/core';
 
 @Component({
   standalone: true,
@@ -10,7 +10,7 @@ import { ExpensesService } from '../services/expenses.service';
   imports: [ExpenseCardPageComponent],
 })
 export class ExpensesCardsComponent {
-  readonly categories = this.expensesService.categories;
+  private expensesHtppService = inject(ExpensesHttpService);
 
-  constructor(private readonly expensesService: ExpensesService) {}
+  categories = this.expensesHtppService.categories;
 }

@@ -1,20 +1,20 @@
 <div class="card">
   <div class="header">
     <p class="card-type">
-      {{ item().cardType }}
+      {{ card().cardType }}
     </p>
     <div class="card-name">
       <img src="assets/mastercard-logo.png" alt="MasterCard logo" loading="lazy" />
-      <p>{{ item().cardName }}</p>
+      <p>{{ card().cardName }}</p>
     </div>
   </div>
   <div class="body">
     <div class="body-item">
-      {{ item().cardNumber }}
+      {{ card().cardNumber }}
       <p>Account Number</p>
     </div>
     <div class="body-item">
-      {{ item().cardBalance | currency }}
+      {{ card().cardBalance | currency }}
       <p>Total amount</p>
     </div>
   </div>

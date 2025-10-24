@@ -88,7 +88,6 @@ export class UrlSyncService {
     const page = this.getControlsPaginationData(params);
     if (!page) return data;
     this.paginationService.setLength(data.length);
-    console.log(data.length, 'data.length');
     return data.slice((+page - 1) * pageSize, +page * pageSize);
   }
 

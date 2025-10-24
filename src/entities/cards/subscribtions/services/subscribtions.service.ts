@@ -1,16 +1,17 @@
 import { SubscribeItem } from '@/shared';
-import { subscribes } from '@/shared/constants/subscribtions';
-import { Injectable } from '@angular/core';
+import { SubscribtionsHttpService } from '@/shared';
+import { inject, Injectable } from '@angular/core';
 import dayjs from 'dayjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SubscribtionsService {
-  private subscribes = subscribes;
+  private subscribeHttpService = inject(SubscribtionsHttpService);
 
   getUpcomingSubscribes() {
-    return this.subscribes
+    return this.subscribeHttpService
+      .subscribtions()
       .filter((sub) =>
         dayjs(sub.subscribeDate).isBetween(dayjs(), dayjs().add(21, 'day'), null, '[]'),
       )
@@ -30,6 +31,6 @@ export class SubscribtionsService {
   }
 
   getSubscribes() {
-    return this.subscribes;
+    return this.subscribeHttpService.subscribtions();
   }
 }

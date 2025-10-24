@@ -11,7 +11,8 @@
           "inlineStyle": true,
           "style": "scss",
           "skipTests": true,
-          "changeDetection": "OnPush"
+          "changeDetection": "OnPush",
+          "standalone": true
         },
         "@schematics/angular:class": {
           "skipTests": true

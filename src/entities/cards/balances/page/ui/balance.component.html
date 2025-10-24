@@ -1,8 +1,8 @@
 <div class="container">
-  @for (item of items(); track item.id) {
+  @for (card of cards(); track card.id) {
     <dashboard-card class="card">
       <card-body class="body">
-        <balance-card-item [item]="item" />
+        <balance-card-item [card]="card" />
       </card-body>
     </dashboard-card>
   }

@@ -1,36 +1,26 @@
-import { generateTransactions, Tabs, Transaction } from '@/shared';
-import { Injectable } from '@angular/core';
-import dayjs from 'dayjs';
+import { inject, Injectable, Signal, computed } from '@angular/core';
+import { Tabs, Transaction, TransactionsHttpService } from '@/shared';
 
 @Injectable({ providedIn: 'root' })
-export class TransactionsService {
-  private readonly transactions = generateTransactions().sort((a, b) =>
-    dayjs(b.date).diff(dayjs(a.date)),
-  );
+export class DashboardTransactionsService {
+  private readonly http = inject(TransactionsHttpService);
 
-  getAllTransactions() {
-    return this.transactions;
+  private readonly all: Signal<Transaction[]> = this.http.transactions;
+
+  tabTransactions(tabFilter: Signal<string>): Signal<Transaction[]> {
+    return computed(() => {
+      const tab = tabFilter();
+      const data = this.all();
+      return tab !== Tabs.All ? data.filter((t) => t.type === tab) : data;
+    });
   }
 
-  tabTransactions(tabFilter: string) {
-    return this.transactions.filter((t) => t.type === tabFilter);
+  dashboardTransactions(tabFilter: Signal<string>): Signal<Transaction[]> {
+    const source = this.tabTransactions(tabFilter);
+    return computed(() => source().slice(0, 9));
   }
 
-  dashboardTabTransactions(tabFilter: string) {
-    return this.tabTransactions(tabFilter).slice(0, 9);
-  }
-
-  dashboardAllTransactions() {
-    return this.getAllTransactions().slice(0, 9);
-  }
-
-  dashboardTransactions(tabFilter: string) {
-    return tabFilter === Tabs.All
-      ? this.dashboardAllTransactions()
-      : this.dashboardTabTransactions(tabFilter);
-  }
-
-  getDisplayedCells() {
+  displayedCells() {
     return [
       { field: 'date', name: 'Date' },
       { field: 'title', name: 'Title' },
@@ -42,9 +32,5 @@ export class TransactionsService {
       { field: 'receipt', name: 'Receipt' },
       { field: 'amount', name: 'Amount' },
     ];
-  }
-
-  getCurrentTransactions(tabFilter: string): Transaction[] {
-    return tabFilter === Tabs.All ? this.getAllTransactions() : this.tabTransactions(tabFilter);
   }
 }

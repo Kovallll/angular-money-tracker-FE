@@ -1,7 +1,7 @@
 <div class="container">
   <p class="title">Expenses Breakdown</p>
   <div class="content">
-    @for (category of categories; track category.id) {
+    @for (category of categories(); track category.id) {
       @if (category.expenses.length) {
         <expense-card [category]="category" />
       }

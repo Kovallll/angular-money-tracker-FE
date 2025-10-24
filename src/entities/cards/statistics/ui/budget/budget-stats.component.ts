@@ -14,6 +14,7 @@ import { BudgetStatisticsService } from '../../services/budget-statistics.servic
 import { MatIconModule } from '@angular/material/icon';
 import { SelectComponent } from '@/entities/select/ui/select.component';
 import { SelectOption } from '@/entities/select/lib';
+import { chartColors } from '@/shared';
 
 @Component({
   selector: 'budget-statistic-card',
@@ -52,13 +53,13 @@ export class BudgetStatisticCardComponent {
       {
         label: 'Expenses',
         data: this.chartData().expenses,
-        backgroundColor: '#ef4444',
+        backgroundColor: chartColors.red,
         borderWidth: 1,
       },
       {
         label: 'Revenue',
         data: this.chartData().revenue,
-        backgroundColor: '#3b82f6',
+        backgroundColor: chartColors.blue,
         borderWidth: 1,
       },
     ],

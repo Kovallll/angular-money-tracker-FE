@@ -1,7 +1,6 @@
 import { Component, computed, effect, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CategoryItem, ExpenseItem, UrlSyncedComponent } from '@/shared';
-import { ExpensesService } from '@/widgets/expensesCards/services/expenses.service';
+import { CategoryItem, ExpenseItem, ExpensesHttpService, UrlSyncedComponent } from '@/shared';
 import { TableComponent } from '@/entities/table/ui/table.component';
 import { DashboardCardComponent, CardBodyComponent } from '@/entities/cards/card';
 import { ControlsComponent } from '@/widgets/controls/ui/controls.component';
@@ -26,7 +25,7 @@ export class ExpensesDetailsPageComponent
   implements OnInit
 {
   private route = inject(ActivatedRoute);
-  private expensesService = inject(ExpensesService);
+  private expensesHttpService = inject(ExpensesHttpService);
 
   expenses = signal<ExpenseItem[]>([]);
   category = signal<CategoryItem | null>(null);
@@ -71,8 +70,8 @@ export class ExpensesDetailsPageComponent
         const categoryId = params['id'];
 
         if (!categoryId) return;
-
-        const category = this.expensesService.getCurrentCategory(+categoryId);
+        this.expensesHttpService.selectedCategoryId.set(categoryId);
+        const category = this.expensesHttpService.currentCategory();
         this.category.set(category || null);
       }
     });

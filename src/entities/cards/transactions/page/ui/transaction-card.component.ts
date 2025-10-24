@@ -1,8 +1,16 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  linkedSignal,
+  signal,
+} from '@angular/core';
 import { DashboardCardComponent, CardBodyComponent } from '../../../card';
 import { MatTabsModule } from '@angular/material/tabs';
-import { tabs, Transaction, UrlSyncedComponent } from '@/shared';
-import { TransactionsService } from '../../services/transactions.service';
+import { Tabs, tabs, Transaction, UrlSyncedComponent } from '@/shared';
+import { DashboardTransactionsService } from '../../services/transactions.service';
 import { TableComponent } from '@/entities/table/ui/table.component';
 import { ControlsComponent } from '@/widgets/controls/ui/controls.component';
 import { ControlsProps } from '@/widgets/controls/lib';
@@ -24,24 +32,26 @@ import { PaginationComponent } from '@/entities/pagination/ui/pagination.compone
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TransactionsComponent extends UrlSyncedComponent<Transaction> {
-  private transactionsService = inject(TransactionsService);
+  private transactionsService = inject(DashboardTransactionsService);
   readonly tabs = tabs;
 
   readonly tabFilter = signal('All');
 
-  readonly transactions = computed(() => this.transactionsService.getAllTransactions());
+  readonly transactions = this.transactionsService.tabTransactions(this.tabFilter);
 
-  protected base = computed(() =>
-    this.tabFilter() === 'All'
-      ? this.transactions()
-      : this.transactions().filter((t) => t.type === this.tabFilter()),
-  );
+  readonly currentTransactions = signal<Transaction[]>([]);
+  readonly allData = signal<Transaction[]>([]);
 
-  allData = this.base;
+  constructor() {
+    super();
+    effect(() => {
+      const base = this.transactions();
+      this.currentTransactions.set([...base]);
+      this.allData.set([...base]);
+    });
+  }
 
-  readonly currentTransactions = signal(this.base());
-
-  readonly displayedCells = signal(this.transactionsService.getDisplayedCells());
+  readonly displayedCells = signal(this.transactionsService.displayedCells());
 
   readonly controlsProps = computed<ControlsProps>(() => ({
     filterProps: {
@@ -55,7 +65,7 @@ export class TransactionsComponent extends UrlSyncedComponent<Transaction> {
   }));
 
   onSelectedIndexChange(index: number) {
-    this.tabFilter.set(this.tabs[index] ?? 'All');
+    this.tabFilter.set(this.tabs[index] ?? Tabs.All);
   }
 
   override get isEmpty() {
@@ -63,6 +73,6 @@ export class TransactionsComponent extends UrlSyncedComponent<Transaction> {
   }
 
   override setUpdatedData(updatedData: Transaction[]): void {
-    this.currentTransactions.set(updatedData);
+    this.currentTransactions.set([...updatedData]);
   }
 }

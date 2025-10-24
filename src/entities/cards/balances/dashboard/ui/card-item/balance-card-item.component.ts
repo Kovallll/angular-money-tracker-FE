@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BalanceCard } from '@/shared';
 
@@ -11,5 +11,5 @@ import { BalanceCard } from '@/shared';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BalanceCardItemComponent {
-  item = input.required<BalanceCard>();
+  card = input.required<BalanceCard>();
 }

@@ -1,8 +1,7 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { DashboardCardComponent, CardBodyComponent } from '../../../card';
 import { ExpenseCardItemComponent } from './card-item/expense-card-item.component';
-import { ExpenseItem, RoutePaths } from '@/shared';
-import { ExpensesService } from '@/widgets/expensesCards/services/expenses.service';
+import { ExpensesHttpService, RoutePaths } from '@/shared';
 
 @Component({
   selector: 'dash-expense-card',
@@ -13,10 +12,8 @@ import { ExpensesService } from '@/widgets/expensesCards/services/expenses.servi
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardExpenseCardComponent {
-  title = 'Expenses';
+  private expesesHttpService = inject(ExpensesHttpService);
   seeAllPath = RoutePaths.EXPENSES;
 
-  expenses = signal<ExpenseItem[]>(this.expesesService.expenses.slice(0, 6));
-
-  constructor(private readonly expesesService: ExpensesService) {}
+  expenses = computed(() => this.expesesHttpService.expenses().slice(0, 6));
 }

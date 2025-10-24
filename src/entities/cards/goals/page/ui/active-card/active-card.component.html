@@ -1,4 +1,4 @@
-<dashboard-card [title]="title">
+<dashboard-card title="Active goal">
   <card-body class="body">
     <div class="card">
       <div class="header">
@@ -7,9 +7,7 @@
         </div>
         <p class="date">{{ goal().startDate | date }} - <br />{{ goal().endDate | date }}</p>
       </div>
-
       <divider color="tertiary" />
-
       <div class="wrapper">
         <div class="content">
           <div class="left-side">

@@ -5,10 +5,10 @@
   </card-header>
 
   <card-body class="body">
-    <app-slider [items]="items()" class="slider">
-      @for (item of items(); track item.id) {
+    <app-slider [items]="cards()" class="slider">
+      @for (card of cards(); track card.id) {
       <app-slide class="card">
-        <balance-card-item [item]="item" />
+        <balance-card-item [card]="card" />
       </app-slide>
       }
     </app-slider>

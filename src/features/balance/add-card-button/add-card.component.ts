@@ -1,6 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
+import { AddCardModalComponent } from './modal/add-card-modal.component';
+import { DialogService, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   standalone: true,
@@ -8,6 +10,26 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './add-card.component.html',
   styleUrls: ['./add-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatButtonModule, MatIconModule],
+  imports: [MatIconModule, ButtonModule, DynamicDialogModule],
+  providers: [DialogService],
 })
-export class BalanceAddCardButtonComponent {}
+export class BalanceAddCardButtonComponent implements OnDestroy {
+  ref: DynamicDialogRef | undefined | null;
+
+  constructor(public dialogService: DialogService) {}
+
+  show() {
+    this.ref = this.dialogService.open(AddCardModalComponent, {
+      header: 'Add Card',
+      closable: true,
+      dismissableMask: true,
+      styleClass: 'modal',
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.ref) {
+      this.ref.close();
+    }
+  }
+}

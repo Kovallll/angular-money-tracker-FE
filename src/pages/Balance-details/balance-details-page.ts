@@ -1,8 +1,10 @@
-import { cards } from '@/shared/constants';
 import { Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CardDetailsComponent } from '@/entities/cards/balances/card-details/card-details.component';
 import { TransactionsHistoryComponent } from '@/entities/cards/transactions/transactions-history/ui/transactions-history.component';
+import { BalancesHttpService } from '@/shared';
+import { map } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'balance-details-page',
@@ -13,15 +15,9 @@ import { TransactionsHistoryComponent } from '@/entities/cards/transactions/tran
 })
 export class BalanceDetailsPageComponent {
   private route = inject(ActivatedRoute);
-
-  card = signal<(typeof cards)[number] | null>(null);
+  private balancesHttpService = inject(BalancesHttpService);
 
   transactions = computed(() => this.card()?.transactions ?? []);
-
-  constructor() {
-    const cardId = this.route.snapshot.paramMap.get('id');
-    if (cardId) {
-      this.card.set(cards.find((item) => item.id === Number(cardId)) ?? null);
-    }
-  }
+  id = Number(this.route.snapshot.paramMap.get('id'));
+  card = toSignal(this.balancesHttpService.getCard(this.id), { initialValue: null });
 }

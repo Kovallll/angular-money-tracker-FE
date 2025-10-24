@@ -1,15 +1,21 @@
-import { goals } from '@/shared/constants/goals';
-import { Injectable } from '@angular/core';
+import { GoalItem, GoalsHttpService } from '@/shared';
+import { computed, inject, Injectable, Signal } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GoalsService {
-  getGoals(max?: number) {
-    return max ? goals.slice(0, max) : (goals ?? []);
+  private goalsHttpService = inject(GoalsHttpService);
+  private goals = this.goalsHttpService.goals;
+
+  getGoals(max?: number): Signal<GoalItem[]> {
+    return computed(() => {
+      const all = this.goals() ?? [];
+      return max ? all.slice(0, max) : all;
+    });
   }
 
-  getGoal(id: number) {
-    return goals.find((goal) => goal.id === id);
+  getGoal(id: number): Signal<GoalItem | undefined> {
+    return computed(() => this.goals().find((g) => g.id === id));
   }
 }

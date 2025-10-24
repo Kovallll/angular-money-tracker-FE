@@ -13,9 +13,9 @@ import { Router } from '@angular/router';
 })
 export class BalanceCardItemComponent {
   router = inject(Router);
-  item = input.required<BalanceCard>();
+  card = input.required<BalanceCard>();
 
   handleCheckDetails() {
-    this.router.navigate([RoutePaths.BALANCE_DETAILS, this.item().id]);
+    this.router.navigate([RoutePaths.BALANCE_DETAILS, this.card().id]);
   }
 }
