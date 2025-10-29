@@ -70,6 +70,11 @@ const routes: Routes = [
           ),
       },
       {
+        path: RoutePaths.CATEGORIES,
+        loadComponent: () =>
+          import('../pages/Categories/categories-page').then((m) => m.CategoriesPageComponent),
+      },
+      {
         path: `${RoutePaths.BALANCE_DETAILS}/:id`,
         loadComponent: () =>
           import('../pages/Balance-details/balance-details-page').then(

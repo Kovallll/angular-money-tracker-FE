@@ -1,0 +1,55 @@
+<div class="container">
+  <div class="cards-block">
+    <div class="top">
+      <p class="title">Categories</p>
+      <category-add-button />
+    </div>
+    <div class="cards">
+      <div class="totals">
+        <div class="total">
+          <p class="amount">{{ totalExpenses() | currency }}</p>
+          <p class="title">Total Expenses</p>
+        </div>
+        <div class="total">
+          <p class="amount">{{ topTransactions() }} Top Category</p>
+          <p class="title">Transactions</p>
+        </div>
+        <div class="total">
+          <div class="percents">
+            @if (overageDeltaCompare().negative) {
+              <i class="pi pi-arrow-down negative"></i>
+            } @else {
+              <i class="pi pi-arrow-up positive"></i>
+            }
+            <p class="amount">
+              {{ overageDeltaCompare().value + '%' }}
+            </p>
+          </div>
+          <p class="title">Last month</p>
+        </div>
+      </div>
+      <div class="content">
+        @for (category of categories(); track category.id) {
+          <category-card [category]="category" [chart]="getCurrentChart(category.id)" />
+        }
+      </div>
+    </div>
+  </div>
+  <div class="analytics">
+    <p class="title">Analytics</p>
+    <div class="charts">
+      <div class="chart">
+        <div class="subtitle">Categories Share</div>
+        <canvas baseChart [type]="'doughnut'" [data]="pieData" [options]="pieOptions"></canvas>
+      </div>
+      <div class="chart">
+        <div class="subtitle">Spending by Month</div>
+        <canvas baseChart [type]="'bar'" [data]="barData" [options]="barOptions"></canvas>
+      </div>
+      <div class="chart">
+        <div class="subtitle">Spending Over Time</div>
+        <canvas baseChart [type]="'line'" [data]="lineData" [options]="lineOptions"></canvas>
+      </div>
+    </div>
+  </div>
+</div>

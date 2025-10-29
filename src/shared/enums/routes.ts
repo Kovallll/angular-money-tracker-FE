@@ -10,6 +10,7 @@ export enum RoutePaths {
   GOALS = 'goals',
   SUBSCRIPTIONS = 'subscriptions',
   BAlANCES = 'balances',
+  CATEGORIES = 'categories',
   BALANCE_DETAILS = 'balance-details',
   EXPENSES_DETAILS = 'expenses-details',
 }

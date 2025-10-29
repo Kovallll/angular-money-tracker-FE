@@ -1,5 +1,13 @@
 @use 'theme' as *;
 
-.input {
+.wrapper {
   margin-bottom: 12px;
+}
+
+.select {
+  width: 100%;
+}
+
+.input {
+  width: 100%;
 }

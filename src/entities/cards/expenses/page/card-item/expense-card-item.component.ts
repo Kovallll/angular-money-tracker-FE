@@ -17,6 +17,8 @@ export class ExpenseCardItemComponent {
   @Input({ required: true }) expense!: ExpenseItem;
 
   handleCheckDetails() {
-    this.router.navigate([RoutePaths.EXPENSES_DETAILS, this.expense.category.id]);
+    this.router.navigate([RoutePaths.EXPENSES_DETAILS, this.expense.category.id], {
+      state: { from: this.router.url },
+    });
   }
 }

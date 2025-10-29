@@ -1,6 +1,12 @@
 import { Component, computed, effect, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CategoryItem, ExpenseItem, ExpensesHttpService, UrlSyncedComponent } from '@/shared';
+import {
+  CategoriesHttpService,
+  CategoryItem,
+  ExpenseItem,
+  ExpensesHttpService,
+  UrlSyncedComponent,
+} from '@/shared';
 import { TableComponent } from '@/entities/table/ui/table.component';
 import { DashboardCardComponent, CardBodyComponent } from '@/entities/cards/card';
 import { ControlsComponent } from '@/widgets/controls/ui/controls.component';
@@ -26,11 +32,12 @@ export class ExpensesDetailsPageComponent
 {
   private route = inject(ActivatedRoute);
   private expensesHttpService = inject(ExpensesHttpService);
+  private categoriesHttpService = inject(CategoriesHttpService);
 
   expenses = signal<ExpenseItem[]>([]);
   category = signal<CategoryItem | null>(null);
 
-  allData = computed(() => this.category()?.expenses || []);
+  allData = computed(() => this.expensesHttpService.expenses() || []);
 
   override get isEmpty() {
     return this.expenses().length === 0;
@@ -70,8 +77,8 @@ export class ExpensesDetailsPageComponent
         const categoryId = params['id'];
 
         if (!categoryId) return;
-        this.expensesHttpService.selectedCategoryId.set(categoryId);
-        const category = this.expensesHttpService.currentCategory();
+        this.categoriesHttpService.selectedCategoryId.set(categoryId);
+        const category = this.categoriesHttpService.currentCategory();
         this.category.set(category || null);
       }
     });

@@ -15,13 +15,14 @@ export const menuItems = [
     icon: 'account_balance_wallet',
   },
   { id: 4, path: RoutePaths.EXPENSES, title: 'Expenses', icon: 'attach_money' },
-  { id: 5, path: RoutePaths.GOALS, title: 'Goals', icon: 'check_box' },
-  { id: 6, path: RoutePaths.STATISTICS, title: 'Statistics', icon: 'bar_chart' },
+  { id: 5, path: RoutePaths.CATEGORIES, title: 'Categories', icon: 'category' },
+  { id: 6, path: RoutePaths.GOALS, title: 'Goals', icon: 'check_box' },
+  { id: 7, path: RoutePaths.STATISTICS, title: 'Statistics', icon: 'bar_chart' },
   {
-    id: 7,
+    id: 8,
     path: RoutePaths.SUBSCRIPTIONS,
     title: 'Subscriptions',
     icon: 'subscriptions',
   },
-  { id: 8, path: RoutePaths.SETTINGS, title: 'Settings', icon: 'settings' },
+  { id: 9, path: RoutePaths.SETTINGS, title: 'Settings', icon: 'settings' },
 ];

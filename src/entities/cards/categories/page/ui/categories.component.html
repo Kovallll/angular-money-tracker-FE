@@ -1,0 +1,47 @@
+<div class="card">
+  <div class="header">
+    <div class="left-content">
+      <div class="category-icon">
+        <i class="pi pi-table"></i>
+      </div>
+      <div class="text">
+        <p class="category">{{ category().title }}</p>
+        <p class="cost">{{ category().totalExpenses | currency }}</p>
+      </div>
+    </div>
+    <div class="right-content">
+      <div class="percents-block">
+        <p class="percents">
+          {{ compareDelta().value + '%' }}
+        </p>
+        @if (compareDelta().negative) {
+          <i class="pi pi-arrow-down negative"></i>
+        } @else {
+          <i class="pi pi-arrow-up positive"></i>
+        }
+      </div>
+      <p class="compare">Compare to last month</p>
+    </div>
+  </div>
+  <div class="body">
+    <div class="chart">
+      <canvas
+        baseChart
+        [type]="'line'"
+        [data]="{ labels: chart()?.labels, datasets: chart()?.datasets ?? [] }"
+        [options]="options"
+      ></canvas>
+    </div>
+    <div class="totals">
+      <div class="total">
+        <p class="title">Expenses</p>
+        <p class="amount">{{ category().totalExpenses | currency }}</p>
+      </div>
+      <divider color="tertiary" />
+      <div class="total">
+        <p class="title">Revenue</p>
+        <p class="amount">{{ category().totalRevenues | currency }}</p>
+      </div>
+    </div>
+  </div>
+</div>

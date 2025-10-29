@@ -1,0 +1,106 @@
+@use 'theme' as *;
+
+:host {
+  width: 100%;
+}
+
+.container {
+  display: flex;
+  width: 100%;
+  gap: 32px;
+}
+
+.cards-block {
+  width: 100%;
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+}
+
+.charts {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  width: 100%;
+  gap: 24px;
+}
+
+.pi {
+  font-size: 24px;
+}
+
+.negative {
+  color: $error;
+}
+
+.positive {
+  color: $success;
+}
+
+.totals {
+  width: 100%;
+  justify-content: space-between;
+  display: flex;
+  gap: 24px;
+  margin-bottom: 12px;
+}
+
+.total {
+  display: flex;
+  flex-direction: column;
+  background: $light-blue;
+  width: 100%;
+  border-radius: 12px;
+  justify-content: center;
+  padding: 12px 24px;
+  gap: 12px;
+}
+
+.subtitle {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.amount {
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.percents {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+}
+
+.charts {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+.chart {
+  width: 600px;
+  height: 400px;
+
+  &:not(:first-child) {
+    margin-bottom: 24px;
+  }
+}

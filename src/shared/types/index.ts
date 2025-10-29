@@ -33,6 +33,15 @@ export interface BalanceCard {
   transactions: Transaction[];
 }
 
+export interface CreateCard {
+  cardName: string;
+  cardNumber: string;
+  cardBalance: number;
+  cardType: string;
+  bankName: string;
+  branchName: string;
+}
+
 export interface ExpenseItem {
   id: number;
   category: Pick<CategoryItem, 'id' | 'title'>;
@@ -44,8 +53,10 @@ export interface ExpenseItem {
 export interface CategoryItem {
   id: number;
   title: string;
-  expensesAmount: number;
-  expenses: ExpenseItem[];
+  expenses: Transaction[];
+  revenues: Transaction[];
+  totalExpenses: number;
+  totalRevenues: number;
 }
 
 export interface GoalItem {
@@ -65,4 +76,52 @@ export interface SubscribeItem {
   lastCharge: string;
   type: string;
   description?: string;
+}
+
+export interface CategoryLineChartDto {
+  categoryId: number;
+  title: string;
+  labels: string[];
+  datasets: Array<{
+    label: string;
+    data: number[];
+    borderColor: string;
+    backgroundColor?: string;
+    tension?: number;
+    pointRadius?: number;
+    fill?: boolean;
+  }>;
+}
+
+export interface ChartJsPie {
+  labels: string[];
+  datasets: Array<{ data: number[]; backgroundColor: string[] }>;
+}
+
+export interface ChartJsBar {
+  labels: string[]; // месяцы
+  datasets: Array<{ label: string; data: number[]; backgroundColor?: string }>;
+}
+
+export interface ChartJsLine {
+  labels: string[]; // месяцы
+  datasets: Array<{
+    label: string;
+    data: number[];
+    borderColor?: string;
+    tension?: number;
+    fill?: boolean;
+  }>;
+}
+
+export interface ExpensesOverviewDto {
+  pie: ChartJsPie; // доли категорий за текущий месяц
+  bar: ChartJsBar; // по категориям за последние N месяцев (топ-K)
+  line: ChartJsLine; // суммарно по всем категориям за 12 мес.
+  meta: {
+    monthIndex: number; // 0..11 текущий месяц
+    year: number;
+    monthsBar: number;
+    topK: number;
+  };
 }

@@ -1,0 +1,94 @@
+@use 'theme' as *;
+
+:host {
+  width: 100%;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  border: 1px solid $secondary;
+  overflow: hidden;
+  cursor: pointer;
+  background: $light-blue;
+  padding: 8px 24px;
+}
+
+.header,
+.body {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+}
+
+.left-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.category-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 8px;
+  background-color: $accent;
+}
+
+.percents-block {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  gap: 8px;
+}
+
+.percents {
+  color: $white;
+}
+
+.compare {
+  font-size: 12px;
+  color: $gray;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+}
+
+.icon {
+  color: $success;
+}
+
+.chart {
+  max-height: 100px;
+  height: 100%;
+  margin-bottom: 12px;
+  max-width: 100%;
+}
+
+.totals {
+  display: flex;
+  flex-direction: column;
+}
+
+.total {
+  display: flex;
+  justify-content: space-between;
+}
+
+.negative {
+  color: $error;
+}
+
+.positive {
+  color: $success;
+}

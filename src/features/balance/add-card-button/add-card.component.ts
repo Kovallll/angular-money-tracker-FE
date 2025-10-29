@@ -27,6 +27,10 @@ export class BalanceAddCardButtonComponent implements OnDestroy {
     });
   }
 
+  onClose() {
+    this.ref?.close();
+  }
+
   ngOnDestroy() {
     if (this.ref) {
       this.ref.close();

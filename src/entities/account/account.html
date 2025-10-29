@@ -1,7 +1,13 @@
 <div class="container">
-  @if (user) {
-  <div class="name">{{ user.name }}</div>
-  <div class="email">{{ user.email }}</div>
+  @if (user) { @if(user.avatar) {
+  <div></div>
+  } @else {
+  <i class="pi pi-user"></i>
+  }
+  <div class="info">
+    <div class="name">{{ user.name }}</div>
+    <div class="email">{{ user.email }}</div>
+  </div>
   } @else {
   <p>Пользователь не найден</p>
   }

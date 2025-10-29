@@ -15,5 +15,17 @@ import { ExpenseCardItemComponent } from '../card-item/expense-card-item.compone
 export class ExpenseCardPageComponent {
   @Input({ required: true }) category: CategoryItem | null = null;
 
-  expenses = computed(() => this.category?.expenses.slice(0, 2) ?? []);
+  expenses = computed(() => {
+    if (!this.category) return [];
+    return this.category.expenses.slice(0, 2).map((e) => ({
+      id: e.id,
+      title: e.title,
+      amount: e.amount,
+      date: e.date,
+      category: {
+        id: this.category!.id,
+        title: this.category!.title,
+      },
+    }));
+  });
 }

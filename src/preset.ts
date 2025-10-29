@@ -31,7 +31,28 @@ export const ThemePreset = definePreset(Aura, {
         },
       },
     },
+    floatlabel: {
+      colorScheme: {
+        dark: {
+          root: {
+            color: '#ffffff',
+            activeColor: '#ffffff',
+          },
+        },
+      },
+    },
     inputtext: {
+      colorScheme: {
+        dark: {
+          root: {
+            background: '#0f172a',
+            color: '#ffffff',
+            placeholderColor: '#94a3b8',
+          },
+        },
+      },
+    },
+    select: {
       colorScheme: {
         dark: {
           root: {

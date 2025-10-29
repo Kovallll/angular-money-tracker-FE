@@ -1,5 +1,5 @@
 import { ExpenseCardPageComponent } from '@/entities/cards/expenses/page/ui/expense-card.component';
-import { ExpensesHttpService } from '@/shared';
+import { CategoriesHttpService, ExpensesHttpService } from '@/shared';
 import { Component, inject } from '@angular/core';
 
 @Component({
@@ -10,7 +10,7 @@ import { Component, inject } from '@angular/core';
   imports: [ExpenseCardPageComponent],
 })
 export class ExpensesCardsComponent {
-  private expensesHtppService = inject(ExpensesHttpService);
+  private categoriesHtppService = inject(CategoriesHttpService);
 
-  categories = this.expensesHtppService.categories;
+  categories = this.categoriesHtppService.categories;
 }
