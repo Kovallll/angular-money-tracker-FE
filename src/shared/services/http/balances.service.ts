@@ -3,7 +3,7 @@ import { BalanceCard, CreateCard } from '@/shared/types';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { map, shareReplay, startWith, switchMap, tap, catchError, of, Subject } from 'rxjs';
+import { startWith, switchMap, tap, catchError, Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class BalancesHttpService {
@@ -15,7 +15,6 @@ export class BalancesHttpService {
   private readonly cards$ = this.refresh$.pipe(
     startWith(void 0),
     switchMap(() => this.http.get<BalanceCard[]>(balancesUrl)),
-    shareReplay({ bufferSize: 1, refCount: true }),
   );
 
   readonly cards = toSignal(this.cards$, { initialValue: [] as BalanceCard[] });
@@ -34,8 +33,6 @@ export class BalancesHttpService {
   }
 
   getCard(id: number | null) {
-    return this.http
-      .get<BalanceCard>(`${balancesUrl}/${id}`)
-      .pipe(shareReplay({ bufferSize: 1, refCount: true }));
+    return this.http.get<BalanceCard>(`${balancesUrl}/${id}`);
   }
 }

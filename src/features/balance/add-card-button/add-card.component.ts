@@ -13,7 +13,7 @@ import { ButtonModule } from 'primeng/button';
   imports: [MatIconModule, ButtonModule, DynamicDialogModule],
   providers: [DialogService],
 })
-export class BalanceAddCardButtonComponent implements OnDestroy {
+export class BalanceAddCardButtonComponent {
   ref: DynamicDialogRef | undefined | null;
 
   constructor(public dialogService: DialogService) {}
@@ -25,15 +25,5 @@ export class BalanceAddCardButtonComponent implements OnDestroy {
       dismissableMask: true,
       styleClass: 'modal',
     });
-  }
-
-  onClose() {
-    this.ref?.close();
-  }
-
-  ngOnDestroy() {
-    if (this.ref) {
-      this.ref.close();
-    }
   }
 }

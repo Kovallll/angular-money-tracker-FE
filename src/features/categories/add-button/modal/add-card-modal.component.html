@@ -1,0 +1,22 @@
+<form #cardForm="ngForm" (ngSubmit)="onSubmit(cardForm)">
+  <div class="wrapper">
+    <input
+      class="input"
+      pInputText
+      type="text"
+      id="categoryName"
+      placeholder="Category Name"
+      name="categoryName"
+      [(ngModel)]="card.title"
+      #categoryName="ngModel"
+      [invalid]="categoryName.invalid && (categoryName.touched || cardForm.submitted)"
+      required
+    />
+    @if (categoryName.invalid && (categoryName.touched || cardForm.submitted)) {
+      <p-message severity="error" size="small" variant="simple"
+        >Category Name is required.</p-message
+      >
+    }
+  </div>
+  <button pButton severity="primary" type="submit">Add</button>
+</form>

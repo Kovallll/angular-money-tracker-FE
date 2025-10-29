@@ -29,7 +29,7 @@
         </div>
       </div>
       <div class="content">
-        @for (category of categories(); track category.id) {
+        @for (category of categories.data(); track category.id) {
           <category-card [category]="category" [chart]="getCurrentChart(category.id)" />
         }
       </div>

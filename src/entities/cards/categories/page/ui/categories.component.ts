@@ -19,12 +19,6 @@ export class CategoryCardComponent {
   category = input<CategoryItem>({ title: '', totalExpenses: 0 } as CategoryItem);
   chart = input<CategoryLineChartDto>();
 
-  constructor() {
-    effect(() => {
-      console.log(this.compareDelta(), 'compareDelta');
-    });
-  }
-
   compareDelta = computed(() => this.categoriesHttpService.getChartDeltaCompare(this.chart()));
 
   readonly options: ChartConfiguration['options'] = {

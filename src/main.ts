@@ -8,9 +8,11 @@ import { providePrimeNG } from 'primeng/config';
 import { ThemePreset } from './preset';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { baseApiUrlInterceptor } from './shared';
+import { provideTanStackQuery, QueryClient } from '@tanstack/angular-query-experimental';
 
 bootstrapApplication(AppComponent, {
   providers: [
+    provideTanStackQuery(new QueryClient()),
     provideProtractorTestingSupport(),
     provideRouter(routeConfig),
     provideCharts(withDefaultRegisterables()),

@@ -10,7 +10,6 @@
   border-radius: 12px;
   border: 1px solid $secondary;
   overflow: hidden;
-  cursor: pointer;
   background: $light-blue;
   padding: 8px 24px;
 }
@@ -73,6 +72,7 @@
   height: 100%;
   margin-bottom: 12px;
   max-width: 100%;
+  cursor: pointer;
 }
 
 .totals {

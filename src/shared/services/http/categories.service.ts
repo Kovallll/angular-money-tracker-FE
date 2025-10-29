@@ -1,8 +1,7 @@
-import { categoriesUrl, CategoryItem, CategoryLineChartDto } from '@/shared';
+import { categoriesUrl, CategoryItem, CategoryLineChartDto, CreateCategoryItem } from '@/shared';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal, computed } from '@angular/core';
-import { shareReplay } from 'rxjs';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { lastValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -10,9 +9,27 @@ import { toSignal } from '@angular/core/rxjs-interop';
 export class CategoriesHttpService {
   private http = inject(HttpClient);
 
-  private categories$ = this.http.get<CategoryItem[]>(categoriesUrl).pipe(shareReplay(1));
+  getCategories() {
+    return lastValueFrom(this.http.get<CategoryItem[]>(categoriesUrl));
+  }
 
-  readonly categories = toSignal(this.categories$, { initialValue: [] });
+  readonly categories = signal<CategoryItem[]>([]);
+  readonly charts = signal<CategoryLineChartDto[]>([]);
+
+  constructor() {
+    this.loadCategories();
+    this.loadCharts();
+  }
+
+  private async loadCategories() {
+    const data = await this.getCategories();
+    this.categories.set(data);
+  }
+
+  private async loadCharts() {
+    const data = await this.getCategoryExpenseLineCharts(new Date().getFullYear());
+    this.charts.set(data);
+  }
 
   readonly selectedCategoryId = signal<number | null>(null);
 
@@ -24,14 +41,12 @@ export class CategoriesHttpService {
   getCategoryExpenseLineCharts(year = new Date().getFullYear(), top?: number) {
     const params: any = { year, limitToCurrent: 'true' };
     if (top != null) params.top = String(top);
-    return this.http.get<CategoryLineChartDto[]>('statistics/categories/line/year', {
-      params,
-    });
+    return lastValueFrom(
+      this.http.get<CategoryLineChartDto[]>('statistics/categories/line/year', {
+        params,
+      }),
+    );
   }
-
-  readonly charts = toSignal(this.getCategoryExpenseLineCharts(new Date().getFullYear()), {
-    initialValue: [] as CategoryLineChartDto[],
-  });
 
   getChartDeltaCompare(chart?: CategoryLineChartDto): { value: number; negative: boolean } {
     const data = chart?.datasets?.[0]?.data ?? [];
@@ -77,5 +92,9 @@ export class CategoriesHttpService {
 
     if (delta < 0) return { value: Math.abs(delta).toFixed(2), negative: true };
     return { value: Math.abs(delta).toFixed(2), negative: false };
+  }
+
+  createCategory(category: CreateCategoryItem) {
+    return lastValueFrom(this.http.post<CreateCategoryItem>(categoriesUrl, category));
   }
 }

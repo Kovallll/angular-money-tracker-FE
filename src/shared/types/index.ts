@@ -59,6 +59,10 @@ export interface CategoryItem {
   totalRevenues: number;
 }
 
+export interface CreateCategoryItem {
+  title: string;
+}
+
 export interface GoalItem {
   id: number;
   targetBudget: number;

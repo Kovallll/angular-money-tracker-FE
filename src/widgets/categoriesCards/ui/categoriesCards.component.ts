@@ -5,6 +5,7 @@ import { Component, computed, inject, OnInit } from '@angular/core';
 import { ChartConfiguration } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { GategoryAddButtonComponent } from '@/features/categories/add-button/add-card.component';
+import { injectQuery } from '@tanstack/angular-query-experimental';
 
 @Component({
   selector: 'categories-cards',
@@ -14,26 +15,34 @@ import { GategoryAddButtonComponent } from '@/features/categories/add-button/add
   standalone: true,
 })
 export class CategoriesCardsComponent implements OnInit {
-  private categoriesHtppService = inject(CategoriesHttpService);
+  private categoriesHttpService = inject(CategoriesHttpService);
   private statisticsHttpService = inject(StatisticsHttpService);
 
-  categories = this.categoriesHtppService.categories;
+  categories = injectQuery(() => ({
+    queryKey: ['categories'],
+    queryFn: () => this.categoriesHttpService.getCategories(),
+  }));
 
-  charts = this.categoriesHtppService.charts;
+  charts = injectQuery(() => ({
+    queryKey: ['charts'],
+    queryFn: () => this.categoriesHttpService.getCategoryExpenseLineCharts(),
+  }));
 
   getCurrentChart(id: number) {
-    return this.charts().find((c) => c.categoryId === id);
+    return this.charts.data()?.find((c) => c.categoryId === id);
   }
 
   overageDeltaCompare = computed(() =>
-    this.categoriesHtppService.getOverageDeltaCompare(this.charts()),
+    this.categoriesHttpService.getOverageDeltaCompare(this.charts.data() ?? []),
   );
 
   topTransactions = computed(() =>
-    this.categoriesHtppService.getTopTransactions(this.categories()),
+    this.categoriesHttpService.getTopTransactions(this.categories.data() ?? []),
   );
 
-  totalExpenses = computed(() => this.categoriesHtppService.getTotalExpenses(this.categories()));
+  totalExpenses = computed(() =>
+    this.categoriesHttpService.getTotalExpenses(this.categories.data() ?? []),
+  );
 
   pieData?: ChartConfiguration<'doughnut'>['data'];
   barData?: ChartConfiguration<'bar'>['data'];

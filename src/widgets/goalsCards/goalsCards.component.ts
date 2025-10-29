@@ -41,9 +41,7 @@ export class GoalsCardsComponent extends UrlSyncedComponent<GoalItem> {
 
   handleActiveCardChange(id: number) {
     const card = this.goalsService.getGoal(id);
-    console.log(card(), 'card');
     if (card()) this.activeCard.set(card()!);
-    console.log(this.activeCard(), 'activeCard');
   }
 
   setUpdatedData(updatedData: GoalItem[]): void {
