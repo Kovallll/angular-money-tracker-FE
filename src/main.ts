@@ -1,6 +1,7 @@
+import 'zone.js';
 import { bootstrapApplication, provideProtractorTestingSupport } from '@angular/platform-browser';
 import { AppComponent } from './app/app';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withHashLocation } from '@angular/router';
 import routeConfig from './app/routes';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
@@ -10,23 +11,27 @@ import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/
 import { baseApiUrlInterceptor } from './shared';
 import { provideTanStackQuery, QueryClient } from '@tanstack/angular-query-experimental';
 
-bootstrapApplication(AppComponent, {
-  providers: [
-    provideTanStackQuery(new QueryClient()),
-    provideProtractorTestingSupport(),
-    provideRouter(routeConfig),
-    provideCharts(withDefaultRegisterables()),
-    provideAnimationsAsync(),
-    provideHttpClient(withFetch(), withInterceptors([baseApiUrlInterceptor])),
-    providePrimeNG({
-      theme: {
-        preset: ThemePreset,
-        options: {
-          prefix: 'p',
-          darkModeSelector: 'system',
-          cssLayer: false,
-        },
+const providers = [
+  provideTanStackQuery(new QueryClient()),
+  provideProtractorTestingSupport(),
+  provideRouter(routeConfig, withHashLocation()),
+  provideCharts(withDefaultRegisterables()),
+  provideAnimationsAsync(),
+  provideHttpClient(withFetch(), withInterceptors([baseApiUrlInterceptor])),
+  providePrimeNG({
+    theme: {
+      preset: ThemePreset,
+      options: {
+        prefix: 'p',
+        darkModeSelector: 'system',
+        cssLayer: false,
       },
-    }),
-  ],
+    },
+  }),
+];
+
+bootstrapApplication(AppComponent, {
+  providers,
 }).catch((err) => console.error(err));
+
+export { providers };

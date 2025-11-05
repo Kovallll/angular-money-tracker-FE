@@ -1,0 +1,1 @@
+export { AssetUrlPipe } from './AssetPipe';

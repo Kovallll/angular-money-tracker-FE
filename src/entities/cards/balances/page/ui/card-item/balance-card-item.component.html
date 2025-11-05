@@ -4,7 +4,7 @@
       {{ card().cardType }}
     </p>
     <div class="card-name">
-      <img src="assets/mastercard-logo.png" alt="MasterCard logo" loading="lazy" />
+      <img [src]="'mastercard-logo.png' | assetUrl" alt="MasterCard logo" loading="lazy" />
       <p>{{ card().cardName }}</p>
     </div>
   </div>

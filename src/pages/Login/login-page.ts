@@ -1,4 +1,4 @@
-import { InputErrorStateMatcher, UserService } from '@/shared';
+import { AssetUrlPipe, InputErrorStateMatcher, UserService } from '@/shared';
 import { Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,7 +9,14 @@ import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login-page',
-  imports: [ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatInputModule, RouterLink],
+  imports: [
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    RouterLink,
+    AssetUrlPipe,
+  ],
   templateUrl: `./login-page.html`,
   styleUrl: `./login-page.scss`,
 })

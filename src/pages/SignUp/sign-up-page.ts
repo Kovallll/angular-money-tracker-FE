@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { RegisterButtonComponent } from '@/features/account/register-button/register.component';
+import { AssetUrlPipe } from '@/shared';
 
 @Component({
   selector: 'app-sign-up-page',
@@ -13,6 +14,7 @@ import { RegisterButtonComponent } from '@/features/account/register-button/regi
     MatInputModule,
     RegisterButtonComponent,
     ReactiveFormsModule,
+    AssetUrlPipe,
   ],
   templateUrl: './sign-up-page.html',
   styleUrl: `./sign-up-page.scss`,

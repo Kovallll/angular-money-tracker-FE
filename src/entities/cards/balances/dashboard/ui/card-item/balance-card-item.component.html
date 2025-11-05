@@ -4,7 +4,7 @@
     <p>{{ card().cardNumber }}</p>
   </div>
   <div class="right-side">
-    <img src="assets/mastercard-logo.png" alt="MasterCard logo" loading="lazy" />
+    <img [src]="'mastercard-logo.png' | assetUrl" alt="MasterCard logo" loading="lazy" />
     <p>{{ card().cardBalance | currency }}</p>
   </div>
 </div>

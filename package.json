@@ -1,7 +1,6 @@
 {
-  "name": "angular.dev",
+  "name": "first-app",
   "version": "0.0.0",
-  "type": "module",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -10,7 +9,9 @@
     "lint": "ng lint",
     "lint:fix": "ng lint --fix",
     "format": "prettier --write \"src/**/*.{ts,html,scss,css,json,md}\"",
-    "prepare": "husky"
+    "prepare": "husky",
+    "build:single-spa:first-app": "ng build first-app --configuration production",
+    "serve:single-spa:first-app": "ng s --project first-app --disable-host-check --port 4200 --live-reload false"
   },
   "private": true,
   "dependencies": {
@@ -18,10 +19,10 @@
     "@angular/cdk": "^20.2.0",
     "@angular/common": "^20.1.0-next",
     "@angular/compiler": "^20.1.0-next",
-    "@angular/core": "^20.1.0-next",
     "@angular/forms": "^20.1.0-next",
     "@angular/material": "^20.2.0",
     "@angular/platform-browser": "^20.1.0-next",
+    "@angular/platform-browser-dynamic": "^20.3.7",
     "@angular/router": "^20.1.0-next",
     "@primeuix/styled": "^0.7.4",
     "@primeuix/themes": "^1.2.5",
@@ -34,19 +35,23 @@
     "primeicons": "^7.0.0",
     "primeng": "^20.2.0",
     "rxjs": "~7.8.0",
+    "single-spa": ">=4.0.0",
+    "single-spa-angular": "^9.2.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
     "@angular-architects/module-federation": "^20.0.0",
+    "@angular-builders/custom-webpack": "20.0.0",
     "@angular-eslint/builder": "^20.3.0",
     "@angular-eslint/eslint-plugin": "^20.3.0",
     "@angular-eslint/eslint-plugin-template": "^20.3.0",
     "@angular-eslint/schematics": "^20.3.0",
     "@angular-eslint/template-parser": "^20.2.0",
     "@angular/build": "^20.1.0-next",
-    "@angular/cli": "^20.1.0-next",
+    "@angular/cli": "20.3",
     "@angular/compiler-cli": "^20.1.0-next",
+    "@angular/core": "20.3",
     "@types/node": "^16.11.35",
     "@typescript-eslint/eslint-plugin": "^8.43.0",
     "@typescript-eslint/parser": "^8.43.0",
@@ -55,6 +60,8 @@
     "eslint-plugin-prettier": "^5.5.4",
     "husky": "^9.1.7",
     "sass": "^1.92.0",
+    "style-loader": "^3.3.1",
+    "systemjs-webpack-interop": "^2.3.7",
     "ts-node": "~10.9.0",
     "typescript": "~5.8.0"
   }
