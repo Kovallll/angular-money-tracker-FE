@@ -1,30 +1,41 @@
 <div class="container">
   <controls [controlsProps]="controlsProps()" />
-  <dashboard-card title="Subscribtions">
-    <card-body class="table">
-      <div class="header">
-        @for (header of displayedCells(); track header.field) {
-          <p class="header-title">{{ header.name }}</p>
-        }
-      </div>
-      @if (subscribes().length) {
-        @for (subscribe of subscribes(); track subscribe.id) {
-          <div class="row">
-            <div class="date">
-              <p>{{ subscribe.subscribeDate | date: 'MMM' }}</p>
-              <p class="day">{{ subscribe.subscribeDate | date: 'dd' }}</p>
+  <div class="content">
+    <div class="head">
+      <h2>Subscribtions</h2>
+      <subscription-add-button />
+    </div>
+    <dashboard-card>
+      <card-body class="table">
+        <div class="header">
+          @for (header of displayedCells(); track header.field) {
+            <p class="header-title">{{ header.name }}</p>
+          }
+        </div>
+        @if (subscribes().length) {
+          @for (subscribe of subscribes(); track subscribe.id) {
+            <div class="row" (contextmenu)="openContextMenu($event)">
+              <div class="date">
+                <p>{{ subscribe.subscribeDate | date: 'MMM' }}</p>
+                <p class="day">{{ subscribe.subscribeDate | date: 'dd' }}</p>
+              </div>
+              <p class="title">{{ subscribe.subscribeName }}</p>
+              <p class="describtion">{{ subscribe.description }}</p>
+              <p class="type">{{ subscribe.type | titlecase }}</p>
+              <p class="last-charge">{{ subscribe.lastCharge | date }}</p>
+              <p class="amount">{{ subscribe.amount | currency }}</p>
             </div>
-            <p class="title">{{ subscribe.subscribeName }}</p>
-            <p class="describtion">{{ subscribe.description }}</p>
-            <p class="type">{{ subscribe.type | titlecase }}</p>
-            <p class="last-charge">{{ subscribe.lastCharge | date }}</p>
-            <p class="amount">{{ subscribe.amount | currency }}</p>
-          </div>
+            <context-menu-component
+              #ctxMenu
+              (onDelete)="onDelete(subscribe)"
+              (onEdit)="onEdit(subscribe)"
+            />
+          }
+        } @else {
+          <p class="no-data">No data</p>
         }
-      } @else {
-        <p class="no-data">No data</p>
-      }
-    </card-body>
-  </dashboard-card>
+      </card-body>
+    </dashboard-card>
+  </div>
   <pagination />
 </div>

@@ -1,0 +1,83 @@
+<div class="dialog">
+  <h2>Edit Goal</h2>
+
+  <div class="form">
+    <div class="field">
+      <label for="title">Title</label>
+      <input
+        pInputText
+        id="title"
+        type="text"
+        [(ngModel)]="data.title"
+        placeholder="Enter goal title"
+      />
+    </div>
+
+    <div class="field">
+      <label for="targetBudget">Target Budget</label>
+      <p-inputNumber
+        id="targetBudget"
+        [(ngModel)]="data.targetBudget"
+        mode="currency"
+        currency="USD"
+        locale="en-US"
+        [minFractionDigits]="2"
+      ></p-inputNumber>
+    </div>
+
+    <div class="field">
+      <label for="goalBudget">Goal Budget</label>
+      <p-inputNumber
+        id="goalBudget"
+        [(ngModel)]="data.goalBudget"
+        mode="currency"
+        currency="USD"
+        locale="en-US"
+        [minFractionDigits]="2"
+      ></p-inputNumber>
+    </div>
+
+    <div class="field">
+      <label for="startDate">Start Date</label>
+      <p-datepicker
+        id="startDate"
+        [(ngModel)]="data.startDate"
+        dateFormat="yy-mm-dd"
+        showIcon="true"
+        appendTo="body"
+      ></p-datepicker>
+    </div>
+
+    <div class="field">
+      <label for="endDate">End Date</label>
+      <p-datepicker
+        id="endDate"
+        [(ngModel)]="data.endDate"
+        dateFormat="yy-mm-dd"
+        showIcon="true"
+        appendTo="body"
+      ></p-datepicker>
+    </div>
+  </div>
+
+  <div class="actions">
+    <p-button
+      label="Delete"
+      icon="pi pi-trash"
+      severity="danger"
+      outlined="true"
+      (onClick)="onDelete()"
+    ></p-button>
+
+    <span class="spacer"></span>
+
+    <p-button
+      label="Cancel"
+      icon="pi pi-times"
+      severity="secondary"
+      (onClick)="onCancel()"
+    ></p-button>
+
+    <p-button label="Save" icon="pi pi-check" severity="primary" (onClick)="onSave()"></p-button>
+  </div>
+</div>

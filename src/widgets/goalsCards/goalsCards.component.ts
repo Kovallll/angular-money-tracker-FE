@@ -6,6 +6,7 @@ import { GoalsStatisticCardComponent } from '@/entities/cards/statistics/ui/goal
 import { PaginationComponent } from '@/entities/pagination/ui/pagination.component';
 import { GoalItem, UrlSyncedComponent } from '@/shared';
 import { GoalAddCardButtonComponent } from '@/features/goal/add-goal-card/add-card.component';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   standalone: true,
@@ -18,6 +19,7 @@ import { GoalAddCardButtonComponent } from '@/features/goal/add-goal-card/add-ca
     GoalsStatisticCardComponent,
     PaginationComponent,
     GoalAddCardButtonComponent,
+    ProgressSpinnerModule,
   ],
 })
 export class GoalsCardsComponent extends UrlSyncedComponent<GoalItem> {
@@ -25,7 +27,7 @@ export class GoalsCardsComponent extends UrlSyncedComponent<GoalItem> {
   protected allGoals = this.goalsService.getGoals();
   protected goals = linkedSignal(this.allGoals);
   protected activeCard = signal<GoalItem | null>(null);
-
+  isLoading = this.goalsService.isLoading;
   allData = computed(() => this.allGoals());
 
   constructor() {

@@ -69,33 +69,31 @@ export const expensesOptions: ChartConfiguration<'bar'>['options'] = {
   },
 };
 
-export const goalsOptions: ChartConfiguration<'scatter'>['options'] = {
-  maintainAspectRatio: false,
+export const goalsOptions = {
   responsive: true,
+  maintainAspectRatio: false,
   scales: {
     x: {
-      type: 'linear',
-      position: 'bottom',
-      grid: { color: 'rgba(255,255,255,0.06)' },
-      ticks: { callback: (v) => formatCurrency(Number(v), 'en', '$'), color: 'white' },
+      title: { display: true, text: 'Days left' },
+      ticks: { color: '#aaa' },
+      grid: { color: 'rgba(255,255,255,0.05)' },
     },
     y: {
+      title: { display: true, text: 'Budget left (USD)' },
+      ticks: { color: '#aaa' },
+      grid: { color: 'rgba(255,255,255,0.05)' },
       beginAtZero: true,
-      grid: { color: 'rgba(255,255,255,0.06)' },
-      ticks: { color: 'white' },
     },
   },
   plugins: {
-    tooltip: {
-      titleFont: { size: 30 },
-      bodyFont: { size: 20 },
-      callbacks: {
-        label: (ctx) =>
-          `${ctx.dataset.label}: days left: ${formatNumber(ctx.parsed.y ?? 0, 'en')}, budget left: ${formatCurrency(ctx.parsed.x ?? 0, 'en', '$')}`,
-      },
-    },
     legend: {
       display: false,
+    },
+    tooltip: {
+      callbacks: {
+        label: (ctx: any) =>
+          `${ctx.dataset.label}: $${ctx.parsed.y.toLocaleString()} (${ctx.parsed.x} days left)`,
+      },
     },
   },
 };

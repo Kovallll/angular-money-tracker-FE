@@ -3,10 +3,11 @@ import { User } from '@/shared';
 import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { ExportReportComponent } from './exportReport/export-report.component';
 
 @Component({
   selector: 'app-header',
-  imports: [MatButtonModule, MatIconModule],
+  imports: [MatButtonModule, MatIconModule, ExportReportComponent],
   templateUrl: './header.html',
   styleUrls: ['./header.scss'],
   host: { class: 'container' },

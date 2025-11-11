@@ -1,0 +1,54 @@
+<form #cardForm="ngForm" (ngSubmit)="onSubmit(cardForm)">
+  @if (isDatePicker) {
+    <date-picker (dateEmmit)="onChangeDate($event)" />
+  }
+  @for (input of inputs; track input.field) {
+    @if (input.field === 'type') {
+      <p-select
+        class="select"
+        [options]="[
+          { label: 'Monthly', value: 'monthly' },
+          { label: 'Annually', value: 'annually' },
+          { label: 'Yearly', value: 'yearly' },
+          { label: 'Daily', value: 'daily' },
+        ]"
+        optionValue="value"
+        [id]="input.name"
+        [placeholder]="input.placeholder"
+        [name]="input.name"
+        [ngModel]="card()[input.field]"
+        (ngModelChange)="updateCardField($event)"
+        #model="ngModel"
+        [invalid]="model.invalid && (model.touched || cardForm.submitted)"
+        required
+      />
+
+      @if (model.invalid && (model.touched || cardForm.submitted)) {
+        <p-message severity="error" size="small" variant="simple"
+          >{{ input.placeholder }} is required.</p-message
+        >
+      }
+    } @else {
+      <div class="wrapper">
+        <input
+          class="input"
+          pInputText
+          type="text"
+          [id]="input.name"
+          [placeholder]="input.placeholder"
+          [name]="input.name"
+          [(ngModel)]="card()[input.field]"
+          #model="ngModel"
+          [invalid]="model.invalid && (model.touched || cardForm.submitted)"
+          required
+        />
+        @if (model.invalid && (model.touched || cardForm.submitted)) {
+          <p-message severity="error" size="small" variant="simple"
+            >{{ input.placeholder }} is required.</p-message
+          >
+        }
+      </div>
+    }
+  }
+  <button pButton severity="primary" type="submit">Add</button>
+</form>

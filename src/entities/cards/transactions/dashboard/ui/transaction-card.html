@@ -12,8 +12,10 @@
   </card-header>
 
   <card-body class="body">
-    @for (item of currentItems(); track item.id) {
+    @if(isLoading()) {
+    <p-progress-spinner />
+    } @else {@for (item of currentItems(); track item.id) {
     <transaction-card-item [item]="item" />
-    }
+    }}
   </card-body>
 </dashboard-card>

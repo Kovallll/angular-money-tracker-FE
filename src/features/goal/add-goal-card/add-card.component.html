@@ -1,4 +1,94 @@
-<button pButton class="button">
-  <i class="pi pi-plus" style="font-size: 16px"></i>
-  Add Card
-</button>
+<button
+  pButton
+  class="add-goal-btn"
+  icon="pi pi-plus"
+  label="Add Goal"
+  (click)="openDialog()"
+></button>
+
+<p-dialog
+  header="Create New Goal"
+  [visible]="visible()"
+  (onHide)="closeDialog()"
+  [modal]="true"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="goal-dialog"
+>
+  <form class="goal-form">
+    <div class="form-field">
+      <label for="title">Title</label>
+      <input
+        id="title"
+        pInputText
+        type="text"
+        [(ngModel)]="newGoal.title"
+        name="title"
+        placeholder="Enter goal title"
+      />
+    </div>
+
+    <div class="form-row">
+      <div class="form-field">
+        <label for="targetBudget">Target Budget</label>
+        <p-inputNumber
+          [(ngModel)]="newGoal.targetBudget"
+          name="targetBudget"
+          [min]="0"
+          mode="currency"
+          currency="USD"
+        ></p-inputNumber>
+      </div>
+
+      <div class="form-field">
+        <label for="goalBudget">Goal Budget</label>
+        <p-inputNumber
+          [(ngModel)]="newGoal.goalBudget"
+          name="goalBudget"
+          [min]="0"
+          mode="currency"
+          currency="USD"
+        ></p-inputNumber>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-field">
+        <label for="startDate">Start Date</label>
+        <p-datepicker
+          [(ngModel)]="newGoal.startDate"
+          name="startDate"
+          dateFormat="yy-mm-dd"
+          appendTo="body"
+        ></p-datepicker>
+      </div>
+
+      <div class="form-field">
+        <label for="endDate">End Date</label>
+        <p-datepicker
+          [(ngModel)]="newGoal.endDate"
+          name="endDate"
+          dateFormat="yy-mm-dd"
+          appendTo="body"
+        ></p-datepicker>
+      </div>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      label="Cancel"
+      class="cancel-btn p-button-text"
+      (click)="closeDialog()"
+    ></button>
+    <button
+      pButton
+      label="Create"
+      class="create-btn"
+      (click)="createGoal()"
+      [disabled]="!newGoal.title"
+    ></button>
+  </ng-template>
+</p-dialog>

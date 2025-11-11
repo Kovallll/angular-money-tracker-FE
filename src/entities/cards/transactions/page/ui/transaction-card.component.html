@@ -1,6 +1,10 @@
 <div class="container">
   <controls [controlsProps]="controlsProps()" />
-  <dashboard-card title="Transactions" class="card">
+  <div class="header">
+    <h2>Transactions</h2>
+    <transaction-add-button />
+  </div>
+  <dashboard-card class="card">
     <card-body class="body">
       <ng-container class="table">
         <mat-tab-group
@@ -12,12 +16,17 @@
             <mat-tab [label]="tab" class="tab" />
           }
         </mat-tab-group>
-
-        <table-component
-          [dataSource]="currentTransactions()"
-          [isEmpty]="isEmpty"
-          [displayedCells]="displayedCells()"
-        />
+        @if (isLoading()) {
+          <p-progress-spinner />
+        } @else {
+          <table-component
+            [dataSource]="currentTransactions()"
+            [isEmpty]="isEmpty"
+            [displayedCells]="displayedCells()"
+            (onDelete)="handleDelete($event)"
+            (onEdit)="handleEdit($event)"
+          />
+        }
       </ng-container>
     </card-body>
   </dashboard-card>

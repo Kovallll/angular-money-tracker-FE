@@ -1,0 +1,21 @@
+@use 'theme' as *;
+@use '@angular/material' as mat;
+
+.export {
+  border-radius: 12px;
+  font-size: 20px;
+  background: $accent;
+  border: 1px solid $secondary;
+  padding: 8px 20px;
+  @include mat.button-overrides(
+    (
+      filled-label-text-color: $white,
+      filled-container-color: $accent,
+    )
+  );
+
+  .icon {
+    margin-right: 12px;
+    transform: scale(1.5);
+  }
+}

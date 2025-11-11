@@ -11,6 +11,7 @@ export type Transaction = {
   id: number;
   userId: number;
   cardId: number;
+  categoryId: number;
   title: string;
   category: string;
   amount: number;
@@ -21,6 +22,8 @@ export type Transaction = {
   receipt: string;
   status: string;
 };
+
+export type CreateTransaction = Omit<Transaction, 'id' | 'userId' | 'cardId' | 'categoryId'>;
 
 export interface BalanceCard {
   id: number;
@@ -57,10 +60,12 @@ export interface CategoryItem {
   revenues: Transaction[];
   totalExpenses: number;
   totalRevenues: number;
+  icon: string;
 }
 
 export interface CreateCategoryItem {
   title: string;
+  icon: string;
 }
 
 export interface GoalItem {
@@ -72,6 +77,8 @@ export interface GoalItem {
   title: string;
 }
 
+export type CreateGoalItem = Omit<GoalItem, 'id'>;
+
 export interface SubscribeItem {
   id: number;
   amount: number;
@@ -82,6 +89,7 @@ export interface SubscribeItem {
   description?: string;
 }
 
+export type CreateSubscribeItem = Omit<SubscribeItem, 'id'>;
 export interface CategoryLineChartDto {
   categoryId: number;
   title: string;

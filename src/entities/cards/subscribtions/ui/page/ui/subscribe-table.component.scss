@@ -7,6 +7,17 @@
   width: 100%;
 }
 
+.content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+}
+
 .table {
   display: flex;
   flex-direction: column;

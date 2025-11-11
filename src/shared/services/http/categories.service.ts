@@ -21,7 +21,7 @@ export class CategoriesHttpService {
     this.loadCharts();
   }
 
-  private async loadCategories() {
+  async loadCategories() {
     const data = await this.getCategories();
     this.categories.set(data);
   }
@@ -96,5 +96,13 @@ export class CategoriesHttpService {
 
   createCategory(category: CreateCategoryItem) {
     return lastValueFrom(this.http.post<CreateCategoryItem>(categoriesUrl, category));
+  }
+
+  updateCategory(id: number, category: CreateCategoryItem) {
+    return lastValueFrom(this.http.patch<CreateCategoryItem>(`${categoriesUrl}/${id}`, category));
+  }
+
+  deleteCategory(id: number) {
+    return lastValueFrom(this.http.delete(`${categoriesUrl}/${id}`));
   }
 }

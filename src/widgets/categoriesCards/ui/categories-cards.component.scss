@@ -89,18 +89,3 @@
   display: flex;
   gap: 8px;
 }
-
-.charts {
-  display: flex;
-  flex-direction: column;
-  gap: 48px;
-}
-
-.chart {
-  width: 600px;
-  height: 400px;
-
-  &:not(:first-child) {
-    margin-bottom: 24px;
-  }
-}

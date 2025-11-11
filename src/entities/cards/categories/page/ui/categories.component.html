@@ -1,8 +1,8 @@
-<div class="card">
+<div class="card" (contextmenu)="openContextMenu($event)">
   <div class="header">
     <div class="left-content">
       <div class="category-icon">
-        <i class="pi pi-table"></i>
+        <i [class]="category().icon"></i>
       </div>
       <div class="text">
         <p class="category">{{ category().title }}</p>
@@ -14,7 +14,7 @@
         <p class="percents">
           {{ compareDelta().value + '%' }}
         </p>
-        @if (compareDelta().negative) {
+        @if (!compareDelta().negative) {
           <i class="pi pi-arrow-down negative"></i>
         } @else {
           <i class="pi pi-arrow-up positive"></i>
@@ -44,4 +44,5 @@
       </div>
     </div>
   </div>
+  <context-menu-component #ctxMenu (onDelete)="handleDelete()" (onEdit)="handleEdit()" />
 </div>

@@ -21,6 +21,7 @@
     "useDefineForClassFields": false,
     "allowSyntheticDefaultImports": true,
     "lib": ["ES2022", "dom"],
+    "types": ["node"],
     "paths": {
       "@/*": ["src/*"],
       "chart.js/dist/types/utils": ["node_modules/chart.js/dist/types/utils.d.ts"]

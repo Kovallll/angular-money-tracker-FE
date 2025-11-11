@@ -1,22 +1,28 @@
-<div class="container">
-  <div class="head">
-    <goal-active-card [goal]="activeCard()" />
-    <div class="chart">
-      <goals-statistic-card />
-    </div>
+@if (isLoading()) {
+  <div class="spinner">
+    <p-progress-spinner ariaLabel="loading" />
   </div>
-  <div class="body">
-    <div class="body-header">
-      <div class="title">All Goals</div>
-      <goal-add-card-button />
-    </div>
-    <div class="content">
-      <div class="cards">
-        @for (goal of goals(); track goal.id) {
-          <goal-card-item [goal]="goal" (click)="handleActiveCardChange(goal.id)" />
-        }
+} @else {
+  <div class="container">
+    <div class="head">
+      <goal-active-card [goal]="activeCard()" />
+      <div class="chart">
+        <goals-statistic-card />
       </div>
-      <pagination [pageSize]="pageSize" />
+    </div>
+    <div class="body">
+      <div class="body-header">
+        <div class="title">All Goals</div>
+        <goal-add-card-button />
+      </div>
+      <div class="content">
+        <div class="cards">
+          @for (goal of goals(); track goal.id) {
+            <goal-card-item [goal]="goal" (click)="handleActiveCardChange(goal.id)" />
+          }
+        </div>
+        <pagination [pageSize]="pageSize" />
+      </div>
     </div>
   </div>
-</div>
+}

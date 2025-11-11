@@ -19,9 +19,17 @@
           </ng-container>
         }
       }
-
+      <context-menu-component
+        #ctxMenu
+        (onDelete)="handleDelete(selectedRow)"
+        (onEdit)="handleEdit(selectedRow)"
+      />
       <tr mat-header-row *matHeaderRowDef="displayedColumns()"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns()"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns()"
+        (contextmenu)="openContextMenu($event, row)"
+      ></tr>
     </table>
   } @else {
     <div class="no-data">No data</div>

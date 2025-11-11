@@ -11,7 +11,7 @@ export class SubscribtionsService {
 
   getUpcomingSubscribes() {
     return this.subscribeHttpService
-      .subscribtions()
+      .subscriptions()
       .filter((sub) =>
         dayjs(sub.subscribeDate).isBetween(dayjs(), dayjs().add(21, 'day'), null, '[]'),
       )
@@ -31,6 +31,6 @@ export class SubscribtionsService {
   }
 
   getSubscribes() {
-    return this.subscribeHttpService.subscribtions();
+    return this.subscribeHttpService.subscriptions();
   }
 }

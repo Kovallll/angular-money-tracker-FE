@@ -6,6 +6,7 @@ import { SlideComponent } from '../../../slider/slide/slide';
 import { GoalCardItemComponent } from './card-item/goal-card-item.component';
 import { GoalsService } from '../../services/goals.service';
 import { RoutePaths } from '@/shared';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'dash-goal-card',
@@ -17,6 +18,7 @@ import { RoutePaths } from '@/shared';
     SlideComponent,
     SliderCardComponent,
     GoalCardItemComponent,
+    ProgressSpinnerModule,
   ],
   templateUrl: './goal-card.html',
   styleUrl: `./goal-card.scss`,
@@ -24,7 +26,7 @@ import { RoutePaths } from '@/shared';
 })
 export class DashboardGoalCardComponent {
   seeAllPath = RoutePaths.GOALS;
-
+  isLoading = this.goalsService.isLoading;
   constructor(private readonly goalsService: GoalsService) {}
 
   goals = this.goalsService.getGoals(5);

@@ -1,0 +1,17 @@
+<div class="analytics">
+  <p class="title" [class.disable]="view() === 'row'">Analytics</p>
+  <div class="charts" [class.row]="view() === 'row'">
+    <div class="chart">
+      <div class="subtitle">Categories Share</div>
+      <canvas baseChart [type]="'doughnut'" [data]="pieData()" [options]="pieOptions"></canvas>
+    </div>
+    <div class="chart">
+      <div class="subtitle">Spending by Month</div>
+      <canvas baseChart [type]="'bar'" [data]="barData" [options]="barOptions"></canvas>
+    </div>
+    <div class="chart">
+      <div class="subtitle">Spending Over Time</div>
+      <canvas baseChart [type]="'line'" [data]="lineData" [options]="lineOptions"></canvas>
+    </div>
+  </div>
+</div>

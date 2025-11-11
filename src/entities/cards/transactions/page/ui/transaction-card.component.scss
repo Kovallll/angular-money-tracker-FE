@@ -6,6 +6,12 @@
   max-width: 500px;
 }
 
+.header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
 .card {
   display: flex;
   flex-direction: column;

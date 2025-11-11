@@ -41,32 +41,48 @@
       "prefix": "",
       "architect": {
         "build": {
-          "builder": "@angular-builders/custom-webpack:browser",
+          "builder": "@angular/build:application",
+          //"builder": "@angular-builders/custom-webpack:browser",
           "options": {
             "outputPath": "dist/first-app",
             "index": "src/index.html",
-            "main": "src/main.single-spa.ts",
+            //"main": "src/main.single-spa.ts",
             "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": ["src/assets"],
+            "assets": [
+              "src/assets",
+              {
+                "glob": "**/*",
+                "input": "node_modules/primeicons/fonts",
+                "output": "/assets/primeicons/fonts"
+              }
+            ],
             "stylePreprocessorOptions": {
               "includePaths": ["src"]
             },
             "styles": ["src/styles.scss"],
             "scripts": [],
 
-            "customWebpackConfig": {
-              "path": "extra-webpack.config.js",
-              "libraryName": "first-app",
-              "libraryTarget": "umd",
-              "output": {
-                "publicPath": "http://localhost:4200/"
-              }
-            },
+            // "customWebpackConfig": {
+            //   "path": "extra-webpack.config.js",
+            //   "libraryName": "first-app",
+            //   "libraryTarget": "umd",
+            //   "output": {
+            //     "publicPath": "http://localhost:4200/"
+            //   }
+            // },
             "deployUrl": "http://localhost:4200/"
           },
           "configurations": {
+            "spa": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.spa.ts"
+                }
+              ]
+            },
             "production": {
               "budgets": [
                 {
@@ -92,13 +108,17 @@
           "defaultConfiguration": "production"
         },
         "serve": {
-          "builder": "@angular-builders/custom-webpack:dev-server",
+          //"builder": "@angular-builders/custom-webpack:dev-server",
+          "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
               "buildTarget": "first-app:build:production"
             },
             "development": {
               "buildTarget": "first-app:build:development"
+            },
+            "spa": {
+              "buildTarget": "first-app:build:spa"
             }
           },
           "defaultConfiguration": "development"

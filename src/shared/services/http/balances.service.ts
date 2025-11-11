@@ -35,4 +35,22 @@ export class BalancesHttpService {
   getCard(id: number | null) {
     return this.http.get<BalanceCard>(`${balancesUrl}/${id}`);
   }
+
+  updateCard(id: number, card: CreateCard) {
+    return this.http.patch<BalanceCard>(`${balancesUrl}/${id}`, card).pipe(
+      tap(() => this.refresh()),
+      catchError((err) => {
+        throw err;
+      }),
+    );
+  }
+
+  deleteCard(id: number) {
+    return this.http.delete(`${balancesUrl}/${id}`).pipe(
+      tap(() => this.refresh()),
+      catchError((err) => {
+        throw err;
+      }),
+    );
+  }
 }

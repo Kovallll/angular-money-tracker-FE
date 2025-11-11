@@ -1,0 +1,52 @@
+@use 'theme' as *;
+
+.dialog {
+  padding: 1.5rem;
+  min-width: 400px;
+  background: $secondary;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+
+  h2 {
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+    text-align: center;
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+
+      label {
+        font-weight: 500;
+        font-size: 0.9rem;
+        color: var(--text-color-secondary);
+      }
+
+      input,
+      ::ng-deep .p-inputtext,
+      ::ng-deep .p-inputnumber,
+      ::ng-deep .p-calendar {
+        width: 100%;
+      }
+    }
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+
+    .spacer {
+      flex: 1;
+    }
+  }
+}

@@ -35,20 +35,3 @@
   margin-left: 8px;
   margin-top: 2px;
 }
-
-.export {
-  border-radius: 12px;
-  font-size: 20px;
-  padding: 20px;
-  @include mat.button-overrides(
-    (
-      filled-label-text-color: $white,
-      filled-container-color: $accent,
-    )
-  );
-
-  .icon {
-    margin-right: 12px;
-    transform: scale(1.5);
-  }
-}
