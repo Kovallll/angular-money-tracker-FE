@@ -7,7 +7,7 @@ import { singleSpaAngular } from 'single-spa-angular';
 import { singleSpaPropsSubject } from './single-spa/single-spa-props';
 import { AppComponent } from './app/app';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { providers } from './main';
+import { providers } from './bootstrap';
 
 const lifecycles = singleSpaAngular({
   bootstrapFunction: (singleSpaProps) => {

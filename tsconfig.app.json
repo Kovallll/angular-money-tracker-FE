@@ -4,6 +4,6 @@
     "outDir": "./out-tsc/app",
     "types": []
   },
-  "files": ["src/main.single-spa.ts"],
+  "files": ["src/main.ts"], //main.single-spa.ts
   "include": ["src/**/*.d.ts"]
 }

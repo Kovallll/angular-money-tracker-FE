@@ -41,12 +41,15 @@
       "prefix": "",
       "architect": {
         "build": {
-          "builder": "@angular/build:application",
-          //"builder": "@angular-builders/custom-webpack:browser",
+          //"builder": "@angular/build:application",
+          "builder": "@angular-builders/custom-webpack:browser",
+          //"builder": "@angular-architects/module-federation:webpack-browser",
           "options": {
             "outputPath": "dist/first-app",
             "index": "src/index.html",
             //"main": "src/main.single-spa.ts",
+            //"main": "src/bootstrap.ts",
+            "main": "src/main.ts",
             "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
@@ -72,7 +75,11 @@
             //     "publicPath": "http://localhost:4200/"
             //   }
             // },
-            "deployUrl": "http://localhost:4200/"
+
+            "customWebpackConfig": {
+              "path": "wmf-config.js"
+            }
+            // "deployUrl": "http://localhost:4200/"
           },
           "configurations": {
             "spa": {
@@ -108,8 +115,9 @@
           "defaultConfiguration": "production"
         },
         "serve": {
-          //"builder": "@angular-builders/custom-webpack:dev-server",
-          "builder": "@angular/build:dev-server",
+          "builder": "@angular-builders/custom-webpack:dev-server",
+          //"builder": "@angular/build:dev-server",
+          //"builder": "@angular-architects/module-federation:dev-server",
           "configurations": {
             "production": {
               "buildTarget": "first-app:build:production"
