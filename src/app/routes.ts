@@ -22,11 +22,11 @@ const routes: Routes = [
       },
     ],
   },
-  {
-    path: 'remote',
-    loadComponent: () =>
-      import('../pages/Remote/react-wrapper.component').then((m) => m.ReactWrapperComponent),
-  },
+  //   {
+  //     path: 'remote',
+  //     loadComponent: () =>
+  //       import('../pages/Remote/react-wrapper.component').then((m) => m.ReactWrapperComponent),
+  //   },
   {
     path: '',
     component: MainLayoutComponent,

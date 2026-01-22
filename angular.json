@@ -41,31 +41,33 @@
       "prefix": "",
       "architect": {
         "build": {
-          //"builder": "@angular/build:application",
-          "builder": "@angular-builders/custom-webpack:browser",
+          "builder": "@angular/build:application",
+          //"builder": "@angular-builders/custom-webpack:browser",
           //"builder": "@angular-architects/module-federation:webpack-browser",
           "options": {
             "outputPath": "dist/first-app",
             "index": "src/index.html",
             //"main": "src/main.single-spa.ts",
             //"main": "src/bootstrap.ts",
-            "main": "src/main.ts",
+            //"main": "src/main.ts",
             "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/assets",
+              "src/manifest.webmanifest",
               {
                 "glob": "**/*",
                 "input": "node_modules/primeicons/fonts",
                 "output": "/assets/primeicons/fonts"
               }
             ],
+            "aot": true,
             "stylePreprocessorOptions": {
               "includePaths": ["src"]
             },
             "styles": ["src/styles.scss"],
-            "scripts": [],
+            "scripts": []
 
             // "customWebpackConfig": {
             //   "path": "extra-webpack.config.js",
@@ -76,9 +78,9 @@
             //   }
             // },
 
-            "customWebpackConfig": {
-              "path": "wmf-config.js"
-            }
+            // "customWebpackConfig": {
+            //   "path": "wmf-config.js"
+            // }
             // "deployUrl": "http://localhost:4200/"
           },
           "configurations": {
@@ -103,7 +105,8 @@
                   "maximumError": "300kb"
                 }
               ],
-              "outputHashing": "none"
+              "outputHashing": "none",
+              "serviceWorker": "ngsw-config.json"
             },
             "development": {
               "optimization": false,
@@ -115,8 +118,8 @@
           "defaultConfiguration": "production"
         },
         "serve": {
-          "builder": "@angular-builders/custom-webpack:dev-server",
-          //"builder": "@angular/build:dev-server",
+          //"builder": "@angular-builders/custom-webpack:dev-server",
+          "builder": "@angular/build:dev-server",
           //"builder": "@angular-architects/module-federation:dev-server",
           "configurations": {
             "production": {
