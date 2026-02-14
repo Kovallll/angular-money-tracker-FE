@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "first-app": {
+    "finance": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -42,14 +42,9 @@
       "architect": {
         "build": {
           "builder": "@angular/build:application",
-          //"builder": "@angular-builders/custom-webpack:browser",
-          //"builder": "@angular-architects/module-federation:webpack-browser",
           "options": {
-            "outputPath": "dist/first-app",
+            "outputPath": "dist/finance",
             "index": "src/index.html",
-            //"main": "src/main.single-spa.ts",
-            //"main": "src/bootstrap.ts",
-            //"main": "src/main.ts",
             "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
@@ -68,20 +63,6 @@
             },
             "styles": ["src/styles.scss"],
             "scripts": []
-
-            // "customWebpackConfig": {
-            //   "path": "extra-webpack.config.js",
-            //   "libraryName": "first-app",
-            //   "libraryTarget": "umd",
-            //   "output": {
-            //     "publicPath": "http://localhost:4200/"
-            //   }
-            // },
-
-            // "customWebpackConfig": {
-            //   "path": "wmf-config.js"
-            // }
-            // "deployUrl": "http://localhost:4200/"
           },
           "configurations": {
             "spa": {
@@ -118,18 +99,16 @@
           "defaultConfiguration": "production"
         },
         "serve": {
-          //"builder": "@angular-builders/custom-webpack:dev-server",
           "builder": "@angular/build:dev-server",
-          //"builder": "@angular-architects/module-federation:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "first-app:build:production"
+              "buildTarget": "finance:build:production"
             },
             "development": {
-              "buildTarget": "first-app:build:development"
+              "buildTarget": "finance:build:development"
             },
             "spa": {
-              "buildTarget": "first-app:build:spa"
+              "buildTarget": "finance:build:spa"
             }
           },
           "defaultConfiguration": "development"
@@ -137,7 +116,7 @@
         "extract-i18n": {
           "builder": "@angular/build:extract-i18n",
           "options": {
-            "buildTarget": "first-app:build"
+            "buildTarget": "finance:build"
           }
         },
         "lint": {

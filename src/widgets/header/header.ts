@@ -4,10 +4,11 @@ import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ExportReportComponent } from './exportReport/export-report.component';
+import { NotificationComponent } from '@/entities/notification/notification.component';
 
 @Component({
   selector: 'app-header',
-  imports: [MatButtonModule, MatIconModule, ExportReportComponent],
+  imports: [MatButtonModule, MatIconModule, ExportReportComponent, NotificationComponent],
   templateUrl: './header.html',
   styleUrls: ['./header.scss'],
   host: { class: 'container' },
@@ -19,6 +20,6 @@ export class HeaderComponent implements OnInit {
   constructor(private userService: UserService) {}
 
   ngOnInit() {
-    this.user = this.userService.getUser();
+    this.user = this.userService.currentUser;
   }
 }

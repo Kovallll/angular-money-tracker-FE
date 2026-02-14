@@ -7,14 +7,12 @@ import { MessageModule } from 'primeng/message';
 import { CategoriesHttpService, CreateTransaction, TransactionsHttpService } from '@/shared';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { injectMutation, injectQuery, QueryClient } from '@tanstack/angular-query-experimental';
-import { environment } from '@/environments/environment';
-import { DatePickerComponent } from '@/entities/date-picker/date-picker.component';
 import { Select } from 'primeng/select';
 @Component({
   selector: 'add-card-modal',
   templateUrl: './add-card-modal.component.html',
   styleUrls: ['./add-card-modal.component.scss'],
-  imports: [FormsModule, InputTextModule, ButtonModule, MessageModule, DatePickerComponent, Select],
+  imports: [FormsModule, InputTextModule, ButtonModule, MessageModule, Select],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -64,8 +62,6 @@ export class AddTransactionModalComponent implements OnInit {
       this.createTransaction(form.value);
     }
   }
-
-  isDatePicker = environment.SPA_RUN;
 
   inputs = [
     { name: 'date', placeholder: 'Date', field: 'date' },

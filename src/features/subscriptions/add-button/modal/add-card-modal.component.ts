@@ -7,15 +7,13 @@ import { MessageModule } from 'primeng/message';
 import { CreateSubscribeItem, SubscribtionsHttpService, Transaction } from '@/shared';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { QueryClient } from '@tanstack/angular-query-experimental';
-import { environment } from '@/environments/environment';
-import { DatePickerComponent } from '@/entities/date-picker/date-picker.component';
 import { Select } from 'primeng/select';
 import { tap } from 'rxjs';
 @Component({
   selector: 'edit-subscription-modal',
   templateUrl: './add-card-modal.component.html',
   styleUrls: ['./add-card-modal.component.scss'],
-  imports: [FormsModule, InputTextModule, ButtonModule, MessageModule, DatePickerComponent, Select],
+  imports: [FormsModule, InputTextModule, ButtonModule, MessageModule, Select],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -44,8 +42,6 @@ export class AddSubscriptionModalComponent implements OnInit {
       this.createSubscription(form.value);
     }
   }
-
-  isDatePicker = environment.SPA_RUN;
 
   inputs = [
     { name: 'subscribeDate', placeholder: 'Date', field: 'subscribeDate' },

@@ -21,7 +21,7 @@ import { UserService } from '@/shared';
 })
 export class SettingsTabsComponent {
   selectedTab: string = 'Account';
-  user = signal(this.userService.getUser());
+  user = signal(this.userService.currentUser);
 
   onChangeTabContent(tabLabel: string) {
     this.selectedTab = tabLabel;

@@ -12,15 +12,13 @@ import {
 } from '@/shared';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { injectQuery, QueryClient } from '@tanstack/angular-query-experimental';
-import { environment } from '@/environments/environment';
-import { DatePickerComponent } from '@/entities/date-picker/date-picker.component';
 import { Select } from 'primeng/select';
 import { tap } from 'rxjs';
 @Component({
   selector: 'edit-transaction-modal',
   templateUrl: './edit-card-modal.component.html',
   styleUrls: ['./edit-card-modal.component.scss'],
-  imports: [FormsModule, InputTextModule, ButtonModule, MessageModule, DatePickerComponent, Select],
+  imports: [FormsModule, InputTextModule, ButtonModule, MessageModule, Select],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -55,8 +53,6 @@ export class EditTransactionModalComponent implements OnInit {
       this.updateTransaction(form.value);
     }
   }
-
-  isDatePicker = environment.SPA_RUN;
 
   inputs = [
     { name: 'date', placeholder: 'Date', field: 'date' },

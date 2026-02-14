@@ -1,4 +1,4 @@
-import { AssetUrlPipe, BalanceCard, RoutePaths } from '@/shared';
+import { BalanceCard, RoutePaths } from '@/shared';
 import { CurrencyPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { Router } from '@angular/router';
@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'balance-card-item',
   standalone: true,
-  imports: [CurrencyPipe, AssetUrlPipe],
+  imports: [CurrencyPipe],
   templateUrl: './balance-card-item.component.html',
   styleUrl: `./balance-card-item.component.scss`,
   changeDetection: ChangeDetectionStrategy.OnPush,

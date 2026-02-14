@@ -1,0 +1,11 @@
+<div class="push-settings">
+  <h3>🔔 Уведомления</h3>
+
+  @if (pushEnabled) {
+    <p>✅ Уведомления включены</p>
+    <button (click)="disablePush()" [disabled]="loading">Отключить</button>
+  } @else {
+    <p>Push-уведомления отключены</p>
+    <button (click)="enablePush()" [disabled]="loading">Включить</button>
+  }
+</div>

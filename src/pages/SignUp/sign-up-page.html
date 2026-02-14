@@ -1,11 +1,11 @@
 <div class="container">
-  <img [src]="'logo.png' | assetUrl" alt="logo" class="logo" />
+  <img [src]="'logo.png'" alt="logo" class="logo" />
   <form class="controls" [formGroup]="form">
     <mat-form-field appearance="outline" class="input-wrapper">
       <mat-label>Name</mat-label>
       <input type="text" matInput formControlName="name" placeholder="Enter name" class="input" />
       @if(form.controls['name'].invalid && form.controls['name'].touched) {
-      <mat-error> {{ getErrorNameMessage() }} </mat-error>
+      <mat-error>{{ getErrorMessage('name') }}</mat-error>
       }
     </mat-form-field>
     <mat-form-field appearance="outline" class="input-wrapper">
@@ -18,7 +18,7 @@
         class="input"
       />
       @if(form.controls['lastname'].invalid && form.controls['lastname'].touched) {
-      <mat-error> {{ getErrorLastnameMessage() }} </mat-error>
+      <mat-error>{{ getErrorMessage('lastname') }}</mat-error>
       }
     </mat-form-field>
     <mat-form-field appearance="outline" class="input-wrapper">
@@ -31,7 +31,7 @@
         class="input"
       />
       @if(form.controls['email'].invalid && form.controls['email'].touched) {
-      <mat-error> {{ getErrorEmailMessage() }} </mat-error>
+      <mat-error>{{ getErrorMessage('email') }}</mat-error>
       }
     </mat-form-field>
     <mat-form-field appearance="outline" class="input-wrapper">
@@ -51,9 +51,18 @@
         class="input"
       />
       @if (form.controls['password'].invalid && form.controls['password'].touched) {
-      <mat-error> {{ getErrorPasswordMessage() }} </mat-error>
-      }
+      <mat-error>{{ getErrorMessage('password') }}</mat-error> }
     </mat-form-field>
-    <register-button [user]="form.getRawValue()" />
+    <button
+      (click)="onRegister()"
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="loading || form.invalid"
+    >
+      {{ loading ? 'Creating account...' : 'Sign Up' }}
+    </button>
+
+    <p>Already have an account? <a routerLink="/login">Login</a></p>
   </form>
 </div>

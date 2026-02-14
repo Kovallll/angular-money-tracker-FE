@@ -1,5 +1,5 @@
 <div class="container">
-  <img [src]="'logo.png' | assetUrl" alt="logo" class="logo" />
+  <img [src]="'logo.png'" alt="logo" class="logo" />
   <div class="controls">
     <mat-form-field appearance="outline" class="input-wrapper">
       <mat-label>Email</mat-label>
@@ -30,14 +30,7 @@
       }
     </mat-form-field>
   </div>
-  <button
-    (click)="login(email.value, password.value)"
-    matButton="filled"
-    color="accent"
-    class="button"
-  >
-    Login
-  </button>
+  <button (click)="login()" matButton="filled" color="accent" class="button">Login</button>
   <p class="text">
     Don't have an account?
     <a routerLink="/signup" (click)="signup()" class="link">Sign up</a>

@@ -1,11 +1,11 @@
-import { ChangeDetectionStrategy, Component, input, OnChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BalanceCard, AssetUrlPipe } from '@/shared';
+import { BalanceCard } from '@/shared';
 
 @Component({
   selector: 'balance-card-item',
   standalone: true,
-  imports: [CommonModule, AssetUrlPipe],
+  imports: [CommonModule],
   templateUrl: './balance-card-item.component.html',
   styleUrls: ['./balance-card-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

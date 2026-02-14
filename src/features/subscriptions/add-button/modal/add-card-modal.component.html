@@ -1,7 +1,4 @@
 <form #cardForm="ngForm" (ngSubmit)="onSubmit(cardForm)">
-  @if (isDatePicker) {
-    <date-picker (dateEmmit)="onChangeDate($event)" />
-  }
   @for (input of inputs; track input.field) {
     @if (input.field === 'type') {
       <p-select

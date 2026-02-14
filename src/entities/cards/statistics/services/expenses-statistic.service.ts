@@ -1,4 +1,4 @@
-import { CategoriesHttpService, ExpensesHttpService } from '@/shared';
+import { CategoriesHttpService } from '@/shared';
 import { inject, Injectable } from '@angular/core';
 
 @Injectable({
