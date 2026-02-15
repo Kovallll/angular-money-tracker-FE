@@ -2,7 +2,6 @@ export const defaultPageSize = 10;
 export const defaultPage = 0;
 export const tabs = ['All', 'Expenses', 'Revenue'];
 
-export const API_URL = 'http://localhost:5000/api';
 export const expensesUrl = 'expenses';
 export const categoriesUrl = 'categories';
 export const balancesUrl = 'balances';
