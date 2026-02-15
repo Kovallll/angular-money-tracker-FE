@@ -6,6 +6,18 @@ export const baseApiUrlInterceptor = (
   req: HttpRequest<unknown>,
   next: HttpHandlerFn,
 ): Observable<HttpEvent<unknown>> => {
-  const apiReq = req.clone({ url: `${environment.apiUrl}/${req.url}` });
+  // Log для отладки
+  const apiUrl = environment.apiUrl;
+  const windowApiUrl = (window as any)['API_URL'];
+
+  console.log('🔍 Interceptor Debug:');
+  console.log('  environment.apiUrl:', apiUrl);
+  console.log('  window.API_URL:', windowApiUrl);
+  console.log('  request URL:', req.url);
+
+  const apiReq = req.clone({ url: `${apiUrl}/${req.url}` });
+
+  console.log('  final URL:', apiReq.url);
+
   return next(apiReq);
 };
