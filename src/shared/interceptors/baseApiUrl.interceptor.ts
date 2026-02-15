@@ -15,7 +15,7 @@ export const baseApiUrlInterceptor = (
   console.log('  window.API_URL:', windowApiUrl);
   console.log('  request URL:', req.url);
 
-  const apiReq = req.clone({ url: `${apiUrl}/${req.url}` });
+  const apiReq = req.clone({ url: `${apiUrl}/api/${req.url}` });
 
   console.log('  final URL:', apiReq.url);
 
