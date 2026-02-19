@@ -18,10 +18,8 @@ WORKDIR /app
 # Copy built files from builder
 COPY --from=builder /app/dist ./dist
 
-# Copy the config server script
-COPY frontend/config-server.js .
 
 EXPOSE 80
 
 # Run the server on port 80
-CMD ["node", "config-server.js"]
+CMD ["node", "server.js"]

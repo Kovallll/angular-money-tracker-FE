@@ -1,0 +1,42 @@
+@use 'theme' as *;
+
+.tg-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid $tertiary;
+  background: transparent;
+  color: $tertiary;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: #2aabee;
+    border-color: #2aabee;
+    background: rgba(42, 171, 238, 0.08);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &.linked {
+    color: #2aabee;
+    border-color: #2aabee;
+
+    &:hover {
+      color: $white;
+      background: rgba(239, 68, 68, 0.15);
+      border-color: #ef4444;
+    }
+  }
+}
+
+.tg-icon {
+  width: 22px;
+  height: 22px;
+}

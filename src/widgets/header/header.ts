@@ -5,10 +5,17 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ExportReportComponent } from './exportReport/export-report.component';
 import { NotificationComponent } from '@/entities/notification/notification.component';
+import { TelegramLinkComponent } from './telegramLink/telegram-link.component';
 
 @Component({
   selector: 'app-header',
-  imports: [MatButtonModule, MatIconModule, ExportReportComponent, NotificationComponent],
+  imports: [
+    MatButtonModule,
+    MatIconModule,
+    ExportReportComponent,
+    NotificationComponent,
+    TelegramLinkComponent,
+  ],
   templateUrl: './header.html',
   styleUrls: ['./header.scss'],
   host: { class: 'container' },
