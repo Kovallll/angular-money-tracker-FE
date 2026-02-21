@@ -30,7 +30,7 @@
       "name": "api-data",
       "urls": ["http://localhost:5000/**", "/api/**"],
       "cacheConfig": {
-        "strategy": "performance",
+        "strategy": "freshness",
         "maxSize": 100,
         "maxAge": "7d",
         "timeout": "10s"
@@ -39,3 +39,4 @@
   ],
   "navigationUrls": ["/**", "!/**/*.*", "!/**/__*"]
 }
+
