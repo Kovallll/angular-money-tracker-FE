@@ -8,6 +8,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '@/shared/services/auth/auth.service';
+import { AssetPathPipe } from '@/shared/pipes/asset-path.pipe';
 
 @Component({
   selector: 'app-sign-up-page',
@@ -20,6 +21,7 @@ import { AuthService } from '@/shared/services/auth/auth.service';
     MatSnackBarModule,
     ReactiveFormsModule,
     RouterLink,
+    AssetPathPipe,
   ],
   templateUrl: './sign-up-page.html',
   styleUrl: './sign-up-page.scss',

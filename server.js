@@ -3,7 +3,23 @@ const fs = require('fs');
 const path = require('path');
 
 const PORT = process.env.PORT || 80;
-const DIST_DIR = path.join(__dirname, 'dist');
+
+// Angular может собирать в dist/ или dist/finance/browser/ — ищем папку с index.html
+function findDistDir() {
+  const candidates = [
+    path.join(__dirname, 'dist'),
+    path.join(__dirname, 'dist', 'finance', 'browser'),
+    path.join(__dirname, 'dist', 'finance'),
+  ];
+  for (const dir of candidates) {
+    const indexPath = path.join(dir, 'index.html');
+    if (fs.existsSync(indexPath)) return dir;
+  }
+  return path.join(__dirname, 'dist');
+}
+
+const DIST_DIR = findDistDir();
+console.log('Serving static files from:', DIST_DIR);
 
 const server = http.createServer((req, res) => {
   console.log(`${req.method} ${req.url}`);

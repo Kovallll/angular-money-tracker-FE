@@ -7,10 +7,18 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '@/shared/services/auth/auth.service';
+import { AssetPathPipe } from '@/shared/pipes/asset-path.pipe';
 
 @Component({
   selector: 'app-login-page',
-  imports: [ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatInputModule, RouterLink],
+  imports: [
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    RouterLink,
+    AssetPathPipe,
+  ],
   templateUrl: `./login-page.html`,
   styleUrl: `./login-page.scss`,
 })
