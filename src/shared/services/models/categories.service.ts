@@ -57,8 +57,8 @@ export class CategoriesHttpService {
 
   getCategoryExpenseLineCharts(year = new Date().getFullYear(), top?: number, userId?: string) {
     const params: Record<string, string> = { year: String(year), limitToCurrent: 'true' };
-    if (top != null) params.top = String(top);
-    if (userId) params.userId = userId;
+    if (top != null) params['top'] = String(top);
+    if (userId) params['userId'] = userId;
     return lastValueFrom(
       this.http.get<CategoryLineChartDto[]>('statistics/categories/line/year', { params }),
     );

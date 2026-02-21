@@ -10,11 +10,11 @@ export class StatisticsHttpService {
 
   getExpensesOverview(params?: { monthsBar?: number; topK?: number; locale?: string }) {
     const qp: Record<string, string | number> = {};
-    if (params?.monthsBar) qp.monthsBar = params.monthsBar;
-    if (params?.topK) qp.topK = params.topK;
-    if (params?.locale) qp.locale = params.locale;
+    if (params?.monthsBar) qp['monthsBar'] = params.monthsBar;
+    if (params?.topK) qp['topK'] = params.topK;
+    if (params?.locale) qp['locale'] = params.locale;
     const userId = this.auth.getCurrentUserId();
-    if (userId) qp.userId = userId;
+    if (userId) qp['userId'] = userId;
     return this.http.get<ExpensesOverviewDto>('statistics/expenses/overview', { params: qp });
   }
 

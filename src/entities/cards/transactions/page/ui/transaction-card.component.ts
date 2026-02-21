@@ -9,6 +9,7 @@ import {
 import { DashboardCardComponent, CardBodyComponent } from '../../../card';
 import { MatTabsModule } from '@angular/material/tabs';
 import { Tabs, tabs, Transaction, TransactionsHttpService, UrlSyncedComponent } from '@/shared';
+import { AuthService } from '@/shared/services/auth/auth.service';
 import { DashboardTransactionsService } from '../../services/transactions.service';
 import { TableComponent } from '@/entities/table/ui/table.component';
 import { ControlsComponent } from '@/widgets/controls/ui/controls.component';
@@ -16,7 +17,6 @@ import { ControlsProps } from '@/widgets/controls/lib';
 import { PaginationComponent } from '@/entities/pagination/ui/pagination.component';
 import { TransactionAddButtonComponent } from '@/features/transactions/add-button/add-card.component';
 import { injectQuery } from '@tanstack/angular-query-experimental';
-import { tap } from 'rxjs';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { EditTransactionModalComponent } from '@/features/transactions/edit-modal/edit-card-modal.component';
 import { ProgressSpinner } from 'primeng/progressspinner';
@@ -42,6 +42,7 @@ import { ProgressSpinner } from 'primeng/progressspinner';
 export class TransactionsComponent extends UrlSyncedComponent<Transaction> {
   private transactionsService = inject(DashboardTransactionsService);
   private transactionsHttpService = inject(TransactionsHttpService);
+  private auth = inject(AuthService);
   ref: DynamicDialogRef | undefined | null;
   readonly tabs = tabs;
 
@@ -50,8 +51,12 @@ export class TransactionsComponent extends UrlSyncedComponent<Transaction> {
   readonly tabFilter = signal('All');
 
   transactions = injectQuery(() => ({
-    queryKey: ['transactions'],
-    queryFn: () => this.transactionsHttpService.getTransactions(),
+    queryKey: ['transactions', this.auth.getCurrentUserId()],
+    queryFn: () => {
+      const userId = this.auth.getCurrentUserId();
+      if (!userId) return Promise.resolve([] as Transaction[]);
+      return this.transactionsHttpService.getTransactions(userId);
+    },
   }));
   signalTransactions = computed(() => this.transactions.data());
   readonly currentTransactions = signal<Transaction[]>([]);
