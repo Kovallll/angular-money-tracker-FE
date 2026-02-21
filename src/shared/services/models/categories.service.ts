@@ -2,15 +2,20 @@ import { categoriesUrl, CategoryItem, CategoryLineChartDto, CreateCategoryItem }
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal, computed } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
+import { AuthService } from '@/shared/services/auth/auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CategoriesHttpService {
   private http = inject(HttpClient);
+  private auth = inject(AuthService);
 
-  getCategories() {
-    return lastValueFrom(this.http.get<CategoryItem[]>(categoriesUrl));
+  /** Список категорий текущего пользователя */
+  getCategories(): Promise<CategoryItem[]> {
+    const userId = this.auth.getCurrentUserId();
+    if (!userId) return Promise.resolve([]);
+    return lastValueFrom(this.http.get<CategoryItem[]>(`${categoriesUrl}/user/${userId}`));
   }
 
   readonly categories = signal<CategoryItem[]>([]);
@@ -22,12 +27,24 @@ export class CategoriesHttpService {
   }
 
   async loadCategories() {
-    const data = await this.getCategories();
+    const userId = this.auth.getCurrentUserId();
+    if (!userId) {
+      this.categories.set([]);
+      return;
+    }
+    const data = await lastValueFrom(
+      this.http.get<CategoryItem[]>(`${categoriesUrl}/user/${userId}`),
+    );
     this.categories.set(data);
   }
 
   private async loadCharts() {
-    const data = await this.getCategoryExpenseLineCharts(new Date().getFullYear());
+    const userId = this.auth.getCurrentUserId();
+    const data = await this.getCategoryExpenseLineCharts(
+      new Date().getFullYear(),
+      undefined,
+      userId ?? undefined,
+    );
     this.charts.set(data);
   }
 
@@ -38,13 +55,12 @@ export class CategoriesHttpService {
     return this.categories().find((c) => c.id === id) ?? null;
   });
 
-  getCategoryExpenseLineCharts(year = new Date().getFullYear(), top?: number) {
-    const params: any = { year, limitToCurrent: 'true' };
+  getCategoryExpenseLineCharts(year = new Date().getFullYear(), top?: number, userId?: string) {
+    const params: Record<string, string> = { year: String(year), limitToCurrent: 'true' };
     if (top != null) params.top = String(top);
+    if (userId) params.userId = userId;
     return lastValueFrom(
-      this.http.get<CategoryLineChartDto[]>('statistics/categories/line/year', {
-        params,
-      }),
+      this.http.get<CategoryLineChartDto[]>('statistics/categories/line/year', { params }),
     );
   }
 

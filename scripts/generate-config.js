@@ -1,12 +1,15 @@
 const fs = require('fs');
 const path = require('path');
 
-// Читаем API_URL из env 
+// Читаем API_URL из env
 let apiUrl = process.env.API_URL;
 
 console.log('🔧 Generating config...');
 console.log('process.env.API_URL:', apiUrl);
-console.log('All env keys:', Object.keys(process.env).filter(k => k.includes('API') || k.includes('api')));
+console.log(
+  'All env keys:',
+  Object.keys(process.env).filter((k) => k.includes('API') || k.includes('api')),
+);
 
 // Проверяем что переменная установлена и имеет смысл
 if (!apiUrl) {

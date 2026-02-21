@@ -13,9 +13,7 @@ const defaultProduction = 'https://nest-money-tracker-be.onrender.com';
 const defaultDev = 'http://localhost:5000';
 const isProduction = process.env.NODE_ENV === 'production';
 
-const apiOrigin =
-  process.env.API_URL ||
-  (isProduction ? defaultProduction : defaultDev);
+const apiOrigin = process.env.API_URL || (isProduction ? defaultProduction : defaultDev);
 
 let template = fs.readFileSync(templatePath, 'utf8');
 template = template.replace(/__API_ORIGIN__/g, apiOrigin);

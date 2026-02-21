@@ -4,21 +4,27 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { delay, finalize, tap } from 'rxjs';
+import { AuthService } from '@/shared/services/auth/auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GoalsHttpService {
   private http = inject(HttpClient);
+  private auth = inject(AuthService);
 
   public isLoading = signal(false);
   public goals = signal<GoalItem[]>([]);
 
   loadGoals() {
+    const userId = this.auth.getCurrentUserId();
+    if (!userId) {
+      this.goals.set([]);
+      return;
+    }
     this.isLoading.set(true);
-
     this.http
-      .get<GoalItem[]>(goalsUrl)
+      .get<GoalItem[]>(`${goalsUrl}/user/${userId}`)
       .pipe(
         delay(500),
         finalize(() => this.isLoading.set(false)),
@@ -30,7 +36,11 @@ export class GoalsHttpService {
   }
 
   createGoal(goal: CreateGoalItem) {
-    return this.http.post<CreateGoalItem>(goalsUrl, goal).subscribe(() => this.loadGoals());
+    const userId = this.auth.getCurrentUserId();
+    if (!userId) throw new Error('Not authenticated');
+    return this.http
+      .post<CreateGoalItem>(goalsUrl, { ...goal, userId })
+      .subscribe(() => this.loadGoals());
   }
 
   deleteGoal(id: number) {

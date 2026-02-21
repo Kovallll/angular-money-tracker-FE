@@ -126,6 +126,10 @@ export class AuthService {
     return localStorage.getItem('accessToken');
   }
 
+  getCurrentUserId(): string | null {
+    return this.currentUser.value?.id ?? null;
+  }
+
   isAuthenticated(): boolean {
     return !!this.getAccessToken();
   }

@@ -1,27 +1,35 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { BehaviorSubject, tap } from 'rxjs';
+import { BehaviorSubject, tap, switchMap, of, combineLatest, startWith } from 'rxjs';
 import { subscriptionsUrl } from '@/shared/constants';
 import { SubscribeItem } from '@/shared/types';
+import { AuthService } from '@/shared/services/auth/auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SubscribtionsHttpService {
   private http = inject(HttpClient);
+  private auth = inject(AuthService);
 
-  private readonly _subscriptions$ = new BehaviorSubject<SubscribeItem[]>([]);
+  private readonly refresh$ = new BehaviorSubject<void>(undefined);
 
-  readonly subscriptions = toSignal(this._subscriptions$, { initialValue: [] });
-  constructor() {
-    this.loadAll();
-  }
+  private readonly _subscriptions$ = combineLatest([
+    this.auth.user$,
+    this.refresh$.pipe(startWith(undefined)),
+  ]).pipe(
+    switchMap(([user]) => {
+      if (!user?.id) return of([] as SubscribeItem[]);
+      return this.http.get<SubscribeItem[]>(`${subscriptionsUrl}/user/${user.id}`);
+    }),
+  );
+
+  readonly subscriptions = toSignal(this._subscriptions$, { initialValue: [] as SubscribeItem[] });
+  constructor() {}
+
   loadAll() {
-    return this.http
-      .get<SubscribeItem[]>(subscriptionsUrl)
-      .pipe(tap((data) => this._subscriptions$.next(data)))
-      .subscribe();
+    this.refresh$.next();
   }
 
   getById(id: number | string) {
@@ -29,31 +37,21 @@ export class SubscribtionsHttpService {
   }
 
   create(payload: Omit<SubscribeItem, 'id'>) {
-    return this.http.post<SubscribeItem>(subscriptionsUrl, payload).pipe(
-      tap((created) => {
-        const list = this._subscriptions$.value;
-        this._subscriptions$.next([...list, created]);
-      }),
-    );
+    const userId = this.auth.getCurrentUserId();
+    return this.http
+      .post<SubscribeItem>(subscriptionsUrl, { ...payload, userId })
+      .pipe(tap(() => this.refresh$.next()));
   }
 
   update(id: number | string, payload: Partial<SubscribeItem>) {
-    return this.http.patch<SubscribeItem>(`${subscriptionsUrl}/${id}`, payload).pipe(
-      tap((updated) => {
-        const list = this._subscriptions$.value.map((item) =>
-          item.id === updated.id ? updated : item,
-        );
-        this._subscriptions$.next(list);
-      }),
-    );
+    return this.http
+      .patch<SubscribeItem>(`${subscriptionsUrl}/${id}`, payload)
+      .pipe(tap(() => this.refresh$.next()));
   }
 
   delete(id: number | string) {
-    return this.http.delete<void>(`${subscriptionsUrl}/${id}`).pipe(
-      tap(() => {
-        const list = this._subscriptions$.value.filter((item) => item.id !== id);
-        this._subscriptions$.next(list);
-      }),
-    );
+    return this.http
+      .delete<void>(`${subscriptionsUrl}/${id}`)
+      .pipe(tap(() => this.refresh$.next()));
   }
 }

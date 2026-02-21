@@ -1,4 +1,3 @@
-// src/app/interceptors/auth.interceptor.ts
 import {
   HttpInterceptorFn,
   HttpRequest,
@@ -9,6 +8,9 @@ import { inject } from '@angular/core';
 import { catchError, switchMap, throwError } from 'rxjs';
 import { AuthService } from '../services/auth/auth.service';
 
+const AUTH_PREFIX = '/auth/';
+const isAuthRoute = (url: string) => url.includes(AUTH_PREFIX);
+
 let isRefreshing = false;
 
 export const authInterceptor: HttpInterceptorFn = (
@@ -18,13 +20,15 @@ export const authInterceptor: HttpInterceptorFn = (
   const authService = inject(AuthService);
   const token = authService.getAccessToken();
 
-  if (token) {
-    req = addToken(req, token);
+  if (token && !isAuthRoute(req.url)) {
+    req = req.clone({
+      setHeaders: { Authorization: `Bearer ${token}` },
+    });
   }
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
-      if (error.status === 401 && !req.url.includes('/auth/')) {
+      if (error.status === 401 && !isAuthRoute(req.url)) {
         if (!isRefreshing) {
           isRefreshing = true;
 
@@ -38,7 +42,9 @@ export const authInterceptor: HttpInterceptorFn = (
               }
 
               // Повторяем запрос с новым токеном
-              req = addToken(req, tokens.accessToken);
+              req = req.clone({
+                setHeaders: { Authorization: `Bearer ${tokens.accessToken}` },
+              });
               return next(req);
             }),
             catchError((refreshError) => {
@@ -53,11 +59,3 @@ export const authInterceptor: HttpInterceptorFn = (
     }),
   );
 };
-
-function addToken(req: HttpRequest<unknown>, token: string): HttpRequest<unknown> {
-  return req.clone({
-    setHeaders: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-}
