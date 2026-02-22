@@ -3,7 +3,7 @@
     <p class="title">{{ expense.title }}</p>
   </div>
   <div class="right-content">
-    <p class="cost">{{ expense.amount | currency }}</p>
+    <p class="cost">{{ expense.amount | appCurrency }}</p>
     <p class="date">{{ expense.date | date }}</p>
   </div>
 </div>

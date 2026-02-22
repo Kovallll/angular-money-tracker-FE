@@ -1,6 +1,7 @@
 import { Component, computed, inject, Signal, signal, ViewChild } from '@angular/core';
 import { SubscribtionsService } from '../../../services/subscribtions.service';
-import { CurrencyPipe, DatePipe, TitleCasePipe } from '@angular/common';
+import { DatePipe, TitleCasePipe } from '@angular/common';
+import { AppCurrencyPipe } from '@/shared/pipes/app-currency.pipe';
 import { DashboardCardComponent, CardBodyComponent } from '@/entities/cards/card';
 import { ControlsComponent } from '@/widgets/controls/ui/controls.component';
 import { ControlsProps } from '@/widgets/controls/lib';
@@ -13,6 +14,7 @@ import { ContextMenuComponent } from '@/entities/context-menu/cm.component';
 import { DialogService } from 'primeng/dynamicdialog';
 import { EditSubscriptionModalComponent } from '@/features/subscriptions/edit-modal/edit-card-modal.component';
 import { SubscriptionAddButtonComponent } from '@/features/subscriptions/add-button/add-card.component';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'subscribe-table',
@@ -22,7 +24,7 @@ import { SubscriptionAddButtonComponent } from '@/features/subscriptions/add-but
     DatePipe,
     DashboardCardComponent,
     CardBodyComponent,
-    CurrencyPipe,
+    AppCurrencyPipe,
     ControlsComponent,
     TitleCasePipe,
     PaginationComponent,
@@ -36,6 +38,7 @@ export class SubscribeTableComponent extends UrlSyncedComponent<SubscribeItem> {
   @ViewChild('ctxMenu') ctxMenu!: ContextMenuComponent;
   private readonly subscribtionsService = inject(SubscribtionsService);
   private readonly subscribeHttpService = inject(SubscribtionsHttpService);
+  private readonly confirmationService = inject(ConfirmationService);
 
   subscribes = signal<SubscribeItem[]>([]);
 
@@ -78,11 +81,19 @@ export class SubscribeTableComponent extends UrlSyncedComponent<SubscribeItem> {
   }
 
   onDelete(subscribe: SubscribeItem) {
-    if (subscribe) {
-      this.subscribeHttpService.delete(subscribe.id).subscribe(() => {
-        this.subscribeHttpService.loadAll();
-      });
-    }
+    if (!subscribe) return;
+    this.confirmationService.confirm({
+      message: `Delete subscription «${subscribe.subscribeName}»?`,
+      header: 'Confirm deletion',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Delete',
+      rejectLabel: 'Cancel',
+      accept: () => {
+        this.subscribeHttpService.delete(subscribe.id).subscribe(() => {
+          this.subscribeHttpService.loadAll();
+        });
+      },
+    });
   }
 
   onEdit(subscribe: SubscribeItem) {

@@ -19,7 +19,7 @@ export class GategoryAddButtonComponent {
 
   show() {
     this.ref = this.dialogService.open(AddCategoryModalComponent, {
-      header: 'Add Card',
+      header: 'Add Category',
       closable: true,
       dismissableMask: true,
       styleClass: 'modal',

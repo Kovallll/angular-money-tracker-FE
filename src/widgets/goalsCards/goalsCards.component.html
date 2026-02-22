@@ -2,7 +2,7 @@
   <div class="spinner">
     <p-progress-spinner ariaLabel="loading" />
   </div>
-} @else {
+} @else if (goals().length) {
   <div class="container">
     <div class="head">
       <goal-active-card [goal]="activeCard()" />
@@ -24,5 +24,12 @@
         <pagination [pageSize]="pageSize" />
       </div>
     </div>
+  </div>
+} @else {
+  <div class="data-placeholder data-placeholder--page">
+    <span class="data-placeholder__icon" aria-hidden="true">🎯</span>
+    <p>No goals</p>
+    <p>Add a goal using the button below</p>
+    <goal-add-card-button />
   </div>
 }

@@ -1,7 +1,15 @@
 <div class="card">
   <div class="left-content">
     <div class="category-icon">
-      <mat-icon>category</mat-icon>
+      @if (categoryIcon()) {
+        @if (categoryIcon()!.startsWith('pi ')) {
+          <i [class]="categoryIcon()"></i>
+        } @else {
+          <span class="category-icon-emoji">{{ categoryIcon() }}</span>
+        }
+      } @else {
+        <mat-icon>category</mat-icon>
+      }
     </div>
     <div class="text">
       <p class="title">{{ item().title }}</p>
@@ -9,7 +17,7 @@
     </div>
   </div>
   <div class="right-content">
-    <p class="amount">{{ item().amount | currency }}</p>
+    <p class="amount">{{ item().amount | appCurrency }}</p>
     <p class="date">{{ item().date | date }}</p>
   </div>
 </div>

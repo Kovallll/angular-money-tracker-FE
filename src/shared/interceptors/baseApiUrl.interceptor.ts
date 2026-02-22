@@ -6,18 +6,10 @@ export const baseApiUrlInterceptor = (
   req: HttpRequest<unknown>,
   next: HttpHandlerFn,
 ): Observable<HttpEvent<unknown>> => {
-  // Log для отладки
+  if (req.url.startsWith('http://') || req.url.startsWith('https://')) {
+    return next(req);
+  }
   const apiUrl = environment.apiUrl;
-  const windowApiUrl = (window as any)['API_URL'];
-
-  console.log('🔍 Interceptor Debug:');
-  console.log('  environment.apiUrl:', apiUrl);
-  console.log('  window.API_URL:', windowApiUrl);
-  console.log('  request URL:', req.url);
-
   const apiReq = req.clone({ url: `${apiUrl}/api/${req.url}` });
-
-  console.log('  final URL:', apiReq.url);
-
   return next(apiReq);
 };

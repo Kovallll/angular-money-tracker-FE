@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, input, signal } from '@angular/core';
 import { DashboardCardComponent, CardBodyComponent } from '../../../card';
 import { MatTableModule } from '@angular/material/table';
 import { Transaction, UrlSyncedComponent } from '@/shared';
@@ -25,7 +25,12 @@ export class TransactionsHistoryComponent extends UrlSyncedComponent<Transaction
   displayedCells = signal<TableCell[]>(columns);
 
   transactions = input<Transaction[]>([]);
-  currentTransactions = signal<Transaction[]>(this.transactions());
+  currentTransactions = signal<Transaction[]>([]);
+
+  constructor() {
+    super();
+    effect(() => this.currentTransactions.set(this.transactions()));
+  }
 
   allData = computed(() => this.transactions());
 

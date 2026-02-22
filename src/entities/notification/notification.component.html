@@ -1,11 +1,27 @@
-<div class="push-settings">
-  <h3>🔔 Уведомления</h3>
-
-  @if (pushEnabled) {
-    <p>✅ Уведомления включены</p>
-    <button (click)="disablePush()" [disabled]="loading">Отключить</button>
+<!-- Иконка уведомлений: тултип по наведению, клик — вкл/выкл push -->
+<button
+  type="button"
+  class="notification-icon"
+  [matTooltip]="tooltipText()"
+  [disabled]="loading() || (!pushEnabled() && (!pushSupported() || !userId()))"
+  (click)="onClick()"
+  aria-label="Notifications"
+>
+  @if (loading()) {
+    <span class="notification-icon__spinner" aria-hidden="true"></span>
   } @else {
-    <p>Push-уведомления отключены</p>
-    <button (click)="enablePush()" [disabled]="loading">Включить</button>
+    <svg
+      class="notification-icon__bell"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+      <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+    </svg>
   }
-</div>
+</button>

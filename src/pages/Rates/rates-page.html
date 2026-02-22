@@ -1,0 +1,116 @@
+<div class="container">
+  <h1 class="page-title">Banking tools</h1>
+
+  <mat-tab-group class="tabs" animationDuration="200">
+    <mat-tab label="Rate chart">
+      <div class="tab-content chart-and-rates-tab">
+        <div class="chart-block">
+          <div class="chart-controls">
+            <mat-form-field appearance="outline" class="currency-select">
+              <mat-label>Currency</mat-label>
+              <mat-select
+                panelClass="currency-dropdown-panel"
+                [value]="chartCurrency()"
+                (selectionChange)="chartCurrency.set($event.value)"
+              >
+                @for (c of currencies; track c.code) {
+                <mat-option [value]="c.code">{{ c.label }} — {{ c.name }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+          @if (chartHistoryLoading()) {
+          <p-progress-spinner styleClass="spinner" />
+          } @else if (chartData().datasets[0]?.data?.length) {
+          <div class="chart-wrap">
+            <canvas
+              baseChart
+              [data]="chartData()"
+              [options]="chartOptions"
+              [type]="'line'"
+            ></canvas>
+          </div>
+          } @else {
+          <p class="chart-empty">No data for the period (90 days)</p>
+          }
+        </div>
+        <div class="rates-block">
+          <h2 class="block-title">Exchange rates (NBRB to BYN)</h2>
+          @if (isLoadingRates()) {
+          <p-progress-spinner styleClass="spinner" />
+          } @else {
+          <div class="rates-actions">
+            <button mat-raised-button color="primary" (click)="refreshRates()">
+              Refresh rates
+            </button>
+          </div>
+          <table class="rates-table">
+            <thead>
+              <tr>
+                <th>Currency</th>
+                <th>Rate (1 unit = BYN)</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of ratesList(); track item.currency.code) {
+              <tr>
+                <td>{{ item.currency.label }} — {{ item.currency.name }}</td>
+                <td>{{ item.rateToByn | number: '1.2-4' }} BYN</td>
+              </tr>
+              }
+            </tbody>
+          </table>
+          }
+        </div>
+      </div>
+    </mat-tab>
+    <mat-tab label="Loan calculator">
+      <div class="tab-content calculator-tab">
+        <div class="calculator-form">
+          <mat-form-field appearance="outline" class="field">
+            <mat-label>Loan amount (BYN)</mat-label>
+            <input
+              matInput
+              type="number"
+              [ngModel]="loanAmount()"
+              (ngModelChange)="loanAmount.set($event)"
+              min="1"
+            />
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="field">
+            <mat-label>Term (months)</mat-label>
+            <input
+              matInput
+              type="number"
+              [ngModel]="loanTermMonths()"
+              (ngModelChange)="loanTermMonths.set($event)"
+              min="1"
+            />
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="field">
+            <mat-label>Annual rate (%)</mat-label>
+            <input
+              matInput
+              type="number"
+              [ngModel]="loanRatePercent()"
+              (ngModelChange)="loanRatePercent.set($event)"
+              min="0"
+              step="0.1"
+            />
+          </mat-form-field>
+        </div>
+        <div class="calculator-result">
+          <p class="result-line">
+            <strong>Monthly payment:</strong> {{ monthlyPayment() | number: '1.2-2' }} BYN
+          </p>
+          <p class="result-line">
+            <strong>Total repayment:</strong> {{ totalPayment() | number: '1.2-2' }} BYN
+          </p>
+          <p class="result-line">
+            <strong>Total interest:</strong> {{ totalInterest() | number: '1.2-2' }} BYN
+          </p>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

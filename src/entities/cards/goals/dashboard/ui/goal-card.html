@@ -1,13 +1,23 @@
 <dashboard-card title="Goals" [isWithSeeAll]="true" [seeAllPath]="seeAllPath">
   <card-body class="body">
-    <app-slider [items]="goals()"
-      >@if(isLoading()) {
-      <p-progress-spinner ariaLabel="loading" />
-      } @else { @for (goal of goals(); track goal.id) {
+    @if (isLoading()) {
+    <div class="data-loading">
+      <p-progress-spinner ariaLabel="Loading" />
+    </div>
+    } @else if (goals().length) {
+    <app-slider [items]="goals()">
+      @for (goal of goals(); track goal.id) {
       <app-slide>
         <goal-card-item [item]="goal" />
       </app-slide>
-      }}
+      }
     </app-slider>
+    } @else {
+    <div class="data-placeholder">
+      <span class="data-placeholder__icon" aria-hidden="true">🎯</span>
+      <p>No goals</p>
+      <p>Create a goal on the Goals page</p>
+    </div>
+    }
   </card-body>
 </dashboard-card>

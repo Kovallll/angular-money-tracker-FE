@@ -111,11 +111,21 @@ export class CategoriesHttpService {
   }
 
   createCategory(category: CreateCategoryItem) {
-    return lastValueFrom(this.http.post<CreateCategoryItem>(categoriesUrl, category));
+    return lastValueFrom(
+      this.http.post<CreateCategoryItem>(categoriesUrl, {
+        name: category.title,
+        icon: category.icon,
+      }),
+    );
   }
 
-  updateCategory(id: number, category: CreateCategoryItem) {
-    return lastValueFrom(this.http.patch<CreateCategoryItem>(`${categoriesUrl}/${id}`, category));
+  updateCategory(id: number | string, category: CreateCategoryItem) {
+    return lastValueFrom(
+      this.http.patch<CreateCategoryItem>(`${categoriesUrl}/${id}`, {
+        name: category.title,
+        icon: category.icon,
+      }),
+    );
   }
 
   deleteCategory(id: number) {

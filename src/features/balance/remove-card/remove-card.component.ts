@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   standalone: true,
@@ -16,13 +17,23 @@ export class BalanceRemoveCardButtonComponent {
   private balancesHttpService = inject(BalancesHttpService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private confirmationService = inject(ConfirmationService);
 
   handleDelete() {
+    this.confirmationService.confirm({
+      message: 'Delete this card? Related data will not be deleted.',
+      header: 'Confirm deletion',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Delete',
+      rejectLabel: 'Cancel',
+      accept: () => this.doDelete(),
+    });
+  }
+
+  private doDelete() {
     const id = this.route.snapshot.paramMap.get('id');
     this.balancesHttpService.deleteCard(Number(id)).subscribe({
-      next: () => {
-        this.router.navigate(['balances']);
-      },
+      next: () => this.router.navigate(['balances']),
       error: (err) => console.error('Delete error', err),
     });
   }

@@ -40,6 +40,11 @@
   padding: 8px;
   border-radius: 8px;
   background-color: $accent;
+
+  .category-icon-emoji {
+    font-size: 1.25rem;
+    line-height: 1;
+  }
 }
 
 .percents-block {

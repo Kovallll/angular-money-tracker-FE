@@ -1,5 +1,6 @@
 <dashboard-card title="Upcoming Subscribes" [isWithSeeAll]="true" [seeAllPath]="seeAllPath">
   <card-body class="body">
+    @if (pairsItems().length) {
     <app-slider [items]="pairsItems()">
       @for (subscribes of pairsItems(); track subscribes) {
       <app-slide>
@@ -14,5 +15,12 @@
       </app-slide>
       }
     </app-slider>
+    } @else {
+    <div class="data-placeholder">
+      <span class="data-placeholder__icon" aria-hidden="true">🔄</span>
+      <p>No upcoming subscriptions</p>
+      <p>Add a subscription in the Subscriptions section</p>
+    </div>
+    }
   </card-body>
 </dashboard-card>

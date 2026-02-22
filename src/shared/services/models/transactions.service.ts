@@ -1,5 +1,5 @@
 import { transactionsUrl } from '@/shared/constants';
-import { CreateTransaction, Transaction } from '@/shared/types';
+import { CreateTransaction, CreateTransactionPayload, Transaction } from '@/shared/types';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { delay, lastValueFrom, tap } from 'rxjs';
@@ -37,7 +37,7 @@ export class TransactionsHttpService {
       this.transactions.set(data);
     } catch (err: any) {
       console.error('Ошибка загрузки транзакций', err);
-      this.error.set('Не удалось загрузить транзакции');
+      this.error.set('Failed to load transactions');
     } finally {
       this.isLoading.set(false);
     }
@@ -49,7 +49,7 @@ export class TransactionsHttpService {
     );
   }
 
-  async createTransaction(transaction: CreateTransaction) {
+  async createTransaction(transaction: CreateTransaction | CreateTransactionPayload) {
     const userId = this.auth.getCurrentUserId();
     if (!userId) throw new Error('Not authenticated');
     this.isLoading.set(true);
@@ -60,7 +60,7 @@ export class TransactionsHttpService {
       this.transactions.update((prev) => [...prev, created]);
       return created;
     } catch (err: any) {
-      this.error.set('Ошибка при создании транзакции');
+      this.error.set('Error creating transaction');
       throw err;
     } finally {
       this.isLoading.set(false);
@@ -82,7 +82,7 @@ export class TransactionsHttpService {
     try {
       return this.http.patch<Transaction>(`${transactionsUrl}/${id}`, transaction);
     } catch (err: any) {
-      this.error.set('Ошибка при обновлении транзакции');
+      this.error.set('Error updating transaction');
       throw err;
     } finally {
       this.isLoading.set(false);

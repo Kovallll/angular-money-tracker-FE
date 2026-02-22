@@ -1,10 +1,10 @@
 import { CategoryCardComponent } from '@/entities/cards/categories/page/ui/categories.component';
 import { CategoriesHttpService } from '@/shared';
-import { CurrencyPipe } from '@angular/common';
-import { Component, computed, inject, OnInit } from '@angular/core';
-
+import { AppCurrencyPipe } from '@/shared/pipes/app-currency.pipe';
+import { Component, computed, inject } from '@angular/core';
 import { GategoryAddButtonComponent } from '@/features/categories/add-button/add-card.component';
 import { injectQuery } from '@tanstack/angular-query-experimental';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { CategoryAnaliticsComponent } from '@/widgets/categoryAnalitics/ui/analitics.component';
 
 @Component({
@@ -13,9 +13,10 @@ import { CategoryAnaliticsComponent } from '@/widgets/categoryAnalitics/ui/anali
   styleUrls: ['./categories-cards.component.scss'],
   imports: [
     CategoryCardComponent,
-    CurrencyPipe,
+    AppCurrencyPipe,
     GategoryAddButtonComponent,
     CategoryAnaliticsComponent,
+    ProgressSpinnerModule,
   ],
   standalone: true,
 })

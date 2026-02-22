@@ -13,6 +13,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { BalanceCard, BalancesHttpService, CreateCard } from '@/shared';
+import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { Select } from 'primeng/select';
 import { InputNumber } from 'primeng/inputnumber';
 import { FloatLabel } from 'primeng/floatlabel';
@@ -43,6 +44,7 @@ export class UpdateCardModalComponent implements OnInit {
   private balancesHttpService = inject(BalancesHttpService);
   private ref = inject(DynamicDialogRef);
   private route = inject(ActivatedRoute);
+  readonly currencyService = inject(CurrencyService);
 
   id: number | null = null;
   card = signal<CreateCard>({
@@ -52,7 +54,12 @@ export class UpdateCardModalComponent implements OnInit {
     branchName: '',
     cardNumber: '',
     cardName: '',
+    currencyCode: undefined,
   });
+
+  setCardCurrency(code: string) {
+    this.card.update((c) => ({ ...c, currencyCode: code }));
+  }
 
   onSubmit(form: NgForm) {
     if (form.valid && this.card?.() && this.id) {
@@ -92,6 +99,7 @@ export class UpdateCardModalComponent implements OnInit {
         branchName: card.branchName,
         cardNumber: card.cardNumber,
         cardName: card.cardName,
+        currencyCode: card.currencyCode ?? this.currencyService.primaryCode(),
       });
     });
   }

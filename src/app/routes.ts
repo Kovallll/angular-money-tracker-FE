@@ -22,11 +22,6 @@ const routes: Routes = [
       },
     ],
   },
-  //   {
-  //     path: 'remote',
-  //     loadComponent: () =>
-  //       import('../pages/Remote/react-wrapper.component').then((m) => m.ReactWrapperComponent),
-  //   },
   {
     path: '',
     component: MainLayoutComponent,
@@ -92,6 +87,11 @@ const routes: Routes = [
           import('../pages/Expenses-details/expenses-details-page').then(
             (m) => m.ExpensesDetailsPageComponent,
           ),
+      },
+      {
+        path: RoutePaths.RATES,
+        loadComponent: () => import('../pages/Rates/rates-page').then((m) => m.RatesPageComponent),
+        title: 'Banking tools',
       },
     ],
   },

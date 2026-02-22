@@ -23,6 +23,11 @@
   padding: 8px;
   border-radius: 8px;
   background-color: $tertiary;
+
+  .category-icon-emoji {
+    font-size: 1.25rem;
+    line-height: 1;
+  }
 }
 
 .button {

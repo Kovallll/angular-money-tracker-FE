@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { DashboardCardComponent, CardBodyComponent, CardHeaderComponent } from '../../../card';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RoutePaths, tabs, TransactionsHttpService } from '@/shared';
+import { CurrencyService } from '@/shared/services/currency/currency.service';
+import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
 import { TransactionCardItemComponent } from './card-item/transaction-card-item.component';
 import { DashboardTransactionsService } from '../../services/transactions.service';
 import { ProgressSpinner } from 'primeng/progressspinner';
@@ -23,15 +25,25 @@ import { ProgressSpinner } from 'primeng/progressspinner';
 })
 export class DashboardTransactionCardComponent {
   private transactionsHttpService = inject(TransactionsHttpService);
+  private transactionsService = inject(DashboardTransactionsService);
+  private currencyService = inject(CurrencyService);
+  private exchangeRates = inject(ExchangeRatesService);
+
   readonly tabFilter = signal('All');
   readonly isLoading = this.transactionsHttpService.isLoading;
   readonly title = 'Recent Transaction';
   readonly tabs = tabs;
   readonly seeAllPath = RoutePaths.TRANSACTIONS;
 
-  readonly currentItems = this.transactionsService.dashboardTransactions(this.tabFilter);
-
-  constructor(private readonly transactionsService: DashboardTransactionsService) {}
+  private readonly rawItems = this.transactionsService.dashboardTransactions(this.tabFilter);
+  readonly currentItems = computed(() => {
+    const list = this.rawItems();
+    const primary = this.currencyService.primaryCode();
+    return list.map((t) => ({
+      ...t,
+      amount: this.exchangeRates.convert(t.amount, t.currencyCode ?? 'BYN', primary),
+    }));
+  });
 
   onSelectedIndexChange(index: number) {
     this.tabFilter.set(this.tabs[index] ?? 'All');

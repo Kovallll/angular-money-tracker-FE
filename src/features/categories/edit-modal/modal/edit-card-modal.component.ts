@@ -45,17 +45,17 @@ export class EditCategoryModalComponent implements OnInit {
         key: 'toast',
         severity: 'success',
         summary: 'Success',
-        detail: 'Card created successfully',
+        detail: 'Category updated',
         life: 3000,
       });
-      this.ref.close();
+      this.ref.close(true);
     },
     onError: () => {
       this.messageService.add({
         key: 'toast',
         severity: 'error',
         summary: 'Error',
-        detail: 'Failed to create category',
+        detail: 'Failed to update category',
         life: 3000,
       });
     },
@@ -68,8 +68,8 @@ export class EditCategoryModalComponent implements OnInit {
   onSubmit(form: NgForm) {
     if (form.valid) {
       this.updateCategory({
-        title: form.value.categoryName,
-        icon: this.selectedItem().icon,
+        title: this.card.title,
+        icon: this.card.icon,
       });
     }
   }

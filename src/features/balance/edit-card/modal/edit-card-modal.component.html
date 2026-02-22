@@ -72,6 +72,19 @@
     }
   </div>
   <div class="wrapper">
+    <p-select
+      class="select"
+      [options]="currencyService.currencies"
+      optionLabel="label"
+      optionValue="code"
+      id="currencyCode"
+      name="currencyCode"
+      [ngModel]="card().currencyCode"
+      (ngModelChange)="setCardCurrency($event)"
+      placeholder="Currency"
+    />
+  </div>
+  <div class="wrapper">
     <input
       class="input"
       pInputText

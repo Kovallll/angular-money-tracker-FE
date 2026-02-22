@@ -1,6 +1,6 @@
 import { ExpenseCardPageComponent } from '@/entities/cards/expenses/page/ui/expense-card.component';
-import { CategoriesHttpService, ExpensesHttpService } from '@/shared';
-import { Component, inject } from '@angular/core';
+import { CategoriesHttpService } from '@/shared';
+import { Component, computed, inject } from '@angular/core';
 
 @Component({
   standalone: true,
@@ -10,7 +10,8 @@ import { Component, inject } from '@angular/core';
   imports: [ExpenseCardPageComponent],
 })
 export class ExpensesCardsComponent {
-  private categoriesHtppService = inject(CategoriesHttpService);
+  private categoriesHttpService = inject(CategoriesHttpService);
 
-  categories = this.categoriesHtppService.categories;
+  categories = this.categoriesHttpService.categories;
+  hasAnyExpenses = computed(() => this.categories().some((c) => (c.expenses?.length ?? 0) > 0));
 }

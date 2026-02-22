@@ -1,6 +1,20 @@
 <form #cardForm="ngForm" (ngSubmit)="onSubmit(cardForm)">
   @for (input of inputs; track input.field) {
-    @if (input.field === 'category') {
+    @if (input.field === 'currencyCode') {
+      <div class="wrapper">
+        <p-select
+          class="select"
+          [options]="currencyService.currencies"
+          optionLabel="label"
+          optionValue="code"
+          [id]="input.name"
+          [placeholder]="input.placeholder"
+          [name]="input.name"
+          [ngModel]="card()[input.field]"
+          (ngModelChange)="setCardField('currencyCode', $event)"
+        />
+      </div>
+    } @else if (input.field === 'category') {
       <p-select
         class="select"
         [options]="categories.data()"

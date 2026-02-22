@@ -20,7 +20,7 @@
           <p-progress-spinner />
         } @else {
           <table-component
-            [dataSource]="currentTransactions()"
+            [dataSource]="transactionsForTable()"
             [isEmpty]="isEmpty"
             [displayedCells]="displayedCells()"
             (onDelete)="handleDelete($event)"

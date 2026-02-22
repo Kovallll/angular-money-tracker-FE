@@ -1,10 +1,13 @@
 <dashboard-card [title]="title" [isWithSeeAll]="true" [seeAllPath]="seeAllPath">
   <card-header class="header">
-    <p>{{ totalBalance() | currency}}</p>
+    <p>{{ totalBalancePrimary() | appCurrency:currencyService.primaryCode() }}</p>
+    <p class="secondary">
+      {{ totalBalanceSecondary() | appCurrency:currencyService.secondaryCode() }}
+    </p>
     <p>All accounts</p>
   </card-header>
-
   <card-body class="body">
+    @if (cards().length) {
     <app-slider [items]="cards()" class="slider">
       @for (card of cards(); track card.id) {
       <app-slide class="card">
@@ -12,5 +15,12 @@
       </app-slide>
       }
     </app-slider>
+    } @else {
+    <div class="data-placeholder">
+      <span class="data-placeholder__icon" aria-hidden="true">💳</span>
+      <p>No cards added</p>
+      <p>Add a card to see balance</p>
+    </div>
+    }
   </card-body>
 </dashboard-card>

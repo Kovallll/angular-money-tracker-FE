@@ -23,6 +23,7 @@ export class TransactionAddButtonComponent {
       closable: true,
       dismissableMask: true,
       styleClass: 'modal',
+      width: '560px',
     });
   }
 }

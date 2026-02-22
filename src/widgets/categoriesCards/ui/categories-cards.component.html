@@ -5,34 +5,46 @@
       <category-add-button />
     </div>
     <div class="cards">
-      <div class="totals">
-        <div class="total">
-          <p class="amount">{{ totalExpenses() | currency }}</p>
-          <p class="title">Total Expenses</p>
+      @if (categories.isPending()) {
+        <div class="data-loading">
+          <p-progressSpinner ariaLabel="Loading" />
         </div>
-        <div class="total">
-          <p class="amount">{{ topTransactions() }} Top Category</p>
-          <p class="title">Transactions</p>
+      } @else if (!categories.data()?.length) {
+        <div class="data-placeholder data-placeholder--page">
+          <span class="data-placeholder__icon" aria-hidden="true">📁</span>
+          <p>No categories</p>
+          <p>Add a category using the button above</p>
         </div>
-        <div class="total">
-          <div class="percents">
-            @if (!overageDeltaCompare().negative) {
-              <i class="pi pi-arrow-down negative"></i>
-            } @else {
-              <i class="pi pi-arrow-up positive"></i>
-            }
-            <p class="amount">
-              {{ overageDeltaCompare().value + '%' }}
-            </p>
+      } @else {
+        <div class="totals">
+          <div class="total">
+            <p class="amount">{{ totalExpenses() | appCurrency }}</p>
+            <p class="title">Total Expenses</p>
           </div>
-          <p class="title">Last month</p>
+          <div class="total">
+            <p class="amount">{{ topTransactions() }} Top Category</p>
+            <p class="title">Transactions</p>
+          </div>
+          <div class="total">
+            <div class="percents">
+              @if (!overageDeltaCompare().negative) {
+                <i class="pi pi-arrow-down negative"></i>
+              } @else {
+                <i class="pi pi-arrow-up positive"></i>
+              }
+              <p class="amount">
+                {{ overageDeltaCompare().value + '%' }}
+              </p>
+            </div>
+            <p class="title">Last month</p>
+          </div>
         </div>
-      </div>
-      <div class="content">
-        @for (category of categories.data(); track category.id) {
-          <category-card [category]="category" [chart]="getCurrentChart(category.id)" />
-        }
-      </div>
+        <div class="content">
+          @for (category of categories.data(); track category.id) {
+            <category-card [category]="category" [chart]="getCurrentChart(category.id)" />
+          }
+        </div>
+      }
     </div>
   </div>
   <category-analitics />

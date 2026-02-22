@@ -13,4 +13,5 @@ export enum RoutePaths {
   CATEGORIES = 'categories',
   BALANCE_DETAILS = 'balance-details',
   EXPENSES_DETAILS = 'expenses-details',
+  RATES = 'rates',
 }

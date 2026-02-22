@@ -16,6 +16,8 @@ export type Transaction = {
   title: string;
   category: string;
   amount: number;
+  /** Currency code (e.g. BYN, USD). Default BYN if missing. */
+  currencyCode?: string;
   date: string;
   type: string;
   paymentMethod: string;
@@ -26,11 +28,25 @@ export type Transaction = {
 
 export type CreateTransaction = Omit<Transaction, 'id' | 'userId' | 'cardId' | 'categoryId'>;
 
+/** Payload для создания транзакции (формат бэкенда) */
+export interface CreateTransactionPayload {
+  cardId: string;
+  categoryId: string;
+  type: 'expense' | 'revenue';
+  amount: number;
+  currencyCode?: string;
+  date: string;
+  title?: string;
+  description?: string;
+}
+
 export interface BalanceCard {
   id: number;
   cardName: string;
   cardNumber: string;
   cardBalance: number;
+  /** Currency code for this card (e.g. BYN, USD). Defaults to app primary if missing. */
+  currencyCode?: string;
   cardType: string;
   bankName: string;
   branchName: string;
@@ -41,6 +57,8 @@ export interface CreateCard {
   cardName: string;
   cardNumber: string;
   cardBalance: number;
+  /** Currency code for this card (e.g. BYN, USD). */
+  currencyCode?: string;
   cardType: string;
   bankName: string;
   branchName: string;
@@ -48,8 +66,10 @@ export interface CreateCard {
 
 export interface ExpenseItem {
   id: number;
-  category: Pick<CategoryItem, 'id' | 'title'>;
+  category: Pick<CategoryItem, 'id' | 'title' | 'icon'>;
   amount: number;
+  /** Currency code of the amount (e.g. BYN, USD). Used for conversion to primary. */
+  currencyCode?: string;
   date: string;
   title: string;
 }

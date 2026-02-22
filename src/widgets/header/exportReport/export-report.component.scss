@@ -1,21 +1,82 @@
 @use 'theme' as *;
-@use '@angular/material' as mat;
 
-.export {
-  border-radius: 12px;
-  font-size: 20px;
-  background: $accent;
-  border: 1px solid $secondary;
-  padding: 8px 20px;
-  @include mat.button-overrides(
-    (
-      filled-label-text-color: $white,
-      filled-container-color: $accent,
-    )
-  );
+:host {
+  display: inline-block;
+}
 
-  .icon {
-    margin-right: 12px;
-    transform: scale(1.5);
+::ng-deep .export-btn.p-button {
+  border-radius: 10px;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+  border: none !important;
+  color: #fff !important;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.35);
+
+  &:hover:not(:disabled) {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.45);
+    color: #fff !important;
   }
+
+  .p-button-icon {
+    margin-right: 0.5rem;
+  }
+}
+
+.export-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.export-overlay__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba($primary, 0.85);
+  backdrop-filter: blur(4px);
+}
+
+.export-overlay__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 2rem;
+  min-width: 320px;
+  background: $light-primary;
+  border: 1px solid $tertiary;
+  border-radius: 12px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+}
+
+.export-overlay__spinner {
+  width: 48px;
+  height: 48px;
+
+  ::ng-deep .p-progress-spinner-circle {
+    stroke: $accent !important;
+  }
+}
+
+.export-overlay__title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: $white;
+}
+
+.export-overlay__hint {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: $gray;
+  text-align: center;
+  max-width: 280px;
 }

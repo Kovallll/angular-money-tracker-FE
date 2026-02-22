@@ -2,11 +2,15 @@
   <div class="header">
     <div class="left-content">
       <div class="category-icon">
-        <i [class]="category().icon"></i>
+        @if (category().icon.startsWith('pi ')) {
+          <i [class]="category().icon"></i>
+        } @else if (category().icon) {
+          <span class="category-icon-emoji">{{ category().icon }}</span>
+        }
       </div>
       <div class="text">
         <p class="category">{{ category().title }}</p>
-        <p class="cost">{{ category().totalExpenses | currency }}</p>
+        <p class="cost">{{ category().totalExpenses | appCurrency }}</p>
       </div>
     </div>
     <div class="right-content">
@@ -35,12 +39,12 @@
     <div class="totals">
       <div class="total">
         <p class="title">Expenses</p>
-        <p class="amount">{{ category().totalExpenses | currency }}</p>
+        <p class="amount">{{ category().totalExpenses | appCurrency }}</p>
       </div>
       <divider color="tertiary" />
       <div class="total">
         <p class="title">Revenue</p>
-        <p class="amount">{{ category().totalRevenues | currency }}</p>
+        <p class="amount">{{ category().totalRevenues | appCurrency }}</p>
       </div>
     </div>
   </div>

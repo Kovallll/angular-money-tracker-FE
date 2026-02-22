@@ -1,0 +1,264 @@
+@use 'theme' as *;
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.container {
+  padding: 24px 32px;
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+}
+
+.page-title {
+  margin: 0 0 24px;
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: $white;
+}
+
+.tabs {
+  width: 100%;
+
+  ::ng-deep .mat-mdc-tab-group {
+    width: 100%;
+  }
+
+  ::ng-deep .mat-mdc-tab-header {
+    border-bottom: 2px solid $tertiary;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 12px 12px 0 0;
+  }
+
+  ::ng-deep .mat-mdc-tab-labels {
+    background: transparent;
+  }
+
+  ::ng-deep .mat-mdc-tab {
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+    font-size: 1rem;
+    min-width: 140px;
+    opacity: 1;
+
+    .mdc-tab__text-label {
+      color: inherit;
+    }
+
+    &.mdc-tab--active {
+      color: $white;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 8px 8px 0 0;
+
+      .mdc-tab__text-label {
+        color: $white;
+      }
+    }
+  }
+
+  ::ng-deep .mat-mdc-tab .mdc-tab-indicator__content--underline {
+    border-color: $accent;
+    border-width: 3px;
+  }
+
+  ::ng-deep .mat-mdc-tab-header-pagination-chevron,
+  ::ng-deep .mat-mdc-tab-header-pagination-icon {
+    border-color: $white;
+  }
+
+  ::ng-deep .mat-mdc-tab-body-content {
+    padding: 24px 0;
+    background: transparent;
+  }
+
+  ::ng-deep .mat-mdc-tab-body-wrapper {
+    background: transparent;
+  }
+}
+
+.tab-content {
+  width: 100%;
+  padding: 8px 0;
+  min-height: 280px;
+}
+
+.chart-and-rates-tab {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.chart-block {
+  width: 100%;
+}
+
+.rates-block {
+  width: 100%;
+  padding-top: 16px;
+  border-top: 1px solid $tertiary;
+}
+
+.block-title {
+  margin: 0 0 16px;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: $white;
+}
+
+.rates-actions {
+  margin-bottom: 16px;
+}
+
+.rates-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: $white;
+
+  th,
+  td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid $tertiary;
+  }
+
+  th {
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.95rem;
+  }
+
+  td {
+    font-size: 1rem;
+  }
+}
+
+/* Видимость подписей и полей ввода */
+.calculator-tab,
+.chart-tab,
+.chart-and-rates-tab,
+.rates-tab {
+  ::ng-deep .mat-mdc-form-field {
+    .mat-mdc-floating-label {
+      color: rgba(255, 255, 255, 0.85) !important;
+    }
+
+    .mat-mdc-form-field-focus-overlay {
+      background-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__leading,
+    .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__notch,
+    .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__trailing {
+      border-color: rgba(255, 255, 255, 0.3) !important;
+    }
+
+    .mdc-text-field--focused .mdc-notched-outline .mdc-notched-outline__leading,
+    .mdc-text-field--focused .mdc-notched-outline .mdc-notched-outline__notch,
+    .mdc-text-field--focused .mdc-notched-outline .mdc-notched-outline__trailing {
+      border-color: var(--mat-form-field-outline-focus-color, $accent) !important;
+    }
+
+    .mat-mdc-input-element,
+    .mat-mdc-select-value {
+      color: $white !important;
+    }
+
+    .mat-mdc-select-arrow {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .mat-mdc-text-field-wrapper {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+    }
+  }
+}
+
+.calculator-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 24px;
+
+  .field {
+    min-width: 200px;
+    flex: 1;
+  }
+}
+
+.calculator-result {
+  padding: 20px 24px;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
+  border: 1px solid $tertiary;
+  max-width: 480px;
+
+  .result-line {
+    margin: 0 0 10px;
+    color: $white;
+    font-size: 1.05rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.chart-controls {
+  margin-bottom: 20px;
+
+  .currency-select {
+    min-width: 280px;
+
+    ::ng-deep .mat-mdc-select-value,
+    ::ng-deep .mat-mdc-select-value-text {
+      color: #ffffff !important;
+    }
+
+    ::ng-deep .mat-mdc-select-arrow {
+      color: rgba(255, 255, 255, 0.95) !important;
+    }
+
+    ::ng-deep .mat-mdc-text-field-wrapper {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      transition:
+        border-color 0.2s,
+        box-shadow 0.2s;
+    }
+
+    ::ng-deep .mat-mdc-form-field:hover .mat-mdc-text-field-wrapper,
+    ::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-text-field-wrapper {
+      border-color: rgba(255, 255, 255, 0.4);
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    ::ng-deep .mdc-notched-outline .mdc-notched-outline__leading,
+    ::ng-deep .mdc-notched-outline .mdc-notched-outline__notch,
+    ::ng-deep .mdc-notched-outline .mdc-notched-outline__trailing {
+      border: none !important;
+    }
+  }
+}
+
+.chart-wrap {
+  height: 360px;
+  position: relative;
+  width: 100%;
+}
+
+.chart-empty {
+  color: $gray;
+  padding: 32px;
+  text-align: center;
+  font-size: 1rem;
+}
+
+.spinner {
+  display: inline-block;
+}

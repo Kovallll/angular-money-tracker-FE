@@ -3,6 +3,15 @@ import { ChartViews } from './enums';
 import { SelectOption } from '@/entities/select/lib';
 import { formatCurrency, formatDate, formatNumber } from '@angular/common';
 
+/** Format amount with currency code after the number (e.g. "321.00 BYN"). */
+export function formatAmountWithCurrency(value: number, currencyCode: string): string {
+  const formatted = new Intl.NumberFormat('en', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(value);
+  return `${formatted} ${currencyCode}`;
+}
+
 export const chartViewChoices: SelectOption<`${ChartViews}`>[] = [
   { label: ChartViews.WEEK, value: ChartViews.WEEK, id: 1 },
   { label: ChartViews.MONTH, value: ChartViews.MONTH, id: 2 },

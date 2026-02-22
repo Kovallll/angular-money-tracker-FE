@@ -1,9 +1,17 @@
 <div class="container">
-  @for (card of cards(); track card.id) {
-    <dashboard-card class="card">
-      <card-body class="body">
-        <balance-card-item [card]="card" />
-      </card-body>
-    </dashboard-card>
+  @if (cards().length) {
+    @for (card of cards(); track card.id) {
+      <dashboard-card class="card">
+        <card-body class="body">
+          <balance-card-item [card]="card" />
+        </card-body>
+      </dashboard-card>
+    }
+  } @else {
+    <div class="data-placeholder data-placeholder--page">
+      <span class="data-placeholder__icon" aria-hidden="true">💳</span>
+      <p>No cards</p>
+      <p>Add a card using the "Add Card" button</p>
+    </div>
   }
 </div>

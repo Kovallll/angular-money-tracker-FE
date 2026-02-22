@@ -14,7 +14,10 @@
       <p>Account Number</p>
     </div>
     <div class="body-item">
-      {{ card().cardBalance | currency }}
+      {{ balancePrimary() | appCurrency: currencyService.primaryCode() }}
+      <p class="secondary">
+        {{ balanceSecondary() | appCurrency: currencyService.secondaryCode() }}
+      </p>
       <p>Total amount</p>
     </div>
   </div>

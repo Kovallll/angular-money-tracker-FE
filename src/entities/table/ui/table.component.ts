@@ -3,12 +3,13 @@ import { Component, computed, Input, input, output, ViewChild } from '@angular/c
 import { MatTableModule } from '@angular/material/table';
 import { TableCell } from '../lib';
 import { ContextMenuComponent } from '@/entities/context-menu/cm.component';
+import { AppCurrencyPipe } from '@/shared/pipes/app-currency.pipe';
 
 @Component({
   selector: 'table-component',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
-  imports: [CommonModule, MatTableModule, ContextMenuComponent],
+  imports: [CommonModule, MatTableModule, ContextMenuComponent, AppCurrencyPipe],
   standalone: true,
 })
 export class TableComponent<T> {

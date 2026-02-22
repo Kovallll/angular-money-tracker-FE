@@ -23,7 +23,7 @@
               <p class="describtion">{{ subscribe.description }}</p>
               <p class="type">{{ subscribe.type | titlecase }}</p>
               <p class="last-charge">{{ subscribe.lastCharge | date }}</p>
-              <p class="amount">{{ subscribe.amount | currency }}</p>
+              <p class="amount">{{ subscribe.amount | appCurrency }}</p>
             </div>
             <context-menu-component
               #ctxMenu
@@ -32,7 +32,11 @@
             />
           }
         } @else {
-          <p class="no-data">No data</p>
+          <div class="data-placeholder data-placeholder--page">
+            <span class="data-placeholder__icon" aria-hidden="true">🔄</span>
+            <p>No subscriptions</p>
+            <p>Add a subscription using the button above</p>
+          </div>
         }
       </card-body>
     </dashboard-card>

@@ -2,19 +2,28 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   input,
   linkedSignal,
   signal,
 } from '@angular/core';
+import { ChartConfiguration } from 'chart.js';
 import { DashboardCardComponent, CardBodyComponent } from '../../../card';
 import { BaseChartDirective } from 'ng2-charts';
-import { budgetChartOptions, chartViewChoices, ChartViews } from '../../lib';
+import {
+  budgetChartOptions,
+  chartViewChoices,
+  ChartViews,
+  formatAmountWithCurrency,
+} from '../../lib';
 import { MatSelectModule } from '@angular/material/select';
 import { BudgetStatisticsService } from '../../services/budget-statistics.service';
 import { MatIconModule } from '@angular/material/icon';
 import { SelectComponent } from '@/entities/select/ui/select.component';
 import { SelectOption } from '@/entities/select/lib';
 import { chartColors } from '@/shared';
+import { CurrencyService } from '@/shared/services/currency/currency.service';
+import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
 
 @Component({
   selector: 'budget-statistic-card',
@@ -32,12 +41,15 @@ import { chartColors } from '@/shared';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BudgetStatisticCardComponent {
+  private budgetStatisticsService = inject(BudgetStatisticsService);
+  private currencyService = inject(CurrencyService);
+  private exchangeRates = inject(ExchangeRatesService);
+
   isWithSeeAll = input(false);
   seeAllPath = input<string>('');
   fixedView = input<SelectOption<`${ChartViews}`>>();
   title = input<string>('Budget');
   chartViewChoices = signal<SelectOption<`${ChartViews}`>[]>(chartViewChoices);
-  options = budgetChartOptions;
 
   offset = signal(0);
 
@@ -47,25 +59,49 @@ export class BudgetStatisticCardComponent {
     this.budgetStatisticsService.getPeriodTransactionsData(this.currentView().value, this.offset()),
   );
 
-  data = computed(() => ({
-    labels: this.chartData().labels,
-    datasets: [
-      {
-        label: 'Expenses',
-        data: this.chartData().expenses,
-        backgroundColor: chartColors.red,
-        borderWidth: 1,
-      },
-      {
-        label: 'Revenue',
-        data: this.chartData().revenue,
-        backgroundColor: chartColors.blue,
-        borderWidth: 1,
-      },
-    ],
-  }));
+  /** Chart data with amounts converted to primary currency (reactive to header). */
+  data = computed(() => {
+    const raw = this.chartData();
+    const primary = this.currencyService.primaryCode();
+    const expenses = raw.expenses.map((v) => this.exchangeRates.convert(v, 'BYN', primary));
+    const revenue = raw.revenue.map((v) => this.exchangeRates.convert(v, 'BYN', primary));
+    return {
+      labels: raw.labels,
+      datasets: [
+        {
+          label: 'Expenses',
+          data: expenses,
+          backgroundColor: chartColors.red,
+          borderWidth: 1,
+        },
+        {
+          label: 'Revenue',
+          data: revenue,
+          backgroundColor: chartColors.blue,
+          borderWidth: 1,
+        },
+      ],
+    };
+  });
 
-  constructor(private readonly budgetStatisticsService: BudgetStatisticsService) {}
+  /** Options with tooltip in primary currency. */
+  options = computed<ChartConfiguration<'bar'>['options']>(() => {
+    const code = this.currencyService.primaryCode();
+    const base = budgetChartOptions ?? {};
+    return {
+      ...base,
+      plugins: {
+        ...base.plugins,
+        tooltip: {
+          ...base.plugins?.tooltip,
+          callbacks: {
+            label: (ctx) =>
+              `${ctx.dataset.label}: ${formatAmountWithCurrency(ctx.parsed.y ?? 0, code)}`,
+          },
+        },
+      },
+    };
+  });
 
   handleOffsetChange(offset: number) {
     this.offset.update((prev) => prev + offset);

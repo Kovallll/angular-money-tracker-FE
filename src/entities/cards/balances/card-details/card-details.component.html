@@ -11,7 +11,10 @@
       </div>
       <div class="balance-content">
         <p class="title">Balance</p>
-        <p class="text">{{ card()?.cardBalance }}</p>
+        <p class="text">{{ balancePrimary() | appCurrency: currencyService.primaryCode() }}</p>
+        <p class="text secondary">
+          {{ balanceSecondary() | appCurrency: currencyService.secondaryCode() }}
+        </p>
       </div>
       <div class="branch-name-content">
         <p class="title">Branch Name</p>

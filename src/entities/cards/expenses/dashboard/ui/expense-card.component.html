@@ -1,7 +1,14 @@
 <dashboard-card title="Expenses" [isWithSeeAll]="true" [seeAllPath]="seeAllPath">
   <card-body class="body">
-    @for (expense of expenses(); track expense.id) {
-      <expense-card-item [expense]="expense" />
+    @if (expenses().length) {
+      @for (expense of expenses(); track expense.id) {
+        <expense-card-item [expense]="expense" />
+      }
+    } @else {
+      <div class="data-placeholder">
+        <span class="data-placeholder__icon" aria-hidden="true">📊</span>
+        <p>No expenses</p>
+      </div>
     }
   </card-body>
 </dashboard-card>

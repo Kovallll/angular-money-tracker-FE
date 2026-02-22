@@ -1,58 +1,177 @@
-<form #cardForm="ngForm" (ngSubmit)="onSubmit(cardForm)">
-  @for (input of inputs; track input.field) {
-    @if (input.field === 'category') {
+<form #cardForm="ngForm" (ngSubmit)="onSubmit(cardForm)" class="form">
+  <div class="form-row">
+    <div class="form-field">
+      <label for="date">Date</label>
+      <p-datepicker
+        inputId="date"
+        name="date"
+        [(ngModel)]="form.date"
+        dateFormat="yy-mm-dd"
+        [showIcon]="false"
+        iconDisplay="button"
+        appendTo="body"
+        #dateField="ngModel"
+        required
+      />
+      <div class="form-field-error">
+        @if (dateField.invalid && (dateField.touched || cardForm.submitted)) {
+          <p-message severity="error" size="small" variant="simple">Date is required</p-message>
+        }
+      </div>
+    </div>
+
+    <div class="form-field">
+      <label for="amount">Amount</label>
+      <p-inputnumber
+        inputId="amount"
+        name="amount"
+        [(ngModel)]="form.amount"
+        [min]="0.01"
+        mode="decimal"
+        [minFractionDigits]="0"
+        [maxFractionDigits]="2"
+        [useGrouping]="false"
+        #amountField="ngModel"
+        required
+      />
+      <div class="form-field-error">
+        @if (amountField.invalid && (amountField.touched || cardForm.submitted)) {
+          <p-message severity="error" size="small" variant="simple"
+            >Amount must be greater than 0</p-message
+          >
+        }
+      </div>
+    </div>
+    <div class="form-field">
+      <label for="currencyCode">Currency</label>
       <p-select
-        class="select"
-        [options]="categories.data()"
-        optionValue="title"
-        [id]="input.name"
-        [placeholder]="input.placeholder"
-        [name]="input.name"
-        [ngModel]="card()[input.field]"
-        (ngModelChange)="updateCardField($event)"
-        #model="ngModel"
-        [invalid]="model.invalid && (model.touched || cardForm.submitted)"
+        inputId="currencyCode"
+        name="currencyCode"
+        [options]="currencyService.currencies"
+        optionLabel="label"
+        optionValue="code"
+        [(ngModel)]="form.currencyCode"
+        placeholder="Select currency"
+        appendTo="body"
+      />
+      <div class="form-field-error"></div>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-field">
+      <label for="title">Title</label>
+      <input
+        class="input"
+        pInputText
+        type="text"
+        id="title"
+        name="title"
+        placeholder="e.g. Shopping"
+        [(ngModel)]="form.title"
+        #titleField="ngModel"
+      />
+      <div class="form-field-error"></div>
+    </div>
+
+    <div class="form-field">
+      <label for="type">Type</label>
+      <p-select
+        inputId="type"
+        name="type"
+        [options]="typeOptions"
+        optionLabel="label"
+        optionValue="value"
+        [(ngModel)]="form.type"
+        appendTo="body"
+        #typeField="ngModel"
+        required
+      />
+      <div class="form-field-error">
+        @if (typeField.invalid && (typeField.touched || cardForm.submitted)) {
+          <p-message severity="error" size="small" variant="simple">Select type</p-message>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-field">
+      <label for="categoryId">Category</label>
+      <p-select
+        inputId="categoryId"
+        name="categoryId"
+        [options]="categories.data() ?? []"
+        optionLabel="title"
+        optionValue="id"
+        [(ngModel)]="form.categoryId"
+        placeholder="Select category"
+        appendTo="body"
+        #categoryField="ngModel"
         required
       >
         <ng-template let-item pTemplate="item">
           <div class="icon-row">
-            <i [class]="item.icon"></i>
+            @if (item.icon?.startsWith('pi ')) {
+              <i [class]="item.icon"></i>
+            } @else if (item.icon) {
+              <span class="icon-emoji">{{ item.icon }}</span>
+            }
             <span>{{ item.title }}</span>
           </div>
         </ng-template>
-
-        <ng-template let-item pTemplate="selectedItem">
-          <div class="icon-row selected">
-            <span>{{ item?.title }}</span>
-          </div>
-        </ng-template>
       </p-select>
-      @if (model.invalid && (model.touched || cardForm.submitted)) {
-        <p-message severity="error" size="small" variant="simple"
-          >{{ input.placeholder }} is required.</p-message
-        >
-      }
-    } @else {
-      <div class="wrapper">
-        <input
-          class="input"
-          pInputText
-          type="text"
-          [id]="input.name"
-          [placeholder]="input.placeholder"
-          [name]="input.name"
-          [(ngModel)]="card()[input.field]"
-          #model="ngModel"
-          [invalid]="model.invalid && (model.touched || cardForm.submitted)"
-          required
-        />
-        @if (model.invalid && (model.touched || cardForm.submitted)) {
-          <p-message severity="error" size="small" variant="simple"
-            >{{ input.placeholder }} is required.</p-message
-          >
+      <div class="form-field-error">
+        @if (categoryField.invalid && (categoryField.touched || cardForm.submitted)) {
+          <p-message severity="error" size="small" variant="simple">Select category</p-message>
         }
       </div>
-    }
-  }
-  <button pButton severity="primary" type="submit">Add</button>
+    </div>
+
+    <div class="form-field">
+      <label for="cardId">Card</label>
+      <p-select
+        inputId="cardId"
+        name="cardId"
+        [options]="cards()"
+        optionLabel="bankName"
+        optionValue="id"
+        [(ngModel)]="form.cardId"
+        (ngModelChange)="onCardChange($event)"
+        placeholder="Select card"
+        appendTo="body"
+        #cardField="ngModel"
+        required
+      >
+        <ng-template let-item pTemplate="item">
+          <span>{{ item.bankName }} — {{ item.cardNumber }}</span>
+        </ng-template>
+      </p-select>
+      <div class="form-field-error">
+        @if (cardField.invalid && (cardField.touched || cardForm.submitted)) {
+          <p-message severity="error" size="small" variant="simple">Select card</p-message>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-field form-field--full">
+      <label for="description">Description <span class="optional">(optional)</span></label>
+      <input
+        class="input"
+        pInputText
+        type="text"
+        id="description"
+        name="description"
+        placeholder="Transaction comment"
+        [(ngModel)]="form.description"
+      />
+      <div class="form-field-error"></div>
+    </div>
+  </div>
+
+  <div class="form-submit">
+    <button pButton type="submit" label="Add Transaction" severity="primary"></button>
+  </div>
 </form>

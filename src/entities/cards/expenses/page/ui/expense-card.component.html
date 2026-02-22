@@ -2,11 +2,19 @@
   <div class="header">
     <div class="left-content">
       <div class="category-icon">
-        <mat-icon>category</mat-icon>
+        @if (category?.icon) {
+          @if (category?.icon?.startsWith('pi ')) {
+            <i [class]="category?.icon"></i>
+          } @else {
+            <span class="category-icon-emoji">{{ category?.icon ?? '' }}</span>
+          }
+        } @else {
+          <mat-icon>category</mat-icon>
+        }
       </div>
       <div class="text">
         <p class="category">{{ category?.title }}</p>
-        <p class="cost">{{ category?.totalExpenses | currency }}</p>
+        <p class="cost">{{ displayTotalExpenses() | appCurrency }}</p>
       </div>
     </div>
     <div class="right-content">
@@ -18,8 +26,15 @@
     </div>
   </div>
   <div class="body">
-    @for (expense of expenses(); track expense.id) {
-      <expense-card-item [expense]="expense" />
+    @if (expenses().length) {
+      @for (expense of expenses(); track expense.id) {
+        <expense-card-item [expense]="expense" />
+      }
+    } @else {
+      <div class="data-placeholder">
+        <span class="data-placeholder__icon" aria-hidden="true">📊</span>
+        <p>No expenses in this category</p>
+      </div>
     }
   </div>
 </div>

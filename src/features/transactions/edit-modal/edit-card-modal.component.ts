@@ -10,6 +10,7 @@ import {
   Transaction,
   TransactionsHttpService,
 } from '@/shared';
+import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { injectQuery, QueryClient } from '@tanstack/angular-query-experimental';
 import { Select } from 'primeng/select';
@@ -29,6 +30,7 @@ export class EditTransactionModalComponent implements OnInit {
   private categoriesHttpService = inject(CategoriesHttpService);
   private ref = inject(DynamicDialogRef);
   private queryClient = inject(QueryClient);
+  protected currencyService = inject(CurrencyService);
   transaction = this.config.data as Transaction;
 
   categories = injectQuery(() => ({
@@ -59,6 +61,7 @@ export class EditTransactionModalComponent implements OnInit {
     { name: 'title', placeholder: 'Title', field: 'title' },
     { name: 'category', placeholder: 'Category', field: 'category' },
     { name: 'type', placeholder: 'Type', field: 'type' },
+    { name: 'currencyCode', placeholder: 'Currency', field: 'currencyCode' },
     { name: 'paymentMethod', placeholder: 'Payment method', field: 'paymentMethod' },
     { name: 'status', placeholder: 'Status', field: 'status' },
     { name: 'transactionType', placeholder: 'Transaction Type', field: 'transactionType' },
@@ -70,7 +73,9 @@ export class EditTransactionModalComponent implements OnInit {
 
   ngOnInit() {
     const card = this.inputs.reduce((acc, cur) => {
-      acc[cur.field] = this.transaction[cur.field as keyof CreateTransaction];
+      acc[cur.field] =
+        this.transaction[cur.field as keyof CreateTransaction] ??
+        (cur.field === 'currencyCode' ? this.currencyService.primaryCode() : undefined);
       return acc;
     }, {} as any);
     this.card.set(card);
@@ -87,5 +92,9 @@ export class EditTransactionModalComponent implements OnInit {
       ...state,
       category: value,
     }));
+  }
+
+  setCardField(field: string, value: any) {
+    this.card.update((state: any) => ({ ...state, [field]: value }));
   }
 }

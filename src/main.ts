@@ -9,10 +9,17 @@ import { ThemePreset } from './preset';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { authInterceptor, baseApiUrlInterceptor } from './shared';
 import { provideTanStackQuery, QueryClient } from '@tanstack/angular-query-experimental';
-import { isDevMode } from '@angular/core';
+import { APP_INITIALIZER, isDevMode } from '@angular/core';
 import { provideServiceWorker } from '@angular/service-worker';
+import { ExchangeRatesService } from './shared/services/currency/exchange-rates.service';
 
 const providers = [
+  {
+    provide: APP_INITIALIZER,
+    useFactory: (exchangeRates: ExchangeRatesService) => () => exchangeRates.loadRates(),
+    deps: [ExchangeRatesService],
+    multi: true,
+  },
   provideTanStackQuery(new QueryClient()),
   provideProtractorTestingSupport(),
   provideRouter(routeConfig, withHashLocation()),

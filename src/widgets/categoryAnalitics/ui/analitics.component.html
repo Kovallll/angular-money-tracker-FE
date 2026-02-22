@@ -3,15 +3,36 @@
   <div class="charts" [class.row]="view() === 'row'">
     <div class="chart">
       <div class="subtitle">Categories Share</div>
-      <canvas baseChart [type]="'doughnut'" [data]="pieData()" [options]="pieOptions"></canvas>
+      @if (hasPieData()) {
+        <canvas baseChart [type]="'doughnut'" [data]="pieData()" [options]="pieOptions"></canvas>
+      } @else {
+        <div class="chart-placeholder data-placeholder">
+          <span class="data-placeholder__icon" aria-hidden="true">📊</span>
+          <p>No data</p>
+        </div>
+      }
     </div>
     <div class="chart">
       <div class="subtitle">Spending by Month</div>
-      <canvas baseChart [type]="'bar'" [data]="barData" [options]="barOptions"></canvas>
+      @if (hasBarData()) {
+        <canvas baseChart [type]="'bar'" [data]="barData()" [options]="barOptions"></canvas>
+      } @else {
+        <div class="chart-placeholder data-placeholder">
+          <span class="data-placeholder__icon" aria-hidden="true">📊</span>
+          <p>No data</p>
+        </div>
+      }
     </div>
     <div class="chart">
       <div class="subtitle">Spending Over Time</div>
-      <canvas baseChart [type]="'line'" [data]="lineData" [options]="lineOptions"></canvas>
+      @if (hasLineData()) {
+        <canvas baseChart [type]="'line'" [data]="lineData()" [options]="lineOptions"></canvas>
+      } @else {
+        <div class="chart-placeholder data-placeholder">
+          <span class="data-placeholder__icon" aria-hidden="true">📊</span>
+          <p>No data</p>
+        </div>
+      }
     </div>
   </div>
 </div>

@@ -1,115 +1,152 @@
-<form #cardForm="ngForm" (ngSubmit)="onSubmit(cardForm)">
-  <div class="wrapper">
-    <input
-      class="input"
-      pInputText
-      type="text"
-      id="bankName"
-      placeholder="Bank Name"
-      name="bankName"
-      [(ngModel)]="card.bankName"
-      #bankName="ngModel"
-      [invalid]="bankName.invalid && (bankName.touched || cardForm.submitted)"
-      required
-    />
-    @if (bankName.invalid && (bankName.touched || cardForm.submitted)) {
-      <p-message severity="error" size="small" variant="simple">Bank Name is required.</p-message>
-    }
-  </div>
-  <div class="wrapper">
-    <input
-      class="input"
-      pInputText
-      type="text"
-      id="accountType"
-      name="accountType"
-      placeholder="Card Type"
-      [(ngModel)]="card.cardType"
-      #accountType="ngModel"
-      required
-      [invalid]="accountType.invalid && (accountType.touched || cardForm.submitted)"
-    />
-    @if (accountType.invalid && (accountType.touched || cardForm.submitted)) {
-      <p-message severity="error" size="small" variant="simple">Card Type is required.</p-message>
-    }
-  </div>
-  <div class="wrapper">
-    <input
-      class="input"
-      pInputText
-      type="text"
-      id="branchName"
-      name="branchName"
-      placeholder="Branch Name"
-      [(ngModel)]="card.branchName"
-      #branchName="ngModel"
-      required
-      [invalid]="branchName.invalid && (branchName.touched || cardForm.submitted)"
-    />
-    @if (branchName.invalid && (branchName.touched || cardForm.submitted)) {
-      <p-message severity="error" size="small" variant="simple">Branch Name is required.</p-message>
-    }
-  </div>
-  <div class="wrapper">
-    <p-floatlabel variant="on">
-      <p-inputnumber
+<form #cardForm="ngForm" (ngSubmit)="onSubmit(cardForm)" class="form">
+  <div class="form-row">
+    <div class="form-field">
+      <label for="bankName">Bank Name</label>
+      <input
         class="input"
         pInputText
         type="text"
-        inputId="balance"
-        name="balance"
-        placeholder="Balance"
-        [(ngModel)]="card.cardBalance"
-        #balance="ngModel"
+        id="bankName"
+        name="bankName"
+        placeholder="e.g. Sberbank"
+        [(ngModel)]="card.bankName"
+        #bankName="ngModel"
         required
-        [invalid]="balance.invalid && (balance.touched || cardForm.submitted)"
       />
-      <label for="balance">Balance</label>
-    </p-floatlabel>
+      <div class="form-field-error">
+        @if (bankName.invalid && (bankName.touched || cardForm.submitted)) {
+          <p-message severity="error" size="small" variant="simple"
+            >Bank name is required</p-message
+          >
+        }
+      </div>
+    </div>
 
-    @if (balance.invalid && (balance.touched || cardForm.submitted)) {
-      <p-message severity="error" size="small" variant="simple">Balance is required.</p-message>
-    }
+    <div class="form-field">
+      <label for="cardType">Card Type</label>
+      <p-select
+        inputId="cardType"
+        name="cardType"
+        [options]="cardTypeOptions"
+        optionLabel="label"
+        optionValue="value"
+        [(ngModel)]="card.cardType"
+        placeholder="Select card type"
+        appendTo="body"
+        #cardType="ngModel"
+        required
+      />
+      <div class="form-field-error">
+        @if (cardType.invalid && (cardType.touched || cardForm.submitted)) {
+          <p-message severity="error" size="small" variant="simple">Select card type</p-message>
+        }
+      </div>
+    </div>
   </div>
-  <div class="wrapper">
-    <input
-      class="input"
-      pInputText
-      type="text"
-      id="accountNumber"
-      name="accountNumber"
-      placeholder="Card Number"
-      [(ngModel)]="card.cardNumber"
-      #accountNumber="ngModel"
-      required
-      [invalid]="accountNumber.invalid && (accountNumber.touched || cardForm.submitted)"
-    />
-    @if (accountNumber.invalid && (accountNumber.touched || cardForm.submitted)) {
-      <p-message severity="error" size="small" variant="simple">Card Number is required.</p-message>
-    }
+
+  <div class="form-row">
+    <div class="form-field">
+      <label for="branchName">Branch <span class="optional">(optional)</span></label>
+      <input
+        class="input"
+        pInputText
+        type="text"
+        id="branchName"
+        name="branchName"
+        placeholder="Branch name"
+        [(ngModel)]="card.branchName"
+      />
+      <div class="form-field-error"></div>
+    </div>
+
+    <div class="form-field">
+      <label for="cardNumber">Card Number</label>
+      <input
+        class="input"
+        pInputText
+        type="text"
+        id="cardNumber"
+        name="cardNumber"
+        placeholder="0000 0000 0000 0000"
+        [ngModel]="card.cardNumber"
+        (ngModelChange)="formatCardNumber($event)"
+        #cardNumber="ngModel"
+        required
+        maxlength="19"
+        inputmode="numeric"
+        autocomplete="cc-number"
+      />
+      <div class="form-field-error">
+        @if ((cardNumber.touched || cardForm.submitted) && isCardNumberInvalid(cardNumber)) {
+          <p-message severity="error" size="small" variant="simple">
+            {{ getCardNumberError(cardNumber) }}
+          </p-message>
+        }
+      </div>
+    </div>
   </div>
-  <div class="wrapper">
-    <p-select
-      class="select"
-      [options]="[
-        { name: 'MasterCard', value: 'MasterCard' },
-        { name: 'Visa', value: 'Visa' },
-      ]"
-      id="accountPayment"
-      name="accountPayment"
-      [(ngModel)]="card.cardName"
-      optionLabel="name"
-      optionValue="value"
-      placeholder="Select a Payment Method"
-      required
-      #accountPayment="ngModel"
-      [invalid]="accountPayment.invalid && (accountPayment.touched || cardForm.submitted)"
-    />
-    @if (accountPayment.invalid && (accountPayment.touched || cardForm.submitted)) {
-      <p-message severity="error" size="small" variant="simple"
-        >Card Payment Method is required.</p-message
-      >
-    }
+
+  <div class="form-row">
+    <div class="form-field">
+      <label for="cardBalance">Balance</label>
+      <p-inputnumber
+        inputId="cardBalance"
+        name="cardBalance"
+        [(ngModel)]="card.cardBalance"
+        [min]="0"
+        mode="decimal"
+        #cardBalance="ngModel"
+        required
+      />
+      <div class="form-field-error">
+        @if (cardBalance.invalid && (cardBalance.touched || cardForm.submitted)) {
+          <p-message severity="error" size="small" variant="simple">Balance is required</p-message>
+        }
+      </div>
+    </div>
+
+    <div class="form-field">
+      <label for="currencyCode">Currency</label>
+      <p-select
+        inputId="currencyCode"
+        name="currencyCode"
+        [options]="currencyService.currencies"
+        optionLabel="label"
+        optionValue="code"
+        [(ngModel)]="card.currencyCode"
+        placeholder="Select currency"
+        appendTo="body"
+      />
+      <div class="form-field-error"></div>
+    </div>
   </div>
-  <button pButton severity="primary" type="submit">Add</button>
+
+  <div class="form-row">
+    <div class="form-field">
+      <label for="cardName">Payment System</label>
+      <p-select
+        inputId="cardName"
+        name="cardName"
+        [options]="paymentOptions"
+        optionLabel="label"
+        optionValue="value"
+        [(ngModel)]="card.cardName"
+        placeholder="Select payment system"
+        appendTo="body"
+        #cardName="ngModel"
+        required
+      />
+      <div class="form-field-error">
+        @if (cardName.invalid && (cardName.touched || cardForm.submitted)) {
+          <p-message severity="error" size="small" variant="simple"
+            >Select payment system</p-message
+          >
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="form-submit">
+    <button pButton type="submit" label="Add Card" severity="primary"></button>
+  </div>
 </form>

@@ -23,7 +23,8 @@ export class BalanceAddCardButtonComponent {
       header: 'Add Card',
       closable: true,
       dismissableMask: true,
-      styleClass: 'modal',
+      styleClass: 'modal add-card-modal',
+      width: '660px',
     });
   }
 }

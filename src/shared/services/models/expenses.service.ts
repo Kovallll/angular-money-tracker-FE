@@ -24,13 +24,22 @@ export class ExpensesHttpService {
       }).pipe(
         map(({ transactions, categories }) => {
           const byId: Record<string, string> = {};
-          categories.forEach((c) => (byId[c.id] = c.title));
+          const iconById: Record<string, string> = {};
+          categories.forEach((c) => {
+            byId[c.id] = c.title;
+            iconById[c.id] = c.icon ?? '';
+          });
           return transactions.map((t) => ({
             id: t.id,
             amount: t.amount,
+            currencyCode: t.currencyCode ?? 'BYN',
             date: t.date,
             title: t.title ?? '',
-            category: { id: t.categoryId, title: byId[t.categoryId] ?? '—' },
+            category: {
+              id: t.categoryId,
+              title: byId[t.categoryId] ?? '—',
+              icon: iconById[t.categoryId] ?? '',
+            },
           }));
         }),
       );

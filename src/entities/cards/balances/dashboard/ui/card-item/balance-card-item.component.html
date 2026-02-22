@@ -5,6 +5,7 @@
   </div>
   <div class="right-side">
     <img [src]="'mastercard-logo.png' | assetPath" alt="MasterCard logo" loading="lazy" />
-    <p>{{ card().cardBalance | currency }}</p>
+    <p>{{ balancePrimary() | appCurrency: currencyService.primaryCode() }}</p>
+    <p class="secondary">{{ balanceSecondary() | appCurrency: currencyService.secondaryCode() }}</p>
   </div>
 </div>
