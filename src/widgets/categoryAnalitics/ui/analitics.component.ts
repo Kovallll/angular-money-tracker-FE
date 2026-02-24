@@ -37,84 +37,101 @@ export class CategoryAnaliticsComponent implements OnInit {
   hasBarData = computed(() => hasChartData(this.barData(), 'bar'));
   hasLineData = computed(() => hasChartData(this.lineData(), 'line'));
 
-  pieOptions: ChartConfiguration<'doughnut'>['options'] = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: 'right',
-        labels: { usePointStyle: true, color: 'white', font: { size: 16 } },
-      },
-      tooltip: {
-        titleFont: { size: 30 },
-        bodyFont: { size: 20 },
-        callbacks: {
-          label: (ctx) => `${ctx.label}: ${this.formatCurrency(ctx.parsed as number)}`,
-        },
-      },
-    },
-    cutout: '60%',
-  };
-
-  barOptions: ChartConfiguration<'bar'>['options'] = {
-    responsive: true,
-    maintainAspectRatio: false,
-    interaction: { mode: 'index', intersect: false },
-    plugins: {
-      legend: {
-        position: 'top',
-        labels: { usePointStyle: true, color: 'white', font: { size: 16 } },
-      },
-      tooltip: {
-        titleFont: { size: 30 },
-        bodyFont: { size: 20 },
-        callbacks: {
-          label: (ctx) => `${ctx.dataset.label}: ${this.formatCurrency(ctx.parsed.y as number)}`,
-        },
-      },
-    },
-    scales: {
-      x: { stacked: false, grid: { color: 'rgba(255,255,255,0.06)' }, ticks: { color: 'white' } },
-      y: {
-        beginAtZero: true,
-        grid: { color: 'rgba(255,255,255,0.06)' },
-        ticks: { callback: (v) => this.formatCurrency(Number(v)), color: 'white' },
-      },
-    },
-  };
-
-  lineOptions: ChartConfiguration<'line'>['options'] = {
-    responsive: true,
-    maintainAspectRatio: false,
-    interaction: { mode: 'nearest', intersect: false },
-    plugins: {
-      legend: { display: false },
-      tooltip: {
-        titleFont: { size: 30 },
-        bodyFont: { size: 20 },
-        callbacks: {
-          label: (ctx) => `${ctx.dataset.label}: ${this.formatCurrency(ctx.parsed.y ?? 0)}`,
-        },
-      },
-    },
-    elements: { line: { borderWidth: 2 }, point: { radius: 2 } },
-    scales: {
-      x: { grid: { color: 'rgba(255,255,255,0.06)' }, ticks: { color: 'white' } },
-      y: {
-        beginAtZero: true,
-        grid: { color: 'rgba(255,255,255,0.06)' },
-        ticks: { callback: (v) => this.formatCurrency(Number(v)), color: 'white' },
-      },
-    },
-  };
-
-  formatCurrency(v: number) {
+  private formatWithCurrency(v: number, currencyCode: string) {
     return new Intl.NumberFormat(undefined, {
       style: 'currency',
-      currency: this.currencyService.primaryCode(),
+      currency: currencyCode,
       maximumFractionDigits: 0,
     }).format(v);
   }
+
+  pieOptions = computed<ChartConfiguration<'doughnut'>['options']>(() => {
+    const code = this.currencyService.primaryCode();
+    return {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'right',
+          labels: { usePointStyle: true, color: 'white', font: { size: 16 } },
+        },
+        tooltip: {
+          titleFont: { size: 30 },
+          bodyFont: { size: 20 },
+          callbacks: {
+            label: (ctx) => `${ctx.label}: ${this.formatWithCurrency(ctx.parsed as number, code)}`,
+          },
+        },
+      },
+      cutout: '60%',
+    };
+  });
+
+  barOptions = computed<ChartConfiguration<'bar'>['options']>(() => {
+    const code = this.currencyService.primaryCode();
+    return {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: { usePointStyle: true, color: 'white', font: { size: 16 } },
+        },
+        tooltip: {
+          titleFont: { size: 30 },
+          bodyFont: { size: 20 },
+          callbacks: {
+            label: (ctx) =>
+              `${ctx.dataset.label}: ${this.formatWithCurrency(ctx.parsed.y as number, code)}`,
+          },
+        },
+      },
+      scales: {
+        x: { stacked: false, grid: { color: 'rgba(255,255,255,0.06)' }, ticks: { color: 'white' } },
+        y: {
+          beginAtZero: true,
+          grid: { color: 'rgba(255,255,255,0.06)' },
+          ticks: {
+            callback: (v) => this.formatWithCurrency(Number(v), code),
+            color: 'white',
+          },
+        },
+      },
+    };
+  });
+
+  lineOptions = computed<ChartConfiguration<'line'>['options']>(() => {
+    const code = this.currencyService.primaryCode();
+    return {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'nearest', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          titleFont: { size: 30 },
+          bodyFont: { size: 20 },
+          callbacks: {
+            label: (ctx) =>
+              `${ctx.dataset.label}: ${this.formatWithCurrency(ctx.parsed.y ?? 0, code)}`,
+          },
+        },
+      },
+      elements: { line: { borderWidth: 2 }, point: { radius: 2 } },
+      scales: {
+        x: { grid: { color: 'rgba(255,255,255,0.06)' }, ticks: { color: 'white' } },
+        y: {
+          beginAtZero: true,
+          grid: { color: 'rgba(255,255,255,0.06)' },
+          ticks: {
+            callback: (v) => this.formatWithCurrency(Number(v), code),
+            color: 'white',
+          },
+        },
+      },
+    };
+  });
 
   ngOnInit() {
     this.statisticsHttpService

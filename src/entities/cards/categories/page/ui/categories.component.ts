@@ -4,6 +4,7 @@ import { ChartConfiguration } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { CategoriesHttpService, CategoryItem, CategoryLineChartDto } from '@/shared';
 import { DividerComponent } from '@/shared/components/divider/divider';
+import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 import { ContextMenuComponent } from '@/entities/context-menu/cm.component';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { EditCategoryModalComponent } from '@/features/categories/edit-modal/modal/edit-card-modal.component';
@@ -15,7 +16,13 @@ import { CurrencyService } from '@/shared/services/currency/currency.service';
   selector: 'category-card',
   templateUrl: './categories.component.html',
   styleUrls: ['./categories.component.scss'],
-  imports: [AppCurrencyPipe, BaseChartDirective, DividerComponent, ContextMenuComponent],
+  imports: [
+    AppCurrencyPipe,
+    BaseChartDirective,
+    DividerComponent,
+    ContextMenuComponent,
+    AppIconComponent,
+  ],
   providers: [DialogService],
   standalone: true,
 })

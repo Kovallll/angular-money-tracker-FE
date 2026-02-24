@@ -1,38 +1,42 @@
-import { ChangeDetectionStrategy, Component, inject, signal, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
-import { CategoriesHttpService, CategoryItem, CreateCategoryItem } from '@/shared';
+import {
+  CategoriesHttpService,
+  CategoryItem,
+  CreateCategoryItem,
+  CATEGORY_ICON_OPTIONS,
+  getCategoryIconName,
+} from '@/shared';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { injectMutation, QueryClient } from '@tanstack/angular-query-experimental';
-import { PrimeIcons, MenuItem } from 'primeng/api';
 import { Select } from 'primeng/select';
+import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 
 @Component({
   selector: 'edit-category-modal',
   templateUrl: './edit-card-modal.component.html',
   styleUrls: ['./edit-card-modal.component.scss'],
-  imports: [FormsModule, InputTextModule, ButtonModule, MessageModule, Select],
+  imports: [FormsModule, InputTextModule, ButtonModule, MessageModule, Select, AppIconComponent],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EditCategoryModalComponent implements OnInit {
+export class EditCategoryModalComponent {
   messageService = inject(MessageService);
   private categoriesHttpService = inject(CategoriesHttpService);
   private ref = inject(DynamicDialogRef);
   private config = inject(DynamicDialogConfig);
   queryClient = inject(QueryClient);
 
-  items = signal<MenuItem[]>([]);
-  selectedItem = signal({ label: 'Table', icon: PrimeIcons.TABLE });
-
   category = this.config.data as CategoryItem;
+  iconOptions = CATEGORY_ICON_OPTIONS;
 
   card = {
-    title: '',
-    icon: this.selectedItem().icon,
+    title: this.category.title,
+    icon: getCategoryIconName(this.category.icon),
   };
 
   mutation = injectMutation(() => ({
@@ -74,40 +78,7 @@ export class EditCategoryModalComponent implements OnInit {
     }
   }
 
-  ngOnInit() {
-    this.items.set([
-      {
-        label: 'New',
-        icon: PrimeIcons.PLUS,
-      },
-      {
-        label: 'Delete',
-        icon: PrimeIcons.TRASH,
-      },
-      {
-        label: 'Edit',
-        icon: PrimeIcons.PENCIL,
-      },
-      {
-        label: 'Duplicate',
-        icon: PrimeIcons.COPY,
-      },
-      {
-        label: 'View',
-        icon: PrimeIcons.EYE,
-      },
-      {
-        label: 'Amazon',
-        icon: PrimeIcons.AMAZON,
-      },
-    ]);
-    this.card = {
-      title: this.category.title,
-      icon: this.category.icon,
-    };
-    this.selectedItem.set({
-      label: this.category.title,
-      icon: this.category.icon,
-    });
+  close(): void {
+    this.ref.close();
   }
 }

@@ -1,7 +1,7 @@
 import { Component, computed, inject, Signal, signal, ViewChild } from '@angular/core';
 import { SubscribtionsService } from '../../../services/subscribtions.service';
 import { DatePipe, TitleCasePipe } from '@angular/common';
-import { AppCurrencyPipe } from '@/shared/pipes/app-currency.pipe';
+import { AppCurrencyPrimaryPipe } from '@/shared/pipes/app-currency-primary.pipe';
 import { DashboardCardComponent, CardBodyComponent } from '@/entities/cards/card';
 import { ControlsComponent } from '@/widgets/controls/ui/controls.component';
 import { ControlsProps } from '@/widgets/controls/lib';
@@ -11,6 +11,7 @@ import { SubscribeItem, SubscribtionsHttpService, UrlSyncedComponent } from '@/s
 import { columns, searchProps } from '../lib';
 import { PaginationComponent } from '@/entities/pagination/ui/pagination.component';
 import { ContextMenuComponent } from '@/entities/context-menu/cm.component';
+import { ProgressSpinner } from 'primeng/progressspinner';
 import { DialogService } from 'primeng/dynamicdialog';
 import { EditSubscriptionModalComponent } from '@/features/subscriptions/edit-modal/edit-card-modal.component';
 import { SubscriptionAddButtonComponent } from '@/features/subscriptions/add-button/add-card.component';
@@ -24,12 +25,13 @@ import { ConfirmationService } from 'primeng/api';
     DatePipe,
     DashboardCardComponent,
     CardBodyComponent,
-    AppCurrencyPipe,
+    AppCurrencyPrimaryPipe,
     ControlsComponent,
     TitleCasePipe,
     PaginationComponent,
     ContextMenuComponent,
     SubscriptionAddButtonComponent,
+    ProgressSpinner,
   ],
   standalone: true,
   providers: [DialogService],
@@ -41,6 +43,8 @@ export class SubscribeTableComponent extends UrlSyncedComponent<SubscribeItem> {
   private readonly confirmationService = inject(ConfirmationService);
 
   subscribes = signal<SubscribeItem[]>([]);
+
+  isLoading = this.subscribeHttpService.isLoading;
 
   allData: Signal<SubscribeItem[]> = computed(() => this.subscribtionsService.getSubscribes());
 

@@ -4,7 +4,7 @@
       <mat-icon class="category-icon"> category</mat-icon>
       <div class="text-block">
         <p class="text">{{ goal().title }}</p>
-        <p class="price">{{ goal().goalBudget | appCurrency }}</p>
+        <p class="price">{{ goal().goalBudget | appCurrencyPrimary: goal().currencyCode }}</p>
       </div>
     </div>
     <div class="right-side">

@@ -1,0 +1,146 @@
+@use 'theme' as *;
+
+// Стили для PrimeNG Carousel в блоках дашборда: подгон под тёмную тему, контент и стрелки снизу.
+.dashboard-carousel {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  // Переопределяем overflow: auto из PrimeNG — убираем скроллбар
+  .p-carousel-content-container {
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden !important;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  // Контент — сетка: сверху viewport, снизу строка со стрелками (если есть)
+  .p-carousel-content {
+    max-width: 400px;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    grid-template-columns: 1fr 1fr;
+    flex: 1;
+    min-height: 0;
+    gap: 0 12px;
+    align-items: center;
+  }
+
+  // Когда один слайд — кнопок и точек нет: одна строка, контент на всю высоту
+  .p-carousel-content:has(.p-carousel-viewport:only-child) {
+    grid-template-rows: 1fr;
+  }
+
+  // Viewport занимает всю первую строку, скроллбар скрыт
+  .p-carousel-viewport {
+    grid-row: 1;
+    grid-column: 1 / -1;
+    overflow: hidden;
+    overflow-x: hidden;
+    align-self: stretch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .p-carousel-item-list {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .p-carousel-item {
+    box-sizing: border-box;
+  }
+
+  .carousel-slide {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    display: block;
+  }
+
+  // Стрелки — вторая строка: Prev у левого края, Next у правого
+  .p-carousel-prev-button {
+    grid-row: 2;
+    grid-column: 1;
+    justify-self: start;
+  }
+
+  .p-carousel-next-button {
+    grid-row: 2;
+    grid-column: 2;
+    justify-self: end;
+  }
+
+  .p-carousel-prev-button,
+  .p-carousel-next-button {
+    color: $white !important;
+    background: rgba($tertiary, 0.6) !important;
+    border: 1px solid rgba($tertiary, 0.8) !important;
+    border-radius: 12px !important;
+    width: 40px !important;
+    height: 40px !important;
+    margin-top: 12px;
+
+    &:hover:not(:disabled) {
+      background: rgba($accent, 0.25) !important;
+      border-color: rgba($accent, 0.5) !important;
+      color: $accent !important;
+    }
+
+    &:disabled {
+      opacity: 0.7;
+      color: rgba($gray, 0.5) !important;
+    }
+  }
+
+  // Точки-индикаторы — под стрелками, по центру (скрыты при одном слайде через showIndicators)
+  .p-carousel-indicator-list {
+    margin-top: 8px;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .p-carousel-indicator-button {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid rgba($white, 0.5);
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  // Активный слайд — синяя точка
+  .p-carousel-indicator-active .p-carousel-indicator-button,
+  .p-carousel-indicator-button.p-highlight {
+    background: $accent !important;
+    border-color: $accent !important;
+  }
+}

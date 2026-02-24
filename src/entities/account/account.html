@@ -1,14 +1,19 @@
 <div class="container">
-  @if (user) { @if(user.avatar) {
-  <div></div>
+  @if (user()) { @if (user()!.avatar) {
+  <img
+    [src]="avatarUrl(user()!.avatar!)"
+    alt="Avatar"
+    class="avatar-img"
+    referrerpolicy="no-referrer"
+  />
   } @else {
-  <i class="pi pi-user"></i>
+  <i class="pi pi-user avatar-placeholder"></i>
   }
   <div class="info">
-    <div class="name">{{ user.name }}</div>
-    <div class="email">{{ user.email }}</div>
+    <div class="name">{{ user()!.name }}</div>
+    <div class="email">{{ user()!.email }}</div>
   </div>
   } @else {
-  <p>User not found</p>
+  <p class="no-user">User not found</p>
   }
 </div>

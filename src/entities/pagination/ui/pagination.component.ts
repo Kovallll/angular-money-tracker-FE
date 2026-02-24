@@ -35,7 +35,8 @@ export class PaginationComponent implements OnInit {
       const currentPage = this.paginationService.getCurrentPage();
       const totalPages = this.totalPages();
       if (currentPage >= totalPages && totalPages > 0) {
-        this.setPage(defaultPage);
+        this.paginationService.setPage(defaultPage, { replaceUrl: true });
+        this.pageIndex.set(defaultPage);
       }
     });
   }
@@ -56,7 +57,8 @@ export class PaginationComponent implements OnInit {
       const currentPage = this.paginationService.getCurrentPage();
 
       if (!params['page']) {
-        this.paginationService.setPage(currentPage);
+        // Не пушим новую запись в историю при установке page=1 по умолчанию
+        this.paginationService.setPage(currentPage, { replaceUrl: true });
       }
 
       this.pageIndex.set(currentPage);

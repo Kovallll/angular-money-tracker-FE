@@ -1,35 +1,68 @@
 @use 'theme' as *;
 
 .container {
-  padding: 0px 32px;
+  padding: 0 32px;
 }
 
-.content {
+.form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  margin-bottom: 32px;
+  gap: 20px;
+  max-width: 360px;
 }
 
-.input {
-  background: transparent;
-  border: 1px solid $accent;
-  border-radius: 8px;
-  padding: 12px 16px;
-  color: $white;
-  font-size: 18px;
-  font-weight: 500;
-  width: 320px;
+.field {
+  width: 100%;
 
-  &::placeholder {
-    color: $tertiary;
-    font-size: 18px;
-    font-weight: 500;
+  ::ng-deep .mat-mdc-form-field {
+    width: 100%;
+  }
+
+  ::ng-deep .mat-mdc-floating-label,
+  ::ng-deep .mdc-floating-label {
+    color: rgba(255, 255, 255, 0.95) !important;
+  }
+
+  ::ng-deep .mat-mdc-input-element {
+    color: $white !important;
+    caret-color: $white;
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+  }
+
+  ::ng-deep .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__leading,
+  ::ng-deep .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__notch,
+  ::ng-deep .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__trailing {
+    border-color: rgba(255, 255, 255, 0.5) !important;
+  }
+
+  ::ng-deep .mdc-text-field--focused .mdc-notched-outline .mdc-notched-outline__leading,
+  ::ng-deep .mdc-text-field--focused .mdc-notched-outline .mdc-notched-outline__notch,
+  ::ng-deep .mdc-text-field--focused .mdc-notched-outline .mdc-notched-outline__trailing {
+    border-color: $accent !important;
+    border-width: 2px;
+  }
+
+  ::ng-deep .mat-mdc-text-field-wrapper {
+    background: rgba(255, 255, 255, 0.18);
+    border-radius: 8px;
+  }
+
+  ::ng-deep .mat-mdc-form-field-error,
+  ::ng-deep .mat-mdc-form-field-hint-wrapper {
+    color: $error;
   }
 }
 
-.title {
-  color: $gray;
-  font-size: 20px;
+.actions {
+  margin-top: 8px;
+}
+
+.submit-btn {
+  min-width: 160px;
   font-weight: 600;
+  background: $accent !important;
+  color: $white !important;
 }

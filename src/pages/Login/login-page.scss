@@ -35,6 +35,38 @@
 .input-wrapper {
   width: 100%;
   margin-bottom: 16px;
+
+  input.input,
+  input {
+    caret-color: $white;
+  }
+}
+
+.loading-block {
+  width: 100%;
+  margin-bottom: 16px;
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0;
+  min-height: 56px;
+}
+
+.loading-spinner {
+  flex-shrink: 0;
+  --mdc-circular-progress-active-indicator-color: #{$white};
+
+  ::ng-deep circle,
+  ::ng-deep .mdc-circular-progress__indeterminate-circle-graphic {
+    stroke: $white !important;
+  }
+}
+
+.loading-text {
+  color: $white;
+  font-size: 0.9375rem;
 }
 
 .button {

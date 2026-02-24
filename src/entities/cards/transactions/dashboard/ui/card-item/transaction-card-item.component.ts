@@ -3,11 +3,12 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { AppCurrencyPipe } from '@/shared/pipes/app-currency.pipe';
 import { MatIconModule } from '@angular/material/icon';
 import { CategoriesHttpService } from '@/shared';
+import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 
 @Component({
   selector: 'transaction-card-item',
   standalone: true,
-  imports: [CommonModule, AppCurrencyPipe, DatePipe, MatIconModule],
+  imports: [CommonModule, AppCurrencyPipe, DatePipe, MatIconModule, AppIconComponent],
   templateUrl: './transaction-card-item.component.html',
   styleUrls: ['./transaction-card-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

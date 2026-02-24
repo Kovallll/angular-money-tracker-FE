@@ -1,51 +1,105 @@
-<form #cardForm="ngForm" (ngSubmit)="onSubmit(cardForm)">
-  @for (input of inputs; track input.field) {
-    @if (input.field === 'type') {
-      <p-select
-        class="select"
-        [options]="[
-          { label: 'Monthly', value: 'monthly' },
-          { label: 'Annually', value: 'annually' },
-          { label: 'Yearly', value: 'yearly' },
-          { label: 'Daily', value: 'daily' },
-        ]"
-        optionValue="value"
-        [id]="input.name"
-        [placeholder]="input.placeholder"
-        [name]="input.name"
-        [ngModel]="card()[input.field]"
-        (ngModelChange)="updateCardField($event)"
-        #model="ngModel"
-        [invalid]="model.invalid && (model.touched || cardForm.submitted)"
-        required
-      />
-
-      @if (model.invalid && (model.touched || cardForm.submitted)) {
-        <p-message severity="error" size="small" variant="simple"
-          >{{ input.placeholder }} is required.</p-message
-        >
-      }
-    } @else {
-      <div class="wrapper">
-        <input
-          class="input"
-          pInputText
-          type="text"
-          [id]="input.name"
-          [placeholder]="input.placeholder"
-          [name]="input.name"
-          [(ngModel)]="card()[input.field]"
-          #model="ngModel"
-          [invalid]="model.invalid && (model.touched || cardForm.submitted)"
-          required
-        />
-        @if (model.invalid && (model.touched || cardForm.submitted)) {
-          <p-message severity="error" size="small" variant="simple"
-            >{{ input.placeholder }} is required.</p-message
+<form #cardForm="ngForm" (ngSubmit)="onSubmit(cardForm)" class="app-modal-form">
+  <div class="form-fields">
+    @for (input of inputs; track input.field) {
+      @if (input.field === 'subscribeDate') {
+        <div class="field">
+          <label [for]="input.name"
+            >{{ input.placeholder }}{{ input.required ? '&#42;' : '' }}</label
           >
-        }
-      </div>
+          <p-datepicker
+            [inputId]="input.name"
+            [name]="input.name"
+            [(ngModel)]="cardData.subscribeDate"
+            dateFormat="yy-mm-dd"
+            appendTo="body"
+            [required]="input.required === true"
+            placeholder="Select date"
+          />
+          <div class="error-slot">
+            @if (input.required && cardForm.submitted && !cardData.subscribeDate) {
+              <small class="error">Date is required.</small>
+            }
+          </div>
+        </div>
+      } @else if (input.field === 'lastCharge') {
+        <div class="field">
+          <label [for]="input.name">{{ input.placeholder }}</label>
+          <p-datepicker
+            [inputId]="input.name"
+            [name]="input.name"
+            [(ngModel)]="cardData.lastCharge"
+            dateFormat="yy-mm-dd"
+            appendTo="body"
+            placeholder="Select date"
+          />
+          <div class="error-slot"></div>
+        </div>
+      } @else if (input.field === 'type') {
+        <div class="field">
+          <label [for]="input.name">{{ input.placeholder }}</label>
+          <p-select
+            class="select"
+            [options]="typeOptions"
+            optionLabel="label"
+            optionValue="value"
+            [inputId]="input.name"
+            [placeholder]="input.placeholder"
+            [name]="input.name"
+            [(ngModel)]="cardData[input.field]"
+          />
+          <div class="error-slot"></div>
+        </div>
+      } @else if (input.field === 'amount') {
+        <div class="field">
+          <app-price-currency-field
+            [label]="input.placeholder"
+            [amountName]="input.name"
+            [(amount)]="cardData.amount"
+            [(currencyCode)]="cardData.currencyCode"
+            [showCurrency]="true"
+            [required]="input.required === true"
+          />
+          <div class="error-slot">
+            @if (input.required && cardForm.submitted && isAmountInvalid()) {
+              <small class="error">Amount is required and must be ≥ 0.</small>
+            }
+          </div>
+        </div>
+      } @else {
+        <div class="field">
+          <label [for]="input.name"
+            >{{ input.placeholder }}{{ input.required ? '&#42;' : '' }}</label
+          >
+          <input
+            class="input"
+            pInputText
+            type="text"
+            [id]="input.name"
+            [placeholder]="input.placeholder"
+            [name]="input.name"
+            [(ngModel)]="cardData[input.field]"
+            #model="ngModel"
+            [required]="input.required === true"
+            maxlength="255"
+          />
+          <div class="error-slot">
+            @if (input.required && model.invalid && (model.touched || cardForm.submitted)) {
+              <small class="error">{{ input.placeholder }} is required.</small>
+            }
+          </div>
+        </div>
+      }
     }
-  }
-  <button pButton severity="primary" type="submit">Add</button>
+  </div>
+  <div class="actions">
+    <button type="button" pButton label="Cancel" class="cancel-btn" (click)="close()"></button>
+    <button
+      type="submit"
+      pButton
+      label="Add"
+      severity="primary"
+      class="submit-btn"
+      [disabled]="cardForm.invalid"
+    ></button>
+  </div>
 </form>

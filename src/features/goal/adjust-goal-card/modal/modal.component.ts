@@ -4,10 +4,11 @@ import { CommonModule } from '@angular/common';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 import { InputTextModule } from 'primeng/inputtext';
-import { InputNumberModule } from 'primeng/inputnumber';
 import { DatePickerModule } from 'primeng/datepicker';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmationService } from 'primeng/api';
+import { PriceCurrencyFieldComponent } from '@/shared/components/price-currency-field/price-currency-field.component';
+import { CurrencyService } from '@/shared/services/currency/currency.service';
 
 @Component({
   standalone: true,
@@ -16,17 +17,46 @@ import { ConfirmationService } from 'primeng/api';
     CommonModule,
     FormsModule,
     InputTextModule,
-    InputNumberModule,
     DatePickerModule,
     ButtonModule,
+    PriceCurrencyFieldComponent,
   ],
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.scss'],
 })
 export class GoalAdjustDialogComponent {
-  data = inject(MAT_DIALOG_DATA);
+  data = inject(MAT_DIALOG_DATA) as Record<string, unknown> & {
+    title?: string;
+    targetBudget?: number;
+    goalBudget?: number;
+    startDate?: string;
+    endDate?: string;
+    currencyCode?: string;
+  };
   private dialogRef = inject(MatDialogRef<GoalAdjustDialogComponent>);
   private confirmationService = inject(ConfirmationService);
+  private currencyService = inject(CurrencyService);
+
+  get currencyCode(): string {
+    return this.data.currencyCode ?? this.currencyService.primaryCode();
+  }
+  set currencyCode(v: string) {
+    this.data.currencyCode = v;
+  }
+
+  get targetBudget(): number {
+    return this.data.targetBudget ?? 0;
+  }
+  set targetBudget(v: number) {
+    this.data.targetBudget = v;
+  }
+
+  get goalBudget(): number {
+    return this.data.goalBudget ?? 0;
+  }
+  set goalBudget(v: number) {
+    this.data.goalBudget = v;
+  }
 
   onCancel() {
     this.dialogRef.close();

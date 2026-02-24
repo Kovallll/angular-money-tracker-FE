@@ -4,11 +4,12 @@ import { ExpenseCardItemComponent } from './card-item/expense-card-item.componen
 import { ExpensesHttpService, RoutePaths } from '@/shared';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
+import { ProgressSpinner } from 'primeng/progressspinner';
 
 @Component({
   selector: 'dash-expense-card',
   standalone: true,
-  imports: [DashboardCardComponent, CardBodyComponent, ExpenseCardItemComponent],
+  imports: [DashboardCardComponent, CardBodyComponent, ExpenseCardItemComponent, ProgressSpinner],
   templateUrl: './expense-card.component.html',
   styleUrls: ['./expense-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,6 +19,7 @@ export class DashboardExpenseCardComponent {
   private currencyService = inject(CurrencyService);
   private exchangeRates = inject(ExchangeRatesService);
   seeAllPath = RoutePaths.EXPENSES;
+  isLoading = this.expesesHttpService.isLoading;
 
   /** Expenses with amounts converted to current primary currency (reactive to header). */
   expenses = computed(() => {

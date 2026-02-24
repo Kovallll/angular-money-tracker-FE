@@ -1,5 +1,9 @@
 <div class="container">
-  @if (cards().length) {
+  @if (isLoading()) {
+    <div class="data-loading data-placeholder--page">
+      <p-progress-spinner ariaLabel="Loading" />
+    </div>
+  } @else if (cards().length) {
     @for (card of cards(); track card.id) {
       <dashboard-card class="card">
         <card-body class="body">

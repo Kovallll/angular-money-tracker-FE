@@ -2,7 +2,6 @@ import { goalsUrl } from '@/shared/constants';
 import { CreateGoalItem, GoalItem } from '@/shared/types';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { delay, finalize, tap } from 'rxjs';
 import { AuthService } from '@/shared/services/auth/auth.service';
 
@@ -38,16 +37,34 @@ export class GoalsHttpService {
   createGoal(goal: CreateGoalItem) {
     const userId = this.auth.getCurrentUserId();
     if (!userId) throw new Error('Not authenticated');
+    const { title, targetBudget, goalBudget, startDate, endDate } = goal;
     return this.http
-      .post<CreateGoalItem>(goalsUrl, { ...goal, userId })
-      .subscribe(() => this.loadGoals());
+      .post<CreateGoalItem>(goalsUrl, {
+        title,
+        targetBudget,
+        goalBudget,
+        startDate,
+        endDate,
+        userId,
+      })
+      .pipe(tap(() => this.loadGoals()));
   }
 
   deleteGoal(id: number) {
     return this.http.delete(`${goalsUrl}/${id}`);
   }
 
-  updateGoal(id: number, goal: CreateGoalItem) {
-    return this.http.patch<CreateGoalItem>(`${goalsUrl}/${id}`, goal);
+  updateGoal(id: number | string, goal: Partial<GoalItem> | CreateGoalItem) {
+    const idStr = String(id);
+    const g = goal as Partial<GoalItem>;
+    const payload = {
+      title: g.title,
+      targetBudget: g.targetBudget,
+      goalBudget: g.goalBudget,
+      startDate: g.startDate,
+      endDate: g.endDate,
+      ...(g.status != null && { status: g.status }),
+    };
+    return this.http.patch<CreateGoalItem>(`${goalsUrl}/${idStr}`, payload);
   }
 }

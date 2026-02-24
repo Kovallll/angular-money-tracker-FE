@@ -4,11 +4,12 @@ import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '@/shared/services/auth/auth.service';
 import { AssetPathPipe } from '@/shared/pipes/asset-path.pipe';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-sign-up-page',
@@ -18,7 +19,7 @@ import { AssetPathPipe } from '@/shared/pipes/asset-path.pipe';
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSnackBarModule,
+    MatProgressSpinnerModule,
     ReactiveFormsModule,
     RouterLink,
     AssetPathPipe,
@@ -28,7 +29,7 @@ import { AssetPathPipe } from '@/shared/pipes/asset-path.pipe';
 })
 export class SignUpPageComponent {
   private router = inject(Router);
-  private snackBar = inject(MatSnackBar);
+  private messageService = inject(MessageService);
   private authService = inject(AuthService);
 
   loading = false;
@@ -42,7 +43,7 @@ export class SignUpPageComponent {
     }),
     phone: new FormControl('', { validators: [Validators.required], nonNullable: true }),
     password: new FormControl('', {
-      validators: [Validators.required, Validators.minLength(4)],
+      validators: [Validators.required, Validators.minLength(6)],
       nonNullable: true,
     }),
   });
@@ -53,7 +54,7 @@ export class SignUpPageComponent {
 
     if (control.hasError('required')) return 'Required field';
     if (controlName === 'email' && control.hasError('email')) return 'Invalid email';
-    if (controlName === 'password' && control.hasError('minlength')) return 'Min 4 characters';
+    if (controlName === 'password' && control.hasError('minlength')) return 'Min 6 characters';
 
     return '';
   }
@@ -65,16 +66,25 @@ export class SignUpPageComponent {
     }
 
     this.loading = true;
-    const { name, email, password } = this.form.value;
+    const { name, lastname, email, phone, password } = this.form.value;
 
     try {
-      await this.authService.register(email!, password!, name!);
-
-      this.snackBar.open('✅ Registration successful! Please login.', 'Close', { duration: 3000 });
+      await this.authService.register(email!, password!, name!, lastname ?? '', phone ?? '');
+      this.messageService.add({
+        key: 'toast',
+        severity: 'success',
+        summary: 'Success',
+        detail: 'Registration successful. Please sign in.',
+        life: 4000,
+      });
       this.router.navigate(['/login']);
     } catch (error: any) {
-      this.snackBar.open(`❌ ${error.message || 'Registration failed'}`, 'Close', {
-        duration: 5000,
+      this.messageService.add({
+        key: 'toast',
+        severity: 'error',
+        summary: 'Registration failed',
+        detail: error?.error?.message ?? error?.message ?? 'Please try again.',
+        life: 5000,
       });
     } finally {
       this.loading = false;

@@ -1,5 +1,7 @@
 import { Component, computed, effect, inject, OnInit, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
+import { map } from 'rxjs';
 import {
   CategoriesHttpService,
   CategoryItem,
@@ -37,7 +39,18 @@ export class ExpensesDetailsPageComponent
   expenses = signal<ExpenseItem[]>([]);
   category = signal<CategoryItem | null>(null);
 
-  allData = computed(() => this.expensesHttpService.expenses() || []);
+  /** Id категории из маршрута (expenses-details/:id). */
+  private categoryId = toSignal(this.route.paramMap.pipe(map((p) => p.get('id') ?? null)), {
+    initialValue: null as string | null,
+  });
+
+  /** Все расходы, отфильтрованные по категории при переходе по карточке. */
+  allData = computed(() => {
+    const list = this.expensesHttpService.expenses() ?? [];
+    const id = this.categoryId();
+    if (!id) return list;
+    return list.filter((e) => String(e.category?.id) === id);
+  });
 
   override get isEmpty() {
     return this.expenses().length === 0;
@@ -73,14 +86,11 @@ export class ExpensesDetailsPageComponent
 
   override ngOnInit(): void {
     this.route.params.subscribe((params) => {
-      if (!this.category()) {
-        const categoryId = params['id'];
-
-        if (!categoryId) return;
-        this.categoriesHttpService.selectedCategoryId.set(categoryId);
-        const category = this.categoriesHttpService.currentCategory();
-        this.category.set(category || null);
-      }
+      const categoryId = params['id'];
+      if (!categoryId) return;
+      this.categoriesHttpService.selectedCategoryId.set(categoryId);
+      const category = this.categoriesHttpService.currentCategory();
+      this.category.set(category ?? null);
     });
   }
 }

@@ -1,4 +1,4 @@
-<form #cardForm="ngForm" (ngSubmit)="onSubmit(cardForm)" class="form">
+<form #cardForm="ngForm" (ngSubmit)="onSubmit(cardForm)" class="app-modal-form">
   <div class="form-row">
     <div class="form-field">
       <label for="bankName">Bank Name</label>
@@ -88,36 +88,18 @@
 
   <div class="form-row">
     <div class="form-field">
-      <label for="cardBalance">Balance</label>
-      <p-inputnumber
-        inputId="cardBalance"
-        name="cardBalance"
-        [(ngModel)]="card.cardBalance"
-        [min]="0"
-        mode="decimal"
-        #cardBalance="ngModel"
-        required
+      <app-price-currency-field
+        label="Balance"
+        amountName="cardBalance"
+        [(amount)]="card.cardBalance"
+        [(currencyCode)]="card.currencyCode"
+        [required]="true"
       />
       <div class="form-field-error">
-        @if (cardBalance.invalid && (cardBalance.touched || cardForm.submitted)) {
+        @if (cardForm.submitted && (card.cardBalance === null || card.cardBalance < 0)) {
           <p-message severity="error" size="small" variant="simple">Balance is required</p-message>
         }
       </div>
-    </div>
-
-    <div class="form-field">
-      <label for="currencyCode">Currency</label>
-      <p-select
-        inputId="currencyCode"
-        name="currencyCode"
-        [options]="currencyService.currencies"
-        optionLabel="label"
-        optionValue="code"
-        [(ngModel)]="card.currencyCode"
-        placeholder="Select currency"
-        appendTo="body"
-      />
-      <div class="form-field-error"></div>
     </div>
   </div>
 
@@ -146,7 +128,8 @@
     </div>
   </div>
 
-  <div class="form-submit">
-    <button pButton type="submit" label="Add Card" severity="primary"></button>
+  <div class="actions">
+    <button type="button" pButton label="Cancel" (click)="close()" class="cancel-btn"></button>
+    <button pButton type="submit" label="Add Card" severity="primary" class="submit-btn"></button>
   </div>
 </form>

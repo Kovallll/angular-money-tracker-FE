@@ -1,11 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  effect,
-  inject,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { DashboardCardComponent, CardBodyComponent } from '../../../card';
 import { MatTabsModule } from '@angular/material/tabs';
 import {
@@ -73,8 +66,16 @@ export class TransactionsComponent extends UrlSyncedComponent<Transaction> {
     },
   }));
   signalTransactions = computed(() => this.transactions.data());
+
+  /** Полный список с учётом фильтра по табу (All / Expenses / Revenue) для sync и пагинации. */
+  readonly allData = computed(() => {
+    const base = this.signalTransactions() ?? [];
+    const tab = this.tabFilter();
+    const apiType = tab === Tabs.All ? null : tab === Tabs.Expenses ? 'expense' : 'revenue';
+    return apiType == null ? [...base] : base.filter((t) => t.type === apiType);
+  });
+
   readonly currentTransactions = signal<Transaction[]>([]);
-  readonly allData = signal<Transaction[]>([]);
 
   /** Transactions with amount converted to primary currency (reactive to header). */
   readonly transactionsInPrimary = computed(() => {
@@ -100,11 +101,6 @@ export class TransactionsComponent extends UrlSyncedComponent<Transaction> {
 
   constructor(public dialogService: DialogService) {
     super();
-    effect(() => {
-      const base = this.signalTransactions() ?? [];
-      this.currentTransactions.set([...base]);
-      this.allData.set([...base]);
-    });
   }
 
   readonly displayedCells = signal(this.transactionsService.displayedCells());

@@ -4,7 +4,33 @@
     <p>{{ card().cardNumber }}</p>
   </div>
   <div class="right-side">
-    <img [src]="'mastercard-logo.png' | assetPath" alt="MasterCard logo" loading="lazy" />
+    @if (card().cardName === 'Visa') {
+      <svg
+        class="card-logo card-logo--visa"
+        viewBox="0 0 60 20"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-label="Visa"
+        role="img"
+      >
+        <text
+          x="0"
+          y="15"
+          font-family="Arial Black, Arial, sans-serif"
+          font-size="14"
+          font-weight="900"
+          fill="currentColor"
+        >
+          VISA
+        </text>
+      </svg>
+    } @else {
+      <img
+        [src]="'mastercard-logo.png' | assetPath"
+        alt="Mastercard"
+        loading="lazy"
+        class="card-logo"
+      />
+    }
     <p>{{ balancePrimary() | appCurrency: currencyService.primaryCode() }}</p>
     <p class="secondary">{{ balanceSecondary() | appCurrency: currencyService.secondaryCode() }}</p>
   </div>

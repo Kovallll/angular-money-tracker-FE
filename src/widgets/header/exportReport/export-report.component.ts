@@ -81,6 +81,7 @@ export class ExportReportComponent {
     const data = await this.exportService.getExportData();
     if (!data) {
       this.messageService.add({
+        key: 'toast',
         severity: 'warn',
         summary: 'Access denied',
         detail: 'Sign in to export',
@@ -110,6 +111,7 @@ export class ExportReportComponent {
         this.exportService.exportJSON(data);
       }
       this.messageService.add({
+        key: 'toast',
         severity: 'success',
         summary: 'Export ready',
         detail: 'File saved',
@@ -118,6 +120,7 @@ export class ExportReportComponent {
     } catch (err) {
       console.error(err);
       this.messageService.add({
+        key: 'toast',
         severity: 'error',
         summary: 'Error',
         detail: 'Failed to generate report',

@@ -1,27 +1,15 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  output,
-  signal,
-  Signal,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, OnInit } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
-import { BalanceCard, BalancesHttpService, CreateCard } from '@/shared';
+import { BalancesHttpService, CreateCard } from '@/shared';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { Select } from 'primeng/select';
-import { InputNumber } from 'primeng/inputnumber';
-import { FloatLabel } from 'primeng/floatlabel';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { PriceCurrencyFieldComponent } from '@/shared/components/price-currency-field/price-currency-field.component';
 import { ActivatedRoute } from '@angular/router';
-import { switchMap } from 'rxjs';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { QueryClient } from '@tanstack/angular-query-experimental';
 
 @Component({
   selector: 'update-card-modal',
@@ -33,8 +21,7 @@ import { QueryClient } from '@tanstack/angular-query-experimental';
     ButtonModule,
     MessageModule,
     Select,
-    InputNumber,
-    FloatLabel,
+    PriceCurrencyFieldComponent,
   ],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -59,6 +46,20 @@ export class UpdateCardModalComponent implements OnInit {
 
   setCardCurrency(code: string) {
     this.card.update((c) => ({ ...c, currencyCode: code }));
+  }
+
+  get cardBalance(): number {
+    return this.card().cardBalance ?? 0;
+  }
+  set cardBalance(v: number) {
+    this.card.update((c) => ({ ...c, cardBalance: v }));
+  }
+
+  get currencyCode(): string {
+    return this.card().currencyCode ?? this.currencyService.primaryCode();
+  }
+  set currencyCode(v: string) {
+    this.setCardCurrency(v);
   }
 
   onSubmit(form: NgForm) {
@@ -102,5 +103,9 @@ export class UpdateCardModalComponent implements OnInit {
         currencyCode: card.currencyCode ?? this.currencyService.primaryCode(),
       });
     });
+  }
+
+  close(): void {
+    this.ref.close();
   }
 }

@@ -1,8 +1,8 @@
 import { AuthService } from '@/shared/services/auth/auth.service';
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { switchMap, of, forkJoin, map } from 'rxjs';
+import { switchMap, of, forkJoin, map, tap, catchError } from 'rxjs';
 import { Transaction } from '@/shared/types';
 import { CategoryItem } from '@/shared';
 
@@ -13,9 +13,15 @@ export class ExpensesHttpService {
   private http = inject(HttpClient);
   private auth = inject(AuthService);
 
+  private readonly loadingSignal = signal(true);
+
   private expenses$ = this.auth.user$.pipe(
     switchMap((user) => {
-      if (!user?.id) return of([]);
+      if (!user?.id) {
+        this.loadingSignal.set(false);
+        return of([]);
+      }
+      this.loadingSignal.set(true);
       return forkJoin({
         transactions: this.http.get<Transaction[]>(`transactions/user/${user.id}`, {
           params: { type: 'expense' },
@@ -34,7 +40,7 @@ export class ExpensesHttpService {
             amount: t.amount,
             currencyCode: t.currencyCode ?? 'BYN',
             date: t.date,
-            title: t.title ?? '',
+            title: t.title ?? (t as { description?: string }).description ?? '',
             category: {
               id: t.categoryId,
               title: byId[t.categoryId] ?? '—',
@@ -42,9 +48,15 @@ export class ExpensesHttpService {
             },
           }));
         }),
+        tap(() => this.loadingSignal.set(false)),
+        catchError(() => {
+          this.loadingSignal.set(false);
+          return of([]);
+        }),
       );
     }),
   );
 
   readonly expenses = toSignal(this.expenses$, { initialValue: [] });
+  readonly isLoading = this.loadingSignal.asReadonly();
 }

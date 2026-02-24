@@ -5,13 +5,21 @@
       <p-progress-spinner ariaLabel="Loading" />
     </div>
     } @else if (goals().length) {
-    <app-slider [items]="goals()">
-      @for (goal of goals(); track goal.id) {
-      <app-slide>
-        <goal-card-item [item]="goal" />
-      </app-slide>
-      }
-    </app-slider>
+    <p-carousel
+      [value]="goals()"
+      [numVisible]="1"
+      [numScroll]="1"
+      [responsiveOptions]="carouselResponsive"
+      [showNavigators]="goals().length > 1"
+      [showIndicators]="goals().length > 1"
+      styleClass="dashboard-carousel"
+    >
+      <ng-template #item let-goal>
+        <div class="carousel-slide">
+          <goal-card-item [item]="goal" />
+        </div>
+      </ng-template>
+    </p-carousel>
     } @else {
     <div class="data-placeholder">
       <span class="data-placeholder__icon" aria-hidden="true">🎯</span>

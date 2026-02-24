@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AppCurrencyPipe } from '@/shared/pipes/app-currency.pipe';
+import { AppCurrencyPrimaryPipe } from '@/shared/pipes/app-currency-primary.pipe';
 import { MatIconModule } from '@angular/material/icon';
 import { CardBodyComponent, DashboardCardComponent } from '@/entities/cards/card';
 import { GoalAdjustCardButtonComponent } from '@/features/goal/adjust-goal-card/adjust-card.component';
@@ -11,8 +11,7 @@ import { GoalAdjustCardButtonComponent } from '@/features/goal/adjust-goal-card/
   imports: [
     CommonModule,
     MatIconModule,
-    AppCurrencyPipe,
-
+    AppCurrencyPrimaryPipe,
     DashboardCardComponent,
     CardBodyComponent,
     GoalAdjustCardButtonComponent,

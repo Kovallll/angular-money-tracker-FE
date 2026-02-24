@@ -1,24 +1,7 @@
+// Стили модалки подписки — общая часть в shared/styles/_modal-form.scss и styles.scss
+// Локально только то, что нельзя вынести (если появятся специфичные переопределения)
 @use 'theme' as *;
 
-.wrapper {
-  margin-bottom: 12px;
-}
-
-.select {
-  width: 100%;
-  margin-bottom: 12px;
-}
-
-.input {
-  width: 100%;
-}
-
-.icon-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.selected {
-  color: white;
+:host {
+  display: block;
 }

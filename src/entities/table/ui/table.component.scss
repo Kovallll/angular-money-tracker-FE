@@ -1,29 +1,59 @@
 @use 'theme' as *;
 
-.table {
+.table-wrap {
   width: 100%;
-  height: 100%;
+  overflow: auto;
+  border-radius: 12px;
+  border: 1px solid $tertiary;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
 }
 
-.mat-mdc-row .mat-mdc-cell {
-  border-bottom: 1px solid $primary;
-  border-top: 1px solid $primary;
-  background: $secondary;
-  color: $white;
-  cursor: pointer;
-  padding: 4px 4px;
-  text-align: start;
+.table {
+  width: 100%;
+  min-width: 600px;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+:host ::ng-deep .mat-mdc-table {
+  background: transparent;
 }
 
 th.mat-mdc-header-cell {
   background: $secondary;
   color: $gray;
-  padding: 4px 4px;
-  font-size: 18px;
+  padding: 14px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-bottom: 2px solid $tertiary;
+  white-space: nowrap;
+}
+
+.mat-mdc-row .mat-mdc-cell {
+  background: $secondary;
+  color: $white;
+  cursor: pointer;
+  padding: 14px 16px;
+  font-size: 14px;
+  line-height: 1.4;
+  border-bottom: 1px solid rgba($tertiary, 0.5);
+  transition: background-color 0.15s ease;
+}
+
+.mat-mdc-row:last-child .mat-mdc-cell {
+  border-bottom: none;
 }
 
 .mat-mdc-row:hover .mat-mdc-cell {
-  border-color: $gray;
+  background: $light-primary;
+}
+
+.cell-empty {
+  color: $gray;
+  font-style: normal;
+  user-select: none;
 }
 
 .no-data {

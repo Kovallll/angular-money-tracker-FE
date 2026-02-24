@@ -2,11 +2,7 @@
   <div class="header">
     <div class="left-content">
       <div class="category-icon">
-        @if (category().icon.startsWith('pi ')) {
-          <i [class]="category().icon"></i>
-        } @else if (category().icon) {
-          <span class="category-icon-emoji">{{ category().icon }}</span>
-        }
+        <app-icon [icon]="category().icon" />
       </div>
       <div class="text">
         <p class="category">{{ category().title }}</p>

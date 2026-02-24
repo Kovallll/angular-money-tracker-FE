@@ -3,7 +3,6 @@
 
 :host {
   width: 100%;
-  max-width: 500px;
 }
 
 .header {
@@ -51,4 +50,9 @@
       divider-color: $accent,
     )
   );
+
+  ::ng-deep .mat-mdc-tab .mdc-tab__text-label {
+    font-size: 16px;
+    font-weight: 500;
+  }
 }

@@ -1,0 +1,37 @@
+@use 'theme' as *;
+
+.price-currency-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+
+  .label {
+    font-weight: 500;
+    color: $gray;
+  }
+
+  .row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: stretch;
+  }
+
+  .amount-input {
+    flex: 1 1 0%;
+    min-width: 0;
+    max-width: 100%;
+
+    ::ng-deep .p-inputnumber,
+    ::ng-deep .p-inputnumber .p-inputnumber-input {
+      width: 100% !important;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+  }
+
+  ::ng-deep .currency-select {
+    flex: 0 0 auto;
+    min-width: 5.5rem;
+    width: auto;
+  }
+}

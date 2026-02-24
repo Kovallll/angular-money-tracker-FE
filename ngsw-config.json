@@ -29,7 +29,12 @@
     {
       "name": "api-data",
       "urls": ["https://nest-money-tracker-be.onrender.com/**", "/api/**"],
-      "cacheConfig": { "strategy": "freshness", "maxSize": 100, "maxAge": "7d", "timeout": "10s" }
+      "cacheConfig": {
+        "strategy": "freshness",
+        "maxSize": 100,
+        "maxAge": "7d",
+        "timeout": "10s"
+      }
     }
   ],
   "navigationUrls": ["/**", "!/**/*.*", "!/**/__*"]

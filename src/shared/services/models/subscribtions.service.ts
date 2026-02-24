@@ -1,7 +1,7 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { BehaviorSubject, tap, switchMap, of, combineLatest, startWith } from 'rxjs';
+import { BehaviorSubject, tap, switchMap, of, combineLatest, startWith, catchError } from 'rxjs';
 import { subscriptionsUrl } from '@/shared/constants';
 import { SubscribeItem } from '@/shared/types';
 import { AuthService } from '@/shared/services/auth/auth.service';
@@ -15,17 +15,31 @@ export class SubscribtionsHttpService {
 
   private readonly refresh$ = new BehaviorSubject<void>(undefined);
 
+  /** true пока идёт запрос списка подписок. */
+  private readonly loadingSignal = signal(true);
+
   private readonly _subscriptions$ = combineLatest([
     this.auth.user$,
     this.refresh$.pipe(startWith(undefined)),
   ]).pipe(
     switchMap(([user]) => {
-      if (!user?.id) return of([] as SubscribeItem[]);
-      return this.http.get<SubscribeItem[]>(`${subscriptionsUrl}/user/${user.id}`);
+      if (!user?.id) {
+        this.loadingSignal.set(false);
+        return of([] as SubscribeItem[]);
+      }
+      this.loadingSignal.set(true);
+      return this.http.get<SubscribeItem[]>(`${subscriptionsUrl}/user/${user.id}`).pipe(
+        tap(() => this.loadingSignal.set(false)),
+        catchError(() => {
+          this.loadingSignal.set(false);
+          return of([] as SubscribeItem[]);
+        }),
+      );
     }),
   );
 
   readonly subscriptions = toSignal(this._subscriptions$, { initialValue: [] as SubscribeItem[] });
+  readonly isLoading = this.loadingSignal.asReadonly();
   constructor() {}
 
   loadAll() {

@@ -1,0 +1,57 @@
+<form #f="ngForm" (ngSubmit)="onSubmit(f)" class="app-modal-form">
+  <div class="form-fields">
+    <div class="field">
+      <label for="name">Name</label>
+      <input
+        id="name"
+        type="text"
+        pInputText
+        [(ngModel)]="profile.name"
+        name="name"
+        #name="ngModel"
+        required
+        maxlength="255"
+      />
+      <div class="error-slot">
+        @if (name.invalid && (name.touched || f.submitted)) {
+          <small class="error">Name is required.</small>
+        }
+      </div>
+    </div>
+    <div class="field">
+      <label for="lastname">Lastname</label>
+      <input
+        id="lastname"
+        type="text"
+        pInputText
+        [(ngModel)]="profile.lastname"
+        name="lastname"
+        maxlength="255"
+      />
+      <div class="error-slot"></div>
+    </div>
+    <div class="field">
+      <label for="phone">Phone</label>
+      <input
+        id="phone"
+        type="text"
+        pInputText
+        [(ngModel)]="profile.phone"
+        name="phone"
+        maxlength="20"
+      />
+      <div class="error-slot"></div>
+    </div>
+  </div>
+  <div class="actions">
+    <button type="button" pButton label="Cancel" (click)="close()" class="cancel-btn"></button>
+    <button
+      type="submit"
+      pButton
+      label="Save"
+      class="submit-btn"
+      [loading]="loading()"
+      [disabled]="loading()"
+    ></button>
+  </div>
+</form>

@@ -5,7 +5,7 @@
         <mat-tab [label]="tab" class="tab" />
       }
     </mat-tab-group>
-    @switch (selectedTab) {
+    @switch (selectedTab()) {
       @case ('Account') {
         <settings-account [user]="user()" />
       }

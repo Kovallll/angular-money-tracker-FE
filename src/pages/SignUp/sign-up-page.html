@@ -1,6 +1,6 @@
 <div class="container">
   <img [src]="'logo.png' | assetPath" alt="logo" class="logo" />
-  <form class="controls" [formGroup]="form">
+  <form class="controls" [formGroup]="form" (ngSubmit)="onRegister()">
     <mat-form-field appearance="outline" class="input-wrapper">
       <mat-label>Name</mat-label>
       <input type="text" matInput formControlName="name" placeholder="Enter name" class="input" />
@@ -53,15 +53,23 @@
       @if (form.controls['password'].invalid && form.controls['password'].touched) {
       <mat-error>{{ getErrorMessage('password') }}</mat-error> }
     </mat-form-field>
+    @if (loading) {
+    <div class="loading-block">
+      <mat-spinner diameter="48" class="loading-spinner"></mat-spinner>
+      <span class="loading-text">Creating account...</span>
+    </div>
+    } @else {
     <button
       (click)="onRegister()"
       mat-raised-button
       color="primary"
       type="submit"
-      [disabled]="loading || form.invalid"
+      [disabled]="form.invalid"
+      class="submit-button"
     >
-      {{ loading ? 'Creating account...' : 'Sign Up' }}
+      Sign Up
     </button>
+    }
 
     <p>Already have an account? <a routerLink="/login">Login</a></p>
   </form>

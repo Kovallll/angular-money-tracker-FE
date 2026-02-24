@@ -32,6 +32,7 @@ export class GoalsStatisticsService {
           label: goal.title,
           daysLeft,
           budgetLeft,
+          currencyCode: goal.currencyCode ?? 'BYN',
         };
       });
 
@@ -43,6 +44,7 @@ export class GoalsStatisticsService {
     const datasets = rawData.map((goal) => ({
       label: goal.label,
       data: [{ x: goal.daysLeft, y: Math.min(goal.budgetLeft, cutoff) }],
+      currencyCode: goal.currencyCode,
       backgroundColor: this.getRandomColor(),
       borderWidth: 0,
     }));

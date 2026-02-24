@@ -5,29 +5,96 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  min-height: 64px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: rgba($light-primary, 0.5);
+  border: 1px solid rgba($tertiary, 0.4);
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:hover {
+    background: rgba($tertiary, 0.25);
+    border-color: rgba($accent, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  }
 }
 
 .left-content {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
+  min-width: 0;
 }
 
 .category-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px;
-  border-radius: 8px;
-  background-color: $tertiary;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 10px;
+  background: rgba($accent, 0.12);
+  color: $accent;
+  flex-shrink: 0;
 
   .category-icon-emoji {
     font-size: 1.25rem;
     line-height: 1;
   }
+
+  ::ng-deep mat-icon,
+  ::ng-deep .app-icon {
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
+  }
+}
+
+.text {
+  min-width: 0;
 }
 
 .title {
-  font-size: 20px;
+  margin: 0 0 2px 0;
+  font-size: 16px;
   font-weight: 600;
+  color: $white;
+  letter-spacing: 0.01em;
+  line-height: 1.3;
+}
+
+.category {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: $gray;
+  letter-spacing: 0.02em;
+}
+
+.right-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.amount {
+  margin: 0 0 2px 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: $white;
+  letter-spacing: 0.02em;
+}
+
+.date {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 500;
+  color: $gray;
+  letter-spacing: 0.02em;
 }

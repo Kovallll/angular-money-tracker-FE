@@ -4,7 +4,7 @@
     <div class="chart">
       <div class="subtitle">Categories Share</div>
       @if (hasPieData()) {
-        <canvas baseChart [type]="'doughnut'" [data]="pieData()" [options]="pieOptions"></canvas>
+        <canvas baseChart [type]="'doughnut'" [data]="pieData()" [options]="pieOptions()"></canvas>
       } @else {
         <div class="chart-placeholder data-placeholder">
           <span class="data-placeholder__icon" aria-hidden="true">📊</span>
@@ -15,7 +15,7 @@
     <div class="chart">
       <div class="subtitle">Spending by Month</div>
       @if (hasBarData()) {
-        <canvas baseChart [type]="'bar'" [data]="barData()" [options]="barOptions"></canvas>
+        <canvas baseChart [type]="'bar'" [data]="barData()" [options]="barOptions()"></canvas>
       } @else {
         <div class="chart-placeholder data-placeholder">
           <span class="data-placeholder__icon" aria-hidden="true">📊</span>
@@ -26,7 +26,7 @@
     <div class="chart">
       <div class="subtitle">Spending Over Time</div>
       @if (hasLineData()) {
-        <canvas baseChart [type]="'line'" [data]="lineData()" [options]="lineOptions"></canvas>
+        <canvas baseChart [type]="'line'" [data]="lineData()" [options]="lineOptions()"></canvas>
       } @else {
         <div class="chart-placeholder data-placeholder">
           <span class="data-placeholder__icon" aria-hidden="true">📊</span>

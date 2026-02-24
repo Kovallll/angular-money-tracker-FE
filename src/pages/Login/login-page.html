@@ -30,7 +30,14 @@
       }
     </mat-form-field>
   </div>
+  @if (loading) {
+  <div class="loading-block">
+    <span class="loading-text">Signing in...</span>
+    <mat-spinner diameter="48" class="loading-spinner"></mat-spinner>
+  </div>
+  } @else {
   <button (click)="login()" matButton="filled" color="accent" class="button">Login</button>
+  }
   <p class="text">
     Don't have an account?
     <a routerLink="/signup" (click)="signup()" class="link">Sign up</a>

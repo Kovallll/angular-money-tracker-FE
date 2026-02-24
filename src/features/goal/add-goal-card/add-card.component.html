@@ -9,6 +9,7 @@
 <p-dialog
   header="Create New Goal"
   [visible]="visible()"
+  (visibleChange)="onVisibleChange($event)"
   (onHide)="closeDialog()"
   [modal]="true"
   [closable]="true"
@@ -16,79 +17,115 @@
   [resizable]="false"
   styleClass="goal-dialog"
 >
-  <form class="goal-form">
+  <form #f="ngForm" (ngSubmit)="onSubmit(f)" class="goal-form">
     <div class="form-field">
-      <label for="title">Title</label>
+      <label for="title">Title&#42;</label>
       <input
         id="title"
         pInputText
         type="text"
         [(ngModel)]="newGoal.title"
         name="title"
+        #titleRef="ngModel"
+        required
+        maxlength="255"
         placeholder="Enter goal title"
       />
-    </div>
-
-    <div class="form-row">
-      <div class="form-field">
-        <label for="targetBudget">Target Budget</label>
-        <p-inputNumber
-          [(ngModel)]="newGoal.targetBudget"
-          name="targetBudget"
-          [min]="0"
-          mode="currency"
-          currency="USD"
-        ></p-inputNumber>
-      </div>
-
-      <div class="form-field">
-        <label for="goalBudget">Goal Budget</label>
-        <p-inputNumber
-          [(ngModel)]="newGoal.goalBudget"
-          name="goalBudget"
-          [min]="0"
-          mode="currency"
-          currency="USD"
-        ></p-inputNumber>
+      <div class="error-slot">
+        @if (titleRef.invalid && (titleRef.touched || f.submitted)) {
+          <small class="error">Title is required.</small>
+        }
       </div>
     </div>
 
     <div class="form-row">
       <div class="form-field">
-        <label for="startDate">Start Date</label>
+        <app-price-currency-field
+          label="Target Budget"
+          amountName="targetBudget"
+          [(amount)]="targetBudget"
+          [(currencyCode)]="currencyCode"
+          [required]="true"
+        />
+        <div class="error-slot">
+          @if (f.submitted && +(newGoal.targetBudget ?? 0) < 0) {
+            <small class="error">Must be &ge; 0.</small>
+          }
+        </div>
+      </div>
+
+      <div class="form-field">
+        <app-price-currency-field
+          label="Goal Budget"
+          amountName="goalBudget"
+          [(amount)]="goalBudget"
+          [showCurrency]="false"
+          [required]="true"
+        />
+        <div class="error-slot">
+          @if (f.submitted && +(newGoal.goalBudget ?? 0) < 0) {
+            <small class="error">Must be &ge; 0.</small>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-field">
+        <label for="startDate">Start Date&#42;</label>
         <p-datepicker
           [(ngModel)]="newGoal.startDate"
           name="startDate"
+          #startRef="ngModel"
+          required
           dateFormat="yy-mm-dd"
           appendTo="body"
+          inputId="startDate"
         ></p-datepicker>
+        <div class="error-slot">
+          @if (startRef.invalid && (startRef.touched || f.submitted)) {
+            <small class="error">Start date is required.</small>
+          }
+        </div>
       </div>
 
       <div class="form-field">
-        <label for="endDate">End Date</label>
+        <label for="endDate">End Date&#42;</label>
         <p-datepicker
           [(ngModel)]="newGoal.endDate"
           name="endDate"
+          #endRef="ngModel"
+          required
           dateFormat="yy-mm-dd"
           appendTo="body"
+          inputId="endDate"
         ></p-datepicker>
+        <div class="error-slot">
+          @if (endRef.invalid && (endRef.touched || f.submitted)) {
+            <small class="error">End date is required.</small>
+          }
+          @if (f.submitted && hasDateError()) {
+            <small class="error">End date must be after start date.</small>
+          }
+        </div>
       </div>
     </div>
-  </form>
 
-  <ng-template pTemplate="footer">
-    <button
-      pButton
-      label="Cancel"
-      class="cancel-btn p-button-text"
-      (click)="closeDialog()"
-    ></button>
-    <button
-      pButton
-      label="Create"
-      class="create-btn"
-      (click)="createGoal()"
-      [disabled]="!newGoal.title"
-    ></button>
-  </ng-template>
+    <div class="actions">
+      <button
+        type="button"
+        pButton
+        label="Cancel"
+        class="cancel-btn"
+        (click)="closeDialog()"
+      ></button>
+      <button
+        type="submit"
+        pButton
+        label="Create"
+        class="create-btn"
+        [disabled]="f.invalid || hasDateError() || hasBudgetError()"
+      ></button>
+    </div>
+  </form>
 </p-dialog>

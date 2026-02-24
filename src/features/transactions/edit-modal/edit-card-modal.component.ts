@@ -14,12 +14,23 @@ import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { injectQuery, QueryClient } from '@tanstack/angular-query-experimental';
 import { Select } from 'primeng/select';
-import { tap } from 'rxjs';
+import { PriceCurrencyFieldComponent } from '@/shared/components/price-currency-field/price-currency-field.component';
+import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
+import { catchError, of, tap } from 'rxjs';
+
 @Component({
   selector: 'edit-transaction-modal',
   templateUrl: './edit-card-modal.component.html',
   styleUrls: ['./edit-card-modal.component.scss'],
-  imports: [FormsModule, InputTextModule, ButtonModule, MessageModule, Select],
+  imports: [
+    FormsModule,
+    InputTextModule,
+    ButtonModule,
+    MessageModule,
+    Select,
+    PriceCurrencyFieldComponent,
+    AppIconComponent,
+  ],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -43,8 +54,25 @@ export class EditTransactionModalComponent implements OnInit {
       .updateTransaction(this.transaction.id, transaction)
       .pipe(
         tap(() => {
+          this.messageService.add({
+            key: 'toast',
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Transaction updated',
+            life: 3000,
+          });
           this.ref.close();
           this.queryClient.invalidateQueries({ queryKey: ['transactions'] });
+        }),
+        catchError(() => {
+          this.messageService.add({
+            key: 'toast',
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to update transaction',
+            life: 4000,
+          });
+          return of(null);
         }),
       )
       .subscribe();
@@ -96,5 +124,24 @@ export class EditTransactionModalComponent implements OnInit {
 
   setCardField(field: string, value: any) {
     this.card.update((state: any) => ({ ...state, [field]: value }));
+  }
+
+  get amount(): number {
+    const a = this.card().amount;
+    return a != null ? Number(a) : 0;
+  }
+  set amount(v: number) {
+    this.setCardField('amount', v);
+  }
+
+  get currencyCode(): string {
+    return (this.card().currencyCode as string) ?? this.currencyService.primaryCode();
+  }
+  set currencyCode(v: string) {
+    this.setCardField('currencyCode', v);
+  }
+
+  close(): void {
+    this.ref.close();
   }
 }

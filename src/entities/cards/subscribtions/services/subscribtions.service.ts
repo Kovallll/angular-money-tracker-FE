@@ -9,25 +9,37 @@ import dayjs from 'dayjs';
 export class SubscribtionsService {
   private subscribeHttpService = inject(SubscribtionsHttpService);
 
-  getUpcomingSubscribes() {
-    return this.subscribeHttpService
-      .subscriptions()
-      .filter((sub) =>
-        dayjs(sub.subscribeDate).isBetween(dayjs(), dayjs().add(21, 'day'), null, '[]'),
-      )
-      .sort((a, b) => dayjs(a.subscribeDate).diff(dayjs(b.subscribeDate)));
+  /**
+   * Следующая дата списания по lastCharge и типу подписки (для сортировки).
+   */
+  private getNextChargeDate(sub: SubscribeItem): dayjs.Dayjs {
+    const d = dayjs(sub.lastCharge || sub.subscribeDate);
+    const type = (sub.type || '').toLowerCase();
+    if (type === 'daily') return d.add(1, 'day');
+    if (type === 'monthly') return d.add(1, 'month');
+    if (type === 'yearly' || type === 'annually') return d.add(1, 'year');
+    return d.add(1, 'month');
   }
 
-  getPairsItems() {
-    return this.getUpcomingSubscribes().reduce((acc: SubscribeItem[][], cur) => {
+  /** Все подписки, отсортированные по ближайшей дате переподписки (следующее списание — первыми). */
+  getSubscribesForDashboard(): SubscribeItem[] {
+    return [...this.subscribeHttpService.subscriptions()].sort((a, b) =>
+      this.getNextChargeDate(a).diff(this.getNextChargeDate(b)),
+    );
+  }
+
+  getPairsItems(): SubscribeItem[][] {
+    const list = this.getSubscribesForDashboard();
+    const acc: SubscribeItem[][] = [];
+    for (const cur of list) {
       const last = acc.at(-1);
       if (!last || last.length === 2) {
         acc.push([cur]);
       } else {
         last.push(cur);
       }
-      return acc;
-    }, []);
+    }
+    return acc;
   }
 
   getSubscribes() {

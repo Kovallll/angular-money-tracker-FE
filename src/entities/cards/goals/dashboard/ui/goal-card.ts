@@ -1,12 +1,12 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
 import { DashboardCardComponent, CardBodyComponent } from '../../../card';
 import { MatIconModule } from '@angular/material/icon';
-import { SliderCardComponent } from '../../../slider/slider-card';
-import { SlideComponent } from '../../../slider/slide/slide';
 import { GoalCardItemComponent } from './card-item/goal-card-item.component';
 import { GoalsService } from '../../services/goals.service';
 import { RoutePaths } from '@/shared';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { Carousel } from 'primeng/carousel';
+import { DASHBOARD_CAROUSEL_RESPONSIVE } from '../../../slider/lib/carousel-options';
 
 @Component({
   selector: 'dash-goal-card',
@@ -15,8 +15,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     DashboardCardComponent,
     CardBodyComponent,
     MatIconModule,
-    SlideComponent,
-    SliderCardComponent,
+    Carousel,
     GoalCardItemComponent,
     ProgressSpinnerModule,
   ],
@@ -27,7 +26,13 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 export class DashboardGoalCardComponent {
   seeAllPath = RoutePaths.GOALS;
   isLoading = this.goalsService.isLoading;
+  carouselResponsive = DASHBOARD_CAROUSEL_RESPONSIVE;
   constructor(private readonly goalsService: GoalsService) {}
 
   goals = this.goalsService.getGoals(5);
+
+  /** Один слайд — нет стрелок, блок может быть уже */
+  @HostBinding('class.carousel-single') get isCarouselSingle(): boolean {
+    return this.goals().length <= 1;
+  }
 }

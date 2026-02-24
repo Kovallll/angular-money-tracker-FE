@@ -1,15 +1,7 @@
 <div class="card">
   <div class="left-content">
     <div class="category-icon">
-      @if (categoryIcon()) {
-        @if (categoryIcon()!.startsWith('pi ')) {
-          <i [class]="categoryIcon()"></i>
-        } @else {
-          <span class="category-icon-emoji">{{ categoryIcon() }}</span>
-        }
-      } @else {
-        <mat-icon>category</mat-icon>
-      }
+      <app-icon [icon]="categoryIcon()" />
     </div>
     <div class="text">
       <p class="title">{{ item().title }}</p>

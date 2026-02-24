@@ -1,5 +1,6 @@
 import { Component, computed, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { map } from 'rxjs';
 import { CardDetailsComponent } from '@/entities/cards/balances/card-details/card-details.component';
 import { TransactionsHistoryComponent } from '@/entities/cards/transactions/transactions-history/ui/transactions-history.component';
 import { BalancesHttpService } from '@/shared';
@@ -20,8 +21,23 @@ export class BalanceDetailsPageComponent {
   private currencyService = inject(CurrencyService);
   private exchangeRates = inject(ExchangeRatesService);
 
-  id = Number(this.route.snapshot.paramMap.get('id'));
-  card = toSignal(this.balancesHttpService.getCard(this.id), { initialValue: null });
+  private routeId = toSignal(this.route.paramMap.pipe(map((p) => p.get('id'))), {
+    initialValue: null as string | null,
+  });
+
+  id = computed(() => {
+    const v = this.routeId();
+    if (v === null || v === undefined) return null;
+    const n = Number(v);
+    return Number.isNaN(n) ? null : n;
+  });
+
+  /** Карта из общего списка — после редактирования refresh() обновляет список и данные здесь. */
+  card = computed(() => {
+    const id = this.id();
+    if (id == null) return null;
+    return this.balancesHttpService.cards().find((c) => c.id === id) ?? null;
+  });
 
   transactions = computed(() => this.card()?.transactions ?? []);
 

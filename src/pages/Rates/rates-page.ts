@@ -18,6 +18,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MessageService } from 'primeng/api';
 import { ProgressSpinner } from 'primeng/progressspinner';
 
 @Component({
@@ -41,6 +42,7 @@ import { ProgressSpinner } from 'primeng/progressspinner';
 })
 export class RatesPageComponent {
   private exchangeRates = inject(ExchangeRatesService);
+  private messageService = inject(MessageService);
 
   readonly currencies = CURRENCIES;
   readonly isLoadingRates = this.exchangeRates.isLoading;
@@ -159,7 +161,14 @@ export class RatesPageComponent {
     }
   }
 
-  refreshRates() {
-    this.exchangeRates.loadRates();
+  async refreshRates() {
+    await this.exchangeRates.loadRates();
+    this.messageService.add({
+      key: 'toast',
+      severity: 'info',
+      summary: 'Rates updated',
+      detail: 'Exchange rates have been refreshed.',
+      life: 3000,
+    });
   }
 }

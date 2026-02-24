@@ -7,8 +7,8 @@ import { MessageModule } from 'primeng/message';
 import { BalancesHttpService, CreateCard } from '@/shared';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { Select } from 'primeng/select';
-import { InputNumber } from 'primeng/inputnumber';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { PriceCurrencyFieldComponent } from '@/shared/components/price-currency-field/price-currency-field.component';
 
 const CARD_NUMBER_DIGITS = 16;
 
@@ -16,7 +16,14 @@ const CARD_NUMBER_DIGITS = 16;
   selector: 'add-card-modal',
   templateUrl: './add-card-modal.component.html',
   styleUrls: ['./add-card-modal.component.scss'],
-  imports: [FormsModule, InputTextModule, ButtonModule, MessageModule, Select, InputNumber],
+  imports: [
+    FormsModule,
+    InputTextModule,
+    ButtonModule,
+    MessageModule,
+    Select,
+    PriceCurrencyFieldComponent,
+  ],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -100,5 +107,9 @@ export class AddCardModalComponent implements OnInit {
         },
       });
     }
+  }
+
+  close(): void {
+    this.ref.close();
   }
 }

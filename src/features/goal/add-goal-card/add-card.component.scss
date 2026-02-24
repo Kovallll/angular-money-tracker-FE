@@ -9,25 +9,42 @@
 
 .goal-dialog {
   width: 90%;
-  max-width: 500px;
+  max-width: 520px;
 
-  .p-dialog-header {
-    background: #f5f6fa;
+  ::ng-deep .p-dialog-header {
+    background: $light-primary;
     font-weight: 600;
-    color: #333;
+    color: $white;
+  }
+
+  ::ng-deep .p-dialog-header-close,
+  ::ng-deep .p-dialog-header-close-button {
+    pointer-events: auto;
+  }
+
+  ::ng-deep .p-dialog-content {
+    background: $secondary;
+    color: $white;
+  }
+
+  ::ng-deep .p-dialog-footer {
+    background: $secondary;
+    border-top: 1px solid $tertiary;
   }
 }
 
 .goal-form {
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  gap: 1rem;
   padding: 0.5rem 0;
+  min-width: 0;
 }
 
 .form-row {
   display: flex;
   gap: 1rem;
+  min-width: 0;
 
   @media (max-width: 600px) {
     flex-direction: column;
@@ -35,38 +52,98 @@
 }
 
 .form-field {
-  flex: 1;
+  flex: 1 1 0;
+  min-width: 0;
   display: flex;
   flex-direction: column;
+  gap: 0.35rem;
 
   label {
-    margin-bottom: 0.4rem;
-    font-weight: 500;
-    color: #444;
+    font-weight: 600;
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.85);
   }
 
-  input,
-  .p-inputnumber,
-  .p-datepicker {
-    width: 100%;
+  .error-slot {
+    height: 1.25rem;
+    line-height: 1.25rem;
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .error {
+    color: #f87171;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    margin: 0;
+  }
+
+  input.p-inputtext,
+  ::ng-deep .p-inputnumber,
+  ::ng-deep .p-inputnumber-input,
+  ::ng-deep .p-datepicker,
+  ::ng-deep .p-datepicker .p-inputtext {
+    width: 100% !important;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  app-price-currency-field {
+    display: block;
+    min-width: 0;
+
+    ::ng-deep .row {
+      display: flex;
+      gap: 0.5rem;
+      min-width: 0;
+      align-items: stretch;
+    }
+    // Инпуты суммы на всю ширину колонки, одинаково в обеих колонках
+    ::ng-deep .amount-input {
+      flex: 1 1 0;
+      min-width: 0;
+      box-sizing: border-box;
+    }
+    ::ng-deep .currency-select {
+      flex: 0 0 auto;
+      min-width: 5rem;
+    }
   }
 }
 
-.cancel-btn {
-  color: #777;
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 0.5rem;
+}
+
+:host ::ng-deep .cancel-btn {
+  color: $white !important;
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.7) !important;
+  }
 }
 
 .create-btn {
-  background-color: #007ad9;
+  background: $accent !important;
+  color: $white !important;
   border: none;
   transition: background-color 0.2s ease;
 
-  &:hover {
-    background-color: #005fa3;
+  &:hover:not(:disabled) {
+    filter: brightness(1.1);
   }
 
   &:disabled {
-    background-color: #b0c4de;
+    opacity: 0.6;
     cursor: not-allowed;
   }
 }

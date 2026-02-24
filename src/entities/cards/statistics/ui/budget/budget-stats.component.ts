@@ -84,7 +84,7 @@ export class BudgetStatisticCardComponent {
     };
   });
 
-  /** Options with tooltip in primary currency. */
+  /** Options with tooltip and y-axis label in primary currency. */
   options = computed<ChartConfiguration<'bar'>['options']>(() => {
     const code = this.currencyService.primaryCode();
     const base = budgetChartOptions ?? {};
@@ -97,6 +97,18 @@ export class BudgetStatisticCardComponent {
           callbacks: {
             label: (ctx) =>
               `${ctx.dataset.label}: ${formatAmountWithCurrency(ctx.parsed.y ?? 0, code)}`,
+          },
+        },
+      },
+      scales: {
+        ...base.scales,
+        y: {
+          ...(typeof base.scales?.['y'] === 'object' ? base.scales['y'] : {}),
+          title: {
+            display: true,
+            text: code,
+            color: 'rgba(255,255,255,0.8)',
+            font: { size: 12 },
           },
         },
       },

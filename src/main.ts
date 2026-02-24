@@ -7,13 +7,16 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { providePrimeNG } from 'primeng/config';
 import { ThemePreset } from './preset';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
-import { authInterceptor, baseApiUrlInterceptor } from './shared';
+import { authInterceptor, baseApiUrlInterceptor, errorToastInterceptor } from './shared';
 import { provideTanStackQuery, QueryClient } from '@tanstack/angular-query-experimental';
 import { APP_INITIALIZER, isDevMode } from '@angular/core';
 import { provideServiceWorker } from '@angular/service-worker';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { ExchangeRatesService } from './shared/services/currency/exchange-rates.service';
 
 const providers = [
+  MessageService,
+  ConfirmationService,
   {
     provide: APP_INITIALIZER,
     useFactory: (exchangeRates: ExchangeRatesService) => () => exchangeRates.loadRates(),
@@ -25,7 +28,10 @@ const providers = [
   provideRouter(routeConfig, withHashLocation()),
   provideCharts(withDefaultRegisterables()),
   provideAnimationsAsync(),
-  provideHttpClient(withFetch(), withInterceptors([baseApiUrlInterceptor, authInterceptor])),
+  provideHttpClient(
+    withFetch(),
+    withInterceptors([baseApiUrlInterceptor, authInterceptor, errorToastInterceptor]),
+  ),
   providePrimeNG({
     theme: {
       preset: ThemePreset,

@@ -11,7 +11,14 @@ interface Tokens {
 }
 
 interface AuthResponse {
-  user: { id: string; email: string; name: string; avatar: string };
+  user: {
+    id: string;
+    email: string;
+    name: string;
+    lastname?: string;
+    phone?: string;
+    avatar?: string | null;
+  };
   accessToken: string;
   refreshToken: string;
 }
@@ -67,12 +74,20 @@ export class AuthService {
     return response;
   }
 
-  async register(email: string, password: string, name: string): Promise<AuthResponse> {
+  async register(
+    email: string,
+    password: string,
+    name: string,
+    lastname?: string,
+    phone?: string,
+  ): Promise<AuthResponse> {
     const response = await this.http
       .post<AuthResponse>(`auth/register`, {
         email,
         password,
         name,
+        lastname: lastname ?? '',
+        phone: phone ?? '',
       })
       .toPromise();
 
@@ -86,7 +101,8 @@ export class AuthService {
 
   // Исправленный refreshToken — возвращает Observable
   refreshToken(): Observable<Tokens | null> {
-    const refreshToken = localStorage.getItem('refreshToken');
+    const raw = localStorage.getItem('refreshToken');
+    const refreshToken = raw?.trim() ?? '';
     if (!refreshToken) return of(null);
 
     return this.http

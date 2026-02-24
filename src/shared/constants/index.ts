@@ -12,3 +12,10 @@ export const statisticsUrl = 'statistics';
 export const usersUrl = 'users';
 
 export const chartColors = { blue: '#3b82f6', red: '#ef4444' };
+
+export {
+  DEFAULT_CATEGORY_ICON,
+  CATEGORY_ICON_OPTIONS,
+  getCategoryIconName,
+  type CategoryIconOption,
+} from './category-icons';

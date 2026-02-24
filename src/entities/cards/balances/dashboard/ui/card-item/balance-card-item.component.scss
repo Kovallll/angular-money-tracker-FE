@@ -10,8 +10,8 @@
   justify-content: space-between;
   background: $balance-card-color;
   border-radius: 12px;
-  padding: 20px 16px;
-  height: 130px;
+  padding: 16px 14px;
+  height: 120px;
 }
 
 .left-side {
@@ -26,6 +26,25 @@
   flex-direction: column;
   align-items: flex-end;
   gap: 4px;
+
+  .card-logo {
+    flex-shrink: 0;
+  }
+
+  img.card-logo {
+    max-width: 48px;
+    max-height: 32px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .card-logo--visa {
+    width: 20px;
+    height: 20px;
+    transform: scale(5);
+    color: #1a1f71;
+  }
 
   .secondary {
     font-size: 0.8rem;

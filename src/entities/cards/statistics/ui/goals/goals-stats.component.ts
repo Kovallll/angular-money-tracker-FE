@@ -38,17 +38,20 @@ export class GoalsStatisticCardComponent {
     const raw = this.chartData();
     const primary = this.currencyService.primaryCode();
     return {
-      datasets: raw.datasets.map((goal) => ({
-        axis: 'y' as const,
-        data: goal.data.map((pt) => ({
-          ...pt,
-          y: this.exchangeRates.convert(pt.y, 'BYN', primary),
-        })),
-        backgroundColor: goal.backgroundColor,
-        label: goal.label,
-        fill: false,
-        borderWidth: 1,
-      })),
+      datasets: raw.datasets.map((goal) => {
+        const fromCurrency = (goal as { currencyCode?: string }).currencyCode ?? 'BYN';
+        return {
+          axis: 'y' as const,
+          data: goal.data.map((pt) => ({
+            ...pt,
+            y: this.exchangeRates.convert(pt.y, fromCurrency, primary),
+          })),
+          backgroundColor: goal.backgroundColor,
+          label: goal.label,
+          fill: false,
+          borderWidth: 1,
+        };
+      }),
     };
   });
 

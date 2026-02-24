@@ -1,64 +1,205 @@
 @use 'theme' as *;
 
 :host {
-  max-width: 352px;
+  display: block;
+  max-width: 400px;
   width: 100%;
 }
 
 .card {
+  --card-radius: 20px;
+  --card-padding: 1.5rem;
+  --card-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  position: relative;
   display: flex;
   flex-direction: column;
-  background: $secondary;
   width: 100%;
-}
+  min-height: 200px;
+  padding: var(--card-padding);
+  border-radius: var(--card-radius);
+  background: linear-gradient(
+    160deg,
+    rgba($secondary, 0.98) 0%,
+    rgba($light-primary, 0.98) 45%,
+    rgba($primary, 0.97) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.2),
+    0 1px 0 0 rgba(255, 255, 255, 0.04) inset;
+  cursor: pointer;
+  transition:
+    transform 0.35s var(--card-ease),
+    box-shadow 0.35s var(--card-ease),
+    border-color 0.25s ease;
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 24px;
-}
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      0 12px 40px rgba(0, 0, 0, 0.28),
+      0 0 0 1px rgba($accent, 0.15) inset,
+      0 1px 0 0 rgba(255, 255, 255, 0.06) inset;
+    border-color: rgba($accent, 0.2);
+  }
 
-.body {
-  display: flex;
-  flex-direction: column;
-}
-
-.body-item {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 16px;
-
-  .secondary {
-    font-size: 0.8rem;
-    opacity: 0.8;
-    margin-top: 2px;
+  &:active {
+    transform: translateY(-2px);
+    transition-duration: 0.1s;
   }
 }
 
-.footer {
-  margin-top: 16px;
+.card__header {
   display: flex;
-  justify-content: end;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
 }
 
-.details-button {
-  border-radius: 8px;
-  background: transparent;
-  border: 1px solid $accent;
-  color: $accent;
-  padding: 12px 24px;
-  font-weight: 600;
-  font-size: 14px;
-  cursor: pointer;
+.card__badge {
+  flex-shrink: 0;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba($white, 0.6);
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
 }
 
-.card-name {
+.card__brand {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 0.5rem;
+  min-width: 0;
+
+  .card-logo {
+    flex-shrink: 0;
+  }
+
+  img.card-logo {
+    height: 20px;
+    width: auto;
+    object-fit: contain;
+    opacity: 0.95;
+  }
+
+  .card-logo--visa {
+    width: 40px;
+    height: 20px;
+    color: #1a1f71;
+  }
 }
 
-.card-type {
-  font-size: 16px;
+.card__name {
+  font-size: 0.875rem;
   font-weight: 600;
+  color: $white;
+  letter-spacing: 0.01em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card__number {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.card__number-value {
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  word-spacing: 0.35em;
+  color: rgba($white, 0.95);
+  font-variant-numeric: tabular-nums;
+}
+
+.card__number-label {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba($gray, 0.9);
+}
+
+.card__balance {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  margin-top: auto;
+  padding-top: 0.5rem;
+}
+
+.card__balance-label {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba($gray, 0.85);
+}
+
+.card__balance-primary {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: $white;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+}
+
+.card__balance-secondary {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: rgba($gray, 0.95);
+  margin-top: 0.125rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.card__footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.card__action {
+  --btn-padding-y: 0.625rem;
+  --btn-padding-x: 1.25rem;
+
+  padding: var(--btn-padding-y) var(--btn-padding-x);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: rgba($accent, 1);
+  background: rgba($accent, 0.14);
+  border: 1px solid rgba($accent, 0.4);
+  border-radius: 10px;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.15s ease;
+
+  &:hover {
+    background: rgba($accent, 0.24);
+    border-color: rgba($accent, 0.7);
+    color: $white;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $accent;
+    outline-offset: 2px;
+  }
 }

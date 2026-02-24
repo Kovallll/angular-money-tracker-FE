@@ -1,33 +1,37 @@
 <dashboard-card title="Card Details">
-  <card-body class="body">
-    <div class="content">
-      <div class="bank-content">
-        <p class="title">Bank Name</p>
-        <p class="text">{{ card()?.bankName }}</p>
-      </div>
-      <div class="account-type-content">
-        <p class="title">Account Type</p>
-        <p class="text">{{ card()?.cardType }}</p>
-      </div>
-      <div class="balance-content">
-        <p class="title">Balance</p>
-        <p class="text">{{ balancePrimary() | appCurrency: currencyService.primaryCode() }}</p>
-        <p class="text secondary">
+  <card-body class="details-body">
+    <div class="details">
+      <section class="details__balance" aria-label="Balance">
+        <span class="details__label">Balance</span>
+        <p class="details__balance-primary">
+          {{ balancePrimary() | appCurrency: currencyService.primaryCode() }}
+        </p>
+        <p class="details__balance-secondary">
           {{ balanceSecondary() | appCurrency: currencyService.secondaryCode() }}
         </p>
-      </div>
-      <div class="branch-name-content">
-        <p class="title">Branch Name</p>
-        <p class="text">{{ card()?.branchName }}</p>
-      </div>
-      <div class="account-number-content">
-        <p class="title">Account Number</p>
-        <p class="text">{{ card()?.cardNumber }}</p>
+      </section>
+      <div class="details__grid">
+        <div class="details__field">
+          <span class="details__label">Bank name</span>
+          <p class="details__value">{{ card()?.bankName }}</p>
+        </div>
+        <div class="details__field">
+          <span class="details__label">Account type</span>
+          <p class="details__value">{{ card()?.cardType }}</p>
+        </div>
+        <div class="details__field">
+          <span class="details__label">Branch name</span>
+          <p class="details__value">{{ card()?.branchName }}</p>
+        </div>
+        <div class="details__field details__field--full">
+          <span class="details__label">Account number</span>
+          <p class="details__value details__value--number">{{ card()?.cardNumber }}</p>
+        </div>
       </div>
     </div>
-    <div class="buttons">
+    <footer class="details__actions">
       <balance-update-card-button />
       <balance-remove-card-button />
-    </div>
+    </footer>
   </card-body>
 </dashboard-card>

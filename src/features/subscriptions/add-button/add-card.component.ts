@@ -19,10 +19,10 @@ export class SubscriptionAddButtonComponent {
 
   show() {
     this.ref = this.dialogService.open(AddSubscriptionModalComponent, {
-      header: 'Add Transaction',
+      header: 'Add Subscription',
       closable: true,
       dismissableMask: true,
-      styleClass: 'modal',
+      styleClass: 'modal subscription-modal',
     });
   }
 }

@@ -14,6 +14,25 @@
   display: flex;
   width: 100%;
   gap: 24px;
+  flex-wrap: wrap;
+  align-items: stretch;
+
+  .balance-block,
+  .goal-block,
+  .subscribe-block {
+    flex: 1 1 300px;
+    min-width: 300px;
+    min-height: 200px;
+    box-sizing: border-box;
+  }
+
+  // Когда один слайд (нет стрелок) — блок может сужаться
+  .balance-block.carousel-single,
+  .goal-block.carousel-single,
+  .subscribe-block.carousel-single {
+    min-width: 240px;
+    flex: 1 1 240px;
+  }
 }
 
 .bottom-cards {

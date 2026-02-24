@@ -11,11 +11,12 @@ export class PaginationService {
 
   length = this.lengthSignal.asReadonly();
 
-  setPage(pageIndex: number): void {
+  setPage(pageIndex: number, options?: { replaceUrl?: boolean }): void {
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { page: pageIndex + 1 },
       queryParamsHandling: 'merge',
+      replaceUrl: options?.replaceUrl ?? false,
     });
   }
 

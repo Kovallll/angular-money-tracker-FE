@@ -1,4 +1,4 @@
-<form #cardForm="ngForm" (ngSubmit)="onSubmit(cardForm)" class="form">
+<form #cardForm="ngForm" (ngSubmit)="onSubmit(cardForm)" class="app-modal-form">
   <div class="form-row">
     <div class="form-field">
       <label for="date">Date</label>
@@ -21,40 +21,20 @@
     </div>
 
     <div class="form-field">
-      <label for="amount">Amount</label>
-      <p-inputnumber
-        inputId="amount"
-        name="amount"
-        [(ngModel)]="form.amount"
-        [min]="0.01"
-        mode="decimal"
-        [minFractionDigits]="0"
-        [maxFractionDigits]="2"
-        [useGrouping]="false"
-        #amountField="ngModel"
-        required
+      <app-price-currency-field
+        label="Amount"
+        amountName="amount"
+        [(amount)]="form.amount"
+        [(currencyCode)]="form.currencyCode"
+        [required]="true"
       />
       <div class="form-field-error">
-        @if (amountField.invalid && (amountField.touched || cardForm.submitted)) {
+        @if (cardForm.submitted && (form.amount === null || form.amount < 0.01)) {
           <p-message severity="error" size="small" variant="simple"
             >Amount must be greater than 0</p-message
           >
         }
       </div>
-    </div>
-    <div class="form-field">
-      <label for="currencyCode">Currency</label>
-      <p-select
-        inputId="currencyCode"
-        name="currencyCode"
-        [options]="currencyService.currencies"
-        optionLabel="label"
-        optionValue="code"
-        [(ngModel)]="form.currencyCode"
-        placeholder="Select currency"
-        appendTo="body"
-      />
-      <div class="form-field-error"></div>
     </div>
   </div>
 
@@ -112,11 +92,7 @@
       >
         <ng-template let-item pTemplate="item">
           <div class="icon-row">
-            @if (item.icon?.startsWith('pi ')) {
-              <i [class]="item.icon"></i>
-            } @else if (item.icon) {
-              <span class="icon-emoji">{{ item.icon }}</span>
-            }
+            <app-icon [icon]="item.icon" />
             <span>{{ item.title }}</span>
           </div>
         </ng-template>
@@ -171,7 +147,14 @@
     </div>
   </div>
 
-  <div class="form-submit">
-    <button pButton type="submit" label="Add Transaction" severity="primary"></button>
+  <div class="actions">
+    <button type="button" pButton label="Cancel" (click)="close()" class="cancel-btn"></button>
+    <button
+      pButton
+      type="submit"
+      label="Add Transaction"
+      severity="primary"
+      class="submit-btn"
+    ></button>
   </div>
 </form>

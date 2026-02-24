@@ -1,4 +1,5 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { DashboardCardComponent, CardBodyComponent } from '@/entities/cards/card';
 import { MatTabGroup } from '@angular/material/tabs';
 import { MatTab } from '@angular/material/tabs';
@@ -20,14 +21,14 @@ import { UserService } from '@/shared';
   ],
 })
 export class SettingsTabsComponent {
-  selectedTab: string = 'Account';
-  user = signal(this.userService.currentUser);
+  private userService = inject(UserService);
+
+  selectedTab = signal('Account');
+  user = toSignal(this.userService.currentUser$, { initialValue: this.userService.currentUser });
 
   onChangeTabContent(tabLabel: string) {
-    this.selectedTab = tabLabel;
+    this.selectedTab.set(tabLabel);
   }
 
   tabs = ['Account', 'Security'];
-
-  constructor(private userService: UserService) {}
 }

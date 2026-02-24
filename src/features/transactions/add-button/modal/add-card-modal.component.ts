@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -13,9 +13,10 @@ import {
 import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { injectMutation, injectQuery, QueryClient } from '@tanstack/angular-query-experimental';
-import { Select } from 'primeng/select';
-import { InputNumber } from 'primeng/inputnumber';
 import { DatePickerModule } from 'primeng/datepicker';
+import { Select } from 'primeng/select';
+import { PriceCurrencyFieldComponent } from '@/shared/components/price-currency-field/price-currency-field.component';
+import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 
 @Component({
   selector: 'add-card-modal',
@@ -26,9 +27,10 @@ import { DatePickerModule } from 'primeng/datepicker';
     InputTextModule,
     ButtonModule,
     MessageModule,
-    Select,
-    InputNumber,
     DatePickerModule,
+    Select,
+    PriceCurrencyFieldComponent,
+    AppIconComponent,
   ],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -106,7 +108,7 @@ export class AddTransactionModalComponent implements OnInit {
       categoryId: String(f.categoryId),
       type: f.type,
       amount: Number(f.amount) || 0,
-      currencyCode: f.currencyCode || this.currencyService.primaryCode(),
+      currencyCode: f.currencyCode ?? this.currencyService.primaryCode(),
       date: f.date,
       title: f.title || undefined,
       description: f.description || undefined,
@@ -130,5 +132,9 @@ export class AddTransactionModalComponent implements OnInit {
     if (form.valid && this.form.cardId && this.form.categoryId && this.form.amount > 0) {
       this.mutation.mutate(this.buildPayload());
     }
+  }
+
+  close(): void {
+    this.ref.close();
   }
 }

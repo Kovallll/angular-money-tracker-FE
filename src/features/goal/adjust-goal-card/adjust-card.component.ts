@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { GoalsService } from '@/entities/cards/goals/services/goals.service';
+import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { GoalItem } from '@/shared';
 
 @Component({
@@ -18,13 +19,20 @@ import { GoalItem } from '@/shared';
 export class GoalAdjustCardButtonComponent {
   private dialog = inject(MatDialog);
   private goalsService = inject(GoalsService);
+  private currencyService = inject(CurrencyService);
 
   goal = input.required<GoalItem>();
 
   openDialog() {
+    const g = this.goal();
+    const goalWithCurrency = {
+      ...g,
+      currencyCode:
+        (g as { currencyCode?: string }).currencyCode ?? this.currencyService.primaryCode(),
+    };
     const dialogRef = this.dialog.open(GoalAdjustDialogComponent, {
       width: '600px',
-      data: { ...this.goal() },
+      data: goalWithCurrency,
     });
 
     dialogRef.afterClosed().subscribe((result) => {

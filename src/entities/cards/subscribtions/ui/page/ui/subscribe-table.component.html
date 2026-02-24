@@ -7,37 +7,45 @@
     </div>
     <dashboard-card>
       <card-body class="table">
-        <div class="header">
-          @for (header of displayedCells(); track header.field) {
-            <p class="header-title">{{ header.name }}</p>
+        <div class="table-wrap">
+          <div class="header">
+            @for (header of displayedCells(); track header.field) {
+              <p class="header-title">{{ header.name }}</p>
+            }
+          </div>
+          @if (isLoading()) {
+            <div class="data-loading data-placeholder--page">
+              <p-progress-spinner ariaLabel="Loading" />
+            </div>
+          } @else if (subscribes().length) {
+            @for (subscribe of subscribes(); track subscribe.id) {
+              <div class="row" (contextmenu)="openContextMenu($event)">
+                <div class="date">
+                  <p>{{ subscribe.subscribeDate | date: 'MMM' }}</p>
+                  <p class="day">{{ subscribe.subscribeDate | date: 'dd' }}</p>
+                </div>
+                <p class="title">{{ subscribe.subscribeName }}</p>
+                <p class="describtion">{{ subscribe.description }}</p>
+                <p class="type">{{ subscribe.type | titlecase }}</p>
+                <p class="last-charge">{{ subscribe.lastCharge | date }}</p>
+                <p class="amount">
+                  {{ subscribe.amount | appCurrencyPrimary: subscribe.currencyCode }}
+                </p>
+              </div>
+              <context-menu-component
+                #ctxMenu
+                (onDelete)="onDelete(subscribe)"
+                (onEdit)="onEdit(subscribe)"
+              />
+            }
+          } @else {
+            <div class="data-placeholder data-placeholder--page">
+              <span class="data-placeholder__icon" aria-hidden="true">🔄</span>
+              <p>No subscriptions</p>
+              <p>Add a subscription using the button above</p>
+            </div>
           }
         </div>
-        @if (subscribes().length) {
-          @for (subscribe of subscribes(); track subscribe.id) {
-            <div class="row" (contextmenu)="openContextMenu($event)">
-              <div class="date">
-                <p>{{ subscribe.subscribeDate | date: 'MMM' }}</p>
-                <p class="day">{{ subscribe.subscribeDate | date: 'dd' }}</p>
-              </div>
-              <p class="title">{{ subscribe.subscribeName }}</p>
-              <p class="describtion">{{ subscribe.description }}</p>
-              <p class="type">{{ subscribe.type | titlecase }}</p>
-              <p class="last-charge">{{ subscribe.lastCharge | date }}</p>
-              <p class="amount">{{ subscribe.amount | appCurrency }}</p>
-            </div>
-            <context-menu-component
-              #ctxMenu
-              (onDelete)="onDelete(subscribe)"
-              (onEdit)="onEdit(subscribe)"
-            />
-          }
-        } @else {
-          <div class="data-placeholder data-placeholder--page">
-            <span class="data-placeholder__icon" aria-hidden="true">🔄</span>
-            <p>No subscriptions</p>
-            <p>Add a subscription using the button above</p>
-          </div>
-        }
       </card-body>
     </dashboard-card>
   </div>

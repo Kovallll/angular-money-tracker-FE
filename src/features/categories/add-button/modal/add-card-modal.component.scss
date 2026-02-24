@@ -9,32 +9,45 @@
   margin-bottom: 12px;
 }
 
+// Поле с иконкой: выравнивание по высоте с полем "Category Name"
+.field--icon {
+  .icons {
+    display: flex;
+    align-items: stretch;
+    gap: 0.5rem;
+    min-height: 2.75rem; // как у .p-inputtext (padding 0.65*2 + line)
+  }
+
+  .preview {
+    flex-shrink: 0;
+    background: $accent;
+    border-radius: 50%;
+    width: 2.75rem;
+    height: 2.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .select {
+    flex: 1;
+    min-width: 0;
+
+    ::ng-deep .p-select .p-dropdown {
+      min-height: 2.75rem;
+      display: flex;
+      align-items: center;
+    }
+  }
+}
+
 .select {
   width: 100%;
-  min-width: 300px;
+  min-width: 0;
 }
 
 .input {
   width: 100%;
-}
-
-.icons {
-  display: flex;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-.preview {
-  background: $accent;
-  border-radius: 50%;
-  max-width: 40px;
-  max-height: 40px;
-  min-width: 40px;
-  min-height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 8px;
 }
 
 .icon-row {

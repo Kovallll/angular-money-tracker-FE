@@ -36,4 +36,22 @@ export class TableComponent<T> {
     this.selectedRow = row;
     this.ctxMenu.open(event);
   }
+
+  /** Значение ячейки для проверки на пустоту (null, undefined, ''). */
+  cellValue(row: Record<string, unknown>, field: string): unknown {
+    const v = row[field];
+    if (v == null || v === '') return v;
+    if (typeof v === 'object' && v !== null && 'title' in v)
+      return (v as { title?: string }).title ?? '';
+    return v;
+  }
+
+  /** Значение для отображения (для объекта с title — показываем title). */
+  cellDisplayValue(row: Record<string, unknown>, field: string): string {
+    const v = row[field];
+    if (v == null || v === '') return '';
+    if (typeof v === 'object' && v !== null && 'title' in v)
+      return String((v as { title?: string }).title ?? '');
+    return String(v);
+  }
 }

@@ -93,9 +93,12 @@ export interface GoalItem {
   id: number;
   targetBudget: number;
   goalBudget: number;
+  /** Currency code (e.g. BYN, EUR). Used for display; default BYN if missing. */
+  currencyCode?: string;
   startDate: string;
   endDate: string;
   title: string;
+  status?: string;
 }
 
 export type CreateGoalItem = Omit<GoalItem, 'id'>;
@@ -103,6 +106,8 @@ export type CreateGoalItem = Omit<GoalItem, 'id'>;
 export interface SubscribeItem {
   id: number;
   amount: number;
+  /** Currency code (e.g. BYN, EUR). Used for display; default BYN if missing. */
+  currencyCode?: string;
   subscribeDate: string;
   subscribeName: string;
   lastCharge: string;

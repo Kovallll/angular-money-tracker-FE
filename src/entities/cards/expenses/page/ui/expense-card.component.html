@@ -2,15 +2,7 @@
   <div class="header">
     <div class="left-content">
       <div class="category-icon">
-        @if (category?.icon) {
-          @if (category?.icon?.startsWith('pi ')) {
-            <i [class]="category?.icon"></i>
-          } @else {
-            <span class="category-icon-emoji">{{ category?.icon ?? '' }}</span>
-          }
-        } @else {
-          <mat-icon>category</mat-icon>
-        }
+        <app-icon [icon]="category?.icon" />
       </div>
       <div class="text">
         <p class="category">{{ category?.title }}</p>
@@ -20,7 +12,7 @@
     <div class="right-content">
       <div class="percents-block">
         <p class="percents">15%</p>
-        <mat-icon class="icon">arrow_upward</mat-icon>
+        <app-icon icon="arrow_upward" iconClass="icon" />
       </div>
       <p class="compare">Compare to last month</p>
     </div>

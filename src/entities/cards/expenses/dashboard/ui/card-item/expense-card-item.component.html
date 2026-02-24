@@ -1,24 +1,18 @@
-<div class="card">
+<div
+  class="card"
+  (click)="goToDetails()"
+  role="button"
+  tabindex="0"
+  (keydown.enter)="goToDetails()"
+  (keydown.space)="goToDetails()"
+>
   <div class="left-content">
     <div class="category-icon">
-      @if (expense().category.icon) {
-        @if (expense().category.icon.startsWith('pi ')) {
-          <i [class]="expense().category.icon"></i>
-        } @else {
-          <span class="category-icon-emoji">{{ expense().category.icon }}</span>
-        }
-      } @else {
-        <mat-icon>category</mat-icon>
-      }
+      <app-icon [icon]="expense().category.icon" />
     </div>
     <div class="text">
       <p class="category">{{ expense().category.title }}</p>
       <p class="cost">{{ expense().amount | appCurrency }}</p>
     </div>
-  </div>
-  <div class="right-content">
-    <button class="button">
-      <mat-icon class="icon">arrow_right_alt</mat-icon>
-    </button>
   </div>
 </div>

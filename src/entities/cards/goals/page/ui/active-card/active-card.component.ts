@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import { AppCurrencyPipe } from '@/shared/pipes/app-currency.pipe';
+import { AppCurrencyPrimaryPipe } from '@/shared/pipes/app-currency-primary.pipe';
 import { MatIconModule } from '@angular/material/icon';
 import { BaseChartDirective } from 'ng2-charts';
 import { DividerComponent } from '@/shared/components/divider/divider';
@@ -13,7 +13,7 @@ import { GoalAdjustCardButtonComponent } from '@/features/goal/adjust-goal-card/
   imports: [
     CommonModule,
     MatIconModule,
-    AppCurrencyPipe,
+    AppCurrencyPrimaryPipe,
     DatePipe,
     BaseChartDirective,
     DividerComponent,

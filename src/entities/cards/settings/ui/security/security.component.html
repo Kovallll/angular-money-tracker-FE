@@ -1,15 +1,70 @@
 <div class="container">
-  <div class="content">
-    <p class="title">Old Password</p>
-    <input type="password" placeholder="Old Password" class="input" />
-  </div>
-  <div class="content">
-    <p class="title">New Password</p>
-    <input matInput type="password" placeholder="New Password" class="input" />
-  </div>
-  <div class="content">
-    <p class="title">Confirm Password</p>
-    <input matInput type="password" placeholder="Confirm Password" class="input" />
-  </div>
-  <update-password-button />
+  <form #f="ngForm" (ngSubmit)="onSubmit(f)" class="form">
+    <mat-form-field appearance="outline" class="field">
+      <mat-label>Current password&#42;</mat-label>
+      <input
+        matInput
+        type="password"
+        [(ngModel)]="oldPassword"
+        name="oldPassword"
+        #old="ngModel"
+        required
+        placeholder="Enter current password"
+      />
+      @if (old.invalid && (old.touched || f.submitted)) {
+        <mat-error>Current password is required.</mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="field">
+      <mat-label>New password&#42;</mat-label>
+      <input
+        matInput
+        type="password"
+        [(ngModel)]="newPassword"
+        name="newPassword"
+        #newPw="ngModel"
+        required
+        minlength="6"
+        placeholder="At least 6 characters"
+      />
+      @if (newPw.invalid && (newPw.touched || f.submitted)) {
+        <mat-error>
+          @if (newPw.hasError('required')) {
+            New password is required.
+          } @else if (newPw.hasError('minlength')) {
+            At least 6 characters.
+          }
+        </mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="field">
+      <mat-label>Confirm new password&#42;</mat-label>
+      <input
+        matInput
+        type="password"
+        [(ngModel)]="confirmPassword"
+        name="confirmPassword"
+        #confirm="ngModel"
+        required
+        placeholder="Repeat new password"
+      />
+      @if (confirm.invalid && (confirm.touched || f.submitted)) {
+        <mat-error>Please confirm your new password.</mat-error>
+      }
+      @if ((confirm.touched || f.submitted) && confirmPassword && newPassword !== confirmPassword) {
+        <mat-error>Passwords do not match.</mat-error>
+      }
+    </mat-form-field>
+    <div class="actions">
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        class="submit-btn"
+        [disabled]="loading()"
+      >
+        {{ loading() ? 'Changing...' : 'Change password' }}
+      </button>
+    </div>
+  </form>
 </div>

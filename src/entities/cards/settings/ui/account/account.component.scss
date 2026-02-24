@@ -43,37 +43,91 @@
   .title {
     font-size: 14px;
     font-weight: 500;
-    color: #666;
+    color: $gray;
   }
 
-  .upload-box {
+  .upload-frame {
     width: 140px;
-    height: 140px;
     border: 2px dashed #ccc;
     border-radius: 12px;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 6px;
-    cursor: pointer;
-    transition:
-      border-color 0.3s,
-      background 0.3s;
+    transition: border-color 0.3s;
 
     &:hover {
       border-color: $accent;
+    }
+  }
+
+  .upload-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.05);
+    font-size: 12px;
+    color: $gray;
+    transition: background 0.2s;
+
+    &:hover:not(.loading) {
       background: $tertiary;
+      color: $white;
+    }
+
+    &.loading {
+      pointer-events: none;
+      opacity: 0.7;
     }
 
     .upload-icon {
-      font-size: 32px;
-      color: #999;
+      font-size: 14px;
+    }
+  }
+
+  .avatar-box {
+    position: relative;
+    width: 100%;
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.2);
+
+    &.has-photo {
+      cursor: pointer;
+
+      &:hover .avatar-img {
+        opacity: 0.9;
+      }
     }
 
-    span {
+    .avatar-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: opacity 0.2s;
+    }
+
+    .avatar-placeholder-text {
       font-size: 12px;
-      color: #999;
+      color: $gray;
+    }
+
+    .avatar-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .avatar-loading-text {
+      color: $white;
+      font-size: 12px;
     }
   }
 }

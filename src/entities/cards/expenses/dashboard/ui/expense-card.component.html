@@ -1,6 +1,10 @@
 <dashboard-card title="Expenses" [isWithSeeAll]="true" [seeAllPath]="seeAllPath">
   <card-body class="body">
-    @if (expenses().length) {
+    @if (isLoading()) {
+      <div class="data-loading">
+        <p-progress-spinner ariaLabel="Loading" />
+      </div>
+    } @else if (expenses().length) {
       @for (expense of expenses(); track expense.id) {
         <expense-card-item [expense]="expense" />
       }

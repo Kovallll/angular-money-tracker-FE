@@ -1,20 +1,34 @@
 <dashboard-card [title]="title" [isWithSeeAll]="true" [seeAllPath]="seeAllPath">
   <card-header class="header">
-    <p>{{ totalBalancePrimary() | appCurrency:currencyService.primaryCode() }}</p>
-    <p class="secondary">
-      {{ totalBalanceSecondary() | appCurrency:currencyService.secondaryCode() }}
-    </p>
+    <div class="header__balance">
+      <p>{{ totalBalancePrimary() | appCurrency:currencyService.primaryCode() }}</p>
+      <p class="secondary">
+        {{ totalBalanceSecondary() | appCurrency:currencyService.secondaryCode() }}
+      </p>
+    </div>
     <p>All accounts</p>
   </card-header>
   <card-body class="body">
-    @if (cards().length) {
-    <app-slider [items]="cards()" class="slider">
-      @for (card of cards(); track card.id) {
-      <app-slide class="card">
-        <balance-card-item [card]="card" />
-      </app-slide>
-      }
-    </app-slider>
+    @if (isLoading()) {
+    <div class="data-loading">
+      <p-progress-spinner ariaLabel="Loading" />
+    </div>
+    } @else if (cards().length) {
+    <p-carousel
+      [value]="cards()"
+      [numVisible]="1"
+      [numScroll]="1"
+      [responsiveOptions]="carouselResponsive"
+      [showNavigators]="cards().length > 1"
+      [showIndicators]="cards().length > 1"
+      styleClass="dashboard-carousel slider"
+    >
+      <ng-template #item let-card>
+        <div class="carousel-slide">
+          <balance-card-item [card]="card" />
+        </div>
+      </ng-template>
+    </p-carousel>
     } @else {
     <div class="data-placeholder">
       <span class="data-placeholder__icon" aria-hidden="true">💳</span>

@@ -1,13 +1,14 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, HostBinding, inject } from '@angular/core';
 import { DashboardCardComponent, CardHeaderComponent, CardBodyComponent } from '../../../card';
 import { CommonModule } from '@angular/common';
-import { SliderCardComponent } from '../../../slider/slider-card';
-import { SlideComponent } from '../../../slider/slide/slide';
 import { BalanceCardItemComponent } from './card-item/balance-card-item.component';
 import { BalancesHttpService, RoutePaths } from '@/shared';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
 import { AppCurrencyPipe } from '@/shared/pipes/app-currency.pipe';
+import { ProgressSpinner } from 'primeng/progressspinner';
+import { Carousel } from 'primeng/carousel';
+import { DASHBOARD_CAROUSEL_RESPONSIVE } from '../../../slider/lib/carousel-options';
 
 @Component({
   selector: 'dash-balance-card',
@@ -17,10 +18,10 @@ import { AppCurrencyPipe } from '@/shared/pipes/app-currency.pipe';
     CardHeaderComponent,
     CardBodyComponent,
     CommonModule,
-    SliderCardComponent,
-    SlideComponent,
+    Carousel,
     BalanceCardItemComponent,
     AppCurrencyPipe,
+    ProgressSpinner,
   ],
   templateUrl: './balance-card.html',
   styleUrl: `./balance-card.scss`,
@@ -33,7 +34,14 @@ export class DashboardBalanceCardComponent {
 
   title = 'Total Balance';
   cards = this.balancesHttpService.cards;
+  isLoading = this.balancesHttpService.isLoading;
   seeAllPath = RoutePaths.BAlANCES;
+  carouselResponsive = DASHBOARD_CAROUSEL_RESPONSIVE;
+
+  /** Один слайд — нет стрелок, блок может быть уже */
+  @HostBinding('class.carousel-single') get isCarouselSingle(): boolean {
+    return this.cards().length <= 1;
+  }
 
   /** Total balance converted to primary currency. */
   totalBalancePrimary = computed(() => {

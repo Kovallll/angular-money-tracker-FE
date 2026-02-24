@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
@@ -7,4 +7,6 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrls: ['./update-button.component.scss'],
   imports: [MatButtonModule],
 })
-export class UpdateProfileButtonComponent {}
+export class UpdateProfileButtonComponent {
+  readonly updateClick = output<void>();
+}

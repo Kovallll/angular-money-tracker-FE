@@ -4,6 +4,8 @@ import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
+import { CurrencyService } from '@/shared/services/currency/currency.service';
+import { PriceCurrencyFieldComponent } from '@/shared/components/price-currency-field/price-currency-field.component';
 import {
   CreateSubscribeItem,
   CreateTransaction,
@@ -13,12 +15,19 @@ import {
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { QueryClient } from '@tanstack/angular-query-experimental';
 import { Select } from 'primeng/select';
-import { tap } from 'rxjs';
+import { catchError, of, tap } from 'rxjs';
 @Component({
   selector: 'edit-subscription-modal',
   templateUrl: './edit-card-modal.component.html',
   styleUrls: ['./edit-card-modal.component.scss'],
-  imports: [FormsModule, InputTextModule, ButtonModule, MessageModule, Select],
+  imports: [
+    FormsModule,
+    InputTextModule,
+    ButtonModule,
+    MessageModule,
+    Select,
+    PriceCurrencyFieldComponent,
+  ],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -28,6 +37,7 @@ export class EditSubscriptionModalComponent implements OnInit {
   private subscriptionsHttpService = inject(SubscribtionsHttpService);
   private ref = inject(DynamicDialogRef);
   private queryClient = inject(QueryClient);
+  private currencyService = inject(CurrencyService);
   subscription = this.config.data as Transaction;
 
   updateSubscription(subscription: CreateSubscribeItem) {
@@ -35,8 +45,25 @@ export class EditSubscriptionModalComponent implements OnInit {
       .update(this.subscription.id, subscription)
       .pipe(
         tap(() => {
+          this.messageService.add({
+            key: 'toast',
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Subscription updated',
+            life: 3000,
+          });
           this.ref.close();
           this.queryClient.invalidateQueries({ queryKey: ['subscriptions'] });
+        }),
+        catchError(() => {
+          this.messageService.add({
+            key: 'toast',
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to update subscription',
+            life: 4000,
+          });
+          return of(null);
         }),
       )
       .subscribe();
@@ -64,6 +91,9 @@ export class EditSubscriptionModalComponent implements OnInit {
       acc[cur.field] = this.subscription[cur.field as keyof CreateTransaction];
       return acc;
     }, {} as any);
+    (card as any).currencyCode =
+      (this.subscription as { currencyCode?: string }).currencyCode ??
+      this.currencyService.primaryCode();
     this.card.set(card);
   }
 
@@ -73,10 +103,14 @@ export class EditSubscriptionModalComponent implements OnInit {
     }
   }
 
-  updateCardField(value: any) {
+  updateCardField(field: string, value: any) {
     this.card.update((state: any) => ({
       ...state,
-      category: value,
+      [field]: value,
     }));
+  }
+
+  close(): void {
+    this.ref.close();
   }
 }

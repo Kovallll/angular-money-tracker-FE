@@ -1,6 +1,6 @@
 <div class="card" (click)="handleCheckDetails()">
   <div class="left-content">
-    <p class="title">{{ expense.title }}</p>
+    <p class="title">{{ expense.title || 'Без названия' }}</p>
   </div>
   <div class="right-content">
     <p class="cost">{{ expense.amount | appCurrency }}</p>

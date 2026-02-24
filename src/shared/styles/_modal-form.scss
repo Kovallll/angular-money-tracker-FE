@@ -1,0 +1,251 @@
+// Общие стили для всех модальных форм (две колонки, компактные отступы, фикс. место под ошибки)
+@use '../../theme' as *;
+
+.app-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 380px;
+  max-width: 560px;
+}
+
+// Сетка полей: вариант .form-fields (подписки) или .form-row (карты, транзакции)
+.app-modal-form .form-fields,
+.app-modal-form .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem 1rem;
+  padding-bottom: 1rem;
+}
+
+.app-modal-form .form-row:last-of-type {
+  padding-bottom: 0;
+}
+
+// Поле на всю ширину (опционально)
+.app-modal-form .form-field--full {
+  grid-column: 1 / -1;
+}
+
+// Один блок поля: .field или .form-field
+.app-modal-form .field,
+.app-modal-form .form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+
+  label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .optional {
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.5);
+  }
+}
+
+// Место под ошибку — фиксированная высота, интерфейс не прыгает
+.app-modal-form .error-slot,
+.app-modal-form .form-field-error {
+  height: 1.25rem;
+  line-height: 1.25rem;
+  overflow: hidden;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+
+  .error,
+  small.error,
+  p-message {
+    color: #f87171;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    margin: 0;
+  }
+}
+
+// Инпуты и селекты внутри модальной формы
+.app-modal-form .input,
+.app-modal-form .field input.p-inputtext,
+.app-modal-form .form-field input.p-inputtext,
+.app-modal-form ::ng-deep .p-inputtext,
+.app-modal-form ::ng-deep .p-inputnumber-input {
+  width: 100%;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  padding: 0.65rem 0.9rem !important;
+  font-size: 0.9375rem !important;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  &:hover:not(:disabled) {
+    border-color: rgba(255, 255, 255, 0.2) !important;
+  }
+
+  &:focus,
+  &.p-focus {
+    outline: none;
+    border-color: $accent !important;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+  }
+}
+
+// Селект (полноширинный в своём поле, не внутри price-currency)
+.app-modal-form .field:not(:has(app-price-currency-field)) .select,
+.app-modal-form .field:not(:has(app-price-currency-field)) ::ng-deep .p-select,
+.app-modal-form .form-field .p-select,
+.app-modal-form .form-field ::ng-deep .p-select {
+  width: 100%;
+
+  .p-select-label,
+  .p-dropdown {
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.06) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    padding: 0.65rem 0.9rem !important;
+    transition:
+      border-color 0.2s,
+      box-shadow 0.2s;
+  }
+
+  .p-dropdown:hover:not(.p-disabled) .p-dropdown-label {
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .p-dropdown.p-focus {
+    border-color: $accent !important;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+  }
+}
+
+// Price-currency-field: сумма и валюта в одну строку без наложения
+.app-modal-form .field app-price-currency-field,
+.app-modal-form .form-field app-price-currency-field {
+  display: block;
+
+  ::ng-deep .row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: stretch;
+  }
+
+  ::ng-deep .amount-input {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  ::ng-deep .p-inputnumber,
+  ::ng-deep .p-inputnumber-input {
+    width: 100% !important;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  ::ng-deep .currency-select,
+  ::ng-deep .currency-select.p-select {
+    width: auto !important;
+    min-width: 5.5rem;
+    flex: 0 0 auto;
+  }
+
+  ::ng-deep .p-inputnumber-input,
+  ::ng-deep .p-inputtext {
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.06) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    padding: 0.65rem 0.9rem !important;
+  }
+
+  ::ng-deep .p-select .p-dropdown {
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.06) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  }
+}
+
+// Блок кнопок
+.app-modal-form .actions,
+.app-modal-form .form-submit {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+// Кнопка отмены
+.app-modal-form .cancel-btn,
+.app-modal-form button[pButton][severity='secondary'] {
+  color: rgba(255, 255, 255, 0.9) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-radius: 10px !important;
+  padding: 0.6rem 1.25rem !important;
+  font-weight: 600 !important;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.14) !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+  }
+}
+
+// Основная кнопка (Submit / Save / Add)
+.app-modal-form .submit-btn,
+.app-modal-form button[pButton][severity='primary'],
+.app-modal-form button[pButton][type='submit']:not(.cancel-btn) {
+  background: $accent !important;
+  color: $white !important;
+  border-radius: 10px !important;
+  padding: 0.6rem 1.5rem !important;
+  font-weight: 600 !important;
+  border: none !important;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.35);
+  transition:
+    background 0.2s,
+    box-shadow 0.2s,
+    transform 0.1s;
+
+  &:hover:not(:disabled) {
+    background: #2563eb !important;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.45);
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+}
+
+// Datepicker
+.app-modal-form ::ng-deep .p-datepicker-trigger {
+  border-radius: 0 10px 10px 0;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+// Wrapper для полей (edit-модалки с одним полем в блоке)
+.app-modal-form .wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+
+  .error-slot,
+  .form-field-error {
+    height: 1.25rem;
+    line-height: 1.25rem;
+    overflow: hidden;
+  }
+}

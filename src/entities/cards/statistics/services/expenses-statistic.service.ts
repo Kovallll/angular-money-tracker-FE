@@ -20,10 +20,7 @@ export class ExpensesStatisticsService {
           .sort((a, b) => b.totalExpenses - a.totalExpenses)
           .slice(0, max);
 
-    const labels = cats.map((c) => {
-      const icon = c.icon && !c.icon.startsWith('pi ') ? c.icon : '';
-      return icon ? `${icon} ${c.title}` : c.title;
-    });
+    const labels = cats.map((c) => c.title);
     const dataset = cats.map((c) => c.totalExpenses ?? Math.floor(Math.random() * 1000));
     const bgColors = cats.map(() => this.getRandomColor());
 

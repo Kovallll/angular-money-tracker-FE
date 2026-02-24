@@ -10,7 +10,14 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  gap: 16px;
+  gap: 0;
+}
+
+.transaction-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
 }
 
 .tabs {
@@ -28,4 +35,18 @@
       divider-color: $accent,
     )
   );
+
+  ::ng-deep .mat-mdc-tab .mdc-tab__text-label {
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+
+  ::ng-deep .mat-mdc-tab-header {
+    margin-bottom: 4px;
+  }
+
+  ::ng-deep .mat-mdc-tab-body-wrapper {
+    display: none;
+  }
 }

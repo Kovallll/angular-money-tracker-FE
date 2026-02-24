@@ -7,11 +7,20 @@ export class DashboardTransactionsService {
 
   private readonly all: Signal<Transaction[]> = this.http.transactions;
 
+  /** Приводит значение таба к типу транзакции в API (expense/revenue). */
+  private tabToApiType(tab: string): string | null {
+    if (tab === Tabs.All) return null;
+    if (tab === Tabs.Expenses) return 'expense';
+    if (tab === Tabs.Revenue) return 'revenue';
+    return null;
+  }
+
   tabTransactions(tabFilter: Signal<string>): Signal<Transaction[]> {
     return computed(() => {
       const tab = tabFilter();
       const data = this.all();
-      return tab !== Tabs.All ? data.filter((t) => t.type === tab) : data;
+      const apiType = this.tabToApiType(tab);
+      return apiType == null ? data : data.filter((t) => t.type === apiType);
     });
   }
 

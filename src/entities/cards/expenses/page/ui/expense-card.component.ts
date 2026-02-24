@@ -1,15 +1,15 @@
 import { ChangeDetectionStrategy, Component, computed, inject, Input } from '@angular/core';
 import { CategoryItem } from '@/shared';
-import { MatIconModule } from '@angular/material/icon';
 import { AppCurrencyPipe } from '@/shared/pipes/app-currency.pipe';
 import { ExpenseCardItemComponent } from '../card-item/expense-card-item.component';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
+import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 
 @Component({
   selector: 'expense-card',
   standalone: true,
-  imports: [MatIconModule, AppCurrencyPipe, ExpenseCardItemComponent],
+  imports: [AppCurrencyPipe, ExpenseCardItemComponent, AppIconComponent],
   templateUrl: './expense-card.component.html',
   styleUrls: ['./expense-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,7 +35,7 @@ export class ExpenseCardPageComponent {
     const primary = this.currencyService.primaryCode();
     return cat.expenses.slice(0, 2).map((e) => ({
       id: e.id,
-      title: e.title,
+      title: e.title ?? (e as { description?: string }).description ?? '',
       amount: this.exchangeRates.convert(e.amount ?? 0, 'BYN', primary),
       date: e.date,
       category: {
