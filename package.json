@@ -12,10 +12,22 @@
     "format": "prettier --write \"src/**/*.{ts,html,scss,css,json,md}\"",
     "prepare": "husky",
     "build:single-spa:first-app": "ng build first-app --configuration production",
-    "serve:single-spa:first-app": "ng s --project first-app --disable-host-check --port 4200 --live-reload false"
+    "serve:single-spa:first-app": "ng s --project first-app --disable-host-check --port 4200 --live-reload false",
+    "build:mobile": "node scripts/generate-ngsw-config.js && ng build",
+    "cap:copy": "npx cap copy",
+    "cap:open:android": "npx cap open android",
+    "cap:open:ios": "npx cap open ios",
+    "cap:run:android": "yarn build:mobile && npx cap copy && npx cap open android",
+    "cap:run:ios": "yarn build:mobile && npx cap copy && npx cap open ios",
+    "cap:add:android": "npx cap add android",
+    "cap:add:ios": "npx cap add ios",
+    "cap:icons": "npx @capacitor/assets generate --iconBackgroundColor #0f1d39 --iconBackgroundColorDark #0f172a --splashBackgroundColor #0f1d39 --splashBackgroundColorDark #0f172a"
   },
   "private": true,
   "dependencies": {
+    "@capacitor/android": "^6.0.0",
+    "@capacitor/core": "^6.0.0",
+    "@capacitor/ios": "^6.0.0",
     "@angular/animations": "^20.3.4",
     "@angular/cdk": "^20.2.0",
     "@angular/common": "^20.1.0-next",
@@ -44,6 +56,8 @@
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^6.0.0",
     "@angular-architects/module-federation": "^20.0.0",
     "@angular-builders/custom-webpack": "20.0.0",
     "@angular-eslint/builder": "^20.3.0",

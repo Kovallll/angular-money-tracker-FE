@@ -2,6 +2,7 @@ import { Component, inject, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UpdateProfileButtonComponent } from '@/features/account/update-profile/update-button.component';
 import { EditProfileModalComponent } from '@/features/account/update-profile/edit-profile-modal.component';
+import { LogoutButtonComponent } from '@/entities/logout-button/logout-button';
 import { User, UserService } from '@/shared';
 import { MessageService } from 'primeng/api';
 import { environment } from '@/environments/environment';
@@ -12,11 +13,12 @@ import { DynamicDialogModule } from 'primeng/dynamicdialog';
   selector: 'settings-account',
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.scss'],
-  imports: [CommonModule, UpdateProfileButtonComponent, DynamicDialogModule],
+  imports: [CommonModule, UpdateProfileButtonComponent, LogoutButtonComponent, DynamicDialogModule],
   providers: [DialogService],
 })
 export class AccountComponent {
   user = input<User | null>(null);
+  avatarLoadError = signal(false);
   private userService = inject(UserService);
   private messageService = inject(MessageService);
   private dialogService = inject(DialogService);

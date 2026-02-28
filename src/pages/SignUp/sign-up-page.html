@@ -1,5 +1,7 @@
 <div class="container">
-  <img [src]="'logo.png' | assetPath" alt="logo" class="logo" />
+  <div class="logo-block">
+    <app-logo size="md" />
+  </div>
   <form class="controls" [formGroup]="form" (ngSubmit)="onRegister()">
     <mat-form-field appearance="outline" class="input-wrapper">
       <mat-label>Name</mat-label>
@@ -36,9 +38,16 @@
     </mat-form-field>
     <mat-form-field appearance="outline" class="input-wrapper">
       <mat-label>Phone</mat-label>
-      <input type="tel" matInput formControlName="phone" placeholder="Enter phone" class="input" />
+      <input
+        type="tel"
+        matInput
+        formControlName="phone"
+        appBelarusPhoneMask
+        placeholder="+375 (__) ___-__-__"
+        class="input"
+      />
       @if(form.controls['phone'].invalid && form.controls['phone'].touched) {
-      <mat-error> Invalid phone </mat-error>
+      <mat-error>{{ getErrorMessage('phone') }}</mat-error>
       }
     </mat-form-field>
     <mat-form-field appearance="outline" class="input-wrapper">
@@ -55,20 +64,19 @@
     </mat-form-field>
     @if (loading) {
     <div class="loading-block">
-      <mat-spinner diameter="48" class="loading-spinner"></mat-spinner>
       <span class="loading-text">Creating account...</span>
+      <mat-spinner diameter="48" class="loading-spinner"></mat-spinner>
     </div>
     } @else {
-    <button
-      (click)="onRegister()"
-      mat-raised-button
-      color="primary"
+    <app-button
+      appearance="primary"
+      size="lg"
       type="submit"
+      [fullWidth]="true"
       [disabled]="form.invalid"
-      class="submit-button"
     >
       Sign Up
-    </button>
+    </app-button>
     }
 
     <p>Already have an account? <a routerLink="/login">Login</a></p>

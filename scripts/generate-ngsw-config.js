@@ -10,7 +10,7 @@ const templatePath = path.join(root, 'ngsw-config.template.json');
 const outputPath = path.join(root, 'ngsw-config.json');
 
 const defaultProduction = 'https://nest-money-tracker-be.onrender.com';
-const defaultDev = 'http://localhost:5000';
+const defaultDev = 'https://nest-money-tracker-be.onrender.com';
 const isProduction = process.env.NODE_ENV === 'production';
 
 const apiOrigin = process.env.API_URL || (isProduction ? defaultProduction : defaultDev);

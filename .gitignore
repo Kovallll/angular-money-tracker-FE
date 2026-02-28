@@ -5,3 +5,12 @@ package-lock.json
 yarn.lock
 
 dist
+
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+android
+ios

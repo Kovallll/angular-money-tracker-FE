@@ -52,7 +52,9 @@
     </div>
   </div>
   <div class="actions">
-    <button type="button" pButton label="Cancel" (click)="close()" class="cancel-btn"></button>
-    <button pButton severity="primary" type="submit" label="Save" class="submit-btn"></button>
+    <app-button type="button" appearance="secondary" size="md" (buttonClick)="close()"
+      >Cancel</app-button
+    >
+    <app-button type="submit" appearance="primary" size="md">Save</app-button>
   </div>
 </form>

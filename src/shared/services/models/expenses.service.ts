@@ -2,7 +2,7 @@ import { AuthService } from '@/shared/services/auth/auth.service';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { switchMap, of, forkJoin, map, tap, catchError } from 'rxjs';
+import { switchMap, of, forkJoin, map, tap, catchError, merge, Subject } from 'rxjs';
 import { Transaction } from '@/shared/types';
 import { CategoryItem } from '@/shared';
 
@@ -14,19 +14,21 @@ export class ExpensesHttpService {
   private auth = inject(AuthService);
 
   private readonly loadingSignal = signal(true);
+  private readonly refreshTrigger$ = new Subject<void>();
 
-  private expenses$ = this.auth.user$.pipe(
-    switchMap((user) => {
-      if (!user?.id) {
+  private expenses$ = merge(this.auth.user$, this.refreshTrigger$).pipe(
+    switchMap(() => {
+      const userId = this.auth.getCurrentUserId();
+      if (!userId) {
         this.loadingSignal.set(false);
         return of([]);
       }
       this.loadingSignal.set(true);
       return forkJoin({
-        transactions: this.http.get<Transaction[]>(`transactions/user/${user.id}`, {
+        transactions: this.http.get<Transaction[]>(`transactions/user/${userId}`, {
           params: { type: 'expense' },
         }),
-        categories: this.http.get<CategoryItem[]>(`categories/user/${user.id}`),
+        categories: this.http.get<CategoryItem[]>(`categories/user/${userId}`),
       }).pipe(
         map(({ transactions, categories }) => {
           const byId: Record<string, string> = {};
@@ -59,4 +61,9 @@ export class ExpensesHttpService {
 
   readonly expenses = toSignal(this.expenses$, { initialValue: [] });
   readonly isLoading = this.loadingSignal.asReadonly();
+
+  /** Принудительно обновить список расходов (после добавления/удаления транзакции). */
+  refreshExpenses(): void {
+    this.refreshTrigger$.next();
+  }
 }

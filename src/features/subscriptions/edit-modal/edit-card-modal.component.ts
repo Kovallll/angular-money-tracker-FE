@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, signal, OnInit } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { ButtonModule } from 'primeng/button';
+import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
@@ -15,6 +15,7 @@ import {
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { QueryClient } from '@tanstack/angular-query-experimental';
 import { Select } from 'primeng/select';
+import { DatePickerModule } from 'primeng/datepicker';
 import { catchError, of, tap } from 'rxjs';
 @Component({
   selector: 'edit-subscription-modal',
@@ -23,9 +24,10 @@ import { catchError, of, tap } from 'rxjs';
   imports: [
     FormsModule,
     InputTextModule,
-    ButtonModule,
+    AppButtonComponent,
     MessageModule,
     Select,
+    DatePickerModule,
     PriceCurrencyFieldComponent,
   ],
   standalone: true,
@@ -69,9 +71,22 @@ export class EditSubscriptionModalComponent implements OnInit {
       .subscribe();
   }
 
+  private formatDate(v: string | Date | undefined): string | undefined {
+    if (v == null || v === '') return undefined;
+    if (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v)) return v;
+    const d = (v as unknown) instanceof Date ? (v as Date) : new Date(v as string);
+    return isNaN(d.getTime()) ? undefined : d.toISOString().split('T')[0];
+  }
+
   onSubmit(form: NgForm) {
     if (form.valid) {
-      this.updateSubscription(form.value);
+      const value = form.value;
+      const payload: CreateSubscribeItem = {
+        ...value,
+        subscribeDate: this.formatDate(value.subscribeDate) ?? '',
+        lastCharge: this.formatDate(value.lastCharge) ?? '',
+      };
+      this.updateSubscription(payload);
     }
   }
 

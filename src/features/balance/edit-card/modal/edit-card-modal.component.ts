@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, signal, OnInit } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { ButtonModule } from 'primeng/button';
+import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { BalancesHttpService, CreateCard } from '@/shared';
@@ -18,7 +18,7 @@ import { ActivatedRoute } from '@angular/router';
   imports: [
     FormsModule,
     InputTextModule,
-    ButtonModule,
+    AppButtonComponent,
     MessageModule,
     Select,
     PriceCurrencyFieldComponent,
@@ -38,10 +38,10 @@ export class UpdateCardModalComponent implements OnInit {
     bankName: '',
     cardType: '',
     cardBalance: 0,
-    branchName: '',
     cardNumber: '',
     cardName: '',
     currencyCode: undefined,
+    expiry: undefined,
   });
 
   setCardCurrency(code: string) {
@@ -89,6 +89,13 @@ export class UpdateCardModalComponent implements OnInit {
     }
   }
 
+  formatExpiry(value: string): void {
+    const digits = value.replace(/\D/g, '').slice(0, 4);
+    const formatted =
+      digits.length > 2 ? digits.slice(0, 2) + '/' + digits.slice(2) : digits || undefined;
+    this.card.update((c) => ({ ...c, expiry: formatted }));
+  }
+
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.id = id;
@@ -97,10 +104,10 @@ export class UpdateCardModalComponent implements OnInit {
         bankName: card.bankName,
         cardType: card.cardType,
         cardBalance: card.cardBalance,
-        branchName: card.branchName,
         cardNumber: card.cardNumber,
         cardName: card.cardName,
         currencyCode: card.currencyCode ?? this.currencyService.primaryCode(),
+        expiry: card.expiry ?? undefined,
       });
     });
   }

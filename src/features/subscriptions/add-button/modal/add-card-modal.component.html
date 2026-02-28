@@ -14,6 +14,8 @@
             appendTo="body"
             [required]="input.required === true"
             placeholder="Select date"
+            [touchUI]="isTouchUI()"
+            panelStyleClass="subscription-datepicker-panel"
           />
           <div class="error-slot">
             @if (input.required && cardForm.submitted && !cardData.subscribeDate) {
@@ -31,6 +33,8 @@
             dateFormat="yy-mm-dd"
             appendTo="body"
             placeholder="Select date"
+            [touchUI]="isTouchUI()"
+            panelStyleClass="subscription-datepicker-panel"
           />
           <div class="error-slot"></div>
         </div>
@@ -46,6 +50,7 @@
             [placeholder]="input.placeholder"
             [name]="input.name"
             [(ngModel)]="cardData[input.field]"
+            appendTo="body"
           />
           <div class="error-slot"></div>
         </div>
@@ -54,16 +59,11 @@
           <app-price-currency-field
             [label]="input.placeholder"
             [amountName]="input.name"
-            [(amount)]="cardData.amount"
-            [(currencyCode)]="cardData.currencyCode"
+            [amount]="cardData.amount"
+            [currencyCode]="cardData.currencyCode"
             [showCurrency]="true"
-            [required]="input.required === true"
           />
-          <div class="error-slot">
-            @if (input.required && cardForm.submitted && isAmountInvalid()) {
-              <small class="error">Amount is required and must be ≥ 0.</small>
-            }
-          </div>
+          <div class="error-slot"></div>
         </div>
       } @else {
         <div class="field">
@@ -92,14 +92,11 @@
     }
   </div>
   <div class="actions">
-    <button type="button" pButton label="Cancel" class="cancel-btn" (click)="close()"></button>
-    <button
-      type="submit"
-      pButton
-      label="Add"
-      severity="primary"
-      class="submit-btn"
-      [disabled]="cardForm.invalid"
-    ></button>
+    <app-button type="button" appearance="secondary" size="md" (buttonClick)="close()"
+      >Cancel</app-button
+    >
+    <app-button type="submit" appearance="primary" size="md" [disabled]="!!cardForm.invalid"
+      >Add</app-button
+    >
   </div>
 </form>

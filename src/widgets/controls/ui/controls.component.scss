@@ -1,6 +1,12 @@
+@use 'shared/styles/breakpoints' as bp;
+
 .container {
   display: flex;
   align-items: center;
+  justify-content: end;
   gap: 8px;
   width: 100%;
+  min-width: 0;
+  flex-wrap: wrap;
+  margin: 0 0 8px 0;
 }

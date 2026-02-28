@@ -1,7 +1,12 @@
 <div class="main-container">
-  <app-sidebar />
+  <aside class="sidebar-wrap">
+    <app-sidebar />
+  </aside>
   <div class="content">
     <app-header />
     <div class="router"><router-outlet></router-outlet></div>
   </div>
+  <nav class="bottom-tabs-wrap">
+    <app-bottom-tabs />
+  </nav>
 </div>

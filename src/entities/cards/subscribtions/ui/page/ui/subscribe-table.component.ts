@@ -2,7 +2,6 @@ import { Component, computed, inject, Signal, signal, ViewChild } from '@angular
 import { SubscribtionsService } from '../../../services/subscribtions.service';
 import { DatePipe, TitleCasePipe } from '@angular/common';
 import { AppCurrencyPrimaryPipe } from '@/shared/pipes/app-currency-primary.pipe';
-import { DashboardCardComponent, CardBodyComponent } from '@/entities/cards/card';
 import { ControlsComponent } from '@/widgets/controls/ui/controls.component';
 import { ControlsProps } from '@/widgets/controls/lib';
 import { TableCell } from '@/entities/table/lib';
@@ -23,8 +22,6 @@ import { ConfirmationService } from 'primeng/api';
   styleUrls: ['./subscribe-table.component.scss'],
   imports: [
     DatePipe,
-    DashboardCardComponent,
-    CardBodyComponent,
     AppCurrencyPrimaryPipe,
     ControlsComponent,
     TitleCasePipe,
@@ -43,6 +40,7 @@ export class SubscribeTableComponent extends UrlSyncedComponent<SubscribeItem> {
   private readonly confirmationService = inject(ConfirmationService);
 
   subscribes = signal<SubscribeItem[]>([]);
+  selectedSubscribe = signal<SubscribeItem | null>(null);
 
   isLoading = this.subscribeHttpService.isLoading;
 
@@ -79,12 +77,13 @@ export class SubscribeTableComponent extends UrlSyncedComponent<SubscribeItem> {
     this.subscribes.set(updatedData);
   }
 
-  openContextMenu(event: MouseEvent) {
+  openContextMenu(event: MouseEvent, subscribe: SubscribeItem) {
     event.preventDefault();
+    this.selectedSubscribe.set(subscribe);
     this.ctxMenu.open(event);
   }
 
-  onDelete(subscribe: SubscribeItem) {
+  onDelete(subscribe: SubscribeItem | null) {
     if (!subscribe) return;
     this.confirmationService.confirm({
       message: `Delete subscription «${subscribe.subscribeName}»?`,
@@ -100,7 +99,8 @@ export class SubscribeTableComponent extends UrlSyncedComponent<SubscribeItem> {
     });
   }
 
-  onEdit(subscribe: SubscribeItem) {
+  onEdit(subscribe: SubscribeItem | null) {
+    if (!subscribe) return;
     this.dialogService.open(EditSubscriptionModalComponent, {
       header: 'Edit Transaction',
       closable: true,

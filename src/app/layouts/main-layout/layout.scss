@@ -1,13 +1,68 @@
+@use 'shared/styles/breakpoints' as bp;
+
 .main-container {
   display: flex;
+  flex-wrap: wrap;
   height: 100%;
   width: 100%;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+.sidebar-wrap {
+  display: block;
 }
 
 .content {
-  width: 100%;
+  flex: 1;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: clip;
+  overflow-y: visible;
+  display: flex;
+  flex-direction: column;
 }
 
 .router {
-  padding: 24px;
+  flex: 1;
+  min-width: 0;
+  overflow-x: clip;
+  overflow-y: visible;
+  padding-inline: 12px;
+  padding-block: 12px;
+
+  @include bp.tablet-and-up {
+    padding-inline: 20px;
+    padding-block: 20px;
+  }
+
+  @include bp.desktop-and-up {
+    padding-inline: 24px;
+    padding-block: 24px;
+  }
+}
+
+.bottom-tabs-wrap {
+  display: none;
+}
+
+/* < 1200px: сайдбар скрыт, нижние табы видны */
+@include bp.sidebar-to-tabs {
+  .sidebar-wrap {
+    display: none;
+  }
+
+  .bottom-tabs-wrap {
+    display: block;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+  }
+
+  .content {
+    /* Место под фиксированные табы + safe-area, чтобы контент не перекрывался и скроллился полностью */
+    padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+  }
 }

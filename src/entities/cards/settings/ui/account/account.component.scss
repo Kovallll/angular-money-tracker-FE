@@ -111,8 +111,8 @@
       transition: opacity 0.2s;
     }
 
-    .avatar-placeholder-text {
-      font-size: 12px;
+    .avatar-placeholder-icon {
+      font-size: 48px;
       color: $gray;
     }
 
@@ -132,6 +132,21 @@
   }
 }
 
-.button {
+.actions {
+  display: flex;
+  gap: 16px;
   margin-top: 16px;
+  flex-direction: column;
+  flex-wrap: wrap;
+
+  @media (min-width: 600px) {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
+
+.action-btn {
+  display: flex;
+
+  min-width: 200px;
 }

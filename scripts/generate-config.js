@@ -11,15 +11,15 @@ console.log(
   Object.keys(process.env).filter((k) => k.includes('API') || k.includes('api')),
 );
 
-// Проверяем что переменная установлена и имеет смысл
+// Базовый URL без /api в конце — интерцептор сам добавляет /api/ к путям.
 if (!apiUrl) {
   console.warn('⚠️  API_URL не установлен, используем default');
-  apiUrl = 'http://localhost:5000/api';
+  apiUrl = 'https://nest-money-tracker-be.onrender.com';
 } else if (apiUrl.includes('0.0.0.0')) {
   console.warn('⚠️  API_URL содержит 0.0.0.0 (адрес сервера), это неправильно для клиента!');
-  console.warn('   Используйте публичный адрес, например: https://api.onrender.com/api');
-  apiUrl = 'http://localhost:5000/api';
+  apiUrl = 'https://nest-money-tracker-be.onrender.com';
 }
+apiUrl = apiUrl.replace(/\/api\/?$/, '');
 
 // Путь к папке dist
 const distPath = path.join(__dirname, '../dist/finance/browser');

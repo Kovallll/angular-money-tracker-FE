@@ -9,9 +9,17 @@
   box-sizing: border-box;
 }
 
-html,
+html {
+  width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
 body {
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -80,14 +88,20 @@ auth-layout {
 .p-dialog.subscription-modal .p-dialog-content {
   overflow-x: hidden;
   max-width: 100%;
+  min-width: 0;
   box-sizing: border-box;
-  padding: 1.5rem 1.75rem;
+  padding: 1rem 1.25rem;
+
+  @media (min-width: 560px) {
+    padding: 1.5rem 1.75rem;
+  }
 }
 
 .p-dialog.modal,
 .p-dialog.add-card-modal,
 .p-dialog.subscription-modal {
-  max-width: 100%;
+  width: calc(100vw - 24px);
+  max-width: 560px;
   box-sizing: border-box;
   border-radius: 16px;
   overflow: hidden;
@@ -95,16 +109,34 @@ auth-layout {
     0 24px 48px rgba(0, 0, 0, 0.4),
     0 0 0 1px rgba(255, 255, 255, 0.06);
 
+  @media (min-width: 400px) {
+    width: 90vw;
+    min-width: 340px;
+    max-width: 560px;
+  }
+
+  @media (min-width: 600px) {
+    width: 560px;
+  }
+
   .p-dialog-header {
-    padding: 1.25rem 1.5rem;
+    padding: 1rem 1.25rem;
+
+    @media (min-width: 560px) {
+      padding: 1.25rem 1.5rem;
+    }
     background: rgba(255, 255, 255, 0.04);
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 
     .p-dialog-title {
-      font-size: 1.25rem;
+      font-size: 1.125rem;
       font-weight: 700;
       letter-spacing: -0.02em;
       color: #fff;
+
+      @media (min-width: 560px) {
+        font-size: 1.25rem;
+      }
     }
 
     .p-dialog-header-close {
@@ -122,28 +154,115 @@ auth-layout {
   }
 }
 
-/* Currency dropdown panel (Banking tools – Rate chart) */
-.currency-dropdown-panel {
+/* Datepicker в модалке подписок — панель не выходит за экран */
+.subscription-datepicker-panel.p-datepicker-panel {
+  max-width: min(320px, calc(100vw - 24px));
+}
+
+/* Bottom sheet «Ещё» (мобильные табы) — тёмная тема приложения */
+.more-sheet-panel,
+.mat-bottom-sheet-container.more-sheet-panel,
+.cdk-overlay-pane.more-sheet-panel .mat-bottom-sheet-container {
   background: $secondary !important;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 12px !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
-  padding: 6px 0 !important;
-  min-width: 280px;
+  color: $white !important;
+  border-top: 1px solid $tertiary;
+  border-radius: 16px 16px 0 0;
+  max-width: 100vw !important;
+  width: 100% !important;
+  overflow-x: hidden !important;
+}
 
-  .mat-mdc-option {
-    color: #ffffff !important;
+/* Export report dropdown — не вылазит за экран на мобилке */
+@media (max-width: 779px) {
+  .export-report-menu.p-tieredmenu-overlay {
+    max-width: calc(100vw - 24px);
+    right: 12px !important;
+    left: auto !important;
+  }
+}
 
-    .mdc-list-item__primary-text {
-      color: #ffffff !important;
-    }
+/* Currency selector в хедере */
+app-currency-selector .currency-selector.p-inputwrapper {
+  background: $secondary;
+}
 
-    &:hover:not(.mdc-list-item--disabled) {
-      background: rgba(255, 255, 255, 0.1) !important;
-    }
+app-currency-selector .currency-selector .p-select-label {
+  color: $white;
+  font-weight: 500;
+  font-size: 14px;
+}
 
-    &.mdc-list-item--selected:not(.mdc-list-item--disabled) {
-      background: rgba(255, 255, 255, 0.12) !important;
-    }
+app-currency-selector .currency-selector.p-inputwrapper.p-focus,
+app-currency-selector .currency-selector.p-inputwrapper.p-inputwrapper-focus {
+  border-color: $accent;
+  box-shadow: 0 0 0 2px rgba($accent, 0.3);
+}
+
+@media (max-width: 779px) {
+  app-currency-selector .currency-selector {
+    max-width: 50px;
+  }
+
+  .p-select-dropdown {
+    max-width: 20px;
+  }
+
+  app-currency-selector .currency-selector.p-inputwrapper {
+    min-height: 32px;
+    padding: 0 8px;
+    border-radius: 8px;
+  }
+
+  app-currency-selector .currency-selector .p-select-label {
+    font-size: 12px;
+  }
+}
+
+/* Dropdown панель выбора валюты */
+.currency-selector-panel.p-select-overlay {
+  background: $secondary;
+  border: 1px solid $tertiary;
+  border-radius: 12px;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.06);
+  padding: 6px 0;
+}
+
+.currency-selector-panel .p-select-option {
+  color: $white;
+  border-radius: 8px;
+  transition: background 0.15s ease;
+}
+
+.currency-selector-panel .p-select-option:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.currency-selector-panel .p-select-option.p-select-option-selected.p-focus {
+  font-weight: 700;
+  color: $accent;
+}
+
+/* Toast на мобилке — фикс смещения влево */
+@media (max-width: 779px) {
+  .p-toast.p-toast-top-right,
+  .p-toast.p-toast-top-left,
+  .p-toast.p-toast-bottom-right,
+  .p-toast.p-toast-bottom-left {
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    margin-left: 0 !important;
+  }
+
+  .p-toast.p-toast-top-right,
+  .p-toast.p-toast-top-left {
+    top: 12px !important;
+  }
+
+  .p-toast.p-toast-bottom-right,
+  .p-toast.p-toast-bottom-left {
+    bottom: 12px !important;
   }
 }

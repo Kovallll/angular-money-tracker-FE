@@ -1,0 +1,11 @@
+<div class="more-sheet">
+  <h3 class="more-sheet__title">Menu</h3>
+  <div class="more-sheet__list">
+    @for (item of items; track item.id) {
+      <button type="button" class="more-sheet__item" (click)="select(item)">
+        <mat-icon class="more-sheet__icon">{{ item.icon }}</mat-icon>
+        <span>{{ item.title }}</span>
+      </button>
+    }
+  </div>
+</div>

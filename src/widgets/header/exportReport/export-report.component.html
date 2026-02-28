@@ -8,8 +8,15 @@
   [disabled]="isLoading()"
   class="export-btn"
   severity="primary"
+  aria-label="Export report"
 ></button>
-<p-tieredMenu #menu [model]="menuItems" [popup]="true"></p-tieredMenu>
+<p-tieredMenu
+  #menu
+  [model]="menuItems"
+  [popup]="true"
+  appendTo="body"
+  styleClass="export-report-menu"
+></p-tieredMenu>
 
 @if (showOverlay()) {
   <div class="export-overlay" aria-busy="true" aria-label="Export report">

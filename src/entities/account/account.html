@@ -1,10 +1,11 @@
 <div class="container">
-  @if (user()) { @if (user()!.avatar) {
+  @if (user()) { @if (user()!.avatar && !avatarLoadError()) {
   <img
     [src]="avatarUrl(user()!.avatar!)"
     alt="Avatar"
     class="avatar-img"
     referrerpolicy="no-referrer"
+    (error)="avatarLoadError.set(true)"
   />
   } @else {
   <i class="pi pi-user avatar-placeholder"></i>

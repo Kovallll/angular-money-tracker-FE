@@ -14,8 +14,8 @@ export const menuItems = [
     title: 'Balances',
     icon: 'account_balance_wallet',
   },
-  { id: 4, path: RoutePaths.EXPENSES, title: 'Expenses', icon: 'attach_money' },
   { id: 5, path: RoutePaths.CATEGORIES, title: 'Categories', icon: 'category' },
+  { id: 4, path: RoutePaths.EXPENSES, title: 'Expenses', icon: 'attach_money' },
   { id: 6, path: RoutePaths.GOALS, title: 'Goals', icon: 'check_box' },
   { id: 7, path: RoutePaths.STATISTICS, title: 'Statistics', icon: 'bar_chart' },
   {

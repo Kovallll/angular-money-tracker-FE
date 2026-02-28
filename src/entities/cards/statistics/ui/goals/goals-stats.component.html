@@ -1,11 +1,13 @@
 <dashboard-card [title]="title()">
   <card-body class="body">
-    <canvas
-      class="chart"
-      baseChart
-      [data]="data()"
-      [options]="options()"
-      [type]="'scatter'"
-    ></canvas>
+    <div class="chart-wrap">
+      <canvas
+        class="chart"
+        baseChart
+        [data]="data()"
+        [options]="options()"
+        [type]="'scatter'"
+      ></canvas>
+    </div>
   </card-body>
 </dashboard-card>

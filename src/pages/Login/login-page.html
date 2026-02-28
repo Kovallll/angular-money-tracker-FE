@@ -1,5 +1,7 @@
 <div class="container">
-  <img [src]="'logo.png' | assetPath" alt="logo" class="logo" />
+  <div class="logo-block">
+    <app-logo size="md" />
+  </div>
   <div class="controls">
     <mat-form-field appearance="outline" class="input-wrapper">
       <mat-label>Email</mat-label>
@@ -36,7 +38,11 @@
     <mat-spinner diameter="48" class="loading-spinner"></mat-spinner>
   </div>
   } @else {
-  <button (click)="login()" matButton="filled" color="accent" class="button">Login</button>
+  <div class="button-wrap">
+    <app-button appearance="primary" size="lg" [fullWidth]="true" (buttonClick)="login()"
+      >Login</app-button
+    >
+  </div>
   }
   <p class="text">
     Don't have an account?

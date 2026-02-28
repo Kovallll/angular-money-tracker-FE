@@ -2,7 +2,7 @@
 import { Component, inject, input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GoalAdjustDialogComponent } from './modal/modal.component';
-import { MatButtonModule } from '@angular/material/button';
+import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { GoalsService } from '@/entities/cards/goals/services/goals.service';
@@ -14,7 +14,7 @@ import { GoalItem } from '@/shared';
   selector: 'goal-adjust-card-button',
   templateUrl: './adjust-card.component.html',
   styleUrls: ['./adjust-card.component.scss'],
-  imports: [CommonModule, MatButtonModule, MatIconModule],
+  imports: [CommonModule, AppButtonComponent, MatIconModule],
 })
 export class GoalAdjustCardButtonComponent {
   private dialog = inject(MatDialog);

@@ -1,93 +1,130 @@
 @use 'theme' as *;
+@use 'shared/styles/breakpoints' as bp;
 
 .card {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   width: 100%;
-  height: 100%;
-  min-width: 332px;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .header {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
-  align-items: center;
-
+  align-items: flex-start;
   width: 100%;
+  min-width: 0;
+  gap: 12px;
 }
 
 .left-header {
-  display: flex;
-  align-items: center;
+  flex: 1;
+  min-width: 0;
 }
 
-.title {
-  display: flex;
-}
+.goal-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  word-break: break-word;
 
-.edit-button {
-  border-radius: 8px;
-  background: $accent;
-  color: $white;
-  padding: 2px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-
-  .material-icons {
-    font-size: 16px;
+  @include bp.tablet-and-up {
+    font-size: 1.125rem;
   }
-  .mat-icon {
-    width: 20px;
-    height: 20px;
+
+  @include bp.desktop-and-up {
+    font-size: 1.25rem;
+  }
+}
+
+.date {
+  color: $gray;
+  font-size: 0.8125rem;
+  margin: 0;
+  text-align: right;
+
+  @include bp.tablet-and-up {
+    font-size: 0.875rem;
   }
 }
 
 .wrapper {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  width: 100%;
+  min-width: 0;
+  gap: 12px;
 }
 
 .content {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  height: 100%;
+  width: 100%;
+  min-width: 0;
+  gap: 16px;
 }
 
 .left-side {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+}
+
+.title {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
 }
 
 .text-block {
   display: flex;
-  align-items: start;
   flex-direction: column;
   justify-content: center;
+  min-width: 0;
 }
 
 .text {
-  margin-left: 8px;
+  margin: 0;
   font-weight: 700;
-  font-size: 16px;
+  font-size: 0.875rem;
+
+  @include bp.tablet-and-up {
+    font-size: 0.9375rem;
+  }
+
+  @include bp.desktop-and-up {
+    font-size: 1rem;
+  }
 }
 
-.goal-title {
-  font-size: 20px;
-  font-weight: 600;
+.text-block .price {
+  margin: 4px 0 0;
+  font-size: 0.9375rem;
+
+  @include bp.tablet-and-up {
+    font-size: 1rem;
+  }
+
+  @include bp.desktop-and-up {
+    font-size: 1.0625rem;
+  }
 }
 
-.date {
-  color: $gray;
-}
+.right-side {
+  flex-shrink: 0;
+  width: 90px;
+  height: 90px;
 
-.left-side {
-  gap: 12px;
+  @include bp.tablet-and-up {
+    width: 100px;
+    height: 100px;
+  }
 }
 
 .button {
@@ -95,10 +132,4 @@
   width: 100%;
   justify-content: center;
   align-items: center;
-  margin-top: 12px;
-}
-
-.right-side {
-  width: 100px;
-  height: 100px;
 }

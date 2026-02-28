@@ -21,11 +21,23 @@ export class DashboardExpenseCardComponent {
   seeAllPath = RoutePaths.EXPENSES;
   isLoading = this.expesesHttpService.isLoading;
 
-  /** Expenses with amounts converted to current primary currency (reactive to header). */
+  /** Самый затратный расход в каждой категории, макс 6 карточек (в primary валюте). */
   expenses = computed(() => {
-    const list = this.expesesHttpService.expenses().slice(0, 6);
+    const list = this.expesesHttpService.expenses();
     const primary = this.currencyService.primaryCode();
-    return list.map((e) => ({
+
+    const byCategory = new Map<string, (typeof list)[0]>();
+    for (const e of list) {
+      const key = String(e.category?.id ?? e.category?.title ?? e.id);
+      const existing = byCategory.get(key);
+      if (!existing || e.amount > existing.amount) {
+        byCategory.set(key, e);
+      }
+    }
+
+    const topByCategory = [...byCategory.values()].sort((a, b) => b.amount - a.amount).slice(0, 6);
+
+    return topByCategory.map((e) => ({
       ...e,
       amount: this.exchangeRates.convert(e.amount, e.currencyCode ?? 'BYN', primary),
     }));

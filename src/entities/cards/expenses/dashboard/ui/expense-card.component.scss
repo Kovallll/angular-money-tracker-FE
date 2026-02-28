@@ -1,10 +1,29 @@
+@use 'shared/styles/breakpoints' as bp;
+
 :host {
   width: 100%;
 }
 
 .body {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   width: 100%;
-  gap: 20px;
+  gap: 12px;
+  min-height: 160px;
+
+  @include bp.tablet-and-up {
+    gap: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+
+  @include bp.desktop-and-up {
+    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+
+  &:has(.data-placeholder:only-child) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }

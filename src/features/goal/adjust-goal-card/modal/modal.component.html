@@ -56,30 +56,22 @@
     </div>
 
     <div class="actions">
-      <p-button
-        label="Delete"
-        icon="pi pi-trash"
-        severity="danger"
-        outlined="true"
-        (onClick)="onDelete()"
-      ></p-button>
+      <app-button appearance="danger" size="md" (buttonClick)="onDelete()">
+        <i class="pi pi-trash"></i>
+        Delete
+      </app-button>
 
       <span class="spacer"></span>
 
-      <p-button
-        label="Cancel"
-        icon="pi pi-times"
-        severity="secondary"
-        (onClick)="onCancel()"
-      ></p-button>
+      <app-button appearance="secondary" size="md" (buttonClick)="onCancel()">
+        <i class="pi pi-times"></i>
+        Cancel
+      </app-button>
 
-      <p-button
-        label="Save"
-        icon="pi pi-check"
-        severity="primary"
-        (onClick)="onSave()"
-        class="submit-btn"
-      ></p-button>
+      <app-button appearance="primary" size="md" (buttonClick)="onSave()">
+        <i class="pi pi-check"></i>
+        Save
+      </app-button>
     </div>
   </form>
 </div>

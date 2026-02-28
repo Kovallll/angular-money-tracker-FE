@@ -3,16 +3,19 @@ import { LoginPageComponent } from '../pages/Login/login-page';
 import { AuthLayoutComponent } from './layouts/auth-layout/layout';
 import { MainLayoutComponent } from './layouts/main-layout/layout';
 import { RoutePaths } from '@/shared';
+import { authGuard } from './guards/auth.guard';
+import { guestGuard } from './guards/guest.guard';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: RoutePaths.LOGIN,
+    redirectTo: RoutePaths.DASHBOARD,
     pathMatch: 'full',
   },
   {
     path: '',
     component: AuthLayoutComponent,
+    canActivate: [guestGuard],
     children: [
       { path: RoutePaths.LOGIN, component: LoginPageComponent, title: 'Login' },
       {
@@ -25,6 +28,7 @@ const routes: Routes = [
   {
     path: '',
     component: MainLayoutComponent,
+    canActivate: [authGuard],
     children: [
       {
         path: RoutePaths.DASHBOARD,

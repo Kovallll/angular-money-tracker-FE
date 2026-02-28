@@ -1,26 +1,26 @@
 import { InputErrorStateMatcher } from '@/shared';
 import { Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
+import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
 import { Router } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '@/shared/services/auth/auth.service';
-import { AssetPathPipe } from '@/shared/pipes/asset-path.pipe';
+import { AppLogoComponent, emailValidator } from '@/shared';
 import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-login-page',
   imports: [
     ReactiveFormsModule,
-    MatButtonModule,
+    AppButtonComponent,
     MatFormFieldModule,
     MatInputModule,
     MatProgressSpinnerModule,
     RouterLink,
-    AssetPathPipe,
+    AppLogoComponent,
   ],
   templateUrl: `./login-page.html`,
   styleUrl: `./login-page.scss`,
@@ -30,7 +30,7 @@ export class LoginPageComponent {
   private messageService = inject(MessageService);
 
   loading = false;
-  email = new FormControl('', [Validators.required, Validators.email]);
+  email = new FormControl('', [Validators.required, emailValidator]);
   password = new FormControl('', [Validators.required, Validators.minLength(6)]);
   constructor(private authService: AuthService) {}
 

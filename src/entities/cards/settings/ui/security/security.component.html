@@ -56,15 +56,15 @@
       }
     </mat-form-field>
     <div class="actions">
-      <button
-        mat-raised-button
-        color="primary"
+      <app-button
         type="submit"
-        class="submit-btn"
+        appearance="primary"
+        size="md"
         [disabled]="loading()"
+        [loading]="loading()"
       >
-        {{ loading() ? 'Changing...' : 'Change password' }}
-      </button>
+        Change password
+      </app-button>
     </div>
   </form>
 </div>

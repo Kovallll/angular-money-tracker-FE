@@ -1,7 +1,7 @@
 // src/app/services/auth.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, from, Observable, of } from 'rxjs';
 import { catchError, switchMap, tap } from 'rxjs/operators';
 import { PushService } from '../push/push.service';
 
@@ -46,16 +46,20 @@ export class AuthService {
   }
 
   async login(email: string, password: string): Promise<AuthResponse> {
-    // Получаем или создаём push-подписку
-    let pushSubscription = await this.pushService.getCurrentSubscription();
-
-    if (!pushSubscription) {
-      try {
-        pushSubscription = await this.pushService.createSubscription();
-      } catch (e) {
-        console.log('Push не настроен, продолжаем без него');
-      }
-    }
+    // Push не блокируем логин: в WebView/Capacitor SW может отсутствовать и getCurrentSubscription() зависает.
+    const pushSubscription = await Promise.race([
+      (async () => {
+        if (!this.pushService.isEnabled) return null;
+        const current = await this.pushService.getCurrentSubscription();
+        if (current) return current;
+        try {
+          return await this.pushService.createSubscription();
+        } catch {
+          return null;
+        }
+      })(),
+      new Promise<null>((resolve) => setTimeout(() => resolve(null), 3000)),
+    ]).catch(() => null);
 
     const response = await this.http
       .post<AuthResponse>(`auth/login`, {
@@ -119,19 +123,18 @@ export class AuthService {
             refreshToken: response.refreshToken,
           });
         }),
-        catchError((error) => {
-          this.logout();
-          return of(null);
+        catchError(() => {
+          return from(this.logout()).pipe(switchMap(() => of(null)));
         }),
       );
   }
 
-  logout(): void {
-    const userId = this.currentUser.value?.id;
-    if (userId) {
-      this.http.post(`auth/logout`, {}).subscribe();
+  async logout(): Promise<void> {
+    try {
+      await this.http.post(`auth/logout`, {}).toPromise();
+    } catch {
+      // При ошибке всё равно выходим — пользователь уже разлогинивается
     }
-
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('user');

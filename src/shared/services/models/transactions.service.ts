@@ -4,6 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { delay, lastValueFrom, tap } from 'rxjs';
 import { AuthService } from '@/shared/services/auth/auth.service';
+import { CategoriesHttpService } from './categories.service';
+import { ExpensesHttpService } from './expenses.service';
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +13,8 @@ import { AuthService } from '@/shared/services/auth/auth.service';
 export class TransactionsHttpService {
   private http = inject(HttpClient);
   private auth = inject(AuthService);
+  private expensesHttpService = inject(ExpensesHttpService);
+  private categoriesHttpService = inject(CategoriesHttpService);
 
   readonly transactions = signal<Transaction[]>([]);
 
@@ -71,7 +75,13 @@ export class TransactionsHttpService {
     this.isLoading.set(true);
     return this.http
       .delete(`${transactionsUrl}/${id}`)
-      .pipe(tap(() => this.loadTransactions()))
+      .pipe(
+        tap(() => {
+          this.loadTransactions();
+          this.expensesHttpService.refreshExpenses();
+          this.categoriesHttpService.refreshCategories();
+        }),
+      )
       .subscribe({
         error: () => this.isLoading.set(false),
       });

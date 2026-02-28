@@ -1,44 +1,126 @@
 @use 'theme' as *;
+@use 'shared/styles/breakpoints' as bp;
 
 :host {
+  display: block;
   width: 100%;
+  min-width: 0;
 }
 
 .container {
   display: flex;
+  flex-direction: column;
   width: 100%;
-  gap: 32px;
+  min-width: 0;
+  gap: 20px;
+  box-sizing: border-box;
+
+  @include bp.desktop-and-up {
+    flex-direction: row;
+    gap: 32px;
+    align-items: flex-start;
+  }
 }
 
 .cards-block {
+  flex: 1;
+  min-width: 0;
   width: 100%;
 }
 
 .cards {
   display: flex;
   flex-direction: column;
-}
-
-.charts {
-  display: flex;
-  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
 }
 
 .title {
-  font-size: 28px;
+  font-size: 1.25rem;
   font-weight: 600;
-  margin-bottom: 12px;
+  margin: 0;
+
+  @include bp.tablet-and-up {
+    font-size: 1.5rem;
+  }
+
+  @include bp.desktop-and-up {
+    font-size: 1.75rem;
+  }
 }
 
-.content {
+.top {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.totals {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  width: 100%;
-  gap: 24px;
+  gap: 12px;
+  margin-bottom: 16px;
+  min-width: 0;
+
+  @include bp.mobile {
+    grid-template-columns: 1fr;
+  }
+
+  @include bp.tablet-and-up {
+    gap: 16px;
+  }
+
+  @include bp.desktop-and-up {
+    gap: 24px;
+  }
 }
 
-.pi {
-  font-size: 24px;
+.total {
+  display: flex;
+  flex-direction: column;
+  background: $light-primary;
+  min-width: 0;
+  border-radius: 12px;
+  justify-content: center;
+  padding: 12px 16px;
+  gap: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-sizing: border-box;
+
+  @include bp.tablet-and-up {
+    padding: 12px 20px;
+    gap: 10px;
+  }
+
+  @include bp.desktop-and-up {
+    padding: 12px 24px;
+    gap: 12px;
+  }
+}
+
+.amount {
+  font-size: 1.25rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @include bp.tablet-and-up {
+    font-size: 1.5rem;
+  }
+
+  @include bp.desktop-and-up {
+    font-size: 1.75rem;
+  }
+}
+
+.percents {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .negative {
@@ -49,43 +131,25 @@
   color: $success;
 }
 
-.totals {
+.content {
+  display: grid;
+  grid-template-columns: 1fr;
   width: 100%;
-  justify-content: space-between;
-  display: flex;
-  gap: 24px;
-  margin-bottom: 12px;
+  min-width: 0;
+  gap: 16px;
+  box-sizing: border-box;
+
+  @include bp.tablet-and-up {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  @include bp.desktop-and-up {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
 }
 
-.total {
-  display: flex;
-  flex-direction: column;
-  background: $light-blue;
-  width: 100%;
-  border-radius: 12px;
-  justify-content: center;
-  padding: 12px 24px;
-  gap: 12px;
-}
-
-.subtitle {
-  font-size: 20px;
-  font-weight: 600;
-}
-
-.top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.amount {
-  font-size: 28px;
-  font-weight: 600;
-}
-
-.percents {
-  align-items: center;
-  display: flex;
-  gap: 8px;
+.pi {
+  font-size: 1.25rem;
 }

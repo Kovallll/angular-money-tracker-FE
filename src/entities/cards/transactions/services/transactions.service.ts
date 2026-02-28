@@ -36,9 +36,6 @@ export class DashboardTransactionsService {
       { field: 'category', name: 'Category' },
       { field: 'type', name: 'Type' },
       { field: 'paymentMethod', name: 'Payment method' },
-      { field: 'status', name: 'Status' },
-      { field: 'transactionType', name: 'Transaction Type' },
-      { field: 'receipt', name: 'Receipt' },
       { field: 'amount', name: 'Amount' },
     ];
   }

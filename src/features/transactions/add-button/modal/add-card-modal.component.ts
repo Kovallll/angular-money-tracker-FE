@@ -1,13 +1,14 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { ButtonModule } from 'primeng/button';
+import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import {
   BalancesHttpService,
   CategoriesHttpService,
   CreateTransactionPayload,
+  ExpensesHttpService,
   TransactionsHttpService,
 } from '@/shared';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
@@ -25,7 +26,7 @@ import { AppIconComponent } from '@/shared/components/app-icon/app-icon.componen
   imports: [
     FormsModule,
     InputTextModule,
-    ButtonModule,
+    AppButtonComponent,
     MessageModule,
     DatePickerModule,
     Select,
@@ -38,6 +39,7 @@ import { AppIconComponent } from '@/shared/components/app-icon/app-icon.componen
 export class AddTransactionModalComponent implements OnInit {
   private messageService = inject(MessageService);
   private transactionsHttpService = inject(TransactionsHttpService);
+  private expensesHttpService = inject(ExpensesHttpService);
   private ref = inject(DynamicDialogRef);
   private queryClient = inject(QueryClient);
   private categoriesHttpService = inject(CategoriesHttpService);
@@ -56,6 +58,9 @@ export class AddTransactionModalComponent implements OnInit {
       this.transactionsHttpService.createTransaction(payload),
     onSuccess: () => {
       this.queryClient.invalidateQueries({ queryKey: ['transactions'] });
+      this.transactionsHttpService.loadTransactions();
+      this.expensesHttpService.refreshExpenses();
+      this.categoriesHttpService.refreshCategories();
       this.messageService.add({
         key: 'toast',
         severity: 'success',
@@ -85,6 +90,7 @@ export class AddTransactionModalComponent implements OnInit {
     amount: number;
     currencyCode: string;
     description: string;
+    paymentMethod?: 'cash' | 'card';
   } = {
     date: new Date().toISOString().slice(0, 10),
     title: '',
@@ -94,7 +100,13 @@ export class AddTransactionModalComponent implements OnInit {
     amount: 0,
     currencyCode: '',
     description: '',
+    paymentMethod: undefined,
   };
+
+  protected readonly paymentMethodOptions = [
+    { label: 'Cash', value: 'cash' },
+    { label: 'Card', value: 'card' },
+  ];
 
   protected readonly typeOptions = [
     { label: 'Expense', value: 'expense' },
@@ -112,6 +124,7 @@ export class AddTransactionModalComponent implements OnInit {
       date: f.date,
       title: f.title || undefined,
       description: f.description || undefined,
+      paymentMethod: f.paymentMethod || undefined,
     };
   }
 

@@ -1,10 +1,21 @@
 @use 'theme' as *;
+@use 'shared/styles/breakpoints' as bp;
 @use '@angular/material' as mat;
+
 .paginator {
-  width: 600px;
+  width: 100%;
+  max-width: 600px;
   background: transparent;
   color: $white;
-  font-size: 18px;
+  font-size: 0.875rem;
+
+  @include bp.tablet-and-up {
+    font-size: 1rem;
+  }
+
+  @include bp.desktop-and-up {
+    font-size: 1.125rem;
+  }
 
   @include mat.paginator-overrides(
     (

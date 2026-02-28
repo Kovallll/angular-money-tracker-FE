@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { UpdateCardModalComponent } from './modal/edit-card-modal.component';
 import { DialogService, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { ButtonModule } from 'primeng/button';
+import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
 
 @Component({
   standalone: true,
@@ -10,7 +10,7 @@ import { ButtonModule } from 'primeng/button';
   templateUrl: './edit-card.component.html',
   styleUrls: ['./edit-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatIconModule, ButtonModule, DynamicDialogModule],
+  imports: [MatIconModule, AppButtonComponent, DynamicDialogModule],
   providers: [DialogService],
 })
 export class BalanceEditCardButtonComponent {

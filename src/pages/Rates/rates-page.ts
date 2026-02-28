@@ -4,8 +4,10 @@ import {
   computed,
   effect,
   inject,
+  OnInit,
   signal,
 } from '@angular/core';
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration } from 'chart.js';
 import { CURRENCIES, CurrencyItem } from '@/shared/constants/currencies';
@@ -15,7 +17,7 @@ import { FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
+import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MessageService } from 'primeng/api';
@@ -31,7 +33,7 @@ import { ProgressSpinner } from 'primeng/progressspinner';
     MatSelectModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule,
+    AppButtonComponent,
     MatProgressSpinnerModule,
     MatTabsModule,
     ProgressSpinner,
@@ -40,17 +42,21 @@ import { ProgressSpinner } from 'primeng/progressspinner';
   styleUrl: './rates-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RatesPageComponent {
+export class RatesPageComponent implements OnInit {
   private exchangeRates = inject(ExchangeRatesService);
   private messageService = inject(MessageService);
+  private breakpointObserver = inject(BreakpointObserver);
 
   readonly currencies = CURRENCIES;
+  /** Currencies for chart: exclude BYN (no rate to itself) */
+  readonly chartCurrencies = CURRENCIES.filter((c) => c.code !== 'BYN');
   readonly isLoadingRates = this.exchangeRates.isLoading;
 
-  /** Current rates table: 1 unit = X BYN */
+  /** Current rates table: 1 unit = X BYN (excludes BYN — no rate to itself) */
   ratesList = computed(() => {
     const list: { currency: CurrencyItem; rateToByn: number }[] = [];
     for (const c of this.currencies) {
+      if (c.code === 'BYN') continue;
       list.push({
         currency: c,
         rateToByn: this.exchangeRates.getRateToByn(c.code),
@@ -100,9 +106,12 @@ export class RatesPageComponent {
   chartCurrency = signal<string>('USD');
   chartHistory = signal<{ date: string; rate: number }[]>([]);
   chartHistoryLoading = signal(false);
-  chartOptions: ChartConfiguration<'line'>['options'] = {
+  /** На мобилке показываем меньше точек для читаемости */
+  isMobileChart = signal(false);
+  chartOptions = signal<ChartConfiguration<'line'>['options']>({
     responsive: true,
     maintainAspectRatio: false,
+    interaction: { intersect: false, mode: 'nearest' },
     plugins: {
       legend: { display: false },
       tooltip: {
@@ -122,24 +131,61 @@ export class RatesPageComponent {
         ticks: { color: '#aaa' },
       },
     },
-  };
+  });
   chartData = computed<ChartConfiguration<'line'>['data']>(() => {
     const history = this.chartHistory();
     const code = this.chartCurrency();
     const label = `1 ${code} = X BYN`;
+    const mobile = this.isMobileChart();
+    // На мобилке — ~20 точек вместо 90 для читаемости
+    const sampled = mobile && history.length > 25 ? this.sampleForMobile(history, 20) : history;
+    const rates = sampled.map((h) => h.rate);
+    const inflectionIndices = mobile ? this.findInflectionIndices(rates) : null;
     return {
-      labels: history.map((h) => h.date),
+      labels: sampled.map((h) => h.date),
       datasets: [
         {
-          data: history.map((h) => h.rate),
+          data: rates,
           label,
           borderColor: 'rgb(75, 192, 192)',
           tension: 0.1,
           fill: false,
+          pointRadius: mobile ? rates.map((_, i) => (inflectionIndices!.has(i) ? 5 : 0)) : 3,
+          pointHoverRadius: mobile ? 8 : 6,
+          pointHitRadius: mobile ? 28 : 10,
         },
       ],
     };
   });
+
+  /** Индексы точек излома (локальные min и max) для отображения на мобилке */
+  private findInflectionIndices(rates: number[]): Set<number> {
+    const indices = new Set<number>();
+    if (rates.length < 3) return indices;
+    indices.add(0);
+    indices.add(rates.length - 1);
+    for (let i = 1; i < rates.length - 1; i++) {
+      const prev = rates[i - 1];
+      const curr = rates[i];
+      const next = rates[i + 1];
+      if ((curr >= prev && curr >= next) || (curr <= prev && curr <= next)) {
+        indices.add(i);
+      }
+    }
+    return indices;
+  }
+
+  /** Равномерная выборка N точек из массива (первая, последняя + равномерно между) */
+  private sampleForMobile<T>(arr: T[], n: number): T[] {
+    if (arr.length <= n) return arr;
+    const step = (arr.length - 1) / (n - 1);
+    const result: T[] = [];
+    for (let i = 0; i < n; i++) {
+      const idx = i === n - 1 ? arr.length - 1 : Math.round(i * step);
+      result.push(arr[idx]);
+    }
+    return result;
+  }
 
   constructor() {
     effect(() => {
@@ -148,6 +194,46 @@ export class RatesPageComponent {
     effect(() => {
       const code = this.chartCurrency();
       this.loadChartHistory(code);
+    });
+  }
+
+  ngOnInit() {
+    this.breakpointObserver.observe('(max-width: 600px)').subscribe((result) => {
+      const isMobile = result.matches;
+      this.isMobileChart.set(isMobile);
+      this.chartOptions.set({
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: {
+          intersect: false,
+          mode: 'nearest',
+        },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            enabled: true,
+            callbacks: {
+              label: (ctx) => `${ctx.parsed.y != null ? ctx.parsed.y.toFixed(4) : ''} BYN`,
+            },
+          },
+        },
+        scales: {
+          x: {
+            grid: { color: 'rgba(255,255,255,0.06)' },
+            ticks: {
+              color: '#aaa',
+              maxTicksLimit: isMobile ? 5 : 8,
+              maxRotation: isMobile ? 45 : 0,
+              minRotation: isMobile ? 45 : 0,
+            },
+          },
+          y: {
+            beginAtZero: false,
+            grid: { color: 'rgba(255,255,255,0.06)' },
+            ticks: { color: '#aaa' },
+          },
+        },
+      });
     });
   }
 

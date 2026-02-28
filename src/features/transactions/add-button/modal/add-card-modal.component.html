@@ -132,7 +132,7 @@
   </div>
 
   <div class="form-row">
-    <div class="form-field form-field--full">
+    <div class="form-field">
       <label for="description">Description <span class="optional">(optional)</span></label>
       <input
         class="input"
@@ -145,16 +145,27 @@
       />
       <div class="form-field-error"></div>
     </div>
+
+    <div class="form-field">
+      <label for="paymentMethod">Payment method <span class="optional">(optional)</span></label>
+      <p-select
+        inputId="paymentMethod"
+        name="paymentMethod"
+        [options]="paymentMethodOptions"
+        optionLabel="label"
+        optionValue="value"
+        [(ngModel)]="form.paymentMethod"
+        placeholder="Select"
+        appendTo="body"
+      />
+      <div class="form-field-error"></div>
+    </div>
   </div>
 
   <div class="actions">
-    <button type="button" pButton label="Cancel" (click)="close()" class="cancel-btn"></button>
-    <button
-      pButton
-      type="submit"
-      label="Add Transaction"
-      severity="primary"
-      class="submit-btn"
-    ></button>
+    <app-button type="button" appearance="secondary" size="md" (buttonClick)="close()"
+      >Cancel</app-button
+    >
+    <app-button type="submit" appearance="primary" size="md">Add Transaction</app-button>
   </div>
 </form>

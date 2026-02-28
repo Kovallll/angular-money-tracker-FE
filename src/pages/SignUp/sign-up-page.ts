@@ -1,14 +1,19 @@
 // src/app/pages/signup/sign-up-page.component.ts
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
+import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '@/shared/services/auth/auth.service';
-import { AssetPathPipe } from '@/shared/pipes/asset-path.pipe';
+import {
+  AppLogoComponent,
+  emailValidator,
+  BelarusPhoneMaskDirective,
+  BelarusPhoneValidatorDirective,
+} from '@/shared';
 import { MessageService } from 'primeng/api';
 
 @Component({
@@ -16,13 +21,15 @@ import { MessageService } from 'primeng/api';
   standalone: true,
   imports: [
     CommonModule,
-    MatButtonModule,
+    AppButtonComponent,
     MatFormFieldModule,
     MatInputModule,
     MatProgressSpinnerModule,
     ReactiveFormsModule,
     RouterLink,
-    AssetPathPipe,
+    AppLogoComponent,
+    BelarusPhoneMaskDirective,
+    BelarusPhoneValidatorDirective,
   ],
   templateUrl: './sign-up-page.html',
   styleUrl: './sign-up-page.scss',
@@ -38,7 +45,7 @@ export class SignUpPageComponent {
     name: new FormControl('', { validators: [Validators.required], nonNullable: true }),
     lastname: new FormControl('', { validators: [Validators.required], nonNullable: true }),
     email: new FormControl('', {
-      validators: [Validators.required, Validators.email],
+      validators: [Validators.required, emailValidator],
       nonNullable: true,
     }),
     phone: new FormControl('', { validators: [Validators.required], nonNullable: true }),
@@ -54,6 +61,8 @@ export class SignUpPageComponent {
 
     if (control.hasError('required')) return 'Required field';
     if (controlName === 'email' && control.hasError('email')) return 'Invalid email';
+    if (controlName === 'phone' && control.hasError('belarusPhone'))
+      return 'Enter valid Belarus phone: +375 (XX) XXX-XX-XX';
     if (controlName === 'password' && control.hasError('minlength')) return 'Min 6 characters';
 
     return '';

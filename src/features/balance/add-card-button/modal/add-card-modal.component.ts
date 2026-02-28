@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { FormsModule, NgForm, NgModel } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { ButtonModule } from 'primeng/button';
+import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { BalancesHttpService, CreateCard } from '@/shared';
@@ -19,7 +19,7 @@ const CARD_NUMBER_DIGITS = 16;
   imports: [
     FormsModule,
     InputTextModule,
-    ButtonModule,
+    AppButtonComponent,
     MessageModule,
     Select,
     PriceCurrencyFieldComponent,
@@ -37,10 +37,10 @@ export class AddCardModalComponent implements OnInit {
     bankName: '',
     cardType: '',
     cardBalance: 0,
-    branchName: '',
     cardNumber: '',
     cardName: '',
     currencyCode: undefined,
+    expiry: undefined,
   };
 
   protected readonly cardTypeOptions = [
@@ -58,6 +58,12 @@ export class AddCardModalComponent implements OnInit {
     if (!this.card.currencyCode) {
       this.card.currencyCode = this.currencyService.primaryCode();
     }
+  }
+
+  protected formatExpiry(value: string): void {
+    const digits = value.replace(/\D/g, '').slice(0, 4);
+    this.card.expiry =
+      digits.length > 2 ? digits.slice(0, 2) + '/' + digits.slice(2) : digits || undefined;
   }
 
   protected formatCardNumber(value: string): void {

@@ -22,19 +22,13 @@
   height: 100%;
 }
 
-.logo {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 32px;
-}
-
 .logo-wrapper {
   border-bottom: 1px solid $tertiary;
-  height: 120px;
+  min-height: 80px;
+  padding: 20px 24px;
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
 }
 
 .footer {

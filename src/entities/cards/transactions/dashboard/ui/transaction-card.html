@@ -18,9 +18,16 @@
     } @else if (currentItems().length) {
     <div class="transaction-list">
       @for (item of currentItems(); track item.id) {
-      <transaction-card-item [item]="item" />
+      <div (contextmenu)="openContextMenu($event, item)" class="transaction-row">
+        <transaction-card-item [item]="item" />
+      </div>
       }
     </div>
+    <context-menu-component
+      #ctxMenu
+      (onDelete)="handleDelete(selectedItem())"
+      (onEdit)="handleEdit(selectedItem())"
+    />
     } @else {
     <div class="data-placeholder">
       <span class="data-placeholder__icon" aria-hidden="true">📋</span>

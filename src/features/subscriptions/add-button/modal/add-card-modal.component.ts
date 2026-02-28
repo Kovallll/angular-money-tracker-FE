@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { ButtonModule } from 'primeng/button';
+import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { CreateSubscribeItem, SubscribtionsHttpService, Transaction } from '@/shared';
@@ -38,7 +38,7 @@ interface SubscriptionFormData {
   imports: [
     FormsModule,
     InputTextModule,
-    ButtonModule,
+    AppButtonComponent,
     MessageModule,
     Select,
     DatePickerModule,
@@ -72,16 +72,16 @@ export class AddSubscriptionModalComponent implements OnInit {
     field: SubscriptionFormField;
     required?: boolean;
   }> = [
+    { name: 'subscribeName', placeholder: 'Title', field: 'subscribeName', required: true },
     {
       name: 'subscribeDate',
-      placeholder: 'Date (YYYY-MM-DD)',
+      placeholder: 'Date',
       field: 'subscribeDate',
       required: true,
     },
-    { name: 'subscribeName', placeholder: 'Title', field: 'subscribeName', required: true },
     { name: 'description', placeholder: 'Description', field: 'description' },
     { name: 'type', placeholder: 'Type', field: 'type' },
-    { name: 'lastCharge', placeholder: 'Last charge (YYYY-MM-DD)', field: 'lastCharge' },
+    { name: 'lastCharge', placeholder: 'Last charge', field: 'lastCharge' },
     { name: 'amount', placeholder: 'Amount', field: 'amount', required: true },
   ];
 
@@ -90,6 +90,8 @@ export class AddSubscriptionModalComponent implements OnInit {
     { label: 'Annually', value: 'annually' },
     { label: 'Daily', value: 'daily' },
   ];
+
+  isTouchUI = signal(false);
 
   ngOnInit() {
     this.cardData = {
@@ -101,6 +103,7 @@ export class AddSubscriptionModalComponent implements OnInit {
       amount: 0,
       currencyCode: this.currencyService.primaryCode(),
     };
+    this.isTouchUI.set(typeof window !== 'undefined' && window.innerWidth < 780);
   }
 
   isAmountInvalid(): boolean {

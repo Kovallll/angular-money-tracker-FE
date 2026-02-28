@@ -46,20 +46,6 @@
 
   <div class="form-row">
     <div class="form-field">
-      <label for="branchName">Branch <span class="optional">(optional)</span></label>
-      <input
-        class="input"
-        pInputText
-        type="text"
-        id="branchName"
-        name="branchName"
-        placeholder="Branch name"
-        [(ngModel)]="card.branchName"
-      />
-      <div class="form-field-error"></div>
-    </div>
-
-    <div class="form-field">
       <label for="cardNumber">Card Number</label>
       <input
         class="input"
@@ -84,6 +70,22 @@
         }
       </div>
     </div>
+
+    <div class="form-field">
+      <label for="expiry">Expiry <span class="optional">(optional)</span></label>
+      <input
+        class="input"
+        pInputText
+        type="text"
+        id="expiry"
+        name="expiry"
+        placeholder="MM/YY"
+        [(ngModel)]="card.expiry"
+        (ngModelChange)="formatExpiry($event)"
+        maxlength="5"
+      />
+      <div class="form-field-error"></div>
+    </div>
   </div>
 
   <div class="form-row">
@@ -101,9 +103,7 @@
         }
       </div>
     </div>
-  </div>
 
-  <div class="form-row">
     <div class="form-field">
       <label for="cardName">Payment System</label>
       <p-select
@@ -129,7 +129,9 @@
   </div>
 
   <div class="actions">
-    <button type="button" pButton label="Cancel" (click)="close()" class="cancel-btn"></button>
-    <button pButton type="submit" label="Add Card" severity="primary" class="submit-btn"></button>
+    <app-button type="button" appearance="secondary" size="md" (buttonClick)="close()"
+      >Cancel</app-button
+    >
+    <app-button type="submit" appearance="primary" size="md">Add Card</app-button>
   </div>
 </form>

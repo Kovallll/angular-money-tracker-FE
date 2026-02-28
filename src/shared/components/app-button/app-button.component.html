@@ -1,0 +1,17 @@
+<button
+  type="{{ type() }}"
+  class="app-btn app-btn--{{ appearance() }} app-btn--{{ size() }} {{ customClass() }}"
+  [class.app-btn--full]="fullWidth()"
+  [class.app-btn--loading]="loading()"
+  [attr.disabled]="disabled() || loading() ? true : null"
+  [attr.aria-label]="ariaLabel() || null"
+  [attr.aria-disabled]="disabled() || loading()"
+  (click)="onClick($event)"
+>
+  @if (loading()) {
+    <span class="app-btn__spinner" aria-hidden="true"></span>
+  }
+  <span class="app-btn__content" [class.app-btn__content--hidden]="loading()">
+    <ng-content />
+  </span>
+</button>

@@ -15,6 +15,8 @@ import { CurrencyService } from '@/shared/services/currency/currency.service';
       optionLabel="label"
       optionValue="code"
       styleClass="currency-selector"
+      panelStyleClass="currency-selector-panel"
+      placeholder="Валюта"
     />
   `,
   styles: [
@@ -23,10 +25,7 @@ import { CurrencyService } from '@/shared/services/currency/currency.service';
         display: inline-block;
       }
       ::ng-deep .currency-selector {
-        min-width: 5.5rem;
-      }
-      ::ng-deep .currency-selector .p-select-label {
-        color: inherit;
+        min-width: 88px;
       }
     `,
   ],

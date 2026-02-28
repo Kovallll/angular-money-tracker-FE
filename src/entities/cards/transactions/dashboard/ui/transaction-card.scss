@@ -1,9 +1,11 @@
 @use 'theme' as *;
 @use '@angular/material' as mat;
+@use 'shared/styles/breakpoints' as bp;
 
 :host {
   width: 100%;
-  max-width: 500px;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .body {
@@ -20,15 +22,19 @@
   margin-top: 4px;
 }
 
+.transaction-row {
+  cursor: context-menu;
+}
+
 .tabs {
   @include mat.tabs-overrides(
     (
       active-focus-indicator-color: $accent,
-      active-focus-label-text-color: $accent,
+      active-focus-label-text-color: $white,
       active-hover-indicator-color: $accent,
-      active-hover-label-text-color: $accent,
+      active-hover-label-text-color: $white,
       active-indicator-color: $accent,
-      active-label-text-color: $accent,
+      active-label-text-color: $white,
       inactive-label-text-color: $gray,
       inactive-hover-label-text-color: $white,
       inactive-focus-label-text-color: $white,
@@ -40,6 +46,25 @@
     font-size: 15px;
     font-weight: 500;
     letter-spacing: 0.02em;
+  }
+
+  ::ng-deep .mat-mdc-tab.mdc-tab--active {
+    background-color: $accent;
+    color: $white;
+    border-radius: 10px;
+
+    .mdc-tab__text-label {
+      color: $white;
+    }
+  }
+
+  ::ng-deep .mat-mdc-tab {
+    border-radius: 10px;
+    transition: background-color 0.2s ease;
+  }
+
+  ::ng-deep .mat-mdc-tab:not(.mdc-tab--active):hover {
+    background-color: rgba($accent, 0.15);
   }
 
   ::ng-deep .mat-mdc-tab-header {

@@ -4,6 +4,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { defaultSorter, DialogData, Sorter } from '../../lib';
 import { MatIconModule } from '@angular/material/icon';
+import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
 import { SorterService } from '../../services/sorter.service';
 import { ActivatedRoute } from '@angular/router';
 
@@ -11,7 +12,7 @@ import { ActivatedRoute } from '@angular/router';
   selector: 'sorters-modal',
   templateUrl: './sorter-modal.component.html',
   styleUrls: ['./sorter-modal.component.scss'],
-  imports: [SelectComponent, ModalComponent, MatIconModule],
+  imports: [SelectComponent, ModalComponent, MatIconModule, AppButtonComponent],
   standalone: true,
 })
 export class SorterModalComponent implements OnInit {

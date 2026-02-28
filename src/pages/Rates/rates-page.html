@@ -13,7 +13,7 @@
                 [value]="chartCurrency()"
                 (selectionChange)="chartCurrency.set($event.value)"
               >
-                @for (c of currencies; track c.code) {
+                @for (c of chartCurrencies; track c.code) {
                 <mat-option [value]="c.code">{{ c.label }} — {{ c.name }}</mat-option>
                 }
               </mat-select>
@@ -26,7 +26,7 @@
             <canvas
               baseChart
               [data]="chartData()"
-              [options]="chartOptions"
+              [options]="chartOptions()"
               [type]="'line'"
             ></canvas>
           </div>
@@ -40,26 +40,28 @@
           <p-progress-spinner styleClass="spinner" />
           } @else {
           <div class="rates-actions">
-            <button mat-raised-button color="primary" (click)="refreshRates()">
+            <app-button appearance="primary" size="md" (buttonClick)="refreshRates()">
               Refresh rates
-            </button>
+            </app-button>
           </div>
-          <table class="rates-table">
-            <thead>
-              <tr>
-                <th>Currency</th>
-                <th>Rate (1 unit = BYN)</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (item of ratesList(); track item.currency.code) {
-              <tr>
-                <td>{{ item.currency.label }} — {{ item.currency.name }}</td>
-                <td>{{ item.rateToByn | number: '1.2-4' }} BYN</td>
-              </tr>
-              }
-            </tbody>
-          </table>
+          <div class="rates-table-wrap">
+            <table class="rates-table">
+              <thead>
+                <tr>
+                  <th>Currency</th>
+                  <th>Rate (1 unit = BYN)</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (item of ratesList(); track item.currency.code) {
+                <tr>
+                  <td>{{ item.currency.label }} — {{ item.currency.name }}</td>
+                  <td>{{ item.rateToByn | number: '1.2-4' }} BYN</td>
+                </tr>
+                }
+              </tbody>
+            </table>
+          </div>
           }
         </div>
       </div>

@@ -1,26 +1,123 @@
 @use 'theme' as *;
 @use '@angular/material' as mat;
+@use 'shared/styles/breakpoints' as bp;
 
 :host {
   display: flex;
   width: 100%;
+  height: 90px;
 }
 
 .header {
-  height: 90px;
   width: 100%;
+  min-width: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 32px;
+  padding-inline: 12px;
+  padding-block: 0;
   border-bottom: 1px solid $tertiary;
+  gap: 12px;
+  height: 90px;
+
+  @include bp.tablet-and-up {
+    padding-inline: 20px;
+    gap: 20px;
+  }
+
+  @include bp.desktop-and-up {
+    padding-inline: 24px;
+    gap: 24px;
+  }
 }
 
 .content {
   display: flex;
   align-items: center;
-  height: 100%;
   gap: 24px;
+  min-width: 0;
+
+  @include bp.mobile {
+    gap: 12px;
+  }
+}
+
+.header .content:first-child {
+  flex-direction: row;
+  gap: 24px;
+
+  @include bp.mobile {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 4px;
+    padding: 12px 0;
+  }
+}
+
+// Мобилка (сайдбар скрыт): аватар + имя вместо "Hello"
+.user-hello {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 24px;
+
+  @include bp.sidebar-to-tabs {
+    display: none;
+  }
+}
+
+.user-compact {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+
+  @include bp.sidebar-to-tabs {
+    display: flex;
+  }
+}
+
+.user-compact .avatar-img,
+.user-compact .avatar-placeholder {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  min-height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.user-compact .avatar-placeholder {
+  background: $tertiary;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: $gray;
+}
+
+.user-compact .user-name {
+  font-size: 1rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+
+  @include bp.tablet-and-up {
+    font-size: 1.5rem;
+  }
+
+  @include bp.desktop-and-up {
+    font-size: 1.75rem;
+  }
 }
 
 .date {
@@ -34,4 +131,21 @@
   align-items: center;
   margin-left: 8px;
   margin-top: 2px;
+  font-size: 0.875rem;
+
+  @include bp.tablet-and-up {
+    font-size: 1rem;
+  }
+}
+
+.header .date .mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+
+  @include bp.tablet-and-up {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
 }

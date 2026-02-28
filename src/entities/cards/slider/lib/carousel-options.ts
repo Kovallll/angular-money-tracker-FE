@@ -1,9 +1,9 @@
 import type { CarouselResponsiveOptions } from 'primeng/carousel';
 
-/** Один слайд виден, листаем по одному. Адаптивно под любой размер контейнера. */
+/** Breakpoints: 1920, 1440, 780 (см. shared/styles/_breakpoints.scss). */
 export const DASHBOARD_CAROUSEL_RESPONSIVE: CarouselResponsiveOptions[] = [
-  { breakpoint: '1400px', numVisible: 1, numScroll: 1 },
-  { breakpoint: '992px', numVisible: 1, numScroll: 1 },
-  { breakpoint: '768px', numVisible: 1, numScroll: 1 },
+  { breakpoint: '1920px', numVisible: 1, numScroll: 1 },
+  { breakpoint: '1440px', numVisible: 1, numScroll: 1 },
+  { breakpoint: '780px', numVisible: 1, numScroll: 1 },
   { breakpoint: '576px', numVisible: 1, numScroll: 1 },
 ];

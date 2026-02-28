@@ -2,52 +2,78 @@
   <controls [controlsProps]="controlsProps()" />
   <div class="content">
     <div class="head">
-      <h2>Subscribtions</h2>
+      <h2>Subscriptions</h2>
       <subscription-add-button />
     </div>
-    <dashboard-card>
-      <card-body class="table">
-        <div class="table-wrap">
-          <div class="header">
-            @for (header of displayedCells(); track header.field) {
-              <p class="header-title">{{ header.name }}</p>
-            }
-          </div>
-          @if (isLoading()) {
-            <div class="data-loading data-placeholder--page">
-              <p-progress-spinner ariaLabel="Loading" />
-            </div>
-          } @else if (subscribes().length) {
-            @for (subscribe of subscribes(); track subscribe.id) {
-              <div class="row" (contextmenu)="openContextMenu($event)">
-                <div class="date">
-                  <p>{{ subscribe.subscribeDate | date: 'MMM' }}</p>
-                  <p class="day">{{ subscribe.subscribeDate | date: 'dd' }}</p>
-                </div>
-                <p class="title">{{ subscribe.subscribeName }}</p>
-                <p class="describtion">{{ subscribe.description }}</p>
-                <p class="type">{{ subscribe.type | titlecase }}</p>
-                <p class="last-charge">{{ subscribe.lastCharge | date }}</p>
-                <p class="amount">
-                  {{ subscribe.amount | appCurrencyPrimary: subscribe.currencyCode }}
-                </p>
+
+    @if (isLoading()) {
+      <div class="cards-loading data-placeholder--page">
+        <p-progress-spinner ariaLabel="Loading" />
+      </div>
+    } @else if (subscribes().length) {
+      <ul class="cards-list" role="list">
+        @for (subscribe of subscribes(); track subscribe.id) {
+          <li class="card-item">
+            <article
+              class="subscription-card"
+              (click)="onEdit(subscribe)"
+              (contextmenu)="openContextMenu($event, subscribe)"
+              (keydown.enter)="onEdit(subscribe)"
+              (keydown.space)="$event.preventDefault(); onEdit(subscribe)"
+              tabindex="0"
+              role="button"
+              [attr.aria-label]="'Edit ' + subscribe.subscribeName"
+            >
+              <div class="card__date">
+                <span class="card__date-label">Date</span>
+                <span class="card__month">{{ subscribe.subscribeDate | date: 'MMM' }}</span>
+                <span class="card__day">{{ subscribe.subscribeDate | date: 'dd' }}</span>
               </div>
-              <context-menu-component
-                #ctxMenu
-                (onDelete)="onDelete(subscribe)"
-                (onEdit)="onEdit(subscribe)"
-              />
-            }
-          } @else {
-            <div class="data-placeholder data-placeholder--page">
-              <span class="data-placeholder__icon" aria-hidden="true">🔄</span>
-              <p>No subscriptions</p>
-              <p>Add a subscription using the button above</p>
-            </div>
-          }
-        </div>
-      </card-body>
-    </dashboard-card>
+              <div class="card__body">
+                <div class="card__top">
+                  <h3 class="card__title">{{ subscribe.subscribeName }}</h3>
+                  <div class="card__amount-wrap">
+                    <span class="card__label">Amount</span>
+                    <span class="card__amount">{{
+                      subscribe.amount | appCurrencyPrimary: subscribe.currencyCode
+                    }}</span>
+                  </div>
+                </div>
+                <div class="card__field card__field--full">
+                  <span class="card__label">Type</span>
+                  <span class="card__value">{{ subscribe.type | titlecase }}</span>
+                </div>
+                <div class="card__field card__field--full">
+                  <span class="card__label">Next payment</span>
+                  <span class="card__value card__value--full">{{
+                    subscribe.lastCharge | date
+                  }}</span>
+                </div>
+                @if (subscribe.description) {
+                  <div class="card__field card__field--full">
+                    <span class="card__label">Description</span>
+                    <span class="card__value card__value--full card__value--description">{{
+                      subscribe.description
+                    }}</span>
+                  </div>
+                }
+              </div>
+            </article>
+          </li>
+        }
+      </ul>
+      <context-menu-component
+        #ctxMenu
+        (onDelete)="onDelete(selectedSubscribe())"
+        (onEdit)="onEdit(selectedSubscribe())"
+      />
+    } @else {
+      <div class="data-placeholder data-placeholder--page">
+        <span class="data-placeholder__icon" aria-hidden="true">🔄</span>
+        <p>No subscriptions</p>
+        <p>Add a subscription using the button above</p>
+      </div>
+    }
   </div>
   <pagination />
 </div>

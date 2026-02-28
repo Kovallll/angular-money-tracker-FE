@@ -1,0 +1,19 @@
+<nav class="bottom-tabs">
+  @for (item of primaryItems; track item.id) {
+    <a [routerLink]="['/', item.path]" routerLinkActive="active" class="tab">
+      <mat-icon class="tab__icon">{{ item.icon }}</mat-icon>
+      <span class="tab__label">{{ item.title }}</span>
+    </a>
+  }
+  @if (hasMore) {
+    <button
+      type="button"
+      class="tab tab--more"
+      [class.active]="isMoreActive()"
+      (click)="openMore()"
+    >
+      <mat-icon class="tab__icon">more_horiz</mat-icon>
+      <span class="tab__label">More</span>
+    </button>
+  }
+</nav>

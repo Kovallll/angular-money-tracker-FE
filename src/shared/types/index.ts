@@ -20,10 +20,7 @@ export type Transaction = {
   currencyCode?: string;
   date: string;
   type: string;
-  paymentMethod: string;
-  transactionType: string;
-  receipt: string;
-  status: string;
+  paymentMethod?: string;
 };
 
 export type CreateTransaction = Omit<Transaction, 'id' | 'userId' | 'cardId' | 'categoryId'>;
@@ -38,6 +35,7 @@ export interface CreateTransactionPayload {
   date: string;
   title?: string;
   description?: string;
+  paymentMethod?: 'cash' | 'card';
 }
 
 export interface BalanceCard {
@@ -49,7 +47,7 @@ export interface BalanceCard {
   currencyCode?: string;
   cardType: string;
   bankName: string;
-  branchName: string;
+  expiry?: string | null;
   transactions: Transaction[];
 }
 
@@ -61,7 +59,7 @@ export interface CreateCard {
   currencyCode?: string;
   cardType: string;
   bankName: string;
-  branchName: string;
+  expiry?: string | null;
 }
 
 export interface ExpenseItem {

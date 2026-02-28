@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, inject, signal, OnInit } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { ButtonModule } from 'primeng/button';
+import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import {
   CategoriesHttpService,
   CreateTransaction,
+  ExpensesHttpService,
   Transaction,
   TransactionsHttpService,
 } from '@/shared';
@@ -25,7 +26,7 @@ import { catchError, of, tap } from 'rxjs';
   imports: [
     FormsModule,
     InputTextModule,
-    ButtonModule,
+    AppButtonComponent,
     MessageModule,
     Select,
     PriceCurrencyFieldComponent,
@@ -37,6 +38,7 @@ import { catchError, of, tap } from 'rxjs';
 export class EditTransactionModalComponent implements OnInit {
   messageService = inject(MessageService);
   private transactionsHttpService = inject(TransactionsHttpService);
+  private expensesHttpService = inject(ExpensesHttpService);
   private config = inject(DynamicDialogConfig);
   private categoriesHttpService = inject(CategoriesHttpService);
   private ref = inject(DynamicDialogRef);
@@ -54,6 +56,10 @@ export class EditTransactionModalComponent implements OnInit {
       .updateTransaction(this.transaction.id, transaction)
       .pipe(
         tap(() => {
+          this.queryClient.invalidateQueries({ queryKey: ['transactions'] });
+          this.transactionsHttpService.loadTransactions();
+          this.expensesHttpService.refreshExpenses();
+          this.categoriesHttpService.refreshCategories();
           this.messageService.add({
             key: 'toast',
             severity: 'success',
@@ -62,7 +68,6 @@ export class EditTransactionModalComponent implements OnInit {
             life: 3000,
           });
           this.ref.close();
-          this.queryClient.invalidateQueries({ queryKey: ['transactions'] });
         }),
         catchError(() => {
           this.messageService.add({
@@ -90,11 +95,13 @@ export class EditTransactionModalComponent implements OnInit {
     { name: 'category', placeholder: 'Category', field: 'category' },
     { name: 'type', placeholder: 'Type', field: 'type' },
     { name: 'currencyCode', placeholder: 'Currency', field: 'currencyCode' },
-    { name: 'paymentMethod', placeholder: 'Payment method', field: 'paymentMethod' },
-    { name: 'status', placeholder: 'Status', field: 'status' },
-    { name: 'transactionType', placeholder: 'Transaction Type', field: 'transactionType' },
-    { name: 'receipt', placeholder: 'Receipt', field: 'receipt' },
+    { name: 'paymentMethod', placeholder: 'Payment method (optional)', field: 'paymentMethod' },
     { name: 'amount', placeholder: 'Amount', field: 'amount' },
+  ];
+
+  readonly paymentMethodOptions = [
+    { label: 'Cash', value: 'cash' },
+    { label: 'Card', value: 'card' },
   ];
 
   card = signal<any>([]);

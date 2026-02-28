@@ -9,6 +9,8 @@ import {
   ExpensesHttpService,
   UrlSyncedComponent,
 } from '@/shared';
+import { CurrencyService } from '@/shared/services/currency/currency.service';
+import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
 import { TableComponent } from '@/entities/table/ui/table.component';
 import { DashboardCardComponent, CardBodyComponent } from '@/entities/cards/card';
 import { ControlsComponent } from '@/widgets/controls/ui/controls.component';
@@ -35,9 +37,21 @@ export class ExpensesDetailsPageComponent
   private route = inject(ActivatedRoute);
   private expensesHttpService = inject(ExpensesHttpService);
   private categoriesHttpService = inject(CategoriesHttpService);
+  private currencyService = inject(CurrencyService);
+  private exchangeRates = inject(ExchangeRatesService);
 
   expenses = signal<ExpenseItem[]>([]);
   category = signal<CategoryItem | null>(null);
+
+  /** Расходы с суммами в выбранной (primary) валюте для таблицы. */
+  expensesInPrimaryCurrency = computed(() => {
+    const primary = this.currencyService.primaryCode();
+    return this.expenses().map((e) => ({
+      ...e,
+      amount: this.exchangeRates.convert(e.amount, e.currencyCode ?? 'BYN', primary),
+      currencyCode: primary,
+    }));
+  });
 
   /** Id категории из маршрута (expenses-details/:id). */
   private categoryId = toSignal(this.route.paramMap.pipe(map((p) => p.get('id') ?? null)), {

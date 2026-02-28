@@ -1,13 +1,25 @@
 @use 'theme' as *;
+@use 'shared/styles/breakpoints' as bp;
 
 .filters {
   cursor: pointer;
   background: $tertiary;
   color: $accent;
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  min-height: 36px;
+  padding: 0;
   border-radius: 8px;
   border: 1px solid $accent;
+  flex-shrink: 0;
+
+  @include bp.tablet-and-up {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+  }
 }
 
 ::ng-deep .filter-modal {

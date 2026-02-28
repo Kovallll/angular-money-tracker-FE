@@ -5,7 +5,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 import { InputTextModule } from 'primeng/inputtext';
 import { DatePickerModule } from 'primeng/datepicker';
-import { ButtonModule } from 'primeng/button';
+import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
 import { ConfirmationService } from 'primeng/api';
 import { PriceCurrencyFieldComponent } from '@/shared/components/price-currency-field/price-currency-field.component';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
@@ -18,7 +18,7 @@ import { CurrencyService } from '@/shared/services/currency/currency.service';
     FormsModule,
     InputTextModule,
     DatePickerModule,
-    ButtonModule,
+    AppButtonComponent,
     PriceCurrencyFieldComponent,
   ],
   templateUrl: './modal.component.html',

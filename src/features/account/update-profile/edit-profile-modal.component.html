@@ -31,27 +31,57 @@
       <div class="error-slot"></div>
     </div>
     <div class="field">
+      <label for="email">Email</label>
+      <input
+        id="email"
+        type="email"
+        pInputText
+        [(ngModel)]="profile.email"
+        name="email"
+        appEmailValidator
+        required
+        #email="ngModel"
+      />
+      <div class="error-slot">
+        @if (email.invalid && (email.touched || f.submitted)) {
+          @if (email.hasError('required')) {
+            <small class="error">Email is required.</small>
+          } @else if (email.hasError('email')) {
+            <small class="error">Invalid email.</small>
+          }
+        }
+      </div>
+    </div>
+    <div class="field">
       <label for="phone">Phone</label>
       <input
         id="phone"
-        type="text"
+        type="tel"
         pInputText
         [(ngModel)]="profile.phone"
         name="phone"
-        maxlength="20"
+        appBelarusPhoneMask
+        placeholder="+375 (29) 123-45-67"
+        #phone="ngModel"
       />
-      <div class="error-slot"></div>
+      <div class="error-slot">
+        @if (phone.invalid && phone.value && (phone.touched || f.submitted)) {
+          <small class="error">Enter valid Belarus phone: +375 (XX) XXX-XX-XX</small>
+        }
+      </div>
     </div>
   </div>
   <div class="actions">
-    <button type="button" pButton label="Cancel" (click)="close()" class="cancel-btn"></button>
-    <button
+    <app-button type="button" appearance="secondary" size="md" (buttonClick)="close()"
+      >Cancel</app-button
+    >
+    <app-button
       type="submit"
-      pButton
-      label="Save"
-      class="submit-btn"
+      appearance="primary"
+      size="md"
       [loading]="loading()"
       [disabled]="loading()"
-    ></button>
+      >Save</app-button
+    >
   </div>
 </form>

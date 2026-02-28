@@ -3,7 +3,7 @@
   <dashboard-card [title]="category()?.title ?? ''">
     <card-body>
       <table-component
-        [dataSource]="expenses()"
+        [dataSource]="expensesInPrimaryCurrency()"
         [isEmpty]="isEmpty"
         [displayedCells]="displayedCells()"
       />

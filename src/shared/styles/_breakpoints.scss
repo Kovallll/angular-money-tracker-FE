@@ -1,0 +1,62 @@
+// Брейкпоинты для адаптивного layout (1920, 1440, 1200, 780)
+// Использование: @use 'shared/styles/breakpoints' as bp; @include bp.desktop-large { ... }
+
+$bp-desktop-large: 1920px;
+$bp-desktop: 1440px;
+$bp-sidebar-to-tabs: 1200px; // при < 1200 сайдбар скрывается, показываются нижние табы
+$bp-tablet: 780px;
+
+@mixin desktop-large {
+  @media (min-width: $bp-desktop-large) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: $bp-desktop) and (max-width: #{$bp-desktop-large - 1px}) {
+    @content;
+  }
+}
+
+@mixin desktop-and-up {
+  @media (min-width: $bp-desktop) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (min-width: $bp-tablet) and (max-width: #{$bp-desktop - 1px}) {
+    @content;
+  }
+}
+
+@mixin tablet-and-up {
+  @media (min-width: $bp-tablet) {
+    @content;
+  }
+}
+
+@mixin mobile {
+  @media (max-width: #{$bp-tablet - 1px}) {
+    @content;
+  }
+}
+
+@mixin desktop-large-down {
+  @media (max-width: #{$bp-desktop-large - 1px}) {
+    @content;
+  }
+}
+
+@mixin desktop-down {
+  @media (max-width: #{$bp-desktop - 1px}) {
+    @content;
+  }
+}
+
+/** Сайдбар скрыт, нижние табы видны (при < 1200px). */
+@mixin sidebar-to-tabs {
+  @media (max-width: #{$bp-sidebar-to-tabs - 1px}) {
+    @content;
+  }
+}

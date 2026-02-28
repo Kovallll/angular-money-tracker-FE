@@ -4,13 +4,13 @@ import { UserService } from '@/shared';
 import { MessageService } from 'primeng/api';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
+import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
 
 @Component({
   selector: 'settings-security',
   templateUrl: './security.component.html',
   styleUrls: ['./security.component.scss'],
-  imports: [FormsModule, MatFormFieldModule, MatInputModule, MatButtonModule],
+  imports: [FormsModule, MatFormFieldModule, MatInputModule, AppButtonComponent],
 })
 export class SecurityComponent {
   private userService = inject(UserService);

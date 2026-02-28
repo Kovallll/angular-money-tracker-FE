@@ -2,7 +2,13 @@ import { Component, computed, inject, input, ViewChild } from '@angular/core';
 import { AppCurrencyPipe } from '@/shared/pipes/app-currency.pipe';
 import { ChartConfiguration } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
-import { CategoriesHttpService, CategoryItem, CategoryLineChartDto } from '@/shared';
+import {
+  CategoriesHttpService,
+  CategoryItem,
+  CategoryLineChartDto,
+  ExpensesHttpService,
+  TransactionsHttpService,
+} from '@/shared';
 import { DividerComponent } from '@/shared/components/divider/divider';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 import { ContextMenuComponent } from '@/entities/context-menu/cm.component';
@@ -11,6 +17,7 @@ import { EditCategoryModalComponent } from '@/features/categories/edit-modal/mod
 import { QueryClient } from '@tanstack/angular-query-experimental';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
+import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
 
 @Component({
   selector: 'category-card',
@@ -30,8 +37,11 @@ export class CategoryCardComponent {
   @ViewChild('ctxMenu') ctxMenu!: ContextMenuComponent;
 
   private categoriesHttpService = inject(CategoriesHttpService);
+  private transactionsHttpService = inject(TransactionsHttpService);
+  private expensesHttpService = inject(ExpensesHttpService);
   private queryClient = inject(QueryClient);
   private currencyService = inject(CurrencyService);
+  private exchangeRates = inject(ExchangeRatesService);
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
   category = input<CategoryItem>({ title: '', totalExpenses: 0 } as CategoryItem);
@@ -39,6 +49,28 @@ export class CategoryCardComponent {
   ref: DynamicDialogRef | undefined | null;
 
   compareDelta = computed(() => this.categoriesHttpService.getChartDeltaCompare(this.chart()));
+
+  /** Есть ли у категории реальные данные для графика (хотя бы одно ненулевое значение). */
+  hasChartData = computed(() => {
+    const ch = this.chart();
+    const data = ch?.datasets?.[0]?.data;
+    if (!Array.isArray(data)) return false;
+    return data.some((v) => typeof v === 'number' && v > 0);
+  });
+
+  /** Расходы в выбранной валюте */
+  displayTotalExpenses = computed(() => {
+    const cat = this.category();
+    const primary = this.currencyService.primaryCode();
+    return this.exchangeRates.convert(cat.totalExpenses ?? 0, 'BYN', primary);
+  });
+
+  /** Доходы в выбранной валюте */
+  displayTotalRevenues = computed(() => {
+    const cat = this.category();
+    const primary = this.currencyService.primaryCode();
+    return this.exchangeRates.convert(cat.totalRevenues ?? 0, 'BYN', primary);
+  });
   constructor(public dialogService: DialogService) {}
   readonly options: ChartConfiguration['options'] = {
     responsive: true,
@@ -68,20 +100,28 @@ export class CategoryCardComponent {
   };
 
   formatCurrency(v: number) {
+    const primary = this.currencyService.primaryCode();
+    const converted = this.exchangeRates.convert(v, 'BYN', primary);
     return new Intl.NumberFormat(undefined, {
       style: 'currency',
-      currency: this.currencyService.primaryCode(),
+      currency: primary,
       maximumFractionDigits: 0,
-    }).format(v);
+    }).format(converted);
   }
 
   handleDelete() {
+    const cat = this.category();
+    const txCount = (cat.expenses?.length ?? 0) + (cat.revenues?.length ?? 0);
+    const warning =
+      txCount > 0
+        ? ` В этой категории ${txCount} транзакций — они будут удалены безвозвратно.`
+        : '';
     this.confirmationService.confirm({
-      message: `Delete category «${this.category().title}»?`,
-      header: 'Confirm deletion',
+      message: `Удалить категорию «${cat.title}»?${warning}`,
+      header: 'Подтверждение удаления',
       icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Delete',
-      rejectLabel: 'Cancel',
+      acceptLabel: 'Удалить',
+      rejectLabel: 'Отмена',
       accept: () => this.doDeleteCategory(),
     });
   }
@@ -91,6 +131,10 @@ export class CategoryCardComponent {
       await this.categoriesHttpService.deleteCategory(this.category().id);
       this.queryClient.invalidateQueries({ queryKey: ['categories'] });
       this.queryClient.invalidateQueries({ queryKey: ['charts'] });
+      this.queryClient.invalidateQueries({ queryKey: ['transactions'] });
+      this.categoriesHttpService.refreshCategories();
+      this.transactionsHttpService.loadTransactions();
+      this.expensesHttpService.refreshExpenses();
       this.messageService.add({
         key: 'toast',
         severity: 'success',

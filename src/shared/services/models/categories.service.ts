@@ -38,6 +38,11 @@ export class CategoriesHttpService {
     this.categories.set(data);
   }
 
+  /** Принудительно обновить категории (после добавления/редактирования/удаления транзакции). */
+  refreshCategories(): void {
+    this.loadCategories();
+  }
+
   private async loadCharts() {
     const userId = this.auth.getCurrentUserId();
     const data = await this.getCategoryExpenseLineCharts(
@@ -128,7 +133,8 @@ export class CategoriesHttpService {
     );
   }
 
-  deleteCategory(id: number) {
-    return lastValueFrom(this.http.delete(`${categoriesUrl}/${id}`));
+  deleteCategory(id: number | string, reassignTo?: string) {
+    const options = reassignTo ? { params: { reassignTo } } : {};
+    return lastValueFrom(this.http.delete(`${categoriesUrl}/${id}`, options));
   }
 }

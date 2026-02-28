@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
@@ -15,6 +15,7 @@ import { environment } from '@/environments/environment';
 })
 export class AccountComponent {
   private userService = inject(UserService);
+  avatarLoadError = signal(false);
   user = toSignal(this.userService.currentUser$, {
     initialValue: this.userService.currentUser,
   });

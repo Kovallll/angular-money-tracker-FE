@@ -37,7 +37,7 @@ export class GoalsHttpService {
   createGoal(goal: CreateGoalItem) {
     const userId = this.auth.getCurrentUserId();
     if (!userId) throw new Error('Not authenticated');
-    const { title, targetBudget, goalBudget, startDate, endDate } = goal;
+    const { title, targetBudget, goalBudget, startDate, endDate, currencyCode } = goal;
     return this.http
       .post<CreateGoalItem>(goalsUrl, {
         title,
@@ -46,6 +46,7 @@ export class GoalsHttpService {
         startDate,
         endDate,
         userId,
+        ...(currencyCode && { currencyCode }),
       })
       .pipe(tap(() => this.loadGoals()));
   }

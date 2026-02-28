@@ -1,0 +1,16 @@
+@use 'theme' as *;
+@use 'shared/styles/breakpoints' as bp;
+
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+.container {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}

@@ -6,7 +6,7 @@
       </div>
       <div class="text">
         <p class="category">{{ category().title }}</p>
-        <p class="cost">{{ category().totalExpenses | appCurrency }}</p>
+        <p class="cost">{{ displayTotalExpenses() | appCurrency }}</p>
       </div>
     </div>
     <div class="right-content">
@@ -25,22 +25,26 @@
   </div>
   <div class="body">
     <div class="chart">
-      <canvas
-        baseChart
-        [type]="'line'"
-        [data]="{ labels: chart()?.labels, datasets: chart()?.datasets ?? [] }"
-        [options]="options"
-      ></canvas>
+      @if (hasChartData()) {
+        <canvas
+          baseChart
+          [type]="'line'"
+          [data]="{ labels: chart()?.labels, datasets: chart()?.datasets ?? [] }"
+          [options]="options"
+        ></canvas>
+      } @else {
+        <div class="chart-placeholder">No data</div>
+      }
     </div>
     <div class="totals">
       <div class="total">
         <p class="title">Expenses</p>
-        <p class="amount">{{ category().totalExpenses | appCurrency }}</p>
+        <p class="amount">{{ displayTotalExpenses() | appCurrency }}</p>
       </div>
       <divider color="tertiary" />
       <div class="total">
         <p class="title">Revenue</p>
-        <p class="amount">{{ category().totalRevenues | appCurrency }}</p>
+        <p class="amount">{{ displayTotalRevenues() | appCurrency }}</p>
       </div>
     </div>
   </div>

@@ -1,21 +1,15 @@
 <div class="content">
-  <div class="top-cards">
-    <dash-balance-card class="balance-block" />
-    <dash-goal-card class="goal-block" />
-    <dash-subscribe-card class="subscribe-block" />
+  <dash-balance-card class="block balance-block" />
+  <dash-goal-card class="block goal-block" />
+  <dash-subscribe-card class="block subscribe-block" />
+  <dash-transaction-card class="block transaction-block" />
+  <div class="block stats-block">
+    <budget-statistic-card
+      [fixedView]="fixedView()"
+      [title]="'Week statistic'"
+      [isWithSeeAll]="true"
+      [seeAllPath]="seeAllPath"
+    />
   </div>
-  <div class="bottom-cards">
-    <dash-transaction-card />
-    <div class="columns-card">
-      <div class="stats">
-        <budget-statistic-card
-          [fixedView]="fixedView()"
-          [title]="'Week statistic'"
-          [isWithSeeAll]="true"
-          [seeAllPath]="seeAllPath"
-        />
-      </div>
-      <dash-expense-card />
-    </div>
-  </div>
+  <dash-expense-card class="block expense-block" />
 </div>

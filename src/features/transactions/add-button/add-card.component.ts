@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ButtonModule } from 'primeng/button';
+import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AddTransactionModalComponent } from './modal/add-card-modal.component';
 
@@ -9,7 +9,7 @@ import { AddTransactionModalComponent } from './modal/add-card-modal.component';
   templateUrl: './add-card.component.html',
   styleUrls: ['./add-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ButtonModule],
+  imports: [AppButtonComponent],
   providers: [DialogService],
 })
 export class TransactionAddButtonComponent {

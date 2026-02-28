@@ -1,9 +1,26 @@
 <div class="header">
   <div class="content">
-    <h2>Hello {{user?.name}}</h2>
-    <div class="date">
-      <mat-icon>calendar_today</mat-icon>
-      <p class="date-text">{{date}}</p>
+    <div class="user-hello">
+      <h2 class="hello-text">Hello {{user?.name}}</h2>
+      <div class="date">
+        <mat-icon>calendar_today</mat-icon>
+        <p class="date-text">{{date}}</p>
+      </div>
+    </div>
+    <div class="user-compact">
+      @if (user) { @if (user.avatar && !avatarLoadError) {
+      <img
+        [src]="avatarUrl(user.avatar)"
+        alt=""
+        class="avatar-img"
+        referrerpolicy="no-referrer"
+        (error)="avatarLoadError = true"
+      />
+      } @else {
+      <span class="avatar-placeholder pi pi-user"></span>
+      }
+      <span class="user-name">{{ user.name }}</span>
+      }
     </div>
   </div>
   <div class="content">

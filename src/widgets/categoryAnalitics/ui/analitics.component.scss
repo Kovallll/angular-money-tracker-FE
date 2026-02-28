@@ -1,45 +1,105 @@
+@use 'theme' as *;
+@use 'shared/styles/breakpoints' as bp;
+
+.analytics {
+  width: 100%;
+  min-width: 0;
+  flex-shrink: 0;
+
+  @include bp.desktop-and-up {
+    width: 400px;
+    min-width: 320px;
+    max-width: 480px;
+  }
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0 0 16px;
+
+  @include bp.tablet-and-up {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+
+  @include bp.desktop-and-up {
+    font-size: 1.75rem;
+  }
+
+  &.disable {
+    display: none;
+  }
+}
+
 .charts {
   display: flex;
   flex-direction: column;
-  gap: 48px;
+  gap: 24px;
+  width: 100%;
+  min-width: 0;
+
+  @include bp.tablet-and-up {
+    gap: 32px;
+  }
+
+  &.row {
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    .chart {
+      flex: 1 1 100%;
+      min-width: 280px;
+
+      @include bp.tablet-and-up {
+        flex: 1 1 calc(50% - 12px);
+      }
+
+      @include bp.desktop-and-up {
+        flex: 1 1 calc(33.333% - 16px);
+      }
+    }
+  }
 }
 
 .chart {
-  width: 600px;
-  height: 400px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  height: 280px;
+  position: relative;
+  box-sizing: border-box;
 
-  &:not(:first-child) {
-    margin-bottom: 24px;
+  @include bp.tablet-and-up {
+    height: 320px;
+  }
+
+  @include bp.desktop-and-up {
+    height: 360px;
+  }
+
+  &.row {
+    height: 400px;
   }
 }
 
 .chart-placeholder {
   width: 100%;
   height: 100%;
-  min-height: 320px;
+  min-height: 200px;
+  box-sizing: border-box;
+
+  @include bp.tablet-and-up {
+    min-height: 280px;
+  }
 }
 
 .subtitle {
-  font-size: 20px;
-  font-weight: 600;
-}
-
-.title {
-  font-size: 28px;
+  font-size: 1rem;
   font-weight: 600;
   margin-bottom: 12px;
-}
 
-.disable {
-  display: none;
-}
-
-.row {
-  flex-direction: row;
-  width: 100%;
-
-  .chart {
-    width: 100%;
-    height: 600px;
+  @include bp.tablet-and-up {
+    font-size: 1.125rem;
   }
 }

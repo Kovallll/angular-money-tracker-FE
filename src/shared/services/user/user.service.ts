@@ -79,7 +79,7 @@ export class UserService {
 
     await this.http.delete(`users/${userId}`).toPromise();
 
-    this.authService.logout();
+    await this.authService.logout();
   }
 
   // Получение статистики пользователя

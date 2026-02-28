@@ -5,13 +5,14 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { defaultFilters, DialogData, Filter } from '../../lib';
 import { FiltersService } from '../../services/filters.service';
 import { MatIconModule } from '@angular/material/icon';
+import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'filters-modal',
   templateUrl: './filters-modal.component.html',
   styleUrls: ['./filters-modal.component.scss'],
-  imports: [SelectComponent, ModalComponent, MatIconModule],
+  imports: [SelectComponent, ModalComponent, MatIconModule, AppButtonComponent],
   standalone: true,
 })
 export class FiltersModalComponent implements OnInit {

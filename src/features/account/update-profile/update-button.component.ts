@@ -1,11 +1,11 @@
 import { Component, output } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
+import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
 
 @Component({
   selector: 'update-profile-button',
   templateUrl: './update-button.component.html',
   styleUrls: ['./update-button.component.scss'],
-  imports: [MatButtonModule],
+  imports: [AppButtonComponent],
 })
 export class UpdateProfileButtonComponent {
   readonly updateClick = output<void>();

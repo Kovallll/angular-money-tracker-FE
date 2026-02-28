@@ -34,6 +34,41 @@
             }
           </div>
         </div>
+      } @else if (input.field === 'subscribeDate') {
+        <div class="field">
+          <label [for]="input.name">{{ input.placeholder }}</label>
+          <p-datepicker
+            [inputId]="input.name"
+            [name]="input.name"
+            [ngModel]="card().subscribeDate"
+            (ngModelChange)="updateCardField('subscribeDate', $event)"
+            dateFormat="yy-mm-dd"
+            appendTo="body"
+            placeholder="Select date"
+            required
+            panelStyleClass="subscription-datepicker-panel"
+          />
+          <div class="error-slot">
+            @if (cardForm.submitted && !card().subscribeDate) {
+              <small class="error">{{ input.placeholder }} is required.</small>
+            }
+          </div>
+        </div>
+      } @else if (input.field === 'lastCharge') {
+        <div class="field">
+          <label [for]="input.name">{{ input.placeholder }}</label>
+          <p-datepicker
+            [inputId]="input.name"
+            [name]="input.name"
+            [ngModel]="card().lastCharge"
+            (ngModelChange)="updateCardField('lastCharge', $event)"
+            dateFormat="yy-mm-dd"
+            appendTo="body"
+            placeholder="Select date"
+            panelStyleClass="subscription-datepicker-panel"
+          />
+          <div class="error-slot"></div>
+        </div>
       } @else if (input.field === 'amount') {
         <div class="field">
           <app-price-currency-field
@@ -72,7 +107,9 @@
     }
   </div>
   <div class="actions">
-    <button type="button" pButton label="Cancel" (click)="close()" class="cancel-btn"></button>
-    <button pButton severity="primary" type="submit" label="Save" class="submit-btn"></button>
+    <app-button type="button" appearance="secondary" size="md" (buttonClick)="close()"
+      >Cancel</app-button
+    >
+    <app-button type="submit" appearance="primary" size="md">Save</app-button>
   </div>
 </form>

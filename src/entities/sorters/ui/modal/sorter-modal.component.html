@@ -34,7 +34,7 @@
   </div>
 
   <div modal-actions>
-    <button mat-button class="btn-close" (click)="closeModal()">Close</button>
-    <button mat-button color="primary" class="btn-apply" (click)="applySorter()">Apply</button>
+    <app-button appearance="secondary" size="md" (buttonClick)="closeModal()">Close</app-button>
+    <app-button appearance="primary" size="md" (buttonClick)="applySorter()">Apply</app-button>
   </div>
 </modal>

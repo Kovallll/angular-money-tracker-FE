@@ -1,0 +1,156 @@
+@use 'theme' as *;
+@use 'shared/styles/breakpoints' as bp;
+
+.app-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: inherit;
+  font-weight: 600;
+  white-space: nowrap;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    box-shadow 0.2s,
+    transform 0.1s;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  &--full {
+    width: 100%;
+  }
+
+  &--loading {
+    .app-btn__content {
+      visibility: hidden;
+    }
+  }
+}
+
+/* Sizes */
+.app-btn--sm {
+  padding: 6px 14px;
+  font-size: 14px;
+
+  .app-btn__spinner {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.app-btn--md {
+  padding: 10px 20px;
+  font-size: 16px;
+
+  .app-btn__spinner {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.app-btn--lg {
+  padding: 14px 24px;
+  font-size: 18px;
+
+  .app-btn__spinner {
+    width: 20px;
+    height: 20px;
+  }
+
+  @include bp.mobile {
+    padding: 12px 20px;
+    font-size: 16px;
+  }
+}
+
+/* Appearances */
+.app-btn--primary {
+  background: $accent;
+  color: $white;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.35);
+
+  &:hover:not(:disabled) {
+    background: darken($accent, 8%);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.45);
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+}
+
+.app-btn--secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+
+  &:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+}
+
+.app-btn--outline {
+  background: transparent;
+  color: $accent;
+  border: 2px solid $accent;
+
+  &:hover:not(:disabled) {
+    background: rgba(59, 130, 246, 0.15);
+  }
+}
+
+.app-btn--ghost {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.9);
+
+  &:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.08);
+  }
+}
+
+.app-btn--danger {
+  background: $error;
+  color: $white;
+
+  &:hover:not(:disabled) {
+    background: darken($error, 8%);
+  }
+}
+
+/* Loading spinner */
+.app-btn__spinner {
+  position: absolute;
+  border: 2px solid transparent;
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: app-btn-spin 0.7s linear infinite;
+}
+
+.app-btn__content {
+  display: inline-flex;
+  align-items: center;
+  gap: inherit;
+
+  &--hidden {
+    position: absolute;
+    visibility: hidden;
+  }
+}
+
+.app-btn--loading {
+  position: relative;
+}
+
+@keyframes app-btn-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,6 +1,6 @@
 <form #cardForm="ngForm" (ngSubmit)="onSubmit(cardForm)" class="app-modal-form">
-  <div class="form-fields">
-    <div class="field">
+  <div class="form-row">
+    <div class="form-field">
       <label for="bankName">Bank Name</label>
       <div class="wrapper">
         <input
@@ -22,7 +22,7 @@
         </div>
       </div>
     </div>
-    <div class="field">
+    <div class="form-field">
       <label for="accountType">Card Type</label>
       <div class="wrapper">
         <input
@@ -44,45 +44,7 @@
         </div>
       </div>
     </div>
-    <div class="field">
-      <label for="branchName">Branch Name</label>
-      <div class="wrapper">
-        <input
-          class="input"
-          pInputText
-          type="text"
-          id="branchName"
-          name="branchName"
-          placeholder="Branch Name"
-          [(ngModel)]="card().branchName"
-          #branchName="ngModel"
-          required
-          [invalid]="branchName.invalid && (branchName.touched || cardForm.submitted)"
-        />
-        <div class="error-slot">
-          @if (branchName.invalid && (branchName.touched || cardForm.submitted)) {
-            <small class="error">Branch Name is required.</small>
-          }
-        </div>
-      </div>
-    </div>
-    <div class="field">
-      <div class="wrapper">
-        <app-price-currency-field
-          label="Balance"
-          amountName="balance"
-          [(amount)]="cardBalance"
-          [(currencyCode)]="currencyCode"
-          [required]="true"
-        />
-        <div class="error-slot">
-          @if (cardForm.submitted && (card().cardBalance === null || card().cardBalance < 0)) {
-            <small class="error">Balance is required.</small>
-          }
-        </div>
-      </div>
-    </div>
-    <div class="field">
+    <div class="form-field">
       <label for="accountNumber">Card Number</label>
       <div class="wrapper">
         <input
@@ -104,8 +66,41 @@
         </div>
       </div>
     </div>
-    <div class="field">
-      <label for="accountPayment">Payment Method</label>
+    <div class="form-field">
+      <label for="expiry">Expiry <span class="optional">(optional)</span></label>
+      <div class="wrapper">
+        <input
+          class="input"
+          pInputText
+          type="text"
+          id="expiry"
+          name="expiry"
+          placeholder="MM/YY"
+          [ngModel]="card().expiry"
+          (ngModelChange)="formatExpiry($event)"
+          maxlength="5"
+        />
+        <div class="error-slot"></div>
+      </div>
+    </div>
+    <div class="form-field">
+      <div class="wrapper">
+        <app-price-currency-field
+          label="Balance"
+          amountName="balance"
+          [(amount)]="cardBalance"
+          [(currencyCode)]="currencyCode"
+          [required]="true"
+        />
+        <div class="error-slot">
+          @if (cardForm.submitted && (card().cardBalance === null || card().cardBalance < 0)) {
+            <small class="error">Balance is required.</small>
+          }
+        </div>
+      </div>
+    </div>
+    <div class="form-field">
+      <label for="accountPayment">Payment System</label>
       <div class="wrapper">
         <p-select
           class="select"
@@ -132,8 +127,9 @@
     </div>
   </div>
   <div class="actions">
-    <button type="button" pButton label="Cancel" (click)="close()" class="cancel-btn"></button>
-    <button pButton severity="primary" type="submit" class="submit-btn">Edit</button>
+    <app-button type="button" appearance="secondary" size="md" (buttonClick)="close()"
+      >Cancel</app-button
+    >
+    <app-button type="submit" appearance="primary" size="md">Edit</app-button>
   </div>
 </form>
-

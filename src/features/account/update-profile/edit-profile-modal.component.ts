@@ -1,15 +1,28 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { User, UserService } from '@/shared';
+import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
+import {
+  User,
+  UserService,
+  BelarusPhoneMaskDirective,
+  BelarusPhoneValidatorDirective,
+  EmailValidatorDirective,
+} from '@/shared';
 import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-edit-profile-modal',
   standalone: true,
-  imports: [FormsModule, InputTextModule, ButtonModule],
+  imports: [
+    FormsModule,
+    InputTextModule,
+    AppButtonComponent,
+    BelarusPhoneMaskDirective,
+    BelarusPhoneValidatorDirective,
+    EmailValidatorDirective,
+  ],
   templateUrl: './edit-profile-modal.component.html',
   styleUrl: './edit-profile-modal.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,11 +39,13 @@ export class EditProfileModalComponent {
   profile = {
     name: this.user?.name ?? '',
     lastname: this.user?.lastname ?? '',
+    email: this.user?.email ?? '',
     phone: this.user?.phone ?? '',
   };
 
   async onSubmit(form: NgForm) {
     this.profile.name = this.profile.name?.trim() ?? '';
+    this.profile.email = this.profile.email?.trim() ?? '';
     if (!this.profile.name) {
       this.messageService.add({
         key: 'toast',
@@ -41,11 +56,28 @@ export class EditProfileModalComponent {
       });
       return;
     }
+    if (!this.profile.email) {
+      this.messageService.add({
+        key: 'toast',
+        severity: 'warn',
+        summary: 'Validation',
+        detail: 'Email is required.',
+        life: 3000,
+      });
+      return;
+    }
     if (form.invalid) return;
+
+    const payload = {
+      name: this.profile.name,
+      lastname: this.profile.lastname,
+      email: this.profile.email?.trim() ?? '',
+      phone: this.profile.phone || undefined,
+    };
 
     this.loading.set(true);
     try {
-      await this.userService.updateProfile({ ...this.profile });
+      await this.userService.updateProfile(payload);
       this.messageService.add({
         key: 'toast',
         severity: 'success',

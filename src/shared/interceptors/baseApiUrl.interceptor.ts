@@ -10,6 +10,10 @@ export const baseApiUrlInterceptor = (
     return next(req);
   }
   const apiUrl = environment.apiUrl;
-  const apiReq = req.clone({ url: `${apiUrl}/api/${req.url}` });
+  const fullUrl = `${apiUrl}/api/${req.url}`;
+  if (typeof ngDevMode !== 'undefined' && ngDevMode) {
+    console.log('[API]', req.method, fullUrl);
+  }
+  const apiReq = req.clone({ url: fullUrl });
   return next(apiReq);
 };

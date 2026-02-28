@@ -16,8 +16,13 @@
       <p class="title">Phone</p>
       <p class="phone">{{ user()?.phone ?? '—' }}</p>
     </div>
-    <div class="button">
-      <update-profile-button (updateClick)="openEditProfileDialog()" />
+    <div class="actions">
+      <div class="action-btn">
+        <update-profile-button (updateClick)="openEditProfileDialog()" />
+      </div>
+      <div class="action-btn">
+        <logout-button />
+      </div>
     </div>
   </div>
   <div class="avatar-upload">
@@ -36,15 +41,20 @@
           user()?.avatar && !avatarLoading() ? openFullSize(avatarUrl(user()!.avatar!)) : null
         "
       >
-        @if (user()?.avatar) {
-          <img [src]="avatarUrl(user()!.avatar!)" alt="Avatar" class="avatar-img" />
+        @if (user()?.avatar && !avatarLoadError()) {
+          <img
+            [src]="avatarUrl(user()!.avatar!)"
+            alt="Avatar"
+            class="avatar-img"
+            (error)="avatarLoadError.set(true)"
+          />
           @if (avatarLoading()) {
             <div class="avatar-overlay">
               <span class="avatar-loading-text">Uploading...</span>
             </div>
           }
         } @else {
-          <span class="avatar-placeholder-text">No photo</span>
+          <i class="pi pi-user avatar-placeholder-icon"></i>
         }
       </div>
     </div>

@@ -5,17 +5,34 @@
   display: flex;
   flex-direction: column;
   gap: 0;
-  min-width: 380px;
-  max-width: 560px;
+  min-width: 0;
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
+
+  @media (min-width: 400px) {
+    min-width: 0;
+  }
+
+  @media (min-width: 560px) {
+    min-width: 0;
+    max-width: 100%;
+  }
 }
 
 // Сетка полей: вариант .form-fields (подписки) или .form-row (карты, транзакции)
 .app-modal-form .form-fields,
 .app-modal-form .form-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.75rem 1rem;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
   padding-bottom: 1rem;
+  min-width: 0;
+
+  @media (min-width: 560px) {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem 1rem;
+  }
 }
 
 .app-modal-form .form-row:last-of-type {
@@ -33,6 +50,8 @@
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
+  min-width: 0;
+  overflow: hidden;
 
   label {
     font-size: 0.8125rem;
@@ -131,30 +150,40 @@
 .app-modal-form .field app-price-currency-field,
 .app-modal-form .form-field app-price-currency-field {
   display: block;
+  min-width: 0;
+  overflow: hidden;
 
   ::ng-deep .row {
     display: flex;
-    gap: 0.75rem;
+    gap: 0.5rem;
     align-items: stretch;
+    min-width: 0;
   }
 
   ::ng-deep .amount-input {
     flex: 1 1 0;
     min-width: 0;
+    overflow: hidden;
   }
 
   ::ng-deep .p-inputnumber,
   ::ng-deep .p-inputnumber-input {
-    width: 100% !important;
+    width: 100%;
     max-width: 100%;
     box-sizing: border-box;
   }
 
   ::ng-deep .currency-select,
   ::ng-deep .currency-select.p-select {
-    width: auto !important;
-    min-width: 5.5rem;
     flex: 0 0 auto;
+    min-width: 4rem;
+    max-width: 5rem;
+  }
+
+  ::ng-deep .currency-select .p-select,
+  ::ng-deep .currency-select .p-inputwrapper {
+    min-width: 0;
+    max-width: 100%;
   }
 
   ::ng-deep .p-inputnumber-input,
@@ -228,12 +257,41 @@
   }
 }
 
-// Datepicker
+// Datepicker — полная ширина, без обрезки
+.app-modal-form .field:has(p-datepicker),
+.app-modal-form .form-field:has(p-datepicker) {
+  overflow: visible;
+  min-width: 0;
+}
+
+.app-modal-form p-datepicker {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.app-modal-form ::ng-deep .p-datepicker.p-inputwrapper,
+.app-modal-form ::ng-deep .field .p-datepicker,
+.app-modal-form ::ng-deep .form-field .p-datepicker {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.app-modal-form ::ng-deep .p-datepicker-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
 .app-modal-form ::ng-deep .p-datepicker-trigger {
   border-radius: 0 10px 10px 0;
   background: rgba(255, 255, 255, 0.08) !important;
   border: 1px solid rgba(255, 255, 255, 0.12) !important;
   color: rgba(255, 255, 255, 0.8);
+  flex-shrink: 0;
 }
 
 // Wrapper для полей (edit-модалки с одним полем в блоке)

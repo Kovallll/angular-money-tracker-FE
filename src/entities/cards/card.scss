@@ -1,4 +1,5 @@
 @use 'theme' as *;
+@use 'shared/styles/breakpoints' as bp;
 
 :host {
   width: 100%;
@@ -22,19 +23,38 @@
 }
 
 .content {
-  border-radius: 16px;
+  border-radius: 12px;
   background: $secondary;
-  padding: 24px;
+  padding: 16px;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  @include bp.tablet-and-up {
+    border-radius: 14px;
+    padding: 20px;
+  }
+
+  @include bp.desktop-and-up {
+    border-radius: 16px;
+    padding: 24px;
+  }
 }
 
 .title {
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   color: $white;
-  font-size: 22px;
+  font-size: 18px;
+
+  @include bp.tablet-and-up {
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+
+  @include bp.desktop-and-up {
+    font-size: 22px;
+  }
 }
 
 .see-all {
