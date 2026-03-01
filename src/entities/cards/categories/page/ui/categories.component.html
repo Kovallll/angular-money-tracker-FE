@@ -14,10 +14,12 @@
         <p class="percents">
           {{ compareDelta().value + '%' }}
         </p>
-        @if (!compareDelta().negative) {
-          <i class="pi pi-arrow-down negative"></i>
-        } @else {
-          <i class="pi pi-arrow-up positive"></i>
+        @if (compareDelta().value !== 0) {
+          @if (!compareDelta().negative) {
+            <i class="pi pi-arrow-down negative"></i>
+          } @else {
+            <i class="pi pi-arrow-up positive"></i>
+          }
         }
       </div>
       <p class="compare">Compare to last month</p>

@@ -79,12 +79,12 @@
 }
 
 .title {
-  font-size: 1.125rem;
+  font-size: 18px;
   font-weight: 600;
   margin: 0;
 
   @include bp.tablet-and-up {
-    font-size: 1.25rem;
+    font-size: 20px;
   }
 }
 
@@ -124,5 +124,5 @@
 }
 
 .data-placeholder goal-add-card-button {
-  margin-top: 0.5rem;
+  margin-top: 8px;
 }

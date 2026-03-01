@@ -14,17 +14,17 @@
 }
 
 .title {
-  font-size: 1.25rem;
+  font-size: 20px;
   font-weight: 600;
   margin: 0 0 16px;
 
   @include bp.tablet-and-up {
-    font-size: 1.5rem;
+    font-size: 24px;
     margin-bottom: 20px;
   }
 
   @include bp.desktop-and-up {
-    font-size: 1.75rem;
+    font-size: 28px;
   }
 
   &.disable {
@@ -95,11 +95,11 @@
 }
 
 .subtitle {
-  font-size: 1rem;
+  font-size: 16px;
   font-weight: 600;
   margin-bottom: 12px;
 
   @include bp.tablet-and-up {
-    font-size: 1.125rem;
+    font-size: 18px;
   }
 }

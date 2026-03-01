@@ -36,16 +36,16 @@
 }
 
 .title {
-  font-size: 1.25rem;
+  font-size: 20px;
   font-weight: 600;
   margin: 0;
 
   @include bp.tablet-and-up {
-    font-size: 1.5rem;
+    font-size: 24px;
   }
 
   @include bp.desktop-and-up {
-    font-size: 1.75rem;
+    font-size: 28px;
   }
 }
 
@@ -102,18 +102,18 @@
 }
 
 .amount {
-  font-size: 1.25rem;
+  font-size: 20px;
   font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 
   @include bp.tablet-and-up {
-    font-size: 1.5rem;
+    font-size: 24px;
   }
 
   @include bp.desktop-and-up {
-    font-size: 1.75rem;
+    font-size: 28px;
   }
 }
 
@@ -151,5 +151,5 @@
 }
 
 .pi {
-  font-size: 1.25rem;
+  font-size: 20px;
 }

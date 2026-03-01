@@ -34,24 +34,24 @@
 
 .text {
   font-weight: 700;
-  font-size: 0.9375rem;
+  font-size: 15px;
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 
   @include bp.tablet-and-up {
-    font-size: 1rem;
+    font-size: 16px;
   }
 }
 
 .text-block .price {
-  font-size: 0.8125rem;
+  font-size: 13px;
   color: $gray;
   margin: 2px 0 0;
 
   @include bp.tablet-and-up {
-    font-size: 0.875rem;
+    font-size: 14px;
   }
 }
 

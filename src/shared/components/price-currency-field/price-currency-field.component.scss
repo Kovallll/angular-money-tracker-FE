@@ -3,17 +3,16 @@
 .price-currency-field {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 6px;
 
   .label {
     font-weight: 600;
     color: rgba(255, 255, 255, 0.85);
-    margin-bottom: 8px;
   }
 
   .row {
     display: flex;
-    gap: 0.75rem;
+    gap: 12px;
     align-items: stretch;
   }
 
@@ -32,7 +31,8 @@
 
   ::ng-deep .currency-select {
     flex: 0 0 auto;
-    min-width: 5.5rem;
+    min-width: 88px;
     width: auto;
   }
 }
+

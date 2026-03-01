@@ -25,13 +25,13 @@
 .app-modal-form .form-row {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 0.75rem;
-  padding-bottom: 1rem;
+  gap: 12px;
+  padding-bottom: 16px;
   min-width: 0;
 
   @media (min-width: 560px) {
     grid-template-columns: 1fr 1fr;
-    gap: 0.75rem 1rem;
+    gap: 12px 16px;
   }
 }
 
@@ -49,14 +49,14 @@
 .app-modal-form .form-field {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 6px;
   min-width: 0;
   overflow: hidden;
 
   label {
-    font-size: 0.8125rem;
+    font-size: 13px;
     font-weight: 600;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.5px;
     color: rgba(255, 255, 255, 0.85);
   }
 
@@ -69,8 +69,8 @@
 // Место под ошибку — фиксированная высота, интерфейс не прыгает
 .app-modal-form .error-slot,
 .app-modal-form .form-field-error {
-  height: 1.25rem;
-  line-height: 1.25rem;
+  height: 20px;
+  line-height: 20px;
   overflow: hidden;
   flex-shrink: 0;
   display: flex;
@@ -80,7 +80,7 @@
   small.error,
   p-message {
     color: #f87171;
-    font-size: 0.8125rem;
+    font-size: 13px;
     font-weight: 500;
     margin: 0;
   }
@@ -96,8 +96,8 @@
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.06) !important;
   border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  padding: 0.65rem 0.9rem !important;
-  font-size: 0.9375rem !important;
+  padding: 10px 14px !important;
+  font-size: 15px !important;
   transition:
     border-color 0.2s,
     box-shadow 0.2s;
@@ -130,7 +130,7 @@
     border-radius: 10px;
     background: rgba(255, 255, 255, 0.06) !important;
     border: 1px solid rgba(255, 255, 255, 0.12) !important;
-    padding: 0.65rem 0.9rem !important;
+    padding: 10px 14px !important;
     transition:
       border-color 0.2s,
       box-shadow 0.2s;
@@ -155,7 +155,7 @@
 
   ::ng-deep .row {
     display: flex;
-    gap: 0.5rem;
+    gap: 8px;
     align-items: stretch;
     min-width: 0;
   }
@@ -176,8 +176,8 @@
   ::ng-deep .currency-select,
   ::ng-deep .currency-select.p-select {
     flex: 0 0 auto;
-    min-width: 4rem;
-    max-width: 5rem;
+    min-width: 64px;
+    max-width: 80px;
   }
 
   ::ng-deep .currency-select .p-select,
@@ -191,7 +191,7 @@
     border-radius: 10px;
     background: rgba(255, 255, 255, 0.06) !important;
     border: 1px solid rgba(255, 255, 255, 0.12) !important;
-    padding: 0.65rem 0.9rem !important;
+    padding: 10px 14px !important;
   }
 
   ::ng-deep .p-select .p-dropdown {
@@ -207,8 +207,8 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  gap: 0.75rem;
-  padding-top: 1rem;
+  gap: 12px;
+  padding-top: 16px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -219,7 +219,7 @@
   border: 1px solid rgba(255, 255, 255, 0.25) !important;
   background: rgba(255, 255, 255, 0.08) !important;
   border-radius: 10px !important;
-  padding: 0.6rem 1.25rem !important;
+  padding: 10px 20px !important;
   font-weight: 600 !important;
   transition:
     background 0.2s,
@@ -238,7 +238,7 @@
   background: $accent !important;
   color: $white !important;
   border-radius: 10px !important;
-  padding: 0.6rem 1.5rem !important;
+  padding: 10px 24px !important;
   font-weight: 600 !important;
   border: none !important;
   box-shadow: 0 2px 8px rgba(59, 130, 246, 0.35);
@@ -298,12 +298,13 @@
 .app-modal-form .wrapper {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 6px;
 
   .error-slot,
   .form-field-error {
-    height: 1.25rem;
-    line-height: 1.25rem;
+    height: 20px;
+    line-height: 20px;
     overflow: hidden;
   }
 }
+

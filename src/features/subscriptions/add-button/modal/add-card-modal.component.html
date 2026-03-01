@@ -3,7 +3,7 @@
     @for (input of inputs; track input.field) {
       @if (input.field === 'subscribeDate') {
         <div class="field">
-          <label [for]="input.name"
+          <label [for]="input.name" class="label"
             >{{ input.placeholder }}{{ input.required ? '&#42;' : '' }}</label
           >
           <p-datepicker
@@ -25,7 +25,7 @@
         </div>
       } @else if (input.field === 'lastCharge') {
         <div class="field">
-          <label [for]="input.name">{{ input.placeholder }}</label>
+          <label [for]="input.name" class="label">{{ input.placeholder }}</label>
           <p-datepicker
             [inputId]="input.name"
             [name]="input.name"
@@ -40,7 +40,7 @@
         </div>
       } @else if (input.field === 'type') {
         <div class="field">
-          <label [for]="input.name">{{ input.placeholder }}</label>
+          <label [for]="input.name" class="label">{{ input.placeholder }}</label>
           <p-select
             class="select"
             [options]="typeOptions"
@@ -67,7 +67,7 @@
         </div>
       } @else {
         <div class="field">
-          <label [for]="input.name"
+          <label [for]="input.name" class="label"
             >{{ input.placeholder }}{{ input.required ? '&#42;' : '' }}</label
           >
           <input
@@ -100,3 +100,4 @@
     >
   </div>
 </form>
+

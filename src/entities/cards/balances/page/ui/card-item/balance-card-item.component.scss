@@ -9,7 +9,7 @@
 
 .card {
   --card-radius: 16px;
-  --card-padding: 1rem;
+  --card-padding: 16px;
   --card-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
   position: relative;
@@ -39,13 +39,13 @@
 
   @include bp.tablet-and-up {
     --card-radius: 18px;
-    --card-padding: 1.25rem;
+    --card-padding: 20px;
     min-height: 200px;
   }
 
   @include bp.desktop-and-up {
     --card-radius: 20px;
-    --card-padding: 1.5rem;
+    --card-padding: 24px;
     min-height: 200px;
   }
 
@@ -68,45 +68,45 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
+  gap: 8px;
+  margin-bottom: 16px;
 
   @include bp.tablet-and-up {
-    gap: 0.75rem;
-    margin-bottom: 1.25rem;
+    gap: 12px;
+    margin-bottom: 20px;
   }
 
   @include bp.desktop-and-up {
-    margin-bottom: 1.5rem;
+    margin-bottom: 24px;
   }
 }
 
 .card__badge {
   flex-shrink: 0;
-  padding: 0.2rem 0.4rem;
-  font-size: 0.5625rem;
+  padding: 3px 6px;
+  font-size: 9px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 2px;
   text-transform: uppercase;
   color: rgba($white, 0.6);
   background: rgba(255, 255, 255, 0.08);
   border-radius: 6px;
 
   @include bp.tablet-and-up {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.625rem;
-    letter-spacing: 0.14em;
+    padding: 4px 8px;
+    font-size: 10px;
+    letter-spacing: 2px;
   }
 }
 
 .card__brand {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 6px;
   min-width: 0;
 
   @include bp.tablet-and-up {
-    gap: 0.5rem;
+    gap: 8px;
   }
 
   .card-logo {
@@ -145,104 +145,104 @@
 }
 
 .card__name {
-  font-size: 0.75rem;
+  font-size: 12px;
   font-weight: 600;
   color: $white;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.5px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 
   @include bp.tablet-and-up {
-    font-size: 0.8125rem;
+    font-size: 13px;
   }
 
   @include bp.desktop-and-up {
-    font-size: 0.875rem;
+    font-size: 14px;
   }
 }
 
 .card__number {
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
-  margin-bottom: 1rem;
+  gap: 3px;
+  margin-bottom: 16px;
 
   @include bp.tablet-and-up {
-    gap: 0.25rem;
-    margin-bottom: 1.125rem;
+    gap: 4px;
+    margin-bottom: 18px;
   }
 
   @include bp.desktop-and-up {
-    margin-bottom: 1.25rem;
+    margin-bottom: 20px;
   }
 }
 
 .card__number-value {
-  font-size: 0.9375rem;
+  font-size: 15px;
   font-weight: 600;
-  letter-spacing: 0.15em;
-  word-spacing: 0.25em;
+  letter-spacing: 2px;
+  word-spacing: 4px;
   color: rgba($white, 0.95);
   font-variant-numeric: tabular-nums;
   overflow: hidden;
   text-overflow: ellipsis;
 
   @include bp.tablet-and-up {
-    font-size: 1rem;
-    letter-spacing: 0.18em;
+    font-size: 16px;
+    letter-spacing: 3px;
   }
 
   @include bp.desktop-and-up {
-    font-size: 1.125rem;
-    letter-spacing: 0.2em;
-    word-spacing: 0.35em;
+    font-size: 18px;
+    letter-spacing: 3px;
+    word-spacing: 6px;
   }
 }
 
 .card__number-label {
-  font-size: 0.625rem;
+  font-size: 10px;
   font-weight: 500;
-  letter-spacing: 0.05em;
+  letter-spacing: 1px;
   text-transform: uppercase;
   color: rgba($gray, 0.9);
 
   @include bp.tablet-and-up {
-    font-size: 0.6875rem;
-    letter-spacing: 0.06em;
+    font-size: 11px;
+    letter-spacing: 1px;
   }
 }
 
 .card__balance {
   display: flex;
   flex-direction: column;
-  gap: 0.1rem;
+  gap: 2px;
   margin-top: auto;
-  padding-top: 0.5rem;
+  padding-top: 8px;
   min-width: 0;
 
   @include bp.tablet-and-up {
-    gap: 0.125rem;
+    gap: 2px;
   }
 }
 
 .card__balance-label {
-  font-size: 0.625rem;
+  font-size: 10px;
   font-weight: 500;
-  letter-spacing: 0.05em;
+  letter-spacing: 1px;
   text-transform: uppercase;
   color: rgba($gray, 0.85);
 
   @include bp.tablet-and-up {
-    font-size: 0.6875rem;
-    letter-spacing: 0.06em;
+    font-size: 11px;
+    letter-spacing: 1px;
   }
 }
 
 .card__balance-primary {
-  font-size: 1.25rem;
+  font-size: 20px;
   font-weight: 700;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.5px;
   color: $white;
   font-variant-numeric: tabular-nums;
   line-height: 1.2;
@@ -250,23 +250,23 @@
   text-overflow: ellipsis;
 
   @include bp.tablet-and-up {
-    font-size: 1.375rem;
+    font-size: 22px;
   }
 
   @include bp.desktop-and-up {
-    font-size: 1.5rem;
+    font-size: 24px;
   }
 }
 
 .card__balance-secondary {
-  font-size: 0.75rem;
+  font-size: 12px;
   font-weight: 500;
   color: rgba($gray, 0.95);
-  margin-top: 0.125rem;
+  margin-top: 2px;
   font-variant-numeric: tabular-nums;
 
   @include bp.tablet-and-up {
-    font-size: 0.8125rem;
+    font-size: 13px;
   }
 }
 
@@ -274,24 +274,24 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  margin-top: 1rem;
-  padding-top: 0.75rem;
+  margin-top: 16px;
+  padding-top: 12px;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
 
   @include bp.tablet-and-up {
-    margin-top: 1.125rem;
-    padding-top: 1rem;
+    margin-top: 18px;
+    padding-top: 16px;
   }
 }
 
 .card__action {
-  --btn-padding-y: 0.5rem;
-  --btn-padding-x: 1rem;
+  --btn-padding-y: 8px;
+  --btn-padding-x: 16px;
 
   padding: var(--btn-padding-y) var(--btn-padding-x);
-  font-size: 0.75rem;
+  font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.5px;
   color: rgba($accent, 1);
   background: rgba($accent, 0.14);
   border: 1px solid rgba($accent, 0.4);
@@ -304,9 +304,9 @@
     transform 0.15s ease;
 
   @include bp.tablet-and-up {
-    --btn-padding-y: 0.5625rem;
-    --btn-padding-x: 1.125rem;
-    font-size: 0.8125rem;
+    --btn-padding-y: 9px;
+    --btn-padding-x: 18px;
+    font-size: 13px;
     border-radius: 10px;
   }
 

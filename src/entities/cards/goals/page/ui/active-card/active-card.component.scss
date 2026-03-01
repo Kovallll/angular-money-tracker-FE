@@ -26,28 +26,28 @@
 }
 
 .goal-title {
-  font-size: 1rem;
+  font-size: 16px;
   font-weight: 600;
   margin: 0;
   word-break: break-word;
 
   @include bp.tablet-and-up {
-    font-size: 1.125rem;
+    font-size: 18px;
   }
 
   @include bp.desktop-and-up {
-    font-size: 1.25rem;
+    font-size: 20px;
   }
 }
 
 .date {
   color: $gray;
-  font-size: 0.8125rem;
+  font-size: 13px;
   margin: 0;
   text-align: right;
 
   @include bp.tablet-and-up {
-    font-size: 0.875rem;
+    font-size: 14px;
   }
 }
 
@@ -92,27 +92,27 @@
 .text {
   margin: 0;
   font-weight: 700;
-  font-size: 0.875rem;
+  font-size: 14px;
 
   @include bp.tablet-and-up {
-    font-size: 0.9375rem;
+    font-size: 15px;
   }
 
   @include bp.desktop-and-up {
-    font-size: 1rem;
+    font-size: 16px;
   }
 }
 
 .text-block .price {
   margin: 4px 0 0;
-  font-size: 0.9375rem;
+  font-size: 15px;
 
   @include bp.tablet-and-up {
-    font-size: 1rem;
+    font-size: 16px;
   }
 
   @include bp.desktop-and-up {
-    font-size: 1.0625rem;
+    font-size: 17px;
   }
 }
 

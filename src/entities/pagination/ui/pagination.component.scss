@@ -7,14 +7,14 @@
   max-width: 600px;
   background: transparent;
   color: $white;
-  font-size: 0.875rem;
+  font-size: 14px;
 
   @include bp.tablet-and-up {
-    font-size: 1rem;
+    font-size: 16px;
   }
 
   @include bp.desktop-and-up {
-    font-size: 1.125rem;
+    font-size: 18px;
   }
 
   @include mat.paginator-overrides(

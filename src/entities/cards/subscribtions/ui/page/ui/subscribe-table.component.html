@@ -75,5 +75,7 @@
       </div>
     }
   </div>
-  <pagination />
+  @if (subscribes().length) {
+    <pagination />
+  }
 </div>

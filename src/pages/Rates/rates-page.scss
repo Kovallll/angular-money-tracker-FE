@@ -18,7 +18,7 @@
 
 .page-title {
   margin: 0 0 24px;
-  font-size: 1.75rem;
+  font-size: 28px;
   font-weight: 600;
   color: $white;
 }
@@ -43,13 +43,13 @@
   ::ng-deep .mat-mdc-tab {
     color: rgba(255, 255, 255, 0.9);
     font-weight: 500;
-    font-size: 1rem;
+    font-size: 16px;
     min-width: 140px;
     opacity: 1;
 
     @media (max-width: 600px) {
       min-width: 100px;
-      font-size: 0.9rem;
+      font-size: 14px;
     }
 
     .mdc-tab__text-label {
@@ -112,7 +112,7 @@
 
 .block-title {
   margin: 0 0 16px;
-  font-size: 1.15rem;
+  font-size: 18px;
   font-weight: 600;
   color: $white;
 }
@@ -142,18 +142,18 @@
   th {
     font-weight: 600;
     color: rgba(255, 255, 255, 0.9);
-    font-size: 0.95rem;
+    font-size: 15px;
   }
 
   td {
-    font-size: 1rem;
+    font-size: 16px;
   }
 
   @media (max-width: 600px) {
     th,
     td {
       padding: 8px 10px;
-      font-size: 0.8rem;
+      font-size: 13px;
     }
 
     th:first-child,
@@ -231,7 +231,7 @@
   .result-line {
     margin: 0 0 10px;
     color: $white;
-    font-size: 1.05rem;
+    font-size: 17px;
 
     &:last-child {
       margin-bottom: 0;
@@ -301,9 +301,10 @@
   color: $gray;
   padding: 32px;
   text-align: center;
-  font-size: 1rem;
+  font-size: 16px;
 }
 
 .spinner {
   display: inline-block;
 }
+

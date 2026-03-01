@@ -88,7 +88,7 @@
 }
 
 .category {
-  font-size: 1rem;
+  font-size: 16px;
   font-weight: 600;
   margin: 0;
   white-space: nowrap;
@@ -96,17 +96,17 @@
   text-overflow: ellipsis;
 
   @include bp.tablet-and-up {
-    font-size: 1.0625rem;
+    font-size: 17px;
   }
 }
 
 .cost {
-  font-size: 0.875rem;
+  font-size: 14px;
   color: $gray;
   margin: 4px 0 0;
 
   @include bp.tablet-and-up {
-    font-size: 0.9375rem;
+    font-size: 15px;
   }
 }
 
@@ -125,16 +125,16 @@
 .percents {
   color: $white;
   font-weight: 600;
-  font-size: 0.9375rem;
+  font-size: 15px;
 }
 
 .compare {
-  font-size: 0.6875rem;
+  font-size: 11px;
   color: $gray;
   margin: 4px 0 0;
 
   @include bp.tablet-and-up {
-    font-size: 0.75rem;
+    font-size: 12px;
   }
 }
 
@@ -163,7 +163,7 @@
 }
 
 .chart-placeholder {
-  font-size: 0.8125rem;
+  font-size: 13px;
   color: $gray;
   width: 100%;
   text-align: center;
@@ -183,13 +183,13 @@
   gap: 12px;
 
   .title {
-    font-size: 0.8125rem;
+    font-size: 13px;
     color: $gray;
     margin: 0;
   }
 
   .amount {
-    font-size: 0.9375rem;
+    font-size: 15px;
     font-weight: 600;
     margin: 0;
     white-space: nowrap;
@@ -206,3 +206,4 @@
 .positive {
   color: $success;
 }
+

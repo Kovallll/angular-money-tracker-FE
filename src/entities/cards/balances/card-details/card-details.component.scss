@@ -1,7 +1,7 @@
 @use 'theme' as *;
 
 .details-body {
-  --details-gap: 1.5rem;
+  --details-gap: 24px;
 
   display: flex;
   flex-direction: column;
@@ -12,43 +12,43 @@
 .details {
   display: flex;
   flex-direction: column;
-  gap: 1.75rem;
+  gap: 28px;
   flex: 1;
   min-width: 0;
 }
 
 .details__balance {
-  padding: 1.25rem 1rem;
+  padding: 20px 16px;
   border-radius: 12px;
   background: rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.06);
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 4px;
 }
 
 .details__label {
   display: block;
-  font-size: 0.6875rem;
+  font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 1px;
   text-transform: uppercase;
   color: rgba($gray, 0.95);
 }
 
 .details__balance-primary {
   margin: 0;
-  font-size: 1.75rem;
+  font-size: 28px;
   font-weight: 700;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.5px;
   color: $white;
   font-variant-numeric: tabular-nums;
   line-height: 1.2;
 }
 
 .details__balance-secondary {
-  margin: 0.125rem 0 0 0;
-  font-size: 0.9375rem;
+  margin: 2px 0 0 0;
+  font-size: 15px;
   font-weight: 500;
   color: rgba($gray, 0.9);
   font-variant-numeric: tabular-nums;
@@ -57,7 +57,7 @@
 .details__grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 1.25rem 1.5rem;
+  gap: 20px 24px;
 
   @media (max-width: 480px) {
     grid-template-columns: 1fr;
@@ -67,7 +67,7 @@
 .details__field {
   display: flex;
   flex-direction: column;
-  gap: 0.375rem;
+  gap: 6px;
   min-width: 0;
 
   &--full {
@@ -77,15 +77,15 @@
 
 .details__value {
   margin: 0;
-  font-size: 1rem;
+  font-size: 16px;
   font-weight: 500;
   color: $white;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.5px;
 
   &--number {
     font-variant-numeric: tabular-nums;
-    letter-spacing: 0.12em;
-    word-spacing: 0.15em;
+    letter-spacing: 2px;
+    word-spacing: 2px;
   }
 }
 
@@ -93,7 +93,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.75rem;
-  padding-top: 1rem;
+  gap: 12px;
+  padding-top: 16px;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
