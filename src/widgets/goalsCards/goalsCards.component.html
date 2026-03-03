@@ -1,35 +1,84 @@
-@if (isLoading()) {
-  <div class="spinner">
-    <p-progress-spinner ariaLabel="loading" />
-  </div>
-} @else if (goals().length) {
-  <div class="container">
-    <div class="head">
-      <goal-active-card [goal]="activeCard()" />
-      <div class="chart">
-        <goals-statistic-card />
-      </div>
+<div class="container">
+  <header class="page-header">
+    <div class="page-header__text">
+      <h1 class="page-title">Goals</h1>
+      <p class="page-subtitle">Track your savings targets and monitor progress</p>
     </div>
-    <div class="body">
-      <div class="body-header">
-        <div class="title">All Goals</div>
-        <goal-add-card-button />
-      </div>
-      <div class="content">
-        <div class="cards">
-          @for (goal of goals(); track goal.id) {
-            <goal-card-item [goal]="goal" (click)="handleActiveCardChange(goal.id)" />
-          }
-        </div>
-        <pagination [pageSize]="pageSize" />
-      </div>
-    </div>
-  </div>
-} @else {
-  <div class="data-placeholder data-placeholder--page">
-    <span class="data-placeholder__icon" aria-hidden="true">🎯</span>
-    <p>No goals</p>
-    <p>Add a goal using the button below</p>
     <goal-add-card-button />
+  </header>
+
+  <div class="content">
+    @if (isLoading()) {
+      <div class="cards-loading">
+        <p-progress-spinner ariaLabel="Loading" strokeWidth="3" />
+        <p class="cards-loading__text">Loading goals…</p>
+      </div>
+    } @else if (goals().length) {
+      <section class="summary-cards" aria-label="Overview">
+        <div class="summary-card summary-card--primary">
+          <span class="summary-card__icon" aria-hidden="true">
+            <i class="pi pi-flag"></i>
+          </span>
+          <div class="summary-card__content">
+            <span class="summary-card__label">Total Goals</span>
+            <span class="summary-card__value">{{ goals().length }}</span>
+          </div>
+        </div>
+        <div class="summary-card">
+          <span class="summary-card__icon" aria-hidden="true">
+            <i class="pi pi-wallet"></i>
+          </span>
+          <div class="summary-card__content">
+            <span class="summary-card__label">Total Target Budget</span>
+            <span class="summary-card__value">{{ totalTargetBudget() | appCurrency }}</span>
+          </div>
+        </div>
+        <div class="summary-card">
+          <span class="summary-card__icon" aria-hidden="true">
+            <i class="pi pi-chart-line"></i>
+          </span>
+          <div class="summary-card__content">
+            <span class="summary-card__label">Total Goal Budget</span>
+            <span class="summary-card__value">{{ totalGoalBudget() | appCurrency }}</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="hero-section">
+        <goal-active-card [goal]="activeCard()" />
+        <div class="chart-section">
+          <goals-statistic-card />
+        </div>
+      </section>
+
+      <section class="goals-section">
+        <h2 class="section-title">All goals</h2>
+        <div class="content">
+          <div class="cards">
+            @for (goal of goals(); track goal.id) {
+              <goal-card-item
+                [goal]="goal"
+                [isActive]="activeCard()?.id === goal.id"
+                (click)="handleActiveCardChange(goal.id)"
+              />
+            }
+          </div>
+          <div class="pagination-wrap">
+            <pagination [pageSize]="pageSize" />
+          </div>
+        </div>
+      </section>
+    } @else {
+      <div class="empty-state">
+        <div class="empty-state__icon" aria-hidden="true">
+          <i class="pi pi-flag"></i>
+        </div>
+        <h3 class="empty-state__title">No goals yet</h3>
+        <p class="empty-state__text">Create your first goal to start tracking savings</p>
+        <div class="empty-state__action">
+          <goal-add-card-button />
+        </div>
+      </div>
+    }
   </div>
-}
+</div>

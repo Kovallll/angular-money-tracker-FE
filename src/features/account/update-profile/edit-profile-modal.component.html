@@ -1,87 +1,86 @@
-<form #f="ngForm" (ngSubmit)="onSubmit(f)" class="app-modal-form">
-  <div class="form-fields">
-    <div class="field">
-      <label for="name">Name</label>
-      <input
-        id="name"
-        type="text"
-        pInputText
-        [(ngModel)]="profile.name"
-        name="name"
-        #name="ngModel"
-        required
-        maxlength="255"
-      />
-      <div class="error-slot">
-        @if (name.invalid && (name.touched || f.submitted)) {
-          <small class="error">Name is required.</small>
-        }
-      </div>
-    </div>
-    <div class="field">
-      <label for="lastname">Lastname</label>
-      <input
-        id="lastname"
-        type="text"
-        pInputText
-        [(ngModel)]="profile.lastname"
-        name="lastname"
-        maxlength="255"
-      />
-      <div class="error-slot"></div>
-    </div>
-    <div class="field">
-      <label for="email">Email</label>
-      <input
-        id="email"
-        type="email"
-        pInputText
-        [(ngModel)]="profile.email"
-        name="email"
-        appEmailValidator
-        required
-        #email="ngModel"
-      />
-      <div class="error-slot">
-        @if (email.invalid && (email.touched || f.submitted)) {
-          @if (email.hasError('required')) {
-            <small class="error">Email is required.</small>
-          } @else if (email.hasError('email')) {
-            <small class="error">Invalid email.</small>
+<app-modal-shell
+  [embedded]="true"
+  [showCloseButton]="false"
+  [showCancel]="true"
+  [showSave]="true"
+  saveLabel="Save"
+  [saveDisabled]="!!f.invalid || loading()"
+  [saveLoading]="loading()"
+  (cancelRequest)="close()"
+  (saveRequest)="onSubmit(f)"
+>
+  <form #f="ngForm" (ngSubmit)="onSubmit(f)" class="app-modal-form">
+    <div class="form-fields">
+      <div class="field">
+        <label for="name">Name</label>
+        <input
+          id="name"
+          type="text"
+          pInputText
+          [(ngModel)]="profile.name"
+          name="name"
+          #name="ngModel"
+          required
+          maxlength="255"
+        />
+        <div class="error-slot">
+          @if (name.invalid && (name.touched || f.submitted)) {
+            <small class="error">Name is required.</small>
           }
-        }
+        </div>
+      </div>
+      <div class="field">
+        <label for="lastname">Lastname</label>
+        <input
+          id="lastname"
+          type="text"
+          pInputText
+          [(ngModel)]="profile.lastname"
+          name="lastname"
+          maxlength="255"
+        />
+        <div class="error-slot"></div>
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          pInputText
+          [(ngModel)]="profile.email"
+          name="email"
+          appEmailValidator
+          required
+          #email="ngModel"
+        />
+        <div class="error-slot">
+          @if (email.invalid && (email.touched || f.submitted)) {
+            @if (email.hasError('required')) {
+              <small class="error">Email is required.</small>
+            } @else if (email.hasError('email')) {
+              <small class="error">Invalid email.</small>
+            }
+          }
+        </div>
+      </div>
+      <div class="field">
+        <label for="phone">Phone</label>
+        <input
+          id="phone"
+          type="tel"
+          pInputText
+          [(ngModel)]="profile.phone"
+          name="phone"
+          appBelarusPhoneMask
+          placeholder="+375 (29) 123-45-67"
+          #phone="ngModel"
+        />
+        <div class="error-slot">
+          @if (phone.invalid && phone.value && (phone.touched || f.submitted)) {
+            <small class="error">Enter valid Belarus phone: +375 (XX) XXX-XX-XX</small>
+          }
+        </div>
       </div>
     </div>
-    <div class="field">
-      <label for="phone">Phone</label>
-      <input
-        id="phone"
-        type="tel"
-        pInputText
-        [(ngModel)]="profile.phone"
-        name="phone"
-        appBelarusPhoneMask
-        placeholder="+375 (29) 123-45-67"
-        #phone="ngModel"
-      />
-      <div class="error-slot">
-        @if (phone.invalid && phone.value && (phone.touched || f.submitted)) {
-          <small class="error">Enter valid Belarus phone: +375 (XX) XXX-XX-XX</small>
-        }
-      </div>
-    </div>
-  </div>
-  <div class="actions">
-    <app-button type="button" appearance="secondary" size="md" (buttonClick)="close()"
-      >Cancel</app-button
-    >
-    <app-button
-      type="submit"
-      appearance="primary"
-      size="md"
-      [loading]="loading()"
-      [disabled]="loading()"
-      >Save</app-button
-    >
-  </div>
-</form>
+  </form>
+</app-modal-shell>

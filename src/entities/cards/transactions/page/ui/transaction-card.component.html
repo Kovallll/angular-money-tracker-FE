@@ -19,12 +19,13 @@
         @if (isLoading()) {
           <p-progress-spinner />
         } @else {
-          <table-component
+          <transactions-list-view
             [dataSource]="transactionsForTable()"
-            [isEmpty]="isEmpty"
             [displayedCells]="displayedCells()"
-            (onDelete)="handleDelete($event)"
+            [isEmpty]="isEmpty"
+            [showActions]="true"
             (onEdit)="handleEdit($event)"
+            (onDelete)="handleDelete($event)"
           />
         }
       </ng-container>

@@ -7,6 +7,9 @@ import { PaginationComponent } from '@/entities/pagination/ui/pagination.compone
 import { GoalItem, UrlSyncedComponent } from '@/shared';
 import { GoalAddCardButtonComponent } from '@/features/goal/add-goal-card/add-card.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { AppCurrencyPipe } from '@/shared/pipes/app-currency.pipe';
+import { CurrencyService } from '@/shared/services/currency/currency.service';
+import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
 
 @Component({
   standalone: true,
@@ -20,19 +23,41 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     PaginationComponent,
     GoalAddCardButtonComponent,
     ProgressSpinnerModule,
+    AppCurrencyPipe,
   ],
 })
 export class GoalsCardsComponent extends UrlSyncedComponent<GoalItem> {
   protected readonly goalsService = inject(GoalsService);
+  private currencyService = inject(CurrencyService);
+  private exchangeRates = inject(ExchangeRatesService);
+
   protected allGoals = this.goalsService.getGoals();
   protected goals = linkedSignal(this.allGoals);
   protected activeCard = signal<GoalItem | null>(null);
   isLoading = this.goalsService.isLoading;
   allData = computed(() => this.allGoals());
 
+  totalTargetBudget = computed(() => {
+    const primary = this.currencyService.primaryCode();
+    return this.goals().reduce(
+      (sum, g) =>
+        sum + this.exchangeRates.convert(g.targetBudget ?? 0, g.currencyCode ?? 'BYN', primary),
+      0,
+    );
+  });
+
+  totalGoalBudget = computed(() => {
+    const primary = this.currencyService.primaryCode();
+    return this.goals().reduce(
+      (sum, g) =>
+        sum + this.exchangeRates.convert(g.goalBudget ?? 0, g.currencyCode ?? 'BYN', primary),
+      0,
+    );
+  });
+
   constructor() {
     super();
-    this.initPageSize(18);
+    this.initPageSize(9);
 
     effect(() => {
       if (!this.activeCard() && this.goals()) {

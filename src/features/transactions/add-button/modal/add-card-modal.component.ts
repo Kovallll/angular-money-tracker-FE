@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
+import { AppModalShellComponent } from '@/shared/components/app-modal-shell/app-modal-shell.component';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import {
@@ -26,7 +26,7 @@ import { AppIconComponent } from '@/shared/components/app-icon/app-icon.componen
   imports: [
     FormsModule,
     InputTextModule,
-    AppButtonComponent,
+    AppModalShellComponent,
     MessageModule,
     DatePickerModule,
     Select,
@@ -82,7 +82,7 @@ export class AddTransactionModalComponent implements OnInit {
   }));
 
   protected form: {
-    date: string;
+    date: string | Date;
     title: string;
     categoryId: string;
     cardId: string;
@@ -92,7 +92,7 @@ export class AddTransactionModalComponent implements OnInit {
     description: string;
     paymentMethod?: 'cash' | 'card';
   } = {
-    date: new Date().toISOString().slice(0, 10),
+    date: this.formatDateLocal(new Date()) as string,
     title: '',
     categoryId: '',
     cardId: '',
@@ -113,6 +113,15 @@ export class AddTransactionModalComponent implements OnInit {
     { label: 'Revenue', value: 'revenue' },
   ];
 
+  /** YYYY-MM-DD in local timezone (avoids Mar 1 → Feb 28 shift) */
+  private formatDateLocal(v: string | Date): string {
+    if (v == null || v === '') return '';
+    if (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v)) return v;
+    const d = v instanceof Date ? v : new Date(v);
+    if (isNaN(d.getTime())) return '';
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  }
+
   protected buildPayload(): CreateTransactionPayload {
     const f = this.form;
     return {
@@ -121,7 +130,7 @@ export class AddTransactionModalComponent implements OnInit {
       type: f.type,
       amount: Number(f.amount) || 0,
       currencyCode: f.currencyCode ?? this.currencyService.primaryCode(),
-      date: f.date,
+      date: this.formatDateLocal(f.date),
       title: f.title || undefined,
       description: f.description || undefined,
       paymentMethod: f.paymentMethod || undefined,

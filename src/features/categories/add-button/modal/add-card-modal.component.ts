@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
+import { AppModalShellComponent } from '@/shared/components/app-modal-shell/app-modal-shell.component';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import {
@@ -22,7 +22,7 @@ import { AppIconComponent } from '@/shared/components/app-icon/app-icon.componen
   imports: [
     FormsModule,
     InputTextModule,
-    AppButtonComponent,
+    AppModalShellComponent,
     MessageModule,
     Select,
     AppIconComponent,

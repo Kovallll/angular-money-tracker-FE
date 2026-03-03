@@ -22,3 +22,19 @@
 .selected {
   color: white;
 }
+
+:host ::ng-deep .field--has-error {
+  .p-datepicker .p-inputtext,
+  .p-select .p-select-label,
+  .p-inputnumber-input,
+  input.p-inputtext {
+    border-color: #f87171 !important;
+    background: rgba(239, 68, 68, 0.08) !important;
+  }
+}
+
+:host .app-modal-form .error-slot {
+  min-height: 20px;
+  height: auto;
+  overflow: visible;
+}

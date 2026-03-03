@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, signal, OnInit } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
+import { AppModalShellComponent } from '@/shared/components/app-modal-shell/app-modal-shell.component';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { BalancesHttpService, CreateCard } from '@/shared';
@@ -18,7 +18,7 @@ import { ActivatedRoute } from '@angular/router';
   imports: [
     FormsModule,
     InputTextModule,
-    AppButtonComponent,
+    AppModalShellComponent,
     MessageModule,
     Select,
     PriceCurrencyFieldComponent,

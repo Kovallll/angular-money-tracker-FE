@@ -1,4 +1,6 @@
 import { Component, computed, inject, input, ViewChild } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { Router } from '@angular/router';
 import { AppCurrencyPipe } from '@/shared/pipes/app-currency.pipe';
 import { ChartConfiguration } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
@@ -7,9 +9,9 @@ import {
   CategoryItem,
   CategoryLineChartDto,
   ExpensesHttpService,
+  RoutePaths,
   TransactionsHttpService,
 } from '@/shared';
-import { DividerComponent } from '@/shared/components/divider/divider';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 import { ContextMenuComponent } from '@/entities/context-menu/cm.component';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -23,13 +25,7 @@ import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.
   selector: 'category-card',
   templateUrl: './categories.component.html',
   styleUrls: ['./categories.component.scss'],
-  imports: [
-    AppCurrencyPipe,
-    BaseChartDirective,
-    DividerComponent,
-    ContextMenuComponent,
-    AppIconComponent,
-  ],
+  imports: [AppCurrencyPipe, BaseChartDirective, ContextMenuComponent, AppIconComponent, DatePipe],
   providers: [DialogService],
   standalone: true,
 })
@@ -44,11 +40,38 @@ export class CategoryCardComponent {
   private exchangeRates = inject(ExchangeRatesService);
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
+  private router = inject(Router);
   category = input<CategoryItem>({ title: '', totalExpenses: 0 } as CategoryItem);
   chart = input<CategoryLineChartDto>();
   ref: DynamicDialogRef | undefined | null;
 
   compareDelta = computed(() => this.categoriesHttpService.getChartDeltaCompare(this.chart()));
+
+  transactionCount = computed(() => {
+    const cat = this.category();
+    return (cat.expenses?.length ?? 0) + (cat.revenues?.length ?? 0);
+  });
+
+  /** Дата последней транзакции (расход или доход) в категории. */
+  lastActivityDate = computed(() => {
+    const cat = this.category();
+    const all = [...(cat.expenses ?? []), ...(cat.revenues ?? [])];
+    if (!all.length) return null;
+    const dates = all.map((t) => (t as { date?: string }).date).filter(Boolean) as string[];
+    if (!dates.length) return null;
+    return new Date(Math.max(...dates.map((d) => new Date(d).getTime())));
+  });
+
+  /** Средняя сумма расхода по категории в выбранной валюте (если есть расходы). */
+  averageExpense = computed(() => {
+    const cat = this.category();
+    const count = cat.expenses?.length ?? 0;
+    if (count === 0) return null;
+    const total = cat.totalExpenses ?? 0;
+    const avgByn = total / count;
+    const primary = this.currencyService.primaryCode();
+    return this.exchangeRates.convert(avgByn, 'BYN', primary);
+  });
 
   /** Есть ли у категории реальные данные для графика (хотя бы одно ненулевое значение). */
   hasChartData = computed(() => {
@@ -166,5 +189,12 @@ export class CategoryCardComponent {
   openContextMenu(event: MouseEvent) {
     event.preventDefault();
     this.ctxMenu.open(event);
+  }
+
+  handleOpenDetails() {
+    const id = this.category().id;
+    if (id != null) {
+      this.router.navigate([RoutePaths.CATEGORY_DETAILS, id]);
+    }
   }
 }

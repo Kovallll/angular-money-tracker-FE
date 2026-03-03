@@ -80,6 +80,8 @@ export interface CategoryItem {
   totalExpenses: number;
   totalRevenues: number;
   icon: string;
+  /** Дата создания категории (если приходит с API). Для сортировки по «что было раньше». */
+  createdAt?: string;
 }
 
 export interface CreateCategoryItem {
@@ -94,7 +96,8 @@ export interface GoalItem {
   /** Currency code (e.g. BYN, EUR). Used for display; default BYN if missing. */
   currencyCode?: string;
   startDate: string;
-  endDate: string;
+  /** Optional. Goal without end date has no deadline. */
+  endDate?: string;
   title: string;
   status?: string;
 }
@@ -102,18 +105,22 @@ export interface GoalItem {
 export type CreateGoalItem = Omit<GoalItem, 'id'>;
 
 export interface SubscribeItem {
-  id: number;
+  id: number | string;
   amount: number;
   /** Currency code (e.g. BYN, EUR). Used for display; default BYN if missing. */
   currencyCode?: string;
   subscribeDate: string;
   subscribeName: string;
-  lastCharge: string;
+  lastCharge: string | null;
   type: string;
   description?: string;
+  /** Category ID for transaction when marking as paid. */
+  categoryId?: string | null;
 }
 
-export type CreateSubscribeItem = Omit<SubscribeItem, 'id'>;
+export type CreateSubscribeItem = Omit<SubscribeItem, 'id'> & {
+  categoryId?: string | null;
+};
 export interface CategoryLineChartDto {
   categoryId: number;
   title: string;

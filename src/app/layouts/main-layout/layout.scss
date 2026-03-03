@@ -9,7 +9,10 @@
 }
 
 .sidebar-wrap {
-  display: block;
+  display: flex;
+  width: 280px;
+  height: auto;
+  box-shadow: inset -1px 0 0 #334155;
 }
 
 .content {
@@ -66,4 +69,3 @@
     padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
   }
 }
-

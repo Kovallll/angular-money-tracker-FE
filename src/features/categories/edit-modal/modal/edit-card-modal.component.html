@@ -1,60 +1,65 @@
-<form #cardForm="ngForm" (ngSubmit)="onSubmit(cardForm)" class="app-modal-form">
-  <div class="form-fields">
-    <div class="field">
-      <div class="icons">
-        <div class="preview">
-          <app-icon [icon]="card.icon" />
+<app-modal-shell
+  [embedded]="true"
+  [showCloseButton]="false"
+  [showCancel]="true"
+  [showSave]="true"
+  saveLabel="Save"
+  [saveDisabled]="!!cardForm.invalid"
+  (cancelRequest)="close()"
+  (saveRequest)="onSubmit(cardForm)"
+>
+  <form #cardForm="ngForm" (ngSubmit)="onSubmit(cardForm)" class="app-modal-form">
+    <div class="form-fields">
+      <div class="field">
+        <div class="icons">
+          <div class="preview">
+            <app-icon [icon]="card.icon" />
+          </div>
+          <p-select
+            class="select"
+            [options]="iconOptions"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Select icon"
+            [(ngModel)]="card.icon"
+            name="categoryIcon"
+          >
+            <ng-template let-item pTemplate="item">
+              <div class="icon-row">
+                <app-icon [icon]="item.value" />
+                <span>{{ item.label }}</span>
+              </div>
+            </ng-template>
+            <ng-template let-item pTemplate="selectedItem">
+              <div class="icon-row">
+                <app-icon [icon]="item?.value" />
+                <span>{{ item?.label }}</span>
+              </div>
+            </ng-template>
+          </p-select>
         </div>
-        <p-select
-          class="select"
-          [options]="iconOptions"
-          optionLabel="label"
-          optionValue="value"
-          placeholder="Select icon"
-          [(ngModel)]="card.icon"
-          name="categoryIcon"
-        >
-          <ng-template let-item pTemplate="item">
-            <div class="icon-row">
-              <app-icon [icon]="item.value" />
-              <span>{{ item.label }}</span>
-            </div>
-          </ng-template>
-          <ng-template let-item pTemplate="selectedItem">
-            <div class="icon-row">
-              <app-icon [icon]="item?.value" />
-              <span>{{ item?.label }}</span>
-            </div>
-          </ng-template>
-        </p-select>
+        <div class="error-slot"></div>
       </div>
-      <div class="error-slot"></div>
-    </div>
-    <div class="field">
-      <label for="categoryName">Category Name&#42;</label>
-      <input
-        class="input"
-        pInputText
-        type="text"
-        id="categoryName"
-        placeholder="Category Name"
-        name="categoryName"
-        [(ngModel)]="card.title"
-        #categoryName="ngModel"
-        [invalid]="categoryName.invalid && (categoryName.touched || cardForm.submitted)"
-        required
-      />
-      <div class="error-slot">
-        @if (categoryName.invalid && (categoryName.touched || cardForm.submitted)) {
-          <small class="error">Category Name is required.</small>
-        }
+      <div class="field">
+        <label for="categoryName">Category Name&#42;</label>
+        <input
+          class="input"
+          pInputText
+          type="text"
+          id="categoryName"
+          placeholder="Category Name"
+          name="categoryName"
+          [(ngModel)]="card.title"
+          #categoryName="ngModel"
+          [invalid]="categoryName.invalid && (categoryName.touched || cardForm.submitted)"
+          required
+        />
+        <div class="error-slot">
+          @if (categoryName.invalid && (categoryName.touched || cardForm.submitted)) {
+            <small class="error">Category Name is required.</small>
+          }
+        </div>
       </div>
     </div>
-  </div>
-  <div class="actions">
-    <app-button type="button" appearance="secondary" size="md" (buttonClick)="close()"
-      >Cancel</app-button
-    >
-    <app-button type="submit" appearance="primary" size="md">Save</app-button>
-  </div>
-</form>
+  </form>
+</app-modal-shell>

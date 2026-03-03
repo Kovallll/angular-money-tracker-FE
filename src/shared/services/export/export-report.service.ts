@@ -150,7 +150,7 @@ export class ExportReportService {
             fmt(g.targetBudget),
             fmt(g.goalBudget),
             g.startDate,
-            g.endDate,
+            g.endDate || '—',
           ]),
         ],
       },
@@ -239,7 +239,9 @@ export class ExportReportService {
     sections.push(['Title', 'Target budget', 'Current', 'Start', 'End'].join(sep));
     data.goals.forEach((g) =>
       sections.push(
-        [g.title, g.targetBudget, g.goalBudget, g.startDate, g.endDate].map(escape).join(sep),
+        [g.title, g.targetBudget, g.goalBudget, g.startDate, g.endDate || '—']
+          .map(escape)
+          .join(sep),
       ),
     );
     sections.push('');
@@ -360,7 +362,7 @@ export class ExportReportService {
         data.goals
           .map(
             (g) =>
-              `<tr><td>${esc(g.title)}</td><td>${fmt(g.targetBudget)}</td><td>${fmt(g.goalBudget)}</td><td>${esc(g.startDate)} – ${esc(g.endDate)}</td></tr>`,
+              `<tr><td>${esc(g.title)}</td><td>${fmt(g.targetBudget)}</td><td>${fmt(g.goalBudget)}</td><td>${esc(g.startDate)} – ${esc(g.endDate || '—')}</td></tr>`,
           )
           .join('') +
         '</tbody></table>',
@@ -373,7 +375,7 @@ export class ExportReportService {
         data.subscriptions
           .map(
             (s) =>
-              `<tr><td>${esc(s.subscribeName)}</td><td>${fmt(s.amount)}</td><td>${esc(s.subscribeDate)} / ${esc(s.lastCharge)}</td><td>${esc(s.type)}</td></tr>`,
+              `<tr><td>${esc(s.subscribeName)}</td><td>${fmt(s.amount)}</td><td>${esc(s.subscribeDate)} / ${esc(s.lastCharge ?? '—')}</td><td>${esc(s.type)}</td></tr>`,
           )
           .join('') +
         '</tbody></table>',

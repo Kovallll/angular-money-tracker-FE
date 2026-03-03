@@ -5,7 +5,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 import { InputTextModule } from 'primeng/inputtext';
 import { DatePickerModule } from 'primeng/datepicker';
-import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
+import { AppModalShellComponent } from '@/shared/components/app-modal-shell/app-modal-shell.component';
 import { ConfirmationService } from 'primeng/api';
 import { PriceCurrencyFieldComponent } from '@/shared/components/price-currency-field/price-currency-field.component';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
@@ -18,7 +18,7 @@ import { CurrencyService } from '@/shared/services/currency/currency.service';
     FormsModule,
     InputTextModule,
     DatePickerModule,
-    AppButtonComponent,
+    AppModalShellComponent,
     PriceCurrencyFieldComponent,
   ],
   templateUrl: './modal.component.html',
@@ -64,6 +64,20 @@ export class GoalAdjustDialogComponent {
 
   onSave() {
     this.dialogRef.close(this.data);
+  }
+
+  hasDateError(): boolean {
+    const start = this.data?.startDate;
+    const end = this.data?.endDate;
+    if (!start || !end) return false;
+    const startDate = (start as unknown) instanceof Date ? start : new Date(start as string);
+    const endDate = (end as unknown) instanceof Date ? end : new Date(end as string);
+    if (isNaN((startDate as Date).getTime()) || isNaN((endDate as Date).getTime())) return false;
+    return (endDate as Date) < (startDate as Date);
+  }
+
+  hasBudgetError(): boolean {
+    return this.goalBudget <= 0 || this.targetBudget > this.goalBudget;
   }
 
   onDelete() {

@@ -1,5 +1,249 @@
+@use 'theme' as *;
+@use 'shared/styles/breakpoints' as bp;
+
 .container {
   display: flex;
   flex-direction: column;
-  align-items: end;
+  gap: 24px;
+  width: 100%;
+  min-width: 0;
+  padding: 0 16px 32px;
+
+  @include bp.tablet-and-up {
+    gap: 32px;
+    padding: 0 24px 40px;
+  }
+
+  @include bp.desktop-and-up {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 32px 48px;
+  }
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  color: $accent;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition:
+    color 0.2s ease,
+    opacity 0.2s ease;
+
+  &:hover {
+    opacity: 0.9;
+    color: lighten($accent, 8%);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $accent;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+.page-header {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  background: $secondary;
+  border: 1px solid rgba($white, 0.06);
+  border-radius: 16px;
+
+  @include bp.tablet-and-up {
+    padding: 24px;
+    gap: 24px;
+  }
+}
+
+.page-header__main {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+
+.page-header__icon-wrap {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba($accent, 0.3) 0%, rgba($accent, 0.15) 100%);
+  border: 1px solid rgba($accent, 0.25);
+  border-radius: 14px;
+
+  ::ng-deep app-icon,
+  ::ng-deep .mat-icon {
+    font-size: 28px !important;
+    width: 28px !important;
+    height: 28px !important;
+    color: $white;
+  }
+}
+
+.page-header__info {
+  min-width: 0;
+}
+
+.page-header__title {
+  margin: 0 0 4px 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: $white;
+  letter-spacing: -0.02em;
+
+  @include bp.tablet-and-up {
+    font-size: 24px;
+  }
+}
+
+.page-header__subtitle {
+  margin: 0;
+  font-size: 13px;
+  color: $gray;
+}
+
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+
+  @include bp.tablet-and-up {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+}
+
+.summary-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  background: rgba($white, 0.04);
+  border: 1px solid rgba($white, 0.06);
+  border-radius: 12px;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+
+  &:hover {
+    background: rgba($white, 0.06);
+    border-color: rgba($white, 0.1);
+  }
+
+  &--primary {
+    background: rgba($accent, 0.12);
+    border-color: rgba($accent, 0.2);
+
+    .summary-card__value {
+      color: $accent;
+    }
+  }
+}
+
+.summary-card__label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: $gray;
+}
+
+.summary-card__value {
+  font-size: 18px;
+  font-weight: 700;
+  color: $white;
+
+  @include bp.tablet-and-up {
+    font-size: 20px;
+  }
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.section__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.section__pagination {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 48px 24px;
+  text-align: center;
+  min-height: 200px;
+}
+
+.empty-state__icon {
+  font-size: 48px;
+  opacity: 0.6;
+}
+
+.empty-state__title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: $white;
+}
+
+.empty-state__desc {
+  margin: 0;
+  font-size: 14px;
+  color: $gray;
+  max-width: 320px;
+}
+
+.data-placeholder--page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  min-height: 200px;
+  gap: 12px;
+
+  .data-placeholder__icon {
+    font-size: 48px;
+    opacity: 0.6;
+  }
+
+  p {
+    margin: 0;
+    color: $gray;
+    font-size: 15px;
+  }
+
+  a {
+    color: $accent;
+    text-decoration: none;
+    font-weight: 500;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }

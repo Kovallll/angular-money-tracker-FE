@@ -1,0 +1,82 @@
+<div class="container">
+  <a [routerLink]="['/', RoutePaths.CATEGORIES]" class="back-link">
+    <i class="pi pi-arrow-left" aria-hidden="true"></i>
+    Back to categories
+  </a>
+
+  @if (category()) {
+  <div class="category-header">
+    <div class="category-icon">
+      <app-icon [icon]="category()!.icon" />
+    </div>
+    <div class="category-info">
+      <h1 class="category-title">{{ category()!.title }}</h1>
+      <div class="totals-row">
+        <div class="total-item">
+          <span class="total-label">Expenses</span>
+          <span class="total-value">{{ displayTotalExpenses() | appCurrency }}</span>
+        </div>
+        <div class="total-item">
+          <span class="total-label">Revenue</span>
+          <span class="total-value">{{ displayTotalRevenues() | appCurrency }}</span>
+        </div>
+        @if (compareDelta().value !== 0) {
+        <div class="total-item">
+          <span class="total-label">vs last month</span>
+          <span
+            class="total-value"
+            [class.negative]="!compareDelta().negative"
+            [class.positive]="compareDelta().negative"
+          >
+            {{ compareDelta().value }}% @if (!compareDelta().negative) {
+            <i class="pi pi-arrow-down trend-arrow" aria-hidden="true"></i>
+            } @else {
+            <i class="pi pi-arrow-up trend-arrow" aria-hidden="true"></i>
+            }
+          </span>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  @if (hasChartData()) {
+  <dashboard-card title="Expenses trend">
+    <card-body class="chart-body">
+      <div class="chart-wrap">
+        <canvas
+          baseChart
+          [type]="'line'"
+          [data]="{ labels: chart()?.labels ?? [], datasets: chart()?.datasets ?? [] }"
+          [options]="chartOptions"
+        ></canvas>
+      </div>
+    </card-body>
+  </dashboard-card>
+  }
+
+  <controls [controlsProps]="controlsProps()" />
+  <dashboard-card title="Transactions">
+    <card-body>
+      <transactions-list-view
+        [dataSource]="transactionListRows()"
+        [displayedCells]="displayedCells()"
+        [isEmpty]="isEmpty"
+      />
+    </card-body>
+  </dashboard-card>
+  <div class="pagination-wrap">
+    <pagination />
+  </div>
+  } @else if (categoriesQuery.isPending() || chartsQuery.isPending()) {
+  <div class="data-placeholder data-placeholder--page">
+    <p-progress-spinner ariaLabel="Loading" />
+  </div>
+  } @else {
+  <div class="data-placeholder data-placeholder--page">
+    <span class="data-placeholder__icon" aria-hidden="true">📁</span>
+    <p>Category not found</p>
+    <a [routerLink]="['/', RoutePaths.CATEGORIES]">Back to categories</a>
+  </div>
+  }
+</div>

@@ -1,10 +1,26 @@
+@use 'theme' as *;
+@use 'shared/styles/breakpoints' as bp;
+
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
 .container {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-}
+  width: 100%;
+  min-width: 0;
+  padding: 0 16px 32px;
 
-.chart {
-  height: 360px;
-  margin-bottom: 32px;
+  @include bp.tablet-and-up {
+    padding: 0 24px 40px;
+  }
+
+  @include bp.desktop-and-up {
+    padding: 0 32px 48px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
 }

@@ -1,38 +1,62 @@
-<div class="analytics">
-  <p class="title" [class.disable]="view() === 'row'">Analytics</p>
-  <div class="charts" [class.row]="view() === 'row'">
-    <div class="chart">
-      <div class="subtitle">Categories Share</div>
-      @if (hasPieData()) {
-        <canvas baseChart [type]="'doughnut'" [data]="pieData()" [options]="pieOptions()"></canvas>
-      } @else {
-        <div class="chart-placeholder data-placeholder">
-          <span class="data-placeholder__icon" aria-hidden="true">📊</span>
-          <p>No data</p>
-        </div>
-      }
-    </div>
-    <div class="chart">
-      <div class="subtitle">Spending by Month</div>
-      @if (hasBarData()) {
-        <canvas baseChart [type]="'bar'" [data]="barData()" [options]="barOptions()"></canvas>
-      } @else {
-        <div class="chart-placeholder data-placeholder">
-          <span class="data-placeholder__icon" aria-hidden="true">📊</span>
-          <p>No data</p>
-        </div>
-      }
-    </div>
-    <div class="chart">
-      <div class="subtitle">Spending Over Time</div>
-      @if (hasLineData()) {
-        <canvas baseChart [type]="'line'" [data]="lineData()" [options]="lineOptions()"></canvas>
-      } @else {
-        <div class="chart-placeholder data-placeholder">
-          <span class="data-placeholder__icon" aria-hidden="true">📊</span>
-          <p>No data</p>
-        </div>
-      }
-    </div>
+<section class="analytics" aria-label="Category analytics">
+  <h2 class="analytics__title" [class.analytics__title--hidden]="view() === 'row'">Analytics</h2>
+  <p class="analytics__desc" [class.analytics__desc--hidden]="view() === 'row'">
+    Spending breakdown and trends
+  </p>
+  <div class="analytics__charts" [class.analytics__charts--row]="view() === 'row'">
+    <article class="chart-card">
+      <h3 class="chart-card__title">Categories Share</h3>
+      <div class="chart-card__body">
+        @if (hasPieData()) {
+          <canvas
+            baseChart
+            [type]="'doughnut'"
+            [data]="pieChartData()"
+            [options]="pieOptions()"
+          ></canvas>
+        } @else {
+          <div class="chart-placeholder">
+            <span class="chart-placeholder__icon" aria-hidden="true">📊</span>
+            <p>No data</p>
+          </div>
+        }
+      </div>
+    </article>
+    <article class="chart-card">
+      <h3 class="chart-card__title">Spending by Month</h3>
+      <div class="chart-card__body">
+        @if (hasBarData()) {
+          <canvas
+            baseChart
+            [type]="'bar'"
+            [data]="barChartData()"
+            [options]="barOptions()"
+          ></canvas>
+        } @else {
+          <div class="chart-placeholder">
+            <span class="chart-placeholder__icon" aria-hidden="true">📊</span>
+            <p>No data</p>
+          </div>
+        }
+      </div>
+    </article>
+    <article class="chart-card">
+      <h3 class="chart-card__title">Spending Over Time</h3>
+      <div class="chart-card__body">
+        @if (hasLineData()) {
+          <canvas
+            baseChart
+            [type]="'line'"
+            [data]="lineChartData()"
+            [options]="lineOptions()"
+          ></canvas>
+        } @else {
+          <div class="chart-placeholder">
+            <span class="chart-placeholder__icon" aria-hidden="true">📊</span>
+            <p>No data</p>
+          </div>
+        }
+      </div>
+    </article>
   </div>
-</div>
+</section>

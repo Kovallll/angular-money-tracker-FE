@@ -1,137 +1,143 @@
-<form #cardForm="ngForm" (ngSubmit)="onSubmit(cardForm)" class="app-modal-form">
-  <div class="form-row">
-    <div class="form-field">
-      <label for="bankName">Bank Name</label>
-      <input
-        class="input"
-        pInputText
-        type="text"
-        id="bankName"
-        name="bankName"
-        placeholder="e.g. Sberbank"
-        [(ngModel)]="card.bankName"
-        #bankName="ngModel"
-        required
-      />
-      <div class="form-field-error">
-        @if (bankName.invalid && (bankName.touched || cardForm.submitted)) {
-          <p-message severity="error" size="small" variant="simple"
-            >Bank name is required</p-message
-          >
-        }
+<app-modal-shell
+  [embedded]="true"
+  [showCloseButton]="false"
+  [showCancel]="true"
+  [showSave]="true"
+  saveLabel="Add Card"
+  [saveDisabled]="isSaveDisabled(cardForm)"
+  (cancelRequest)="close()"
+  (saveRequest)="onSubmit(cardForm)"
+>
+  <form #cardForm="ngForm" (ngSubmit)="onSubmit(cardForm)" class="app-modal-form">
+    <div class="form-row">
+      <div class="form-field">
+        <label for="bankName">Bank Name</label>
+        <input
+          class="input"
+          pInputText
+          type="text"
+          id="bankName"
+          name="bankName"
+          placeholder="e.g. Sberbank"
+          [(ngModel)]="card.bankName"
+          #bankName="ngModel"
+          required
+        />
+        <div class="form-field-error">
+          @if (bankName.invalid && (bankName.touched || cardForm.submitted)) {
+            <p-message severity="error" size="small" variant="simple"
+              >Bank name is required</p-message
+            >
+          }
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="cardType">Card Type</label>
+        <p-select
+          inputId="cardType"
+          name="cardType"
+          [options]="cardTypeOptions"
+          optionLabel="label"
+          optionValue="value"
+          [(ngModel)]="card.cardType"
+          placeholder="Select card type"
+          appendTo="body"
+          #cardType="ngModel"
+          required
+        />
+        <div class="form-field-error">
+          @if (cardType.invalid && (cardType.touched || cardForm.submitted)) {
+            <p-message severity="error" size="small" variant="simple">Select card type</p-message>
+          }
+        </div>
       </div>
     </div>
 
-    <div class="form-field">
-      <label for="cardType">Card Type</label>
-      <p-select
-        inputId="cardType"
-        name="cardType"
-        [options]="cardTypeOptions"
-        optionLabel="label"
-        optionValue="value"
-        [(ngModel)]="card.cardType"
-        placeholder="Select card type"
-        appendTo="body"
-        #cardType="ngModel"
-        required
-      />
-      <div class="form-field-error">
-        @if (cardType.invalid && (cardType.touched || cardForm.submitted)) {
-          <p-message severity="error" size="small" variant="simple">Select card type</p-message>
-        }
+    <div class="form-row">
+      <div class="form-field">
+        <label for="cardNumber">Card Number</label>
+        <input
+          class="input"
+          pInputText
+          type="text"
+          id="cardNumber"
+          name="cardNumber"
+          placeholder="0000 0000 0000 0000"
+          [ngModel]="card.cardNumber"
+          (ngModelChange)="formatCardNumber($event)"
+          #cardNumber="ngModel"
+          required
+          maxlength="19"
+          inputmode="numeric"
+          autocomplete="cc-number"
+        />
+        <div class="form-field-error">
+          @if ((cardNumber.touched || cardForm.submitted) && isCardNumberInvalid(cardNumber)) {
+            <p-message severity="error" size="small" variant="simple">
+              {{ getCardNumberError(cardNumber) }}
+            </p-message>
+          }
+        </div>
       </div>
-    </div>
-  </div>
 
-  <div class="form-row">
-    <div class="form-field">
-      <label for="cardNumber">Card Number</label>
-      <input
-        class="input"
-        pInputText
-        type="text"
-        id="cardNumber"
-        name="cardNumber"
-        placeholder="0000 0000 0000 0000"
-        [ngModel]="card.cardNumber"
-        (ngModelChange)="formatCardNumber($event)"
-        #cardNumber="ngModel"
-        required
-        maxlength="19"
-        inputmode="numeric"
-        autocomplete="cc-number"
-      />
-      <div class="form-field-error">
-        @if ((cardNumber.touched || cardForm.submitted) && isCardNumberInvalid(cardNumber)) {
-          <p-message severity="error" size="small" variant="simple">
-            {{ getCardNumberError(cardNumber) }}
-          </p-message>
-        }
+      <div class="form-field">
+        <label for="expiry">Expiry <span class="optional">(optional)</span></label>
+        <input
+          class="input"
+          pInputText
+          type="text"
+          id="expiry"
+          name="expiry"
+          placeholder="MM/YY"
+          [(ngModel)]="card.expiry"
+          (ngModelChange)="formatExpiry($event)"
+          maxlength="5"
+        />
+        <div class="form-field-error"></div>
       </div>
     </div>
 
-    <div class="form-field">
-      <label for="expiry">Expiry <span class="optional">(optional)</span></label>
-      <input
-        class="input"
-        pInputText
-        type="text"
-        id="expiry"
-        name="expiry"
-        placeholder="MM/YY"
-        [(ngModel)]="card.expiry"
-        (ngModelChange)="formatExpiry($event)"
-        maxlength="5"
-      />
-      <div class="form-field-error"></div>
-    </div>
-  </div>
+    <div class="form-row">
+      <div class="form-field">
+        <app-price-currency-field
+          label="Balance"
+          amountName="cardBalance"
+          [(amount)]="card.cardBalance"
+          [(currencyCode)]="card.currencyCode"
+          [required]="true"
+        />
+        <div class="form-field-error">
+          @if (cardForm.submitted && (card.cardBalance === null || card.cardBalance < 0)) {
+            <p-message severity="error" size="small" variant="simple"
+              >Balance is required</p-message
+            >
+          }
+        </div>
+      </div>
 
-  <div class="form-row">
-    <div class="form-field">
-      <app-price-currency-field
-        label="Balance"
-        amountName="cardBalance"
-        [(amount)]="card.cardBalance"
-        [(currencyCode)]="card.currencyCode"
-        [required]="true"
-      />
-      <div class="form-field-error">
-        @if (cardForm.submitted && (card.cardBalance === null || card.cardBalance < 0)) {
-          <p-message severity="error" size="small" variant="simple">Balance is required</p-message>
-        }
+      <div class="form-field">
+        <label for="cardName">Payment System</label>
+        <p-select
+          inputId="cardName"
+          name="cardName"
+          [options]="paymentOptions"
+          optionLabel="label"
+          optionValue="value"
+          [(ngModel)]="card.cardName"
+          placeholder="Select payment system"
+          appendTo="body"
+          #cardName="ngModel"
+          required
+        />
+        <div class="form-field-error">
+          @if (cardName.invalid && (cardName.touched || cardForm.submitted)) {
+            <p-message severity="error" size="small" variant="simple"
+              >Select payment system</p-message
+            >
+          }
+        </div>
       </div>
     </div>
-
-    <div class="form-field">
-      <label for="cardName">Payment System</label>
-      <p-select
-        inputId="cardName"
-        name="cardName"
-        [options]="paymentOptions"
-        optionLabel="label"
-        optionValue="value"
-        [(ngModel)]="card.cardName"
-        placeholder="Select payment system"
-        appendTo="body"
-        #cardName="ngModel"
-        required
-      />
-      <div class="form-field-error">
-        @if (cardName.invalid && (cardName.touched || cardForm.submitted)) {
-          <p-message severity="error" size="small" variant="simple"
-            >Select payment system</p-message
-          >
-        }
-      </div>
-    </div>
-  </div>
-
-  <div class="actions">
-    <app-button type="button" appearance="secondary" size="md" (buttonClick)="close()"
-      >Cancel</app-button
-    >
-    <app-button type="submit" appearance="primary" size="md">Add Card</app-button>
-  </div>
-</form>
+  </form>
+</app-modal-shell>

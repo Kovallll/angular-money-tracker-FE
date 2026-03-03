@@ -1,7 +1,8 @@
 <div class="container">
   @if (isLoading()) {
-    <div class="data-loading data-placeholder--page">
-      <p-progress-spinner ariaLabel="Loading" />
+    <div class="cards-loading">
+      <p-progress-spinner ariaLabel="Loading" strokeWidth="3" />
+      <p class="cards-loading__text">Loading balances…</p>
     </div>
   } @else if (cards().length) {
     @for (card of cards(); track card.id) {

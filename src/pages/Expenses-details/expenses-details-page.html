@@ -1,13 +1,74 @@
 <div class="container">
-  <controls [controlsProps]="controlsProps()" />
-  <dashboard-card [title]="category()?.title ?? ''">
-    <card-body>
-      <table-component
-        [dataSource]="expensesInPrimaryCurrency()"
-        [isEmpty]="isEmpty"
-        [displayedCells]="displayedCells()"
-      />
-    </card-body>
-  </dashboard-card>
-  <pagination />
+  <a [routerLink]="['/', RoutePaths.EXPENSES]" class="back-link" aria-label="Back to expenses">
+    <i class="pi pi-arrow-left" aria-hidden="true"></i>
+    Back to expenses
+  </a>
+
+  @if (category()) {
+  <header class="page-header">
+    <div class="page-header__main">
+      <div class="page-header__icon-wrap">
+        <app-icon [icon]="category()!.icon" />
+      </div>
+      <div class="page-header__info">
+        <h1 class="page-header__title">{{ category()!.title }}</h1>
+        <p class="page-header__subtitle">Expenses in this category</p>
+      </div>
+    </div>
+
+    <div class="summary-cards">
+      <div class="summary-card summary-card--primary">
+        <span class="summary-card__label">Total</span>
+        <span class="summary-card__value">{{ totalAmount() | appCurrency }}</span>
+      </div>
+      <div class="summary-card">
+        <span class="summary-card__label">Transactions</span>
+        <span class="summary-card__value">{{ expenseCount() }}</span>
+      </div>
+      @if (expenseCount() > 0) {
+      <div class="summary-card">
+        <span class="summary-card__label">Average</span>
+        <span class="summary-card__value">{{ averageAmount() | appCurrency }}</span>
+      </div>
+      }
+    </div>
+  </header>
+
+  <section class="section" aria-label="Expenses">
+    <div class="section__bar">
+      <controls [controlsProps]="controlsProps()" />
+    </div>
+
+    <dashboard-card title="Expenses">
+      <card-body>
+        @if (isEmpty) {
+        <div class="empty-state">
+          <span class="empty-state__icon" aria-hidden="true">📋</span>
+          <p class="empty-state__title">No expenses in this category</p>
+          <p class="empty-state__desc">
+            Transactions in «{{ category()!.title }}» will appear here.
+          </p>
+        </div>
+        } @else {
+        <transactions-list-view
+          [dataSource]="expenseListRows()"
+          [displayedCells]="displayedCells()"
+          [isEmpty]="isEmpty"
+        />
+        }
+      </card-body>
+    </dashboard-card>
+    @if (!isEmpty) {
+    <div class="section__pagination">
+      <pagination />
+    </div>
+    }
+  </section>
+  } @else {
+  <div class="data-placeholder data-placeholder--page">
+    <span class="data-placeholder__icon" aria-hidden="true">📁</span>
+    <p>Category not found or still loading</p>
+    <a [routerLink]="['/', RoutePaths.EXPENSES]">Back to expenses</a>
+  </div>
+  }
 </div>

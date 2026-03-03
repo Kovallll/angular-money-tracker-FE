@@ -1,10 +1,7 @@
-<button
-  pButton
-  class="add-goal-btn"
-  icon="pi pi-plus"
-  label="Add Goal"
-  (click)="openDialog()"
-></button>
+<app-button appearance="primary" size="md" (buttonClick)="openDialog()" ariaLabel="Add Goal">
+  <i class="pi pi-plus"></i>
+  Add Goal
+</app-button>
 
 <p-dialog
   header="Create New Goal"
@@ -17,115 +14,117 @@
   [resizable]="false"
   styleClass="goal-dialog"
 >
-  <form #f="ngForm" (ngSubmit)="onSubmit(f)" class="goal-form">
-    <div class="form-field">
-      <label for="title">Title&#42;</label>
-      <input
-        id="title"
-        pInputText
-        type="text"
-        [(ngModel)]="newGoal.title"
-        name="title"
-        #titleRef="ngModel"
-        required
-        maxlength="255"
-        placeholder="Enter goal title"
-      />
-      <div class="error-slot">
-        @if (titleRef.invalid && (titleRef.touched || f.submitted)) {
-          <small class="error">Title is required.</small>
-        }
-      </div>
-    </div>
+  <app-modal-shell
+    [embedded]="true"
+    [showCloseButton]="false"
+    [showCancel]="true"
+    [showSave]="true"
+    saveLabel="Create"
+    [saveDisabled]="!!f.invalid || hasDateError() || hasBudgetError()"
+    (cancelRequest)="closeDialog()"
+    (saveRequest)="onSubmit(f)"
+  >
+    <form #f="ngForm" (ngSubmit)="onSubmit(f)" class="app-modal-form">
+      <div class="form-fields">
+        <div class="field form-field--full">
+          <label for="title">Title&#42;</label>
+          <input
+            id="title"
+            pInputText
+            type="text"
+            [(ngModel)]="newGoal.title"
+            name="title"
+            #titleRef="ngModel"
+            required
+            maxlength="255"
+            placeholder="Enter goal title"
+          />
+          <div class="error-slot">
+            @if (titleRef.invalid && (titleRef.touched || f.submitted)) {
+              <small class="error">Title is required.</small>
+            }
+          </div>
+        </div>
 
-    <div class="form-row">
-      <div class="form-field">
-        <app-price-currency-field
-          label="Target Budget"
-          amountName="targetBudget"
-          [(amount)]="targetBudget"
-          [(currencyCode)]="currencyCode"
-          [required]="true"
-        />
-        <div class="error-slot">
-          @if (f.submitted && +(newGoal.targetBudget ?? 0) < 0) {
-            <small class="error">Must be &ge; 0.</small>
-          }
+        <div class="form-row">
+          <div class="field">
+            <app-price-currency-field
+              label="Target Budget"
+              amountName="targetBudget"
+              [(amount)]="targetBudget"
+              [(currencyCode)]="currencyCode"
+              [showCurrency]="true"
+              [required]="true"
+            />
+            <div class="error-slot">
+              @if (f.submitted && +(newGoal.targetBudget ?? 0) < 0) {
+                <small class="error">Must be &ge; 0.</small>
+              }
+              @if (
+                hasBudgetError() &&
+                +(newGoal.goalBudget ?? 0) > 0 &&
+                +(newGoal.targetBudget ?? 0) > +(newGoal.goalBudget ?? 0)
+              ) {
+                <small class="error">Target must not exceed goal.</small>
+              }
+            </div>
+          </div>
+
+          <div class="field">
+            <app-price-currency-field
+              label="Goal Budget"
+              amountName="goalBudget"
+              [(amount)]="goalBudget"
+              [showCurrency]="false"
+              [required]="true"
+            />
+            <div class="error-slot">
+              @if (f.submitted && +(newGoal.goalBudget ?? 0) <= 0) {
+                <small class="error">Must be &gt; 0.</small>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="field">
+            <label for="startDate">Start Date&#42;</label>
+            <p-datepicker
+              [(ngModel)]="newGoal.startDate"
+              name="startDate"
+              #startRef="ngModel"
+              required
+              dateFormat="yy-mm-dd"
+              appendTo="body"
+              inputId="startDate"
+              panelStyleClass="subscription-datepicker-panel"
+            ></p-datepicker>
+            <div class="error-slot">
+              @if (startRef.invalid && (startRef.touched || f.submitted)) {
+                <small class="error">Start date is required.</small>
+              }
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="endDate">End Date <span class="optional">(optional)</span></label>
+            <p-datepicker
+              [(ngModel)]="newGoal.endDate"
+              name="endDate"
+              #endRef="ngModel"
+              dateFormat="yy-mm-dd"
+              appendTo="body"
+              inputId="endDate"
+              panelStyleClass="subscription-datepicker-panel"
+            ></p-datepicker>
+            <div class="error-slot">
+              @if (hasDateError()) {
+                <small class="error">End date must be after start date.</small>
+              }
+            </div>
+          </div>
         </div>
       </div>
-
-      <div class="form-field">
-        <app-price-currency-field
-          label="Goal Budget"
-          amountName="goalBudget"
-          [(amount)]="goalBudget"
-          [showCurrency]="false"
-          [required]="true"
-        />
-        <div class="error-slot">
-          @if (f.submitted && +(newGoal.goalBudget ?? 0) < 0) {
-            <small class="error">Must be &ge; 0.</small>
-          }
-        </div>
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-field">
-        <label for="startDate">Start Date&#42;</label>
-        <p-datepicker
-          [(ngModel)]="newGoal.startDate"
-          name="startDate"
-          #startRef="ngModel"
-          required
-          dateFormat="yy-mm-dd"
-          appendTo="body"
-          inputId="startDate"
-        ></p-datepicker>
-        <div class="error-slot">
-          @if (startRef.invalid && (startRef.touched || f.submitted)) {
-            <small class="error">Start date is required.</small>
-          }
-        </div>
-      </div>
-
-      <div class="form-field">
-        <label for="endDate">End Date&#42;</label>
-        <p-datepicker
-          [(ngModel)]="newGoal.endDate"
-          name="endDate"
-          #endRef="ngModel"
-          required
-          dateFormat="yy-mm-dd"
-          appendTo="body"
-          inputId="endDate"
-        ></p-datepicker>
-        <div class="error-slot">
-          @if (endRef.invalid && (endRef.touched || f.submitted)) {
-            <small class="error">End date is required.</small>
-          }
-          @if (f.submitted && hasDateError()) {
-            <small class="error">End date must be after start date.</small>
-          }
-        </div>
-      </div>
-    </div>
-
-    <div class="actions">
-      <button
-        type="button"
-        pButton
-        label="Cancel"
-        class="cancel-btn"
-        (click)="closeDialog()"
-      ></button>
-      <button
-        type="submit"
-        pButton
-        label="Create"
-        class="create-btn"
-        [disabled]="f.invalid || hasDateError() || hasBudgetError()"
-      ></button>
-    </div>
-  </form>
+    </form>
+  </app-modal-shell>
 </p-dialog>

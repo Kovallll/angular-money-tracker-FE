@@ -1,5 +1,14 @@
 <dashboard-card [title]="title()">
   <card-body class="body">
-    <canvas class="chart" baseChart [data]="data()" [options]="options()" [type]="'bar'"></canvas>
+    <div class="chart-wrap">
+      <canvas
+        class="chart"
+        baseChart
+        [data]="data()"
+        [options]="options()"
+        [type]="'bar'"
+        aria-label="Expenses statistics chart"
+      ></canvas>
+    </div>
   </card-body>
 </dashboard-card>

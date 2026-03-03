@@ -1,11 +1,11 @@
 import { TableCell } from '@/entities/table/lib';
 
 export const columns: TableCell[] = [
-  { field: 'subscribeDate', name: 'Date' },
+  { field: 'subscribeDate', name: 'Start date' },
   { field: 'subscribeName', name: 'Title' },
   { field: 'description', name: 'Description' },
   { field: 'type', name: 'Type' },
-  { field: 'lastCharge', name: 'Last charge' },
+  { field: 'lastCharge', name: 'Last paid' },
   { field: 'amount', name: 'Amount' },
 ];
 

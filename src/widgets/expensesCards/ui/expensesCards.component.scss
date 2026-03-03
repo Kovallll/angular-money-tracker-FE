@@ -1,20 +1,221 @@
+@use 'theme' as *;
+@use 'shared/styles/breakpoints' as bp;
+
 :host {
+  display: block;
   width: 100%;
+  min-width: 0;
 }
 
-.conteiner {
+.container {
   display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  gap: 24px;
+
+  @include bp.desktop-and-up {
+    gap: 32px;
+  }
+}
+
+.page-header {
+  margin-bottom: 8px;
+}
+
+.header-text {
+  min-width: 0;
 }
 
 .title {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+  letter-spacing: -0.02em;
+
+  @include bp.tablet-and-up {
+    font-size: 28px;
+  }
+
+  @include bp.desktop-and-up {
+    font-size: 32px;
+  }
+}
+
+.subtitle {
+  font-size: 14px;
+  color: $gray;
+  margin: 0;
+  line-height: 1.5;
+
+  @include bp.tablet-and-up {
+    font-size: 15px;
+  }
+}
+
+.empty-state {
+  gap: 16px !important;
+
+  .empty-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .empty-desc {
+    margin: 0;
+    opacity: 0.9;
+  }
+}
+
+.summary-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  min-width: 0;
+
+  @include bp.tablet-and-up {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  @include bp.desktop-and-up {
+    gap: 20px;
+  }
+}
+
+.summary-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: $light-primary;
+  border-radius: 14px;
+  padding: 16px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:hover {
+    border-color: rgba($accent, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  &--primary {
+    border-color: rgba($accent, 0.25);
+    background: linear-gradient(135deg, rgba($accent, 0.08) 0%, $light-primary 100%);
+  }
+
+  @include bp.tablet-and-up {
+    padding: 18px 20px;
+  }
+}
+
+.summary-card__icon {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba($accent, 0.15);
+  border-radius: 12px;
+  color: $accent;
   font-size: 20px;
+
+  .summary-card--primary & {
+    background: rgba($accent, 0.25);
+    color: $white;
+  }
+}
+
+.summary-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.summary-card__label {
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: $gray;
+}
+
+.summary-card__value {
+  font-size: 18px;
+  font-weight: 700;
+
+  @include bp.tablet-and-up {
+    font-size: 20px;
+  }
+
+  @include bp.desktop-and-up {
+    font-size: 22px;
+  }
+}
+
+.chart-section {
+  background: $light-primary;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  overflow: hidden;
+  padding: 24px;
+
+  ::ng-deep .body,
+  ::ng-deep card-body {
+    min-height: 320px;
+
+    @include bp.tablet-and-up {
+      min-height: 360px;
+    }
+  }
+
+  ::ng-deep .chart {
+    height: 100%;
+    min-height: 300px;
+  }
+}
+
+.categories-section {
+  margin-top: 8px;
+}
+
+.section-title {
+  font-size: 16px;
   font-weight: 600;
-  margin-bottom: 12px;
+  color: $gray;
+  margin: 0 0 16px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+
+  @include bp.tablet-and-up {
+    margin-bottom: 20px;
+  }
 }
 
 .content {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr;
   width: 100%;
-  gap: 24px;
+  min-width: 0;
+  gap: 16px;
+  align-items: stretch;
+
+  expense-card {
+    display: flex;
+    min-height: 0;
+  }
+
+  @include bp.tablet-and-up {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  @include bp.desktop-and-up {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
 }

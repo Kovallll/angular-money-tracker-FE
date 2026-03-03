@@ -11,6 +11,7 @@ export enum RoutePaths {
   SUBSCRIPTIONS = 'subscriptions',
   BAlANCES = 'balances',
   CATEGORIES = 'categories',
+  CATEGORY_DETAILS = 'category-details',
   BALANCE_DETAILS = 'balance-details',
   EXPENSES_DETAILS = 'expenses-details',
   RATES = 'rates',

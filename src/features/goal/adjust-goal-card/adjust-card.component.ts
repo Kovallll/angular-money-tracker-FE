@@ -32,7 +32,9 @@ export class GoalAdjustCardButtonComponent {
     };
     const dialogRef = this.dialog.open(GoalAdjustDialogComponent, {
       width: '600px',
+      maxWidth: 'calc(100vw - 24px)',
       data: goalWithCurrency,
+      panelClass: 'goal-adjust-dialog',
     });
 
     dialogRef.afterClosed().subscribe((result) => {

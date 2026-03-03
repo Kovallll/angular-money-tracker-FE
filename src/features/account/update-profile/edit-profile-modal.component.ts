@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { FormsModule, NgForm } from '@angular/forms';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
-import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
+import { AppModalShellComponent } from '@/shared/components/app-modal-shell/app-modal-shell.component';
 import {
   User,
   UserService,
@@ -18,7 +18,7 @@ import { MessageService } from 'primeng/api';
   imports: [
     FormsModule,
     InputTextModule,
-    AppButtonComponent,
+    AppModalShellComponent,
     BelarusPhoneMaskDirective,
     BelarusPhoneValidatorDirective,
     EmailValidatorDirective,

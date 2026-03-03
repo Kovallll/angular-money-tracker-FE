@@ -30,3 +30,30 @@
   width: 100%;
   min-width: 0;
 }
+
+/* Loading state — full width, content centered */
+.cards-loading {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 64px 24px;
+  min-height: 320px;
+  width: 100%;
+  background: rgba($secondary, 0.5);
+  border: 1px dashed rgba($accent, 0.2);
+  border-radius: 16px;
+
+  .p-progress-spinner {
+    opacity: 0.9;
+  }
+}
+
+.cards-loading__text {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  color: $gray;
+}

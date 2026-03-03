@@ -2,7 +2,10 @@
   <div class="header">
     <div class="left-header">
       <p class="goal-title">{{ item().title }}</p>
-      <p class="date">{{ item().startDate | date }} - {{ item().endDate | date }}</p>
+      <p class="date">
+        {{ item().startDate | date }} –
+        {{ item().endDate ? (item().endDate | date) : 'No deadline' }}
+      </p>
     </div>
   </div>
 

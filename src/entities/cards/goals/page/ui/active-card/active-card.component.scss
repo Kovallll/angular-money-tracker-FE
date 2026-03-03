@@ -1,6 +1,18 @@
 @use 'theme' as *;
 @use 'shared/styles/breakpoints' as bp;
 
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.body {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
 .card {
   display: flex;
   flex-direction: column;
@@ -8,6 +20,7 @@
   width: 100%;
   min-width: 0;
   box-sizing: border-box;
+  gap: 16px;
 }
 
 .header {
@@ -26,28 +39,85 @@
 }
 
 .goal-title {
-  font-size: 16px;
-  font-weight: 600;
-  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  margin: 0 0 6px 0;
   word-break: break-word;
+  letter-spacing: -0.02em;
 
   @include bp.tablet-and-up {
-    font-size: 18px;
+    font-size: 19px;
   }
 
   @include bp.desktop-and-up {
-    font-size: 20px;
+    font-size: 21px;
   }
+}
+
+.progress-badge {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: rgba($accent, 0.2);
+  color: $accent;
+  margin: 0;
+
+  &.complete {
+    background: rgba($success, 0.2);
+    color: $success;
+  }
+}
+
+.right-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  text-align: right;
 }
 
 .date {
   color: $gray;
   font-size: 13px;
   margin: 0;
-  text-align: right;
+  white-space: nowrap;
 
   @include bp.tablet-and-up {
     font-size: 14px;
+  }
+}
+
+.time-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.time-badge {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 8px;
+  color: $gray;
+
+  &--elapsed {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  &--remaining {
+    background: rgba($accent, 0.12);
+    color: $accent;
+    border: 1px solid rgba($accent, 0.2);
+  }
+
+  &--ended {
+    background: rgba($success, 0.12);
+    color: $success;
+    border-color: rgba($success, 0.2);
   }
 }
 
@@ -56,7 +126,7 @@
   flex-direction: column;
   width: 100%;
   min-width: 0;
-  gap: 12px;
+  gap: 16px;
 }
 
 .content {
@@ -66,20 +136,33 @@
   align-items: center;
   width: 100%;
   min-width: 0;
-  gap: 16px;
+  gap: 20px;
 }
 
 .left-side {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
   min-width: 0;
 }
 
-.title {
+.stat-row {
   display: flex;
-  align-items: flex-start;
-  gap: 8px;
+  align-items: center;
+  gap: 12px;
+}
+
+.stat-icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba($accent, 0.15);
+  border-radius: 10px;
+  color: $accent;
+  font-size: 18px;
 }
 
 .text-block {
@@ -91,39 +174,61 @@
 
 .text {
   margin: 0;
-  font-weight: 700;
-  font-size: 14px;
+  font-weight: 600;
+  font-size: 13px;
+  color: $gray;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 
   @include bp.tablet-and-up {
-    font-size: 15px;
-  }
-
-  @include bp.desktop-and-up {
-    font-size: 16px;
+    font-size: 14px;
   }
 }
 
 .text-block .price {
-  margin: 4px 0 0;
-  font-size: 15px;
+  margin: 2px 0 0;
+  font-size: 16px;
+  font-weight: 700;
 
   @include bp.tablet-and-up {
-    font-size: 16px;
+    font-size: 17px;
   }
 
   @include bp.desktop-and-up {
-    font-size: 17px;
+    font-size: 18px;
   }
 }
 
 .right-side {
   flex-shrink: 0;
-  width: 90px;
-  height: 90px;
+}
+
+.chart-wrap {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   @include bp.tablet-and-up {
-    width: 100px;
-    height: 100px;
+    width: 130px;
+    height: 130px;
+  }
+}
+
+.chart-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  color: $white;
+
+  @include bp.tablet-and-up {
+    font-size: 20px;
   }
 }
 
@@ -132,4 +237,29 @@
   width: 100%;
   justify-content: center;
   align-items: center;
+}
+
+.empty-active {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 48px 24px;
+  background: $light-primary;
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  min-height: 220px;
+
+  .empty-icon {
+    font-size: 40px;
+    color: $gray;
+    opacity: 0.6;
+  }
+
+  .empty-text {
+    margin: 0;
+    font-size: 14px;
+    color: $gray;
+  }
 }

@@ -1,9 +1,29 @@
-.button {
+@use 'shared/styles/breakpoints' as bp;
+
+.add-btn {
   color: white;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
+
+  @include bp.tablet-and-up {
+    font-size: 18px;
+  }
 }
 
-.icon {
-  font-size: 20px;
+.add-btn__label--desktop {
+  display: none;
+}
+
+.add-btn__label--mobile {
+  display: inline;
+}
+
+@include bp.tablet-and-up {
+  .add-btn__label--mobile {
+    display: none;
+  }
+
+  .add-btn__label--desktop {
+    display: inline;
+  }
 }

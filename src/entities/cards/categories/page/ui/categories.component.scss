@@ -2,208 +2,276 @@
 @use 'shared/styles/breakpoints' as bp;
 
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   min-width: 0;
+  flex: 1;
 }
 
 .card {
   display: flex;
   flex-direction: column;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  flex: 1;
+  min-height: 0;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
   overflow: hidden;
-  background: $light-primary;
-  padding: 12px 16px;
+  background: linear-gradient(0deg, rgba(255, 255, 255, 0.04) 0%, $light-primary 100%);
+  padding: 20px;
   min-width: 0;
   box-sizing: border-box;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.25s ease,
+    transform 0.2s ease;
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $accent;
+    outline-offset: 2px;
+  }
 
   @include bp.tablet-and-up {
-    padding: 12px 20px;
-  }
-
-  @include bp.desktop-and-up {
-    padding: 8px 24px;
+    padding: 24px;
   }
 }
 
-.header,
-.body {
-  width: 100%;
-  min-width: 0;
-  box-sizing: border-box;
-}
-
-.header {
+.card__header {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 12px;
-  padding: 12px 0;
-
-  @include bp.tablet-and-up {
-    align-items: center;
-    padding: 16px 0;
-  }
+  gap: 10px;
+  margin-bottom: 14px;
 }
 
-.left-content {
+.card__main {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   min-width: 0;
   flex: 1;
-
-  @include bp.tablet-and-up {
-    gap: 16px;
-  }
 }
 
-.category-icon {
+.card__icon-wrap {
   flex-shrink: 0;
-  width: 40px;
-  height: 40px;
-  min-width: 40px;
-  min-height: 40px;
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  min-height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0;
-  border-radius: 8px;
-  background-color: $accent;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba($accent, 0.25) 0%, rgba($accent, 0.15) 100%);
+  border: 1px solid rgba($accent, 0.2);
   overflow: visible;
 
   ::ng-deep app-icon,
   ::ng-deep .mat-icon {
-    font-size: 24px !important;
-    width: 24px !important;
-    height: 24px !important;
+    font-size: 26px !important;
+    width: 26px !important;
+    height: 26px !important;
   }
 }
 
-.text {
+.card__meta {
   min-width: 0;
   overflow: hidden;
 }
 
-.category {
-  font-size: 16px;
+.card__title {
+  font-size: 17px;
   font-weight: 600;
-  margin: 0;
+  margin: 0 0 6px 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  letter-spacing: -0.01em;
 
   @include bp.tablet-and-up {
-    font-size: 17px;
+    font-size: 18px;
   }
 }
 
-.cost {
-  font-size: 14px;
+.card__meta-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  min-width: 0;
+}
+
+.card__amount {
+  font-size: 18px;
+  font-weight: 600;
+  color: $accent;
+  margin: 0;
+  white-space: nowrap;
+
+  @include bp.tablet-and-up {
+    font-size: 19px;
+  }
+}
+
+.card__badge {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 500;
   color: $gray;
-  margin: 4px 0 0;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 3px 10px;
+  border-radius: 6px;
+
+  @include bp.tablet-and-up {
+    font-size: 14px;
+  }
+}
+
+.card__trend {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+
+  .pi {
+    font-size: 14px;
+    color: $accent;
+  }
+}
+
+.card__trend-main {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.card__trend-value {
+  font-size: 15px;
+  font-weight: 700;
+
+  .card__trend--down & {
+    color: $error;
+  }
+
+  .card__trend--up & {
+    color: $success;
+  }
+
+  .card__trend:not(.card__trend--up):not(.card__trend--down) & {
+    color: $gray;
+  }
+}
+
+.card__trend-label {
+  font-size: 11px;
+  color: $gray;
+}
+
+.card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  flex: 1;
+  min-height: 0;
+}
+
+.card__meta-line {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: $gray;
+  line-height: 1.35;
 
   @include bp.tablet-and-up {
     font-size: 15px;
   }
 }
 
-.right-content {
-  flex-shrink: 0;
-  text-align: right;
+.card__meta-line-sep {
+  opacity: 0.6;
+  user-select: none;
 }
 
-.percents-block {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
+.card__meta-line-item {
+  white-space: nowrap;
 }
 
-.percents {
-  color: $white;
-  font-weight: 600;
-  font-size: 15px;
-}
-
-.compare {
-  font-size: 11px;
-  color: $gray;
-  margin: 4px 0 0;
-
-  @include bp.tablet-and-up {
-    font-size: 12px;
-  }
-}
-
-.body {
-  display: flex;
-  flex-direction: column;
-  padding: 8px 0 0;
-}
-
-.chart {
+.card__chart {
+  flex: 1;
   width: 100%;
   max-width: 100%;
-  height: 80px;
-  min-height: 80px;
-  margin-bottom: 12px;
-  cursor: pointer;
+  min-height: 88px;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
 
   @include bp.tablet-and-up {
-    height: 100px;
     min-height: 100px;
+  }
+
+  @include bp.sidebar-to-tabs {
+    display: none;
   }
 }
 
 .chart-placeholder {
   font-size: 13px;
-  color: $gray;
+  color: rgba($gray, 0.8);
   width: 100%;
   text-align: center;
 }
 
-.totals {
+.card__footer {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.card__stat {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 4px;
+  min-width: 0;
 }
 
-.total {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 6px 0;
-  gap: 12px;
-
-  .title {
-    font-size: 13px;
-    color: $gray;
-    margin: 0;
-  }
-
-  .amount {
-    font-size: 15px;
-    font-weight: 600;
-    margin: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 60%;
-  }
+.card__stat-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: $gray;
 }
 
-.negative {
-  color: $error;
+.card__stat-value {
+  font-size: 15px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.positive {
-  color: $success;
+.card__divider {
+  width: 1px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
 }
-

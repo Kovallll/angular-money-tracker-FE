@@ -1,8 +1,42 @@
 <div class="container">
-  <div id="budget" class="budget">
-    <budget-statistic-card />
-  </div>
-  <div id="expenses" class="expenses"><expenses-statistic-card /></div>
-  <div id="goals" class="goals"><goals-statistic-card title="Goals" /></div>
-  <div id="category"><category-analitics view="row" /></div>
+  <header class="page-header">
+    <div class="page-header__titles">
+      <h1 class="page-header__title">Statistics overview</h1>
+      <p class="page-header__subtitle">
+        Track your budget, expenses, goals and category analytics in a single place.
+      </p>
+    </div>
+    <nav class="page-header__nav" aria-label="Statistics sections">
+      <a class="page-header__nav-link" href="#transactions">Transactions</a>
+      <a class="page-header__nav-link" href="#expenses">Expenses</a>
+      <a class="page-header__nav-link" href="#goals">Goals</a>
+      <a class="page-header__nav-link" href="#categories">Categories</a>
+    </nav>
+  </header>
+
+  <main class="cards-grid">
+    <section
+      id="budget"
+      class="cards-grid__item cards-grid__item--wide"
+      aria-label="Budget statistics"
+    >
+      <budget-statistic-card />
+    </section>
+
+    <section id="expenses" class="cards-grid__item" aria-label="Expenses statistics">
+      <expenses-statistic-card />
+    </section>
+
+    <section id="goals" class="cards-grid__item" aria-label="Goals statistics">
+      <goals-statistic-card title="Goals" />
+    </section>
+
+    <section
+      id="category"
+      class="cards-grid__item cards-grid__item--full"
+      aria-label="Category analytics and breakdown"
+    >
+      <category-analitics view="row" />
+    </section>
+  </main>
 </div>

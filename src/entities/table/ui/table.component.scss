@@ -1,4 +1,5 @@
 @use 'theme' as *;
+@use 'shared/styles/breakpoints' as bp;
 
 .table-wrap {
   width: 100%;
@@ -6,6 +7,12 @@
   border-radius: 12px;
   border: 1px solid $tertiary;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+
+  @include bp.mobile {
+    overflow: visible;
+    border: none;
+    box-shadow: none;
+  }
 }
 
 .table {
@@ -13,6 +20,10 @@
   min-width: 600px;
   border-collapse: separate;
   border-spacing: 0;
+
+  @include bp.mobile {
+    min-width: 0;
+  }
 }
 
 :host ::ng-deep .mat-mdc-table {
@@ -62,4 +73,66 @@ th.mat-mdc-header-cell {
   color: $white;
   padding: 24px;
   text-align: center;
+}
+
+// Мобильный вид: карточки вместо таблицы (ячейки вертикально)
+@include bp.mobile {
+  :host ::ng-deep .table-wrap .mat-mdc-table,
+  :host ::ng-deep .table-wrap table {
+    display: block !important;
+  }
+
+  :host ::ng-deep .table-wrap thead {
+    display: none !important;
+  }
+
+  :host ::ng-deep .table-wrap tbody {
+    display: block !important;
+  }
+
+  :host ::ng-deep .table-wrap tr.mat-mdc-row,
+  :host ::ng-deep .table-wrap tbody tr {
+    display: block !important;
+    margin-bottom: 12px;
+    border-radius: 12px;
+    border: 1px solid $tertiary;
+    overflow: visible;
+    background: $secondary;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  :host ::ng-deep .table-wrap tr.mat-mdc-row:last-child {
+    margin-bottom: 0;
+  }
+
+  :host ::ng-deep .table-wrap .mat-mdc-cell,
+  :host ::ng-deep .table-wrap td {
+    display: block !important;
+    width: 100% !important;
+    box-sizing: border-box;
+    padding: 10px 16px !important;
+    border-bottom: 1px solid rgba($tertiary, 0.5);
+    color: $white;
+  }
+
+  :host ::ng-deep .table-wrap tr.mat-mdc-row .mat-mdc-cell:last-child,
+  :host ::ng-deep .table-wrap tr td:last-child {
+    border-bottom: none;
+  }
+
+  :host ::ng-deep .table-wrap .mat-mdc-cell::before,
+  :host ::ng-deep .table-wrap td::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: $gray;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+
+  :host ::ng-deep .table-wrap .mat-mdc-cell .cell-empty {
+    color: $gray;
+  }
 }

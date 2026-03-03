@@ -79,6 +79,13 @@ const routes: Routes = [
           import('../pages/Categories/categories-page').then((m) => m.CategoriesPageComponent),
       },
       {
+        path: `${RoutePaths.CATEGORY_DETAILS}/:id`,
+        loadComponent: () =>
+          import('../pages/Category-details/category-details-page').then(
+            (m) => m.CategoryDetailsPageComponent,
+          ),
+      },
+      {
         path: `${RoutePaths.BALANCE_DETAILS}/:id`,
         loadComponent: () =>
           import('../pages/Balance-details/balance-details-page').then(

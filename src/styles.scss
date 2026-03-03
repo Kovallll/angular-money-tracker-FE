@@ -85,26 +85,31 @@ auth-layout {
 /* Модалки PrimeNG: общий стиль окна и контента */
 .p-dialog.modal .p-dialog-content,
 .p-dialog.add-card-modal .p-dialog-content,
-.p-dialog.subscription-modal .p-dialog-content {
+.p-dialog.subscription-modal .p-dialog-content,
+.p-dialog.goal-dialog .p-dialog-content {
   overflow-x: hidden;
   max-width: 100%;
   min-width: 0;
   box-sizing: border-box;
-  padding: 16px 20px;
+  padding: 16px 20px 0;
+  background: $secondary;
+  color: $white;
 
   @media (min-width: 560px) {
-    padding: 24px 28px;
+    padding: 24px 28px 0;
   }
 }
 
 .p-dialog.modal,
 .p-dialog.add-card-modal,
-.p-dialog.subscription-modal {
+.p-dialog.subscription-modal,
+.p-dialog.goal-dialog {
   width: calc(100vw - 24px);
   max-width: 560px;
   box-sizing: border-box;
   border-radius: 16px;
   overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow:
     0 24px 48px rgba(0, 0, 0, 0.4),
     0 0 0 1px rgba(255, 255, 255, 0.06);
@@ -125,7 +130,7 @@ auth-layout {
     @media (min-width: 560px) {
       padding: 20px 24px;
     }
-    background: rgba(255, 255, 255, 0.04);
+    background: $light-primary;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 
     .p-dialog-title {
@@ -154,9 +159,55 @@ auth-layout {
   }
 }
 
+/* goal-dialog — форма создания цели: корректная сетка без наездов */
+.p-dialog.goal-dialog .app-modal-form .form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.p-dialog.goal-dialog .app-modal-form .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 24px;
+  row-gap: 16px;
+  padding-bottom: 0;
+  min-width: 0;
+
+  .field:has(p-datepicker) {
+    min-width: 0;
+  }
+}
+
+.p-dialog.goal-dialog .app-modal-form .field {
+  min-width: 0;
+}
+
+.p-dialog.goal-dialog .app-modal-form .form-field--full {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 400px) {
+  .p-dialog.goal-dialog .app-modal-form .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Datepicker в модалке подписок — панель не выходит за экран */
 .subscription-datepicker-panel.p-datepicker-panel {
   max-width: min(320px, calc(100vw - 24px));
+}
+
+/* MatDialog — модалки с app-modal-shell (цель, фильтры, сортировка) */
+.goal-adjust-dialog .mat-mdc-dialog-container,
+.goal-adjust-dialog .mat-mdc-dialog-surface,
+.filter-modal .mat-mdc-dialog-container,
+.filter-modal .mat-mdc-dialog-surface,
+.sorter-modal .mat-mdc-dialog-container,
+.sorter-modal .mat-mdc-dialog-surface {
+  background: transparent !important;
+  padding: 0 !important;
+  overflow: visible !important;
 }
 
 /* Bottom sheet «Ещё» (мобильные табы) — тёмная тема приложения */
@@ -244,6 +295,48 @@ app-currency-selector .currency-selector.p-inputwrapper.p-inputwrapper-focus {
   color: $accent;
 }
 
+/* MatSelect: общий дропдаун в цветах приложения */
+.mat-mdc-select-panel {
+  background: $secondary !important;
+  color: $white !important;
+  border-radius: 12px !important;
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.06);
+  padding-block: 4px;
+}
+
+.mat-mdc-option {
+  color: rgba($white, 0.9) !important;
+  font-size: 13px;
+}
+
+.mat-mdc-option.mdc-list-item--selected,
+.mat-mdc-option.mdc-list-item--activated {
+  background: rgba($accent, 0.22) !important;
+  color: $accent !important;
+}
+
+.mat-mdc-option.mdc-list-item--selected .mdc-list-item__primary-text,
+.mat-mdc-option.mdc-list-item--activated .mdc-list-item__primary-text {
+  color: $accent !important;
+}
+
+.mat-mdc-option.mdc-list-item--selected .mdc-list-item__end,
+.mat-mdc-option.mdc-list-item--selected .mdc-list-item__end svg,
+.mat-mdc-option.mdc-list-item--activated .mdc-list-item__end,
+.mat-mdc-option.mdc-list-item--activated .mdc-list-item__end svg {
+  color: $accent !important;
+  fill: $accent !important;
+}
+
+.mat-mdc-option:hover:not(.mat-mdc-option-disabled):not(.mdc-list-item--selected):not(
+    .mdc-list-item--activated
+  ) {
+  background: rgba($accent, 0.18) !important;
+  color: #fff !important;
+}
+
 /* Toast на мобилке — фикс смещения влево */
 @media (max-width: 779px) {
   .p-toast.p-toast-top-right,
@@ -266,4 +359,3 @@ app-currency-selector .currency-selector.p-inputwrapper.p-inputwrapper-focus {
     bottom: 12px !important;
   }
 }
-

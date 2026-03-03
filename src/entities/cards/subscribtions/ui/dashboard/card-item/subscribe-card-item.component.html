@@ -6,13 +6,25 @@
     </div>
 
     <div class="info">
-      <p class="name">{{ subscribe().subscribeName }} - {{ subscribe().type }}</p>
-      <p>Subscribe - <br />{{ subscribe().subscribeDate | date }}</p>
+      <p class="name">{{ subscribe().subscribeName }}</p>
+      @if (subscribe() | nextChargeDate; as nextDate) {
+        <p class="info__meta">
+          {{ subscribe().type | titlecase }} · Next: {{ nextDate | date: 'MMM d' }}
+        </p>
+      } @else {
+        <p class="info__meta">{{ subscribe().type | titlecase }}</p>
+      }
     </div>
   </div>
 
   <div class="price-block">
-    <p class="price">{{ subscribe().amount | appCurrencyPrimary: subscribe().currencyCode }}</p>
+    <p class="price">
+      {{ subscribe().amount | appCurrencyPrimary: subscribe().currencyCode
+      }}{{ (subscribe() | subscriptionYearly).periodLabel }}
+    </p>
+    @if ((subscribe() | subscriptionYearly).yearlyFormatted; as yearly) {
+      <p class="price-yearly">· {{ yearly }}</p>
+    }
   </div>
 </div>
 

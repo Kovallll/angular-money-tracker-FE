@@ -1,115 +1,176 @@
-<form #cardForm="ngForm" (ngSubmit)="onSubmit(cardForm)" class="app-modal-form">
-  <input
-    type="hidden"
-    name="currencyCode"
-    [ngModel]="card().currencyCode"
-    (ngModelChange)="updateCardField('currencyCode', $event)"
-  />
-  <div class="form-fields">
-    @for (input of inputs; track input.field) {
-      @if (input.field === 'type') {
-        <div class="field">
-          <label [for]="input.name">{{ input.placeholder }}</label>
-          <p-select
-            class="select"
-            [options]="[
-              { label: 'Monthly', value: 'monthly' },
-              { label: 'Annually', value: 'annually' },
-              { label: 'Yearly', value: 'yearly' },
-              { label: 'Daily', value: 'daily' },
-            ]"
-            optionValue="value"
-            [inputId]="input.name"
-            [placeholder]="input.placeholder"
-            [name]="input.name"
-            [ngModel]="card()[input.field]"
-            (ngModelChange)="updateCardField(input.field, $event)"
-            #model="ngModel"
-            [invalid]="model.invalid && (model.touched || cardForm.submitted)"
-            required
-          />
-          <div class="error-slot">
-            @if (model.invalid && (model.touched || cardForm.submitted)) {
-              <small class="error">{{ input.placeholder }} is required.</small>
-            }
+<app-modal-shell
+  [embedded]="true"
+  [showCloseButton]="false"
+  [showCancel]="true"
+  [showSave]="true"
+  saveLabel="Save"
+  [saveDisabled]="!isFormValid()"
+  (cancelRequest)="close()"
+  (saveRequest)="onSubmit(cardForm)"
+>
+  <form #cardForm="ngForm" (ngSubmit)="onSubmit(cardForm)" class="app-modal-form">
+    <input
+      type="hidden"
+      name="currencyCode"
+      [ngModel]="card().currencyCode"
+      (ngModelChange)="updateCardField('currencyCode', $event)"
+    />
+    <div class="form-fields">
+      @for (input of inputs; track input.field) {
+        @if (input.field === 'type') {
+          <div
+            class="field"
+            [class.field--has-error]="shouldShowError('type') && getFieldError('type')"
+          >
+            <label [for]="input.name"
+              >{{ input.placeholder }}{{ input.required ? '&#42;' : '' }}</label
+            >
+            <p-select
+              class="select"
+              [options]="typeOptions"
+              optionLabel="label"
+              optionValue="value"
+              [inputId]="input.name"
+              [placeholder]="input.placeholder"
+              [name]="input.name"
+              [ngModel]="card()[input.field]"
+              (ngModelChange)="updateCardField(input.field, $event)"
+              (onBlur)="markTouched('type')"
+              required
+            />
+            <div class="error-slot">
+              @if (shouldShowError('type') && getFieldError('type'); as err) {
+                <small class="error">{{ err }}</small>
+              }
+            </div>
           </div>
-        </div>
-      } @else if (input.field === 'subscribeDate') {
-        <div class="field">
-          <label [for]="input.name">{{ input.placeholder }}</label>
-          <p-datepicker
-            [inputId]="input.name"
-            [name]="input.name"
-            [ngModel]="card().subscribeDate"
-            (ngModelChange)="updateCardField('subscribeDate', $event)"
-            dateFormat="yy-mm-dd"
-            appendTo="body"
-            placeholder="Select date"
-            required
-            panelStyleClass="subscription-datepicker-panel"
-          />
-          <div class="error-slot">
-            @if (cardForm.submitted && !card().subscribeDate) {
-              <small class="error">{{ input.placeholder }} is required.</small>
-            }
+        } @else if (input.field === 'subscribeDate') {
+          <div
+            class="field"
+            [class.field--has-error]="
+              shouldShowError('subscribeDate') && getFieldError('subscribeDate')
+            "
+          >
+            <label [for]="input.name"
+              >{{ input.placeholder }}{{ input.required ? '&#42;' : '' }}</label
+            >
+            <p-datepicker
+              [inputId]="input.name"
+              [name]="input.name"
+              [ngModel]="card().subscribeDate"
+              (ngModelChange)="updateCardField('subscribeDate', $event)"
+              (onBlur)="markTouched('subscribeDate')"
+              dateFormat="yy-mm-dd"
+              appendTo="body"
+              [required]="input.required === true"
+              placeholder="Select date"
+              panelStyleClass="subscription-datepicker-panel"
+            />
+            <div class="error-slot">
+              @if (shouldShowError('subscribeDate') && getFieldError('subscribeDate'); as err) {
+                <small class="error">{{ err }}</small>
+              }
+            </div>
           </div>
-        </div>
-      } @else if (input.field === 'lastCharge') {
-        <div class="field">
-          <label [for]="input.name">{{ input.placeholder }}</label>
-          <p-datepicker
-            [inputId]="input.name"
-            [name]="input.name"
-            [ngModel]="card().lastCharge"
-            (ngModelChange)="updateCardField('lastCharge', $event)"
-            dateFormat="yy-mm-dd"
-            appendTo="body"
-            placeholder="Select date"
-            panelStyleClass="subscription-datepicker-panel"
-          />
-          <div class="error-slot"></div>
-        </div>
-      } @else if (input.field === 'amount') {
-        <div class="field">
-          <app-price-currency-field
-            [label]="input.placeholder"
-            [amountName]="input.name"
-            [amount]="card().amount"
-            (amountChange)="updateCardField('amount', $event)"
-            [currencyCode]="card().currencyCode"
-            (currencyCodeChange)="updateCardField('currencyCode', $event)"
-            [showCurrency]="true"
-          />
-          <div class="error-slot"></div>
-        </div>
-      } @else {
-        <div class="field">
-          <label [for]="input.name">{{ input.placeholder }}</label>
-          <input
-            class="input"
-            pInputText
-            type="text"
-            [id]="input.name"
-            [placeholder]="input.placeholder"
-            [name]="input.name"
-            [(ngModel)]="card()[input.field]"
-            #model="ngModel"
-            [invalid]="model.invalid && (model.touched || cardForm.submitted)"
-            required
-          />
-          <div class="error-slot">
-            @if (model.invalid && (model.touched || cardForm.submitted)) {
-              <small class="error">{{ input.placeholder }} is required.</small>
-            }
+        } @else if (input.field === 'lastCharge') {
+          <div
+            class="field"
+            [class.field--has-error]="shouldShowError('lastCharge') && getFieldError('lastCharge')"
+          >
+            <label [for]="input.name"
+              >{{ input.placeholder }}{{ input.required ? '&#42;' : '' }}</label
+            >
+            <p-datepicker
+              [inputId]="input.name"
+              [name]="input.name"
+              [ngModel]="card().lastCharge"
+              (ngModelChange)="updateCardField('lastCharge', $event)"
+              (onBlur)="markTouched('lastCharge')"
+              dateFormat="yy-mm-dd"
+              appendTo="body"
+              [required]="input.required === true"
+              placeholder="Select date"
+              panelStyleClass="subscription-datepicker-panel"
+            />
+            <div class="error-slot">
+              @if (shouldShowError('lastCharge') && getFieldError('lastCharge'); as err) {
+                <small class="error">{{ err }}</small>
+              }
+            </div>
           </div>
-        </div>
+        } @else if (input.field === 'amount') {
+          <div
+            class="field"
+            [class.field--has-error]="shouldShowError('amount') && getFieldError('amount')"
+          >
+            <app-price-currency-field
+              [label]="input.placeholder"
+              [amountName]="input.name"
+              [amount]="card().amount ?? 0"
+              (amountChange)="updateCardField('amount', $event)"
+              [currencyCode]="card().currencyCode"
+              (currencyCodeChange)="updateCardField('currencyCode', $event)"
+              [showCurrency]="true"
+              [required]="input.required === true"
+              (amountTouched)="markTouched('amount')"
+            />
+            <div class="error-slot">
+              @if (shouldShowError('amount') && getFieldError('amount'); as err) {
+                <small class="error">{{ err }}</small>
+              }
+            </div>
+          </div>
+        } @else if (input.field === 'categoryId') {
+          <div class="field">
+            <label [for]="input.name">{{ input.placeholder }}</label>
+            <p-select
+              class="select"
+              [inputId]="input.name"
+              [name]="input.name"
+              [options]="categories.data() ?? []"
+              optionLabel="title"
+              optionValue="id"
+              [ngModel]="card()[input.field]"
+              (ngModelChange)="updateCardField(input.field, $event)"
+              placeholder="Select category"
+              appendTo="body"
+            >
+              <ng-template let-item pTemplate="item">
+                <div class="icon-row">
+                  <app-icon [icon]="item.icon" />
+                  <span>{{ item.title }}</span>
+                </div>
+              </ng-template>
+            </p-select>
+          </div>
+        } @else {
+          <div
+            class="field"
+            [class.field--has-error]="shouldShowError(input.field) && getFieldError(input.field)"
+          >
+            <label [for]="input.name"
+              >{{ input.placeholder }}{{ input.required ? '&#42;' : '' }}</label
+            >
+            <input
+              class="input"
+              pInputText
+              type="text"
+              [id]="input.name"
+              [placeholder]="input.placeholder"
+              [name]="input.name"
+              [ngModel]="card()[input.field]"
+              (ngModelChange)="updateCardField(input.field, $event)"
+              (blur)="markTouched(input.field)"
+              required
+            />
+            <div class="error-slot">
+              @if (shouldShowError(input.field) && getFieldError(input.field); as err) {
+                <small class="error">{{ err }}</small>
+              }
+            </div>
+          </div>
+        }
       }
-    }
-  </div>
-  <div class="actions">
-    <app-button type="button" appearance="secondary" size="md" (buttonClick)="close()"
-      >Cancel</app-button
-    >
-    <app-button type="submit" appearance="primary" size="md">Save</app-button>
-  </div>
-</form>
+    </div>
+  </form>
+</app-modal-shell>

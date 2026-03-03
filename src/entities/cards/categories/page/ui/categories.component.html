@@ -1,32 +1,67 @@
-<div class="card" (contextmenu)="openContextMenu($event)">
-  <div class="header">
-    <div class="left-content">
-      <div class="category-icon">
+<article
+  class="card"
+  (click)="handleOpenDetails()"
+  (contextmenu)="openContextMenu($event)"
+  (keydown.enter)="handleOpenDetails()"
+  (keydown.space)="$event.preventDefault(); handleOpenDetails()"
+  role="button"
+  tabindex="0"
+  [attr.aria-label]="'View ' + category().title + ' details'"
+>
+  <div class="card__header">
+    <div class="card__main">
+      <div class="card__icon-wrap">
         <app-icon [icon]="category().icon" />
       </div>
-      <div class="text">
-        <p class="category">{{ category().title }}</p>
-        <p class="cost">{{ displayTotalExpenses() | appCurrency }}</p>
+      <div class="card__meta">
+        <h3 class="card__title">{{ category().title }}</h3>
+        <div class="card__meta-row">
+          <span class="card__amount">{{ displayTotalExpenses() | appCurrency }}</span>
+          @if (transactionCount() > 0) {
+            <span class="card__badge">{{ transactionCount() }} transactions</span>
+          }
+          @if (lastActivityDate() || averageExpense() !== null) {
+            <span class="card__meta-line">
+              @if (lastActivityDate(); as last) {
+                <span class="card__meta-line-item">Last: {{ last | date: 'd MMM' }}</span>
+              }
+              @if (lastActivityDate() && averageExpense() !== null) {
+                <span class="card__meta-line-sep">·</span>
+              }
+              @if (averageExpense() !== null) {
+                <span class="card__meta-line-item">Avg: {{ averageExpense() | appCurrency }}</span>
+              }
+            </span>
+          }
+        </div>
       </div>
     </div>
-    <div class="right-content">
-      <div class="percents-block">
-        <p class="percents">
-          {{ compareDelta().value + '%' }}
-        </p>
-        @if (compareDelta().value !== 0) {
-          @if (!compareDelta().negative) {
-            <i class="pi pi-arrow-down negative"></i>
+    <div
+      class="card__trend"
+      [class.card__trend--down]="compareDelta().comparable && !compareDelta().negative"
+      [class.card__trend--up]="compareDelta().comparable && compareDelta().negative"
+    >
+      <div class="card__trend-main">
+        <span class="card__trend-value">
+          @if (compareDelta().comparable) {
+            {{ compareDelta().value }}%
           } @else {
-            <i class="pi pi-arrow-up positive"></i>
+            N/A
+          }
+        </span>
+        @if (compareDelta().comparable && compareDelta().value !== 0) {
+          @if (!compareDelta().negative) {
+            <i class="pi pi-arrow-down" aria-hidden="true"></i>
+          } @else {
+            <i class="pi pi-arrow-up" aria-hidden="true"></i>
           }
         }
       </div>
-      <p class="compare">Compare to last month</p>
+      <span class="card__trend-label">vs last month</span>
     </div>
   </div>
-  <div class="body">
-    <div class="chart">
+  <div class="card__body">
+    <div class="card__chart">
       @if (hasChartData()) {
         <canvas
           baseChart
@@ -35,20 +70,20 @@
           [options]="options"
         ></canvas>
       } @else {
-        <div class="chart-placeholder">No data</div>
+        <div class="chart-placeholder">No chart data</div>
       }
     </div>
-    <div class="totals">
-      <div class="total">
-        <p class="title">Expenses</p>
-        <p class="amount">{{ displayTotalExpenses() | appCurrency }}</p>
+    <div class="card__footer">
+      <div class="card__stat">
+        <span class="card__stat-label">Expenses</span>
+        <span class="card__stat-value">{{ displayTotalExpenses() | appCurrency }}</span>
       </div>
-      <divider color="tertiary" />
-      <div class="total">
-        <p class="title">Revenue</p>
-        <p class="amount">{{ displayTotalRevenues() | appCurrency }}</p>
+      <div class="card__divider"></div>
+      <div class="card__stat">
+        <span class="card__stat-label">Revenue</span>
+        <span class="card__stat-value">{{ displayTotalRevenues() | appCurrency }}</span>
       </div>
     </div>
   </div>
   <context-menu-component #ctxMenu (onDelete)="handleDelete()" (onEdit)="handleEdit()" />
-</div>
+</article>

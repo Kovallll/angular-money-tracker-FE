@@ -1,6 +1,18 @@
 @use 'theme' as *;
 @use 'shared/styles/breakpoints' as bp;
 
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  cursor: pointer;
+
+  &:hover:not(.is-active) ::ng-deep .content {
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  }
+}
+
 .card {
   display: flex;
   justify-content: space-between;
@@ -8,7 +20,6 @@
   width: 100%;
   min-width: 0;
   gap: 12px;
-  cursor: pointer;
   box-sizing: border-box;
 }
 
@@ -55,24 +66,40 @@
   }
 }
 
-.category-icon {
+.card-icon {
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 12px;
-  border-radius: 8px;
-  background-color: $tertiary;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba($accent, 0.2) 0%, rgba($accent, 0.08) 100%);
+  color: $accent;
+  font-size: 20px;
 
   @include bp.tablet-and-up {
-    padding: 16px;
-  }
-
-  @include bp.desktop-and-up {
-    padding: 20px;
+    width: 48px;
+    height: 48px;
+    font-size: 22px;
   }
 }
 
 .right-side {
   flex-shrink: 0;
+}
+
+:host.is-active {
+  ::ng-deep .content {
+    border: 1px solid rgba($accent, 0.4);
+    box-shadow:
+      0 0 0 1px rgba($accent, 0.2),
+      0 4px 12px rgba(0, 0, 0, 0.15);
+    background: linear-gradient(135deg, rgba($accent, 0.06) 0%, $secondary 100%);
+  }
+
+  .card-icon {
+    background: linear-gradient(135deg, rgba($accent, 0.3) 0%, rgba($accent, 0.15) 100%);
+    color: $accent;
+  }
 }

@@ -1,30 +1,39 @@
 import { Component, computed, effect, inject, OnInit, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { map } from 'rxjs';
 import {
   CategoriesHttpService,
   CategoryItem,
   ExpenseItem,
   ExpensesHttpService,
+  RoutePaths,
   UrlSyncedComponent,
 } from '@/shared';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
-import { TableComponent } from '@/entities/table/ui/table.component';
+import {
+  TransactionsListViewComponent,
+  type TransactionListRow,
+} from '@/entities/transactions-list-view';
 import { DashboardCardComponent, CardBodyComponent } from '@/entities/cards/card';
 import { ControlsComponent } from '@/widgets/controls/ui/controls.component';
 import { ControlsProps } from '@/widgets/controls/lib';
 import { PaginationComponent } from '@/entities/pagination/ui/pagination.component';
+import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
+import { AppCurrencyPipe } from '@/shared/pipes/app-currency.pipe';
 
 @Component({
   selector: 'expenses-details-page',
   imports: [
-    TableComponent,
+    RouterLink,
+    TransactionsListViewComponent,
     DashboardCardComponent,
     CardBodyComponent,
     ControlsComponent,
     PaginationComponent,
+    AppIconComponent,
+    AppCurrencyPipe,
   ],
   templateUrl: './expenses-details-page.html',
   styleUrl: `./expenses-details-page.scss`,
@@ -40,18 +49,10 @@ export class ExpensesDetailsPageComponent
   private currencyService = inject(CurrencyService);
   private exchangeRates = inject(ExchangeRatesService);
 
+  readonly RoutePaths = RoutePaths;
+
   expenses = signal<ExpenseItem[]>([]);
   category = signal<CategoryItem | null>(null);
-
-  /** Расходы с суммами в выбранной (primary) валюте для таблицы. */
-  expensesInPrimaryCurrency = computed(() => {
-    const primary = this.currencyService.primaryCode();
-    return this.expenses().map((e) => ({
-      ...e,
-      amount: this.exchangeRates.convert(e.amount, e.currencyCode ?? 'BYN', primary),
-      currencyCode: primary,
-    }));
-  });
 
   /** Id категории из маршрута (expenses-details/:id). */
   private categoryId = toSignal(this.route.paramMap.pipe(map((p) => p.get('id') ?? null)), {
@@ -66,6 +67,47 @@ export class ExpensesDetailsPageComponent
     return list.filter((e) => String(e.category?.id) === id);
   });
 
+  /** Расходы с суммами в выбранной (primary) валюте для таблицы. */
+  expensesInPrimaryCurrency = computed(() => {
+    const primary = this.currencyService.primaryCode();
+    return this.expenses().map((e) => ({
+      ...e,
+      amount: this.exchangeRates.convert(e.amount, e.currencyCode ?? 'BYN', primary),
+      currencyCode: primary,
+    }));
+  });
+
+  /** Данные для списка (таблица/карточки): совместимы с TransactionListRow. */
+  expenseListRows = computed<TransactionListRow[]>(() =>
+    this.expensesInPrimaryCurrency().map((e) => ({
+      id: e.id,
+      date: e.date,
+      title: e.title,
+      amount: e.amount,
+      category: e.category?.title,
+      categoryIcon: e.category?.icon,
+    })),
+  );
+
+  /** Сумма всех расходов категории в выбранной валюте. */
+  totalAmount = computed(() => {
+    const primary = this.currencyService.primaryCode();
+    return this.allData().reduce(
+      (sum, e) => sum + this.exchangeRates.convert(e.amount, e.currencyCode ?? 'BYN', primary),
+      0,
+    );
+  });
+
+  /** Количество расходов в категории. */
+  expenseCount = computed(() => this.allData().length);
+
+  /** Средняя сумма расхода в выбранной валюте. */
+  averageAmount = computed(() => {
+    const n = this.expenseCount();
+    if (n === 0) return 0;
+    return this.totalAmount() / n;
+  });
+
   override get isEmpty() {
     return this.expenses().length === 0;
   }
@@ -74,6 +116,18 @@ export class ExpensesDetailsPageComponent
     super();
     effect(() => {
       if (this.allData().length > 0) this.sync();
+    });
+    effect(() => {
+      const id = this.categoryId();
+      const categories = this.categoriesHttpService.categories();
+      if (id && categories?.length) {
+        const cat = categories.find((c) => String(c.id) === id) ?? null;
+        this.category.set(cat);
+        const numId = Number(id);
+        if (!Number.isNaN(numId)) {
+          this.categoriesHttpService.selectedCategoryId.set(numId);
+        }
+      }
     });
   }
 
@@ -102,9 +156,10 @@ export class ExpensesDetailsPageComponent
     this.route.params.subscribe((params) => {
       const categoryId = params['id'];
       if (!categoryId) return;
-      this.categoriesHttpService.selectedCategoryId.set(categoryId);
-      const category = this.categoriesHttpService.currentCategory();
-      this.category.set(category ?? null);
+      const numId = Number(categoryId);
+      if (!Number.isNaN(numId)) {
+        this.categoriesHttpService.selectedCategoryId.set(numId);
+      }
     });
   }
 }

@@ -1,54 +1,83 @@
 <div class="container">
   <div class="cards-block">
-    <div class="top">
-      <p class="title">Categories</p>
+    <header class="page-header">
+      <div class="header-text">
+        <h1 class="title">Categories</h1>
+        <p class="subtitle">Track spending by category and view detailed analytics</p>
+      </div>
       <category-add-button />
-    </div>
-    <div class="cards">
-      @if (categories.isPending()) {
-        <div class="data-loading">
-          <p-progressSpinner ariaLabel="Loading" />
-        </div>
-      } @else if (!categories.data()?.length) {
-        <div class="data-placeholder data-placeholder--page">
-          <span class="data-placeholder__icon" aria-hidden="true">📁</span>
-          <p>No categories</p>
-          <p>Add a category using the button above</p>
-        </div>
-      } @else {
-        <div class="totals">
-          <div class="total">
-            <p class="amount">{{ totalExpenses() | appCurrency }}</p>
-            <p class="title">Total Expenses</p>
+    </header>
+
+    @if (categories.isPending()) {
+      <div class="cards-loading">
+        <p-progress-spinner ariaLabel="Loading" strokeWidth="3" />
+        <p class="cards-loading__text">Loading categories…</p>
+      </div>
+    } @else if (!categories.data()?.length) {
+      <div class="data-placeholder data-placeholder--page empty-state">
+        <span class="data-placeholder__icon" aria-hidden="true">📁</span>
+        <h2 class="empty-title">No categories yet</h2>
+        <p class="empty-desc">Create your first category to start tracking expenses</p>
+        <category-add-button />
+      </div>
+    } @else {
+      <controls [controlsProps]="controlsProps()" />
+
+      <section class="summary-cards" aria-label="Overview">
+        <div class="summary-card summary-card--primary">
+          <span class="summary-card__icon" aria-hidden="true">
+            <i class="pi pi-wallet"></i>
+          </span>
+          <div class="summary-card__content">
+            <span class="summary-card__label">Total Expenses</span>
+            <span class="summary-card__value">{{ totalExpenses() | appCurrency }}</span>
           </div>
-          <div class="total">
-            <p class="amount">{{ topCategoryTransactions() }}</p>
-            <p class="title">Transactions in busiest category</p>
+        </div>
+        <div class="summary-card">
+          <span class="summary-card__icon" aria-hidden="true">
+            <i class="pi pi-chart-bar"></i>
+          </span>
+          <div class="summary-card__content">
+            <span class="summary-card__label">Transactions in busiest</span>
+            <span class="summary-card__value">{{ topCategoryTransactions() }}</span>
           </div>
-          <div class="total">
-            <div class="percents">
+        </div>
+        <div class="summary-card">
+          <span class="summary-card__icon" aria-hidden="true">
+            <i class="pi pi-percentage"></i>
+          </span>
+          <div class="summary-card__content">
+            <span class="summary-card__label">vs last month</span>
+            <span
+              class="summary-card__value"
+              [class.negative]="!overageDeltaCompare().negative"
+              [class.positive]="overageDeltaCompare().negative"
+            >
               @if (overageDeltaCompare().value !== '0.00') {
                 @if (!overageDeltaCompare().negative) {
-                  <i class="pi pi-arrow-down negative"></i>
+                  <i class="pi pi-arrow-down"></i>
                 } @else {
-                  <i class="pi pi-arrow-up positive"></i>
+                  <i class="pi pi-arrow-up"></i>
                 }
               }
-              <p class="amount">
-                {{ overageDeltaCompare().value + '%' }}
-              </p>
-            </div>
-            <p class="title">Last month</p>
+              {{ overageDeltaCompare().value }}%
+            </span>
           </div>
         </div>
+      </section>
+
+      <section class="categories-section">
+        <h2 class="section-title">Your categories</h2>
         <div class="content">
-          @for (category of categories.data(); track category.id) {
+          @for (category of currentCategories(); track category.id) {
             <category-card [category]="category" [chart]="getCurrentChart(category.id)" />
           }
         </div>
-      }
-    </div>
+        <pagination [pageSize]="pageSize" />
+      </section>
+    }
   </div>
-  <category-analitics />
+  <aside class="analytics-sidebar">
+    <category-analitics />
+  </aside>
 </div>
-

@@ -1,8 +1,8 @@
 <div class="container">
   <dashboard-card title="Transactions History">
     <card-body class="body">
-      <table-component
-        [dataSource]="currentTransactions()"
+      <transactions-list-view
+        [dataSource]="listRows()"
         [displayedCells]="displayedCells()"
         [isEmpty]="isEmpty"
       />

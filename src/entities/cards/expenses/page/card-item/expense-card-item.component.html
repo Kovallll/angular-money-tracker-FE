@@ -1,4 +1,4 @@
-<div class="card" (click)="handleCheckDetails()">
+<div class="card" (click)="handleCheckDetails(); $event.stopPropagation()">
   <div class="left-content">
     <p class="title">{{ expense.title || 'Без названия' }}</p>
   </div>

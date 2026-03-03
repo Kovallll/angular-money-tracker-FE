@@ -31,6 +31,8 @@ export class FiltersComponent {
         data: this.data,
       } as DialogData,
       panelClass: 'filter-modal',
+      width: '480px',
+      maxWidth: 'calc(100vw - 24px)',
     });
   }
 }

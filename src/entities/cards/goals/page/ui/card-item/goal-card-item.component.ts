@@ -8,9 +8,9 @@ import { GoalAdjustCardButtonComponent } from '@/features/goal/adjust-goal-card/
 @Component({
   selector: 'goal-card-item',
   standalone: true,
+  host: { '[class.is-active]': 'isActive()' },
   imports: [
     CommonModule,
-    MatIconModule,
     AppCurrencyPrimaryPipe,
     DashboardCardComponent,
     CardBodyComponent,
@@ -22,4 +22,5 @@ import { GoalAdjustCardButtonComponent } from '@/features/goal/adjust-goal-card/
 })
 export class GoalCardItemComponent {
   goal = input.required<any>();
+  isActive = input<boolean>(false);
 }

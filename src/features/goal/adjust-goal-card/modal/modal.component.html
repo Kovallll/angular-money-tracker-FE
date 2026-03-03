@@ -1,13 +1,22 @@
-<div class="dialog">
-  <h2>Edit Goal</h2>
-
-  <form class="app-modal-form" (ngSubmit)="onSave()">
+<app-modal-shell
+  title="Edit Goal"
+  [showDelete]="true"
+  [showCancel]="true"
+  [showSave]="true"
+  [saveDisabled]="!!f.invalid || hasDateError() || hasBudgetError()"
+  (closeRequest)="onCancel()"
+  (deleteRequest)="onDelete()"
+  (cancelRequest)="onCancel()"
+  (saveRequest)="onSave()"
+>
+  <form #f="ngForm" class="app-modal-form" (ngSubmit)="onSave()">
     <div class="form-fields">
       <div class="field">
-        <label for="title">Title</label>
+        <label for="title" class="label">Title</label>
         <input
           pInputText
           id="title"
+          name="title"
           type="text"
           [(ngModel)]="data.title"
           placeholder="Enter goal title"
@@ -20,7 +29,13 @@
           amountName="targetBudget"
           [(amount)]="targetBudget"
           [(currencyCode)]="currencyCode"
+          [lockCurrency]="true"
         />
+        <div class="error-slot">
+          @if (hasBudgetError() && goalBudget > 0 && targetBudget > goalBudget) {
+            <small class="error">Target must not exceed goal.</small>
+          }
+        </div>
       </div>
 
       <div class="field">
@@ -30,48 +45,43 @@
           [(amount)]="goalBudget"
           [showCurrency]="false"
         />
+        <div class="error-slot">
+          @if (hasBudgetError() && goalBudget <= 0) {
+            <small class="error">Must be &gt; 0.</small>
+          }
+        </div>
       </div>
 
       <div class="field">
-        <label for="startDate">Start Date</label>
+        <label for="startDate" class="label">Start Date</label>
         <p-datepicker
           id="startDate"
+          inputId="startDate"
           [(ngModel)]="data.startDate"
+          name="startDate"
           dateFormat="yy-mm-dd"
-          showIcon="true"
           appendTo="body"
+          panelStyleClass="subscription-datepicker-panel"
         ></p-datepicker>
       </div>
 
       <div class="field">
-        <label for="endDate">End Date</label>
+        <label for="endDate" class="label">End Date <span class="optional">(optional)</span></label>
         <p-datepicker
           id="endDate"
+          inputId="endDate"
           [(ngModel)]="data.endDate"
+          name="endDate"
           dateFormat="yy-mm-dd"
-          showIcon="true"
           appendTo="body"
+          panelStyleClass="subscription-datepicker-panel"
         ></p-datepicker>
+        <div class="error-slot">
+          @if (hasDateError()) {
+            <small class="error">End date must be after start date.</small>
+          }
+        </div>
       </div>
     </div>
-
-    <div class="actions">
-      <app-button appearance="danger" size="md" (buttonClick)="onDelete()">
-        <i class="pi pi-trash"></i>
-        Delete
-      </app-button>
-
-      <span class="spacer"></span>
-
-      <app-button appearance="secondary" size="md" (buttonClick)="onCancel()">
-        <i class="pi pi-times"></i>
-        Cancel
-      </app-button>
-
-      <app-button appearance="primary" size="md" (buttonClick)="onSave()">
-        <i class="pi pi-check"></i>
-        Save
-      </app-button>
-    </div>
   </form>
-</div>
+</app-modal-shell>

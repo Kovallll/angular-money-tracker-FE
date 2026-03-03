@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, signal, OnInit } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
+import { AppModalShellComponent } from '@/shared/components/app-modal-shell/app-modal-shell.component';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import {
@@ -26,7 +26,7 @@ import { catchError, of, tap } from 'rxjs';
   imports: [
     FormsModule,
     InputTextModule,
-    AppButtonComponent,
+    AppModalShellComponent,
     MessageModule,
     Select,
     PriceCurrencyFieldComponent,
@@ -83,9 +83,19 @@ export class EditTransactionModalComponent implements OnInit {
       .subscribe();
   }
 
+  /** YYYY-MM-DD in local timezone (avoids Mar 1 → Feb 28 shift) */
+  private formatDateLocal(v: string | Date | undefined): string {
+    if (v == null || v === '') return '';
+    if (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v)) return v;
+    const d = v instanceof Date ? v : new Date(v);
+    if (isNaN(d.getTime())) return '';
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  }
+
   onSubmit(form: NgForm) {
     if (form.valid) {
-      this.updateTransaction(form.value);
+      const value = { ...form.value, date: this.formatDateLocal(form.value?.date) };
+      this.updateTransaction(value);
     }
   }
 

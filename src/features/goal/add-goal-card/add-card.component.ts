@@ -1,7 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, ViewChild } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
+import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
+import { AppModalShellComponent } from '@/shared/components/app-modal-shell/app-modal-shell.component';
 import { InputTextModule } from 'primeng/inputtext';
 import { CreateGoalItem, GoalItem } from '@/shared/types';
 import { GoalsService } from '@/entities/cards/goals/services/goals.service';
@@ -16,6 +18,8 @@ import { PriceCurrencyFieldComponent } from '@/shared/components/price-currency-
   styleUrls: ['./add-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    AppButtonComponent,
+    AppModalShellComponent,
     ButtonModule,
     DialogModule,
     FormsModule,
@@ -28,6 +32,7 @@ export class GoalAddCardButtonComponent {
   private goalsService = inject(GoalsService);
   private currencyService = inject(CurrencyService);
   visible = signal(false);
+  @ViewChild('f') form?: NgForm;
 
   newGoal: Partial<GoalItem> & { currencyCode?: string } = {
     title: '',
@@ -66,6 +71,7 @@ export class GoalAddCardButtonComponent {
   closeDialog() {
     this.visible.set(false);
     this.resetGoal();
+    this.form?.resetForm();
   }
 
   /** Синхронизация с закрытием по крестику / Escape / клику по маске */
@@ -83,13 +89,21 @@ export class GoalAddCardButtonComponent {
   }
 
   hasBudgetError(): boolean {
-    return Number(this.newGoal.targetBudget) < 0 || Number(this.newGoal.goalBudget) < 0;
+    const target = Number(this.newGoal.targetBudget) ?? 0;
+    const goal = Number(this.newGoal.goalBudget) ?? 0;
+    return target < 0 || goal <= 0 || target > goal;
   }
 
+  /** Formats date to YYYY-MM-DD using local timezone (avoids UTC shift) */
   private formatDate(value: string | Date | undefined): string {
     if (value == null || value === '') return '';
     const d = (value as unknown) instanceof Date ? value : new Date(value);
-    return isNaN((d as Date).getTime()) ? '' : (d as Date).toISOString().split('T')[0];
+    if (isNaN((d as Date).getTime())) return '';
+    const x = d as Date;
+    const y = x.getFullYear();
+    const m = String(x.getMonth() + 1).padStart(2, '0');
+    const day = String(x.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
   }
 
   private resetGoal() {
@@ -106,14 +120,14 @@ export class GoalAddCardButtonComponent {
     if (form.invalid || this.hasDateError() || this.hasBudgetError()) return;
     const startStr = this.formatDate(this.newGoal.startDate as string | Date);
     const endStr = this.formatDate(this.newGoal.endDate as string | Date);
-    if (!startStr || !endStr) return;
+    if (!startStr) return;
     const payload: CreateGoalItem = {
       title: (this.newGoal.title ?? '').trim(),
       targetBudget: Number(this.newGoal.targetBudget) ?? 0,
       goalBudget: Number(this.newGoal.goalBudget) ?? 0,
       currencyCode: this.newGoal.currencyCode || undefined,
       startDate: startStr,
-      endDate: endStr,
+      endDate: endStr || undefined,
     };
     this.goalsService.createGoal(payload);
     this.visible.set(false);

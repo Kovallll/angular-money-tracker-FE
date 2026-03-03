@@ -1,17 +1,61 @@
 <div class="container">
-  <p class="title">Expenses Breakdown</p>
-  <div class="content">
-    @if (hasAnyExpenses()) {
-      @for (category of categories(); track category.id) {
-        @if (category.expenses.length) {
-          <expense-card [category]="category" />
-        }
-      }
-    } @else {
-      <div class="data-placeholder">
-        <span class="data-placeholder__icon" aria-hidden="true">📊</span>
-        <p>No expenses by category</p>
+  <header class="page-header">
+    <div class="header-text">
+      <h1 class="title">Expenses</h1>
+      <p class="subtitle">Track spending by category and see your top expenses</p>
+    </div>
+  </header>
+
+  @if (hasAnyExpenses()) {
+    <section class="summary-cards" aria-label="Overview">
+      <div class="summary-card summary-card--primary">
+        <span class="summary-card__icon" aria-hidden="true">
+          <i class="pi pi-wallet"></i>
+        </span>
+        <div class="summary-card__content">
+          <span class="summary-card__label">Total Expenses</span>
+          <span class="summary-card__value">{{ totalExpenses() | appCurrency }}</span>
+        </div>
       </div>
-    }
-  </div>
+      <div class="summary-card">
+        <span class="summary-card__icon" aria-hidden="true">
+          <i class="pi pi-chart-bar"></i>
+        </span>
+        <div class="summary-card__content">
+          <span class="summary-card__label">Categories with expenses</span>
+          <span class="summary-card__value">{{ categoriesWithExpenses() }}</span>
+        </div>
+      </div>
+      <div class="summary-card">
+        <span class="summary-card__icon" aria-hidden="true">
+          <i class="pi pi-list"></i>
+        </span>
+        <div class="summary-card__content">
+          <span class="summary-card__label">Total transactions</span>
+          <span class="summary-card__value">{{ totalTransactions() }}</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="chart-section">
+      <expenses-statistic-card [maxDisplay]="5" [title]="'Top 5 Expenses'" />
+    </section>
+
+    <section class="categories-section">
+      <h2 class="section-title">By category</h2>
+      <div class="content">
+        @for (category of categories(); track category.id) {
+          @if (category.expenses.length) {
+            <expense-card [category]="category" />
+          }
+        }
+      </div>
+    </section>
+  } @else {
+    <div class="data-placeholder data-placeholder--page empty-state">
+      <span class="data-placeholder__icon" aria-hidden="true">📊</span>
+      <h2 class="empty-title">No expenses yet</h2>
+      <p class="empty-desc">Add a transaction to start tracking your spending</p>
+    </div>
+  }
 </div>

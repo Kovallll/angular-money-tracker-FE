@@ -1,0 +1,64 @@
+@if (isMobile()) {
+  <div class="mobile-cards">
+    @if (isEmpty()) {
+      <div class="mobile-cards__empty">
+        <span class="mobile-cards__empty-icon" aria-hidden="true">📋</span>
+        <p>No data</p>
+      </div>
+    } @else {
+      @for (row of dataSource(); track row.id) {
+        <article
+          class="mobile-card"
+          [class.mobile-card--no-actions]="!showActions()"
+          (click)="showActions() && onEdit.emit(row)"
+          (contextmenu)="$event.preventDefault()"
+        >
+          <div class="mobile-card__icon-wrap" aria-hidden="true">
+            <app-icon [icon]="row.categoryIcon ?? ''" iconClass="mobile-card__category-icon" />
+          </div>
+          <div class="mobile-card__main">
+            <p class="mobile-card__title">{{ row.title || '—' }}</p>
+            <p class="mobile-card__meta">
+              <span>{{ row.date | date }}</span>
+              <span class="mobile-card__dot">·</span>
+              <span>{{ row.category ?? '—' }}</span>
+              @if (row.type) {
+                <span class="mobile-card__dot">·</span>
+                @if (row.type === 'expense') {
+                  <mat-icon class="mobile-card__type-icon" aria-hidden="true"
+                    >trending_down</mat-icon
+                  >
+                } @else {
+                  <mat-icon
+                    class="mobile-card__type-icon mobile-card__type-icon--revenue"
+                    aria-hidden="true"
+                    >trending_up</mat-icon
+                  >
+                }
+              }
+            </p>
+          </div>
+          <div class="mobile-card__amount">{{ row.amount | appCurrency }}</div>
+          @if (showActions()) {
+            <button
+              type="button"
+              class="mobile-card__delete"
+              aria-label="Delete"
+              (click)="onDelete.emit(row); $event.stopPropagation()"
+            >
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          }
+        </article>
+      }
+    }
+  </div>
+} @else {
+  <table-component
+    [dataSource]="dataSource()"
+    [isEmpty]="isEmpty()"
+    [displayedCells]="displayedCells()"
+    (onDelete)="onDelete.emit($event)"
+    (onEdit)="onEdit.emit($event)"
+  />
+}

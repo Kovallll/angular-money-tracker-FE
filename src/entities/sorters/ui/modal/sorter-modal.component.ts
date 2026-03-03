@@ -1,10 +1,9 @@
-import { ModalComponent } from '@/entities/cards/modal/modal.component';
+import { AppModalShellComponent } from '@/shared/components/app-modal-shell/app-modal-shell.component';
 import { SelectComponent } from '@/entities/select/ui/select.component';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { defaultSorter, DialogData, Sorter } from '../../lib';
 import { MatIconModule } from '@angular/material/icon';
-import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
 import { SorterService } from '../../services/sorter.service';
 import { ActivatedRoute } from '@angular/router';
 
@@ -12,7 +11,7 @@ import { ActivatedRoute } from '@angular/router';
   selector: 'sorters-modal',
   templateUrl: './sorter-modal.component.html',
   styleUrls: ['./sorter-modal.component.scss'],
-  imports: [SelectComponent, ModalComponent, MatIconModule, AppButtonComponent],
+  imports: [SelectComponent, AppModalShellComponent, MatIconModule],
   standalone: true,
 })
 export class SorterModalComponent implements OnInit {

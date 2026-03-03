@@ -11,6 +11,7 @@ import {
 import { ChartConfiguration } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
+import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
 
 const EMPTY_BAR: ChartConfiguration<'bar'>['data'] = { labels: [], datasets: [] };
 const EMPTY_LINE: ChartConfiguration<'line'>['data'] = { labels: [], datasets: [] };
@@ -26,6 +27,7 @@ const EMPTY_LINE: ChartConfiguration<'line'>['data'] = { labels: [], datasets: [
 export class CategoryAnaliticsComponent implements OnInit {
   private statisticsHttpService = inject(StatisticsHttpService);
   private currencyService = inject(CurrencyService);
+  private exchangeRates = inject(ExchangeRatesService);
 
   view = input<'row' | 'column'>('column');
 
@@ -36,6 +38,54 @@ export class CategoryAnaliticsComponent implements OnInit {
   hasPieData = computed(() => hasChartData(this.pieData(), 'doughnut'));
   hasBarData = computed(() => hasChartData(this.barData(), 'bar'));
   hasLineData = computed(() => hasChartData(this.lineData(), 'line'));
+
+  /** Pie data converted from BYN to current primary currency. */
+  pieChartData = computed<ChartConfiguration<'doughnut'>['data']>(() => {
+    const raw = this.pieData();
+    const target = this.currencyService.primaryCode();
+    if (!raw?.datasets?.length) return raw;
+    return {
+      ...raw,
+      datasets: raw.datasets.map((ds) => ({
+        ...ds,
+        data: (ds.data as number[]).map((v) =>
+          this.exchangeRates.convert(typeof v === 'number' ? v : 0, 'BYN', target),
+        ),
+      })),
+    };
+  });
+
+  /** Bar data converted from BYN to current primary currency. */
+  barChartData = computed<ChartConfiguration<'bar'>['data']>(() => {
+    const raw = this.barData();
+    const target = this.currencyService.primaryCode();
+    if (!raw?.datasets?.length) return raw;
+    return {
+      ...raw,
+      datasets: raw.datasets.map((ds) => ({
+        ...ds,
+        data: (ds.data as number[]).map((v) =>
+          this.exchangeRates.convert(typeof v === 'number' ? v : 0, 'BYN', target),
+        ),
+      })),
+    };
+  });
+
+  /** Line data converted from BYN to current primary currency. */
+  lineChartData = computed<ChartConfiguration<'line'>['data']>(() => {
+    const raw = this.lineData();
+    const target = this.currencyService.primaryCode();
+    if (!raw?.datasets?.length) return raw;
+    return {
+      ...raw,
+      datasets: raw.datasets.map((ds) => ({
+        ...ds,
+        data: (ds.data as number[]).map((v) =>
+          this.exchangeRates.convert(typeof v === 'number' ? v : 0, 'BYN', target),
+        ),
+      })),
+    };
+  });
 
   private formatWithCurrency(v: number, currencyCode: string) {
     return new Intl.NumberFormat(undefined, {
@@ -50,20 +100,41 @@ export class CategoryAnaliticsComponent implements OnInit {
     return {
       responsive: true,
       maintainAspectRatio: false,
+      layout: {
+        padding: { top: 8, bottom: 8, left: 4, right: 4 },
+      },
       plugins: {
         legend: {
-          position: 'right',
-          labels: { usePointStyle: true, color: 'white', font: { size: 16 } },
+          position: 'top',
+          align: 'center',
+          labels: {
+            usePointStyle: true,
+            color: 'white',
+            font: { size: 13, weight: 500 },
+            padding: 12,
+          },
         },
         tooltip: {
-          titleFont: { size: 30 },
-          bodyFont: { size: 20 },
+          backgroundColor: 'rgba(7, 17, 30, 0.96)',
+          borderColor: 'rgba(255,255,255,0.12)',
+          borderWidth: 1,
+          padding: 10,
+          titleFont: { size: 13, weight: 600 },
+          bodyFont: { size: 12 },
           callbacks: {
             label: (ctx) => `${ctx.label}: ${this.formatWithCurrency(ctx.parsed as number, code)}`,
           },
         },
       },
       cutout: '60%',
+      elements: {
+        arc: {
+          spacing: 4,
+          borderRadius: 3,
+          borderWidth: 2,
+          borderColor: 'rgba(0, 0, 0, 0.4)',
+        },
+      },
     };
   });
 
@@ -73,28 +144,50 @@ export class CategoryAnaliticsComponent implements OnInit {
       responsive: true,
       maintainAspectRatio: false,
       interaction: { mode: 'index', intersect: false },
+      layout: { padding: { top: 8, right: 8, left: 4, bottom: 4 } },
       plugins: {
         legend: {
           position: 'top',
-          labels: { usePointStyle: true, color: 'white', font: { size: 16 } },
+          labels: {
+            usePointStyle: true,
+            color: 'white',
+            font: { size: 13, weight: 500 },
+            padding: 12,
+          },
         },
         tooltip: {
-          titleFont: { size: 30 },
-          bodyFont: { size: 20 },
+          backgroundColor: 'rgba(7, 17, 30, 0.96)',
+          borderColor: 'rgba(255,255,255,0.12)',
+          borderWidth: 1,
+          padding: 10,
+          titleFont: { size: 13, weight: 600 },
+          bodyFont: { size: 12 },
           callbacks: {
             label: (ctx) =>
               `${ctx.dataset.label}: ${this.formatWithCurrency(ctx.parsed.y as number, code)}`,
           },
         },
       },
+      elements: {
+        bar: {
+          borderRadius: 8,
+          borderSkipped: false,
+          maxBarThickness: 40,
+        },
+      },
       scales: {
-        x: { stacked: false, grid: { color: 'rgba(255,255,255,0.06)' }, ticks: { color: 'white' } },
+        x: {
+          stacked: false,
+          grid: { color: 'rgba(255,255,255,0.06)', drawBorder: false },
+          ticks: { color: 'rgba(255,255,255,0.7)', font: { size: 11 } },
+        },
         y: {
           beginAtZero: true,
-          grid: { color: 'rgba(255,255,255,0.06)' },
+          grid: { color: 'rgba(255,255,255,0.06)', drawBorder: false },
           ticks: {
             callback: (v) => this.formatWithCurrency(Number(v), code),
-            color: 'white',
+            color: 'rgba(255,255,255,0.7)',
+            font: { size: 11 },
           },
         },
       },
@@ -107,26 +200,45 @@ export class CategoryAnaliticsComponent implements OnInit {
       responsive: true,
       maintainAspectRatio: false,
       interaction: { mode: 'nearest', intersect: false },
+      layout: { padding: { top: 8, right: 8, left: 4, bottom: 4 } },
       plugins: {
         legend: { display: false },
         tooltip: {
-          titleFont: { size: 30 },
-          bodyFont: { size: 20 },
+          backgroundColor: 'rgba(7, 17, 30, 0.96)',
+          borderColor: 'rgba(255,255,255,0.12)',
+          borderWidth: 1,
+          padding: 10,
+          titleFont: { size: 13, weight: 600 },
+          bodyFont: { size: 12 },
           callbacks: {
             label: (ctx) =>
               `${ctx.dataset.label}: ${this.formatWithCurrency(ctx.parsed.y ?? 0, code)}`,
           },
         },
       },
-      elements: { line: { borderWidth: 2 }, point: { radius: 2 } },
+      elements: {
+        line: {
+          borderWidth: 2,
+          tension: 0.35,
+        },
+        point: {
+          radius: 3,
+          hoverRadius: 6,
+          hitRadius: 10,
+        },
+      },
       scales: {
-        x: { grid: { color: 'rgba(255,255,255,0.06)' }, ticks: { color: 'white' } },
+        x: {
+          grid: { color: 'rgba(255,255,255,0.06)', drawBorder: false },
+          ticks: { color: 'rgba(255,255,255,0.7)', font: { size: 11 } },
+        },
         y: {
           beginAtZero: true,
-          grid: { color: 'rgba(255,255,255,0.06)' },
+          grid: { color: 'rgba(255,255,255,0.06)', drawBorder: false },
           ticks: {
             callback: (v) => this.formatWithCurrency(Number(v), code),
-            color: 'white',
+            color: 'rgba(255,255,255,0.7)',
+            font: { size: 11 },
           },
         },
       },

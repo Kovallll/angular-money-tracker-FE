@@ -5,14 +5,20 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px;
-  font-size: 18px;
-  background: $tertiary;
-  border: 1px solid $accent;
+  padding: 4px 12px;
+  font-size: 14px;
+  background: $light-primary;
+  border: 1px solid rgba($white, 0.16);
   color: $white;
-  border-radius: 8px;
-  width: 180px;
+  border-radius: 999px;
+  width: auto;
+  min-width: 120px;
   height: 32px;
+  box-shadow: 0 0 0 1px rgba($white, 0.02);
+  transition:
+    border-color 0.15s ease-out,
+    box-shadow 0.15s ease-out,
+    background-color 0.15s ease-out;
 
   @include mat.select-overrides(
     (
@@ -20,8 +26,11 @@
     )
   );
 
-  div .mat-mdc-select-panel {
-    background: $tertiary !important;
+  &:hover:not(.disabled),
+  &.mat-mdc-select-focused:not(.disabled) {
+    border-color: rgba($accent, 0.7);
+    box-shadow: 0 0 0 1px rgba($accent, 0.35);
+    background-color: rgba($accent, 0.18);
   }
 }
 
@@ -34,4 +43,38 @@
       enabled-arrow-color: $gray,
     )
   );
+}
+
+// Dropdown panel + options styling (overlay)
+:host {
+  ::ng-deep .mat-mdc-select-panel {
+    background: $light-primary;
+    color: $white;
+    border-radius: 12px;
+    box-shadow:
+      0 18px 45px rgba(0, 0, 0, 0.45),
+      0 0 0 1px rgba($white, 0.04);
+    padding-block: 4px;
+  }
+
+  ::ng-deep .mat-mdc-option {
+    font-size: 13px;
+    color: rgba($white, 0.9);
+    padding-inline: 14px;
+
+    &.mdc-list-item--selected .mdc-list-item__primary-text::after {
+      // hide default check icon if any custom design
+    }
+
+    &.mdc-list-item--selected,
+    &.mdc-list-item--activated,
+    &:hover:not(.mat-mdc-option-disabled) {
+      background-color: rgba($accent, 0.24);
+      color: $white;
+    }
+  }
+
+  ::ng-deep .mat-mdc-select-arrow {
+    color: $accent;
+  }
 }

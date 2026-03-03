@@ -1,39 +1,66 @@
-<div class="card">
-  <div class="header">
-    <div class="left-content">
-      <div class="category-icon">
-        <app-icon [icon]="category?.icon" />
+<article
+  class="card"
+  (click)="handleCardClick()"
+  (keydown.enter)="handleCardClick()"
+  (keydown.space)="$event.preventDefault(); handleCardClick()"
+  role="button"
+  tabindex="0"
+  [attr.aria-label]="'View ' + (category?.title ?? '') + ' expenses'"
+>
+  <div class="card__header">
+    <div class="card__main">
+      <div class="card__icon-wrap">
+        <app-icon [icon]="category?.icon ?? ''" />
       </div>
-      <div class="text">
-        <p class="category">{{ category?.title }}</p>
-        <p class="cost">{{ displayTotalExpenses() | appCurrency }}</p>
+      <div class="card__meta">
+        <h3 class="card__title">{{ category?.title }}</h3>
+        <p class="card__amount">{{ displayTotalExpenses() | appCurrency }}</p>
+        @if (expenses().length > 0) {
+          <span class="card__badge"
+            >Top {{ expenses().length }} expense{{ expenses().length > 1 ? 's' : '' }}</span
+          >
+        }
       </div>
     </div>
-    <div class="right-content">
-      <div class="percents-block">
-        <p class="percents">{{ compareToLastMonth().value }}%</p>
-        @if (compareToLastMonth().value > 0) {
+    <div
+      class="card__trend"
+      [class.card__trend--up]="compareToLastMonth().comparable && compareToLastMonth().isIncrease"
+      [class.card__trend--down]="
+        compareToLastMonth().comparable && !compareToLastMonth().isIncrease
+      "
+    >
+      <div class="card__trend-main">
+        <span class="card__trend-value">
+          @if (compareToLastMonth().comparable) {
+            {{ compareToLastMonth().value }}%
+          } @else {
+            N/A
+          }
+        </span>
+        @if (compareToLastMonth().comparable && compareToLastMonth().value > 0) {
           <app-icon
-            [icon]="compareToLastMonth().isIncrease ? 'arrow_upward' : 'arrow_downward'"
-            [iconClass]="
-              compareToLastMonth().isIncrease ? 'icon icon--increase' : 'icon icon--decrease'
-            "
+            [icon]="!compareToLastMonth().isIncrease ? 'arrow_upward' : 'arrow_downward'"
+            [iconClass]="'card__trend-icon'"
           />
         }
       </div>
-      <p class="compare">Compare to last month</p>
+      <span class="card__trend-label">vs last month</span>
     </div>
   </div>
-  <div class="body">
+  <div class="card__body">
     @if (expenses().length) {
-      @for (expense of expenses(); track expense.id) {
-        <expense-card-item [expense]="expense" />
-      }
+      <ul class="card__list">
+        @for (expense of expenses(); track expense.id) {
+          <li>
+            <expense-card-item [expense]="expense" />
+          </li>
+        }
+      </ul>
     } @else {
-      <div class="data-placeholder">
-        <span class="data-placeholder__icon" aria-hidden="true">📊</span>
+      <div class="card__empty">
+        <span class="card__empty-icon" aria-hidden="true">📊</span>
         <p>No expenses in this category</p>
       </div>
     }
   </div>
-</div>
+</article>

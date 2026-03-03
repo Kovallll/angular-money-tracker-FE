@@ -1,50 +1,80 @@
-<dashboard-card title="Active goal">
-  <card-body class="body">
-    <div class="card">
-      <div class="header">
-        <div class="left-header">
-          <p class="goal-title">{{ goal().title }}</p>
+@if (goal()) {
+  <dashboard-card title="Active goal">
+    <card-body class="body">
+      <div class="card">
+        <div class="header">
+          <div class="left-header">
+            <p class="goal-title">{{ goal()!.title }}</p>
+            <p class="progress-badge" [class.complete]="getProgress(goal()!) >= 100">
+              {{ getProgress(goal()!) | number: '1.0-1' }}% reached
+            </p>
+          </div>
+          <div class="right-header">
+            <p class="date">
+              {{ goal()!.startDate | date: 'MMM d, y' }} –
+              {{ goal()!.endDate ? (goal()!.endDate | date: 'MMM d, y') : 'No deadline' }}
+            </p>
+            <div class="time-badges">
+              @if (getTimeElapsed(goal()!)) {
+                <span class="time-badge time-badge--elapsed">{{ getTimeElapsed(goal()!) }}</span>
+              }
+              @if (getTimeRemaining(goal()!)) {
+                <span
+                  class="time-badge time-badge--remaining"
+                  [class.time-badge--ended]="getTimeRemaining(goal()!) === 'Ended'"
+                  >{{ getTimeRemaining(goal()!) }}</span
+                >
+              }
+            </div>
+          </div>
         </div>
-        <p class="date">{{ goal().startDate | date }} - <br />{{ goal().endDate | date }}</p>
-      </div>
-      <divider color="tertiary" />
-      <div class="wrapper">
-        <div class="content">
-          <div class="left-side">
-            <div class="title">
-              <mat-icon>today</mat-icon>
-              <div class="text-block">
-                <p class="text">Target Budget</p>
-                <p class="price">
-                  {{ goal().targetBudget | appCurrencyPrimary: goal().currencyCode }}
-                </p>
+        <divider color="tertiary" />
+        <div class="wrapper">
+          <div class="content">
+            <div class="left-side">
+              <div class="stat-row">
+                <span class="stat-icon"><i class="pi pi-wallet"></i></span>
+                <div class="text-block">
+                  <p class="text">Target Budget</p>
+                  <p class="price">
+                    {{ goal()!.targetBudget | appCurrencyPrimary: goal()!.currencyCode }}
+                  </p>
+                </div>
+              </div>
+              <div class="stat-row">
+                <span class="stat-icon"><i class="pi pi-flag"></i></span>
+                <div class="text-block">
+                  <p class="text">Goal Budget</p>
+                  <p class="price">
+                    {{ goal()!.goalBudget | appCurrencyPrimary: goal()!.currencyCode }}
+                  </p>
+                </div>
               </div>
             </div>
-            <div class="title">
-              <mat-icon>check_circle</mat-icon>
-              <div class="text-block">
-                <p class="text">Goal Budget</p>
-                <p class="price">
-                  {{ goal().goalBudget | appCurrencyPrimary: goal().currencyCode }}
-                </p>
+            <div class="right-side">
+              <div class="chart-wrap">
+                <canvas
+                  baseChart
+                  [labels]="labels"
+                  [datasets]="getDataset(goal()!)"
+                  [legend]="false"
+                  [type]="'doughnut'"
+                  [options]="chartOptions"
+                ></canvas>
+                <span class="chart-center">{{ getProgress(goal()!) | number: '1.0-0' }}%</span>
               </div>
             </div>
           </div>
-          <div class="right-side">
-            <canvas
-              baseChart
-              [labels]="labels"
-              [datasets]="getDataset(goal())"
-              [legend]="false"
-              [type]="'doughnut'"
-              [width]="115"
-            ></canvas>
+          <div class="button">
+            <goal-adjust-card-button [goal]="goal()!" />
           </div>
         </div>
-        <div class="button">
-          <goal-adjust-card-button [goal]="goal()" />
-        </div>
       </div>
-    </div>
-  </card-body>
-</dashboard-card>
+    </card-body>
+  </dashboard-card>
+} @else {
+  <div class="empty-active">
+    <span class="empty-icon" aria-hidden="true"><i class="pi pi-flag"></i></span>
+    <p class="empty-text">Select a goal above to view details</p>
+  </div>
+}

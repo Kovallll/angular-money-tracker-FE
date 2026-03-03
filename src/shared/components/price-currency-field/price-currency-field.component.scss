@@ -4,6 +4,7 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+  min-width: 0;
 
   .label {
     font-weight: 600;
@@ -11,28 +12,51 @@
   }
 
   .row {
-    display: flex;
-    gap: 12px;
+    display: grid;
+    grid-template-columns: minmax(80px, 1fr) auto;
+    gap: 10px;
     align-items: stretch;
+    min-width: 0;
   }
 
   .amount-input {
-    flex: 1 1 0%;
     min-width: 0;
-    max-width: 100%;
 
-    ::ng-deep .p-inputnumber,
-    ::ng-deep .p-inputnumber .p-inputnumber-input {
+    ::ng-deep .p-inputnumber {
       width: 100% !important;
       max-width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+    }
+
+    ::ng-deep .p-inputnumber .p-inputnumber-input,
+    ::ng-deep .p-inputnumber-input {
+      width: 100% !important;
+      max-width: 100%;
+      min-width: 0;
       box-sizing: border-box;
     }
   }
 
   ::ng-deep .currency-select {
-    flex: 0 0 auto;
     min-width: 88px;
     width: auto;
   }
-}
 
+  .currency-locked {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    padding: 0 12px;
+    min-width: 52px;
+    min-height: 40px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+}

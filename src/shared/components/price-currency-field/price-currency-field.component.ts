@@ -23,6 +23,8 @@ export class PriceCurrencyFieldComponent {
   amountName = input<string>('amount');
   /** Whether to show the currency selector. Default true. */
   showCurrency = input<boolean>(true);
+  /** When true, show currency as locked read-only text instead of selector. */
+  lockCurrency = input<boolean>(false);
   /** Whether the amount is required. */
   required = input<boolean>(false);
 

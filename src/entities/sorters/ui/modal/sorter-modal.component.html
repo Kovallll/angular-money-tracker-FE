@@ -1,6 +1,14 @@
-<modal class="modal">
-  <div modal-title class="title">Sort by</div>
-  <div modal-content class="content">
+<app-modal-shell
+  title="Sort by"
+  [showCloseButton]="true"
+  [showCancel]="true"
+  [showSave]="true"
+  saveLabel="Apply"
+  (closeRequest)="closeModal()"
+  (cancelRequest)="closeModal()"
+  (saveRequest)="applySorter()"
+>
+  <div class="content">
     <div class="selectors">
       <select-component
         [options]="data.categoryOptions()"
@@ -32,9 +40,4 @@
       </button>
     </div>
   </div>
-
-  <div modal-actions>
-    <app-button appearance="secondary" size="md" (buttonClick)="closeModal()">Close</app-button>
-    <app-button appearance="primary" size="md" (buttonClick)="applySorter()">Apply</app-button>
-  </div>
-</modal>
+</app-modal-shell>

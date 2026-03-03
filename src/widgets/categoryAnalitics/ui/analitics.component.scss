@@ -7,47 +7,55 @@
   flex-shrink: 0;
 
   @include bp.desktop-and-up {
-    width: 400px;
-    min-width: 320px;
-    max-width: 480px;
+    width: 100%;
   }
 }
 
-.title {
-  font-size: 20px;
-  font-weight: 600;
-  margin: 0 0 16px;
+.analytics__title {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+  letter-spacing: -0.02em;
+
+  &--hidden {
+    display: none;
+  }
 
   @include bp.tablet-and-up {
     font-size: 24px;
-    margin-bottom: 20px;
   }
+}
 
-  @include bp.desktop-and-up {
-    font-size: 28px;
-  }
+.analytics__desc {
+  font-size: 14px;
+  color: $gray;
+  margin: 0 0 24px 0;
 
-  &.disable {
+  &--hidden {
     display: none;
   }
 }
 
-.charts {
+.analytics__charts {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
   width: 100%;
   min-width: 0;
 
   @include bp.tablet-and-up {
-    gap: 32px;
+    gap: 24px;
   }
 
-  &.row {
+  @include bp.desktop {
+    flex-direction: row;
+  }
+
+  &--row {
     flex-direction: row;
     flex-wrap: wrap;
 
-    .chart {
+    .chart-card {
       flex: 1 1 100%;
       min-width: 280px;
 
@@ -62,44 +70,80 @@
   }
 }
 
-.chart {
+.chart-card {
+  background: $light-primary;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  overflow: hidden;
+  padding: 20px;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:hover {
+    border-color: rgba($accent, 0.15);
+  }
+
+  @include bp.desktop {
+    width: 100%;
+  }
+
+  @include bp.tablet-and-up {
+    padding: 24px;
+  }
+}
+
+.chart-card__title {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+  color: $white;
+
+  @include bp.tablet-and-up {
+    font-size: 16px;
+  }
+}
+
+.chart-card__body {
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  height: 280px;
+  height: 260px;
   position: relative;
   box-sizing: border-box;
 
   @include bp.tablet-and-up {
-    height: 320px;
+    height: 280px;
   }
 
   @include bp.desktop-and-up {
-    height: 360px;
+    height: 300px;
   }
 
-  &.row {
-    height: 400px;
+  .analytics__charts--row & {
+    height: 320px;
   }
 }
 
 .chart-placeholder {
   width: 100%;
   height: 100%;
-  min-height: 200px;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: $gray;
+  font-size: 14px;
   box-sizing: border-box;
 
-  @include bp.tablet-and-up {
-    min-height: 280px;
+  &__icon {
+    font-size: 40px;
+    opacity: 0.6;
   }
-}
 
-.subtitle {
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 12px;
-
-  @include bp.tablet-and-up {
-    font-size: 18px;
+  p {
+    margin: 0;
   }
 }

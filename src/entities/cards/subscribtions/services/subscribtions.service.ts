@@ -11,10 +11,12 @@ export class SubscribtionsService {
 
   /**
    * Следующая дата списания по lastCharge и типу подписки (для сортировки).
+   * Для onetime возвращает дату lastCharge (единоразовые сортируются по дате оплаты).
    */
   private getNextChargeDate(sub: SubscribeItem): dayjs.Dayjs {
     const d = dayjs(sub.lastCharge || sub.subscribeDate);
     const type = (sub.type || '').toLowerCase();
+    if (type === 'onetime' || type === 'one-time') return d;
     if (type === 'daily') return d.add(1, 'day');
     if (type === 'monthly') return d.add(1, 'month');
     if (type === 'yearly' || type === 'annually') return d.add(1, 'year');

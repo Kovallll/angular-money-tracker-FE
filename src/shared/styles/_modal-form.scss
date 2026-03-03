@@ -44,16 +44,18 @@
   grid-column: 1 / -1;
 }
 
-// Один блок поля: .field или .form-field
+// Один блок поля: .field, .form-field или app-modal-field
 .app-modal-form .field,
-.app-modal-form .form-field {
+.app-modal-form .form-field,
+.app-modal-form app-modal-field {
   display: flex;
   flex-direction: column;
   gap: 6px;
   min-width: 0;
   overflow: hidden;
 
-  label {
+  label,
+  .app-modal-field__label {
     font-size: 13px;
     font-weight: 600;
     letter-spacing: 0.5px;
@@ -68,7 +70,8 @@
 
 // Место под ошибку — фиксированная высота, интерфейс не прыгает
 .app-modal-form .error-slot,
-.app-modal-form .form-field-error {
+.app-modal-form .form-field-error,
+.app-modal-form .app-modal-field__error {
   height: 20px;
   line-height: 20px;
   overflow: hidden;
@@ -85,11 +88,15 @@
     margin: 0;
   }
 }
+.p-inputtext {
+  width: 100%;
+}
 
 // Инпуты и селекты внутри модальной формы
 .app-modal-form .input,
 .app-modal-form .field input.p-inputtext,
 .app-modal-form .form-field input.p-inputtext,
+.app-modal-form app-modal-field input.p-inputtext,
 .app-modal-form ::ng-deep .p-inputtext,
 .app-modal-form ::ng-deep .p-inputnumber-input {
   width: 100%;
@@ -151,31 +158,29 @@
 .app-modal-form .form-field app-price-currency-field {
   display: block;
   min-width: 0;
-  overflow: hidden;
 
   ::ng-deep .row {
-    display: flex;
-    gap: 8px;
+    display: grid;
+    grid-template-columns: minmax(80px, 1fr) auto;
+    gap: 10px;
     align-items: stretch;
     min-width: 0;
   }
 
   ::ng-deep .amount-input {
-    flex: 1 1 0;
     min-width: 0;
-    overflow: hidden;
   }
 
-  ::ng-deep .p-inputnumber,
-  ::ng-deep .p-inputnumber-input {
+  ::ng-deep .amount-input .p-inputnumber,
+  ::ng-deep .amount-input .p-inputnumber-input {
     width: 100%;
     max-width: 100%;
+    min-width: 0;
     box-sizing: border-box;
   }
 
   ::ng-deep .currency-select,
   ::ng-deep .currency-select.p-select {
-    flex: 0 0 auto;
     min-width: 64px;
     max-width: 80px;
   }
@@ -307,4 +312,3 @@
     overflow: hidden;
   }
 }
-

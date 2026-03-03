@@ -1,53 +1,22 @@
 @use 'theme' as *;
 
-.dialog {
-  padding: 24px;
-  min-width: 400px;
-  background: $secondary;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+:host {
+  display: block;
+}
 
-  h2 {
-    margin-bottom: 24px;
-    font-weight: 600;
-    color: var(--text-color);
-    text-align: center;
-  }
+/* Доп. стили для datepicker в этой модалке (_modal-form даёт базовые) */
+:host ::ng-deep .field:has(p-datepicker) {
+  grid-column: 1 / -1;
 
-  .form {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-
-      label {
-        font-weight: 500;
-        font-size: 14px;
-        color: var(--text-color-secondary);
-      }
-
-      input,
-      ::ng-deep .p-inputtext,
-      ::ng-deep .p-inputnumber,
-      ::ng-deep .p-calendar {
-        width: 100%;
-      }
-    }
-  }
-
-  .actions {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 8px;
-    margin-top: 24px;
-
-    .spacer {
-      flex: 1;
-    }
+  @media (min-width: 560px) {
+    grid-column: span 1;
   }
 }
 
+.label {
+  margin: 0;
+}
+
+:host .actions .spacer {
+  flex: 1;
+}

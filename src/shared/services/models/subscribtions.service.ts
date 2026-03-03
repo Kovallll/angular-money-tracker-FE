@@ -1,7 +1,18 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { BehaviorSubject, tap, switchMap, of, combineLatest, startWith, catchError } from 'rxjs';
+import {
+  BehaviorSubject,
+  tap,
+  switchMap,
+  of,
+  combineLatest,
+  startWith,
+  catchError,
+  retry,
+  timer,
+  timeout,
+} from 'rxjs';
 import { subscriptionsUrl } from '@/shared/constants';
 import { SubscribeItem } from '@/shared/types';
 import { AuthService } from '@/shared/services/auth/auth.service';
@@ -29,9 +40,21 @@ export class SubscribtionsHttpService {
       }
       this.loadingSignal.set(true);
       return this.http.get<SubscribeItem[]>(`${subscriptionsUrl}/user/${user.id}`).pipe(
+        timeout(60000),
+        retry({
+          count: 2,
+          delay: (err, retryCount) => {
+            console.warn(
+              `[Subscriptions] Request failed (attempt ${retryCount + 1}/3):`,
+              err?.message,
+            );
+            return timer(2000 * (retryCount + 1));
+          },
+        }),
         tap(() => this.loadingSignal.set(false)),
-        catchError(() => {
+        catchError((err) => {
           this.loadingSignal.set(false);
+          console.error('[Subscriptions] Failed after retries:', err?.message || err);
           return of([] as SubscribeItem[]);
         }),
       );

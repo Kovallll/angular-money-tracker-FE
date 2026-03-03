@@ -27,6 +27,9 @@ export class SorterComponent {
       data: {
         categoryOptions: this.categoryOptions,
       } as DialogData,
+      panelClass: 'sorter-modal',
+      width: '400px',
+      maxWidth: 'calc(100vw - 24px)',
     });
   }
 }

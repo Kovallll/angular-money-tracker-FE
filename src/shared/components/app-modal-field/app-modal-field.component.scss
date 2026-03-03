@@ -1,0 +1,49 @@
+@use 'theme' as *;
+
+.app-modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+
+  &--full {
+    grid-column: 1 / -1;
+
+    @media (min-width: 560px) {
+      grid-column: span 1;
+    }
+  }
+}
+
+.app-modal-field__label {
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.app-modal-field__control {
+  min-width: 0;
+}
+
+.app-modal-field__error {
+  height: 20px;
+  line-height: 20px;
+  overflow: hidden;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+
+  :empty {
+    display: none;
+  }
+
+  .error,
+  small.error,
+  p-message {
+    color: #f87171;
+    font-size: 13px;
+    font-weight: 500;
+    margin: 0;
+  }
+}

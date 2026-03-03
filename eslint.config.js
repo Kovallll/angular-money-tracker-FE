@@ -7,7 +7,15 @@ import angularTemplateParser from '@angular-eslint/template-parser';
 
 export default [
   {
-    ignores: ['dist', 'node_modules', 'projects/**/*', '.angular'],
+    ignores: [
+      'dist',
+      'node_modules',
+      'projects/**/*',
+      '.angular',
+      'android',
+      'ios',
+      'capacitor.config.ts',
+    ],
   },
   {
     files: ['**/*.ts'],
@@ -52,3 +60,4 @@ export default [
     },
   },
 ];
+

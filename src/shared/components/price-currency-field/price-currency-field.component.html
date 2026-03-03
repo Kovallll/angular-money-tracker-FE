@@ -9,13 +9,16 @@
       [(ngModel)]="amount"
       (blur)="onAmountBlur()"
       [min]="0"
+      [required]="required()"
       mode="decimal"
       [minFractionDigits]="0"
       [maxFractionDigits]="2"
       [useGrouping]="false"
       class="amount-input"
     />
-    @if (showCurrency()) {
+    @if (lockCurrency()) {
+      <span class="currency-locked">{{ currencyCodeValue }}</span>
+    } @else if (showCurrency()) {
       <p-select
         [ngModel]="currencyCodeValue"
         (ngModelChange)="currencyCodeValue = $event"

@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, inject, Input } from '@angular/core';
-import { CategoryItem } from '@/shared';
+import { CategoryItem, RoutePaths } from '@/shared';
 import { AppCurrencyPipe } from '@/shared/pipes/app-currency.pipe';
 import { ExpenseCardItemComponent } from '../card-item/expense-card-item.component';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'expense-card',
@@ -17,8 +18,16 @@ import { AppIconComponent } from '@/shared/components/app-icon/app-icon.componen
 export class ExpenseCardPageComponent {
   private currencyService = inject(CurrencyService);
   private exchangeRates = inject(ExchangeRatesService);
+  private router = inject(Router);
 
   @Input({ required: true }) category: CategoryItem | null = null;
+
+  handleCardClick() {
+    const id = this.category?.id;
+    if (id != null) {
+      this.router.navigate([RoutePaths.EXPENSES_DETAILS, id]);
+    }
+  }
 
   /** Total expenses in primary currency (reactive to header). */
   displayTotalExpenses = computed(() => {
@@ -47,10 +56,13 @@ export class ExpenseCardPageComponent {
     }));
   });
 
-  /** Сравнение с прошлым месяцем: процент и направление (для расходов рост = плохо, красная стрелка вверх). */
+  /** Сравнение с прошлым месяцем: процент и направление (для расходов рост = плохо, красная стрелка вверх).
+   * Если данных для сравнения недостаточно (нет трат в прошлом месяце или вообще нет трат),
+   * показываем N/A и не подсвечиваем тренд.
+   */
   compareToLastMonth = computed(() => {
     const cat = this.category;
-    if (!cat?.expenses?.length) return { value: 0, isIncrease: false };
+    if (!cat?.expenses?.length) return { value: 0, isIncrease: false, comparable: false };
     const now = new Date();
     const currentMonthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
     const prevMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
@@ -60,16 +72,37 @@ export class ExpenseCardPageComponent {
       const d = e.date ? String(e.date).slice(0, 7) : '';
       return d;
     };
-    const current = cat.expenses
-      .filter((e) => byMonth(e) === currentMonthKey)
-      .reduce((sum, e) => sum + (e.amount ?? 0), 0);
-    const previous = cat.expenses
-      .filter((e) => byMonth(e) === previousMonthKey)
-      .reduce((sum, e) => sum + (e.amount ?? 0), 0);
 
-    if (previous === 0) return { value: 0, isIncrease: false };
-    const changePct = ((current - previous) / previous) * 100;
+    const primary = this.currencyService.primaryCode();
+
+    // currentMonthKey = текущий месяц (напр. 2026-03), previousMonthKey = прошлый (напр. 2026-02)
+    const thisMonthSum = cat.expenses
+      .filter((e) => byMonth(e) === currentMonthKey)
+      .reduce(
+        (sum, e) =>
+          sum + this.exchangeRates.convert(e.amount ?? 0, e.currencyCode ?? 'BYN', primary),
+        0,
+      );
+    const lastMonthSum = cat.expenses
+      .filter((e) => byMonth(e) === previousMonthKey)
+      .reduce(
+        (sum, e) =>
+          sum + this.exchangeRates.convert(e.amount ?? 0, e.currencyCode ?? 'BYN', primary),
+        0,
+      );
+
+    // N/A, если в одном из месяцев нет транзакций: не показываем 0%, 100% или -100%
+    if (lastMonthSum === 0 || thisMonthSum === 0) {
+      return { value: 0, isIncrease: false, comparable: false };
+    }
+
+    // Рост расходов (thisMonth > lastMonth) → положительный %, стрелка вверх (плохо)
+    const changePct = ((thisMonthSum - lastMonthSum) / lastMonthSum) * 100;
+    if (!Number.isFinite(changePct)) {
+      return { value: 0, isIncrease: false, comparable: false };
+    }
     const value = Math.abs(Math.round(changePct * 100) / 100);
-    return { value, isIncrease: changePct > 0 };
+    const isIncrease = changePct > 0; // true = расходы выросли → красный и стрелка вверх
+    return { value, isIncrease, comparable: true };
   });
 }

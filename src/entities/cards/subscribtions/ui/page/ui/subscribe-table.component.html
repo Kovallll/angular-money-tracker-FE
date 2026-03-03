@@ -1,62 +1,67 @@
 <div class="container">
   <controls [controlsProps]="controlsProps()" />
   <div class="content">
-    <div class="head">
-      <h2>Subscriptions</h2>
+    <header class="page-header">
+      <div class="page-header__text">
+        <h1 class="page-title">Subscriptions</h1>
+        <p class="page-subtitle">Manage your recurring payments</p>
+      </div>
       <subscription-add-button />
-    </div>
+    </header>
 
     @if (isLoading()) {
-      <div class="cards-loading data-placeholder--page">
-        <p-progress-spinner ariaLabel="Loading" />
+      <div class="cards-loading">
+        <p-progress-spinner ariaLabel="Loading" strokeWidth="3" />
+        <p class="cards-loading__text">Loading subscriptions…</p>
       </div>
     } @else if (subscribes().length) {
       <ul class="cards-list" role="list">
         @for (subscribe of subscribes(); track subscribe.id) {
           <li class="card-item">
-            <article
-              class="subscription-card"
-              (click)="onEdit(subscribe)"
-              (contextmenu)="openContextMenu($event, subscribe)"
-              (keydown.enter)="onEdit(subscribe)"
-              (keydown.space)="$event.preventDefault(); onEdit(subscribe)"
-              tabindex="0"
-              role="button"
-              [attr.aria-label]="'Edit ' + subscribe.subscribeName"
-            >
-              <div class="card__date">
-                <span class="card__date-label">Date</span>
-                <span class="card__month">{{ subscribe.subscribeDate | date: 'MMM' }}</span>
-                <span class="card__day">{{ subscribe.subscribeDate | date: 'dd' }}</span>
+            <article class="subscription-card" (contextmenu)="openContextMenu($event, subscribe)">
+              <div class="card__date-badge">
+                <div class="card__date-inner">
+                  <span class="card__date-label">Start</span>
+                  <span class="card__date-month">{{ subscribe.subscribeDate | date: 'MMM' }}</span>
+                  <span class="card__date-day">{{ subscribe.subscribeDate | date: 'dd' }}</span>
+                </div>
               </div>
               <div class="card__body">
-                <div class="card__top">
-                  <h3 class="card__title">{{ subscribe.subscribeName }}</h3>
-                  <div class="card__amount-wrap">
-                    <span class="card__label">Amount</span>
-                    <span class="card__amount">{{
-                      subscribe.amount | appCurrencyPrimary: subscribe.currencyCode
-                    }}</span>
-                  </div>
-                </div>
-                <div class="card__field card__field--full">
-                  <span class="card__label">Type</span>
-                  <span class="card__value">{{ subscribe.type | titlecase }}</span>
-                </div>
-                <div class="card__field card__field--full">
-                  <span class="card__label">Next payment</span>
-                  <span class="card__value card__value--full">{{
-                    subscribe.lastCharge | date
-                  }}</span>
+                <h3 class="card__title">{{ subscribe.subscribeName }}</h3>
+                <div class="card__meta">
+                  <span class="card__badge">{{ subscribe.type | titlecase }}</span>
+                  @if (subscribe | nextChargeDate; as nextDate) {
+                    <span class="card__next-payment"
+                      >Next: {{ nextDate | date: 'MMM d, yyyy' }}</span
+                    >
+                  } @else if (isOneTime(subscribe.type)) {
+                    <span class="card__next-payment">One-time</span>
+                  }
                 </div>
                 @if (subscribe.description) {
-                  <div class="card__field card__field--full">
-                    <span class="card__label">Description</span>
-                    <span class="card__value card__value--full card__value--description">{{
-                      subscribe.description
-                    }}</span>
-                  </div>
+                  <p class="card__description">{{ subscribe.description }}</p>
                 }
+                <div class="card__footer">
+                  <button
+                    type="button"
+                    class="mark-paid-btn"
+                    (click)="markAsPaid($event, subscribe)"
+                    [attr.aria-label]="'Mark ' + subscribe.subscribeName + ' as paid'"
+                    title="Mark as paid"
+                  >
+                    <i class="pi pi-check" aria-hidden="true"></i>
+                    <span>Mark paid</span>
+                  </button>
+                  <div class="card__amount-row">
+                    <span class="card__amount"
+                      >{{ subscribe.amount | appCurrencyPrimary: subscribe.currencyCode
+                      }}{{ (subscribe | subscriptionYearly).periodLabel }}</span
+                    >
+                    @if ((subscribe | subscriptionYearly).yearlyFormatted; as yearly) {
+                      <span class="card__yearly">{{ yearly }}</span>
+                    }
+                  </div>
+                </div>
               </div>
             </article>
           </li>
@@ -68,14 +73,21 @@
         (onEdit)="onEdit(selectedSubscribe())"
       />
     } @else {
-      <div class="data-placeholder data-placeholder--page">
-        <span class="data-placeholder__icon" aria-hidden="true">🔄</span>
-        <p>No subscriptions</p>
-        <p>Add a subscription using the button above</p>
+      <div class="empty-state">
+        <div class="empty-state__icon" aria-hidden="true">
+          <i class="pi pi-credit-card"></i>
+        </div>
+        <h3 class="empty-state__title">No subscriptions yet</h3>
+        <p class="empty-state__text">Add your first subscription to track recurring payments</p>
+        <div class="empty-state__action">
+          <subscription-add-button />
+        </div>
       </div>
     }
   </div>
   @if (subscribes().length) {
-    <pagination />
+    <footer class="page-footer">
+      <pagination />
+    </footer>
   }
 </div>

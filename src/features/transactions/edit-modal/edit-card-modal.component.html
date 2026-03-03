@@ -1,98 +1,103 @@
-<form #cardForm="ngForm" (ngSubmit)="onSubmit(cardForm)" class="app-modal-form">
-  <div class="form-fields">
-    @for (input of inputs; track input.field) {
-      @if (input.field === 'currencyCode') {
-        <!-- Currency shown with Amount in app-price-currency-field below -->
-      } @else if (input.field === 'amount') {
-        <div class="field">
-          <app-price-currency-field
-            [label]="input.placeholder"
-            [amountName]="input.name"
-            [(amount)]="amount"
-            [(currencyCode)]="currencyCode"
-            [required]="true"
-          />
-          <div class="error-slot"></div>
-        </div>
-      } @else if (input.field === 'paymentMethod') {
-        <div class="field">
-          <label [for]="input.name">{{ input.placeholder }}</label>
-          <p-select
-            class="select"
-            [options]="paymentMethodOptions"
-            optionLabel="label"
-            optionValue="value"
-            [inputId]="input.name"
-            [placeholder]="'Select'"
-            [name]="input.name"
-            [ngModel]="card()[input.field]"
-            (ngModelChange)="setCardField('paymentMethod', $event)"
-            appendTo="body"
-          />
-          <div class="error-slot"></div>
-        </div>
-      } @else if (input.field === 'category') {
-        <div class="field">
-          <label [for]="input.name">{{ input.placeholder }}</label>
-          <p-select
-            class="select"
-            [options]="categories.data()"
-            optionValue="title"
-            [inputId]="input.name"
-            [placeholder]="input.placeholder"
-            [name]="input.name"
-            [ngModel]="card()[input.field]"
-            (ngModelChange)="updateCardField($event)"
-            #model="ngModel"
-            [invalid]="model.invalid && (model.touched || cardForm.submitted)"
-            required
-          >
-            <ng-template let-item pTemplate="item">
-              <div class="icon-row">
-                <app-icon [icon]="item.icon" />
-                <span>{{ item.title }}</span>
-              </div>
-            </ng-template>
-            <ng-template let-item pTemplate="selectedItem">
-              <div class="icon-row selected">
-                <span>{{ item?.title }}</span>
-              </div>
-            </ng-template>
-          </p-select>
-          <div class="error-slot">
-            @if (model.invalid && (model.touched || cardForm.submitted)) {
-              <small class="error">{{ input.placeholder }} is required.</small>
-            }
+<app-modal-shell
+  [embedded]="true"
+  [showCloseButton]="false"
+  [showCancel]="true"
+  [showSave]="true"
+  saveLabel="Save"
+  [saveDisabled]="!!cardForm.invalid"
+  (cancelRequest)="close()"
+  (saveRequest)="onSubmit(cardForm)"
+>
+  <form #cardForm="ngForm" (ngSubmit)="onSubmit(cardForm)" class="app-modal-form">
+    <div class="form-fields">
+      @for (input of inputs; track input.field) {
+        @if (input.field === 'currencyCode') {
+          <!-- Currency shown with Amount in app-price-currency-field below -->
+        } @else if (input.field === 'amount') {
+          <div class="field">
+            <app-price-currency-field
+              [label]="input.placeholder"
+              [amountName]="input.name"
+              [(amount)]="amount"
+              [(currencyCode)]="currencyCode"
+              [required]="true"
+            />
+            <div class="error-slot"></div>
           </div>
-        </div>
-      } @else {
-        <div class="field">
-          <label [for]="input.name">{{ input.placeholder }}</label>
-          <input
-            class="input"
-            pInputText
-            type="text"
-            [id]="input.name"
-            [placeholder]="input.placeholder"
-            [name]="input.name"
-            [(ngModel)]="card()[input.field]"
-            #model="ngModel"
-            [invalid]="model.invalid && (model.touched || cardForm.submitted)"
-            required
-          />
-          <div class="error-slot">
-            @if (model.invalid && (model.touched || cardForm.submitted)) {
-              <small class="error">{{ input.placeholder }} is required.</small>
-            }
+        } @else if (input.field === 'paymentMethod') {
+          <div class="field">
+            <label [for]="input.name" class="label">{{ input.placeholder }}</label>
+            <p-select
+              class="select"
+              [options]="paymentMethodOptions"
+              optionLabel="label"
+              optionValue="value"
+              [inputId]="input.name"
+              [placeholder]="'Select'"
+              [name]="input.name"
+              [ngModel]="card()[input.field]"
+              (ngModelChange)="setCardField('paymentMethod', $event)"
+              appendTo="body"
+            />
+            <div class="error-slot"></div>
           </div>
-        </div>
+        } @else if (input.field === 'category') {
+          <div class="field">
+            <label [for]="input.name" class="label">{{ input.placeholder }}</label>
+            <p-select
+              class="select"
+              [options]="categories.data()"
+              optionValue="title"
+              [inputId]="input.name"
+              [placeholder]="input.placeholder"
+              [name]="input.name"
+              [ngModel]="card()[input.field]"
+              (ngModelChange)="updateCardField($event)"
+              #model="ngModel"
+              [invalid]="model.invalid && (model.touched || cardForm.submitted)"
+              required
+            >
+              <ng-template let-item pTemplate="item">
+                <div class="icon-row">
+                  <app-icon [icon]="item.icon" />
+                  <span>{{ item.title }}</span>
+                </div>
+              </ng-template>
+              <ng-template let-item pTemplate="selectedItem">
+                <div class="icon-row selected">
+                  <span>{{ item?.title }}</span>
+                </div>
+              </ng-template>
+            </p-select>
+            <div class="error-slot">
+              @if (model.invalid && (model.touched || cardForm.submitted)) {
+                <small class="error">{{ input.placeholder }} is required.</small>
+              }
+            </div>
+          </div>
+        } @else {
+          <div class="field">
+            <label [for]="input.name" class="label">{{ input.placeholder }}</label>
+            <input
+              class="input"
+              pInputText
+              type="text"
+              [id]="input.name"
+              [placeholder]="input.placeholder"
+              [name]="input.name"
+              [(ngModel)]="card()[input.field]"
+              #model="ngModel"
+              [invalid]="model.invalid && (model.touched || cardForm.submitted)"
+              required
+            />
+            <div class="error-slot">
+              @if (model.invalid && (model.touched || cardForm.submitted)) {
+                <small class="error">{{ input.placeholder }} is required.</small>
+              }
+            </div>
+          </div>
+        }
       }
-    }
-  </div>
-  <div class="actions">
-    <app-button type="button" appearance="secondary" size="md" (buttonClick)="close()"
-      >Cancel</app-button
-    >
-    <app-button type="submit" appearance="primary" size="md">Save</app-button>
-  </div>
-</form>
+    </div>
+  </form>
+</app-modal-shell>

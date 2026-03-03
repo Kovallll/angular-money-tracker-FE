@@ -1,0 +1,81 @@
+@use 'theme' as *;
+
+.app-modal-shell {
+  min-width: 0;
+  width: 100%;
+  background: $secondary;
+  color: $white;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+
+  &--embedded {
+    border: none;
+    border-radius: 0;
+  }
+}
+
+.app-modal-shell__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: $light-primary;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+  @media (min-width: 560px) {
+    padding: 20px 24px;
+  }
+}
+
+.app-modal-shell__title {
+  margin: 0;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.5px;
+  color: $white;
+
+  @media (min-width: 560px) {
+    font-size: 20px;
+  }
+}
+
+.app-modal-shell__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition:
+    color 0.2s,
+    background 0.2s;
+
+  &:hover {
+    color: $white;
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.app-modal-shell__content {
+  padding: 24px;
+  min-width: 0;
+}
+
+.app-modal-shell__footer {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 16px 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.app-modal-shell__spacer {
+  flex: 1;
+}

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { FormsModule, NgForm, NgModel } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
+import { AppModalShellComponent } from '@/shared/components/app-modal-shell/app-modal-shell.component';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { BalancesHttpService, CreateCard } from '@/shared';
@@ -19,7 +19,7 @@ const CARD_NUMBER_DIGITS = 16;
   imports: [
     FormsModule,
     InputTextModule,
-    AppButtonComponent,
+    AppModalShellComponent,
     MessageModule,
     Select,
     PriceCurrencyFieldComponent,
@@ -113,6 +113,11 @@ export class AddCardModalComponent implements OnInit {
         },
       });
     }
+  }
+
+  isSaveDisabled(form: NgForm | undefined): boolean {
+    if (!form) return true;
+    return form.invalid || this.isCardNumberInvalid(this.card.cardNumber);
   }
 
   close(): void {

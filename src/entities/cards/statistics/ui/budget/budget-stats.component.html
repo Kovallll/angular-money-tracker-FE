@@ -1,20 +1,37 @@
 <dashboard-card [title]="title()" [isWithSeeAll]="isWithSeeAll()" [seeAllPath]="seeAllPath()">
   <card-body class="body">
     @if (!fixedView()) {
-      <div class="select-wrapper">
-        <button class="toggle" (click)="handleClickPrev()">
-          <mat-icon>keyboard_arrow_left</mat-icon>
-        </button>
-        <select-component
-          [options]="chartViewChoices()"
-          [value]="currentView().value"
-          (valueChange)="onValueChange($event)"
-        />
-        <button class="toggle" (click)="handleClickNext()">
-          <mat-icon>keyboard_arrow_right</mat-icon>
-        </button>
+      <div class="controls">
+        <div class="select-wrapper">
+          <button
+            class="toggle"
+            type="button"
+            (click)="handleClickPrev()"
+            aria-label="Previous period"
+          >
+            <mat-icon>keyboard_arrow_left</mat-icon>
+          </button>
+          <select-component
+            [options]="chartViewChoices()"
+            [value]="currentView().value"
+            (valueChange)="onValueChange($event)"
+          />
+          <button class="toggle" type="button" (click)="handleClickNext()" aria-label="Next period">
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </button>
+        </div>
       </div>
     }
-    <canvas class="chart" baseChart [data]="data()" [options]="options()" [type]="'bar'"></canvas>
+
+    <div class="chart-wrap">
+      <canvas
+        class="chart"
+        baseChart
+        [data]="data()"
+        [options]="options()"
+        [type]="'bar'"
+        aria-label="Budget statistics chart"
+      ></canvas>
+    </div>
   </card-body>
 </dashboard-card>

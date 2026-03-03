@@ -1,0 +1,13 @@
+<div class="app-modal-field" [class.app-modal-field--full]="fullWidth()">
+  @if (label()) {
+    <label [for]="inputId() || null" class="app-modal-field__label">
+      {{ label() }}{{ required() ? '&#42;' : '' }}
+    </label>
+  }
+  <div class="app-modal-field__control">
+    <ng-content />
+  </div>
+  <div class="app-modal-field__error">
+    <ng-content select="[modalFieldError]" />
+  </div>
+</div>

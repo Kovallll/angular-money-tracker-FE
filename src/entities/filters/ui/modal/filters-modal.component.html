@@ -1,6 +1,14 @@
-<modal class="modal">
-  <div modal-title class="title">Filters</div>
-  <div modal-content>
+<app-modal-shell
+  title="Filters"
+  [showCloseButton]="true"
+  [showCancel]="true"
+  [showSave]="true"
+  saveLabel="Apply"
+  (closeRequest)="closeModal()"
+  (cancelRequest)="closeModal()"
+  (saveRequest)="applyChanges()"
+>
+  <div class="modal-content">
     @for (filter of filters(); track filter.id) {
       <div class="selectors">
         <button mat-icon-button class="remove-filter" (click)="removeFilter(filter.id)">
@@ -34,8 +42,4 @@
       </button>
     </div>
   </div>
-  <div modal-actions>
-    <app-button appearance="secondary" size="md" (buttonClick)="closeModal()">Close</app-button>
-    <app-button appearance="primary" size="md" (buttonClick)="applyChanges()">Apply</app-button>
-  </div>
-</modal>
+</app-modal-shell>

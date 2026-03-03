@@ -20,4 +20,5 @@ export type DialogData = {
 };
 
 export type FiltersField = { field: string; name: string };
-export type FilterData = { id: number; [key: string]: any };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type FilterData = { id: number | string; [key: string]: any };

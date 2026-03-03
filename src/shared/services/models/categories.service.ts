@@ -69,21 +69,26 @@ export class CategoriesHttpService {
     );
   }
 
-  getChartDeltaCompare(chart?: CategoryLineChartDto): { value: number; negative: boolean } {
-    const data = chart?.datasets?.[0]?.data ?? [];
+  getChartDeltaCompare(chart?: CategoryLineChartDto): {
+    value: number;
+    negative: boolean;
+    comparable: boolean;
+  } {
+    const raw = chart?.datasets?.[0]?.data ?? [];
+    const values = raw.map((v) => (typeof v === 'number' && Number.isFinite(v) ? v : 0));
+    if (!values.length) return { value: 0, negative: false, comparable: false };
 
-    const current = data.at(-1) ?? 0;
-    const previous = data.at(-2) ?? 0;
+    const current = values.at(-1) ?? 0;
+    const previous = values.length > 1 ? (values.at(-2) ?? 0) : 0;
 
-    const getDeltaPct = () => {
-      const prev = previous;
-      if (prev === 0) return { value: 0, negative: false };
-      return {
-        value: Number(Math.abs(((current - prev) / prev) * 100).toFixed(2)),
-        negative: current < prev,
-      };
-    };
-    return getDeltaPct();
+    // N/A, если в одном из месяцев нет транзакций (0): не показываем 0%, 100% или -100%
+    if (previous === 0 || current === 0) {
+      return { value: 0, negative: false, comparable: false };
+    }
+
+    const delta = ((current - previous) / previous) * 100;
+    const value = Number(Math.abs(delta).toFixed(2));
+    return { value, negative: current < previous, comparable: true };
   }
 
   getTotalExpenses(categories: CategoryItem[]) {
