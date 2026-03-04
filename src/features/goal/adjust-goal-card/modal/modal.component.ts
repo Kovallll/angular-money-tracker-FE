@@ -9,6 +9,10 @@ import { AppModalShellComponent } from '@/shared/components/app-modal-shell/app-
 import { ConfirmationService } from 'primeng/api';
 import { PriceCurrencyFieldComponent } from '@/shared/components/price-currency-field/price-currency-field.component';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
+import { CategoriesHttpService } from '@/shared/services/models/categories.service';
+import { injectQuery } from '@tanstack/angular-query-experimental';
+import { Select } from 'primeng/select';
+import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 
 @Component({
   standalone: true,
@@ -20,6 +24,8 @@ import { CurrencyService } from '@/shared/services/currency/currency.service';
     DatePickerModule,
     AppModalShellComponent,
     PriceCurrencyFieldComponent,
+    Select,
+    AppIconComponent,
   ],
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.scss'],
@@ -32,10 +38,17 @@ export class GoalAdjustDialogComponent {
     startDate?: string;
     endDate?: string;
     currencyCode?: string;
+    categoryId?: string | null;
   };
   private dialogRef = inject(MatDialogRef<GoalAdjustDialogComponent>);
   private confirmationService = inject(ConfirmationService);
   private currencyService = inject(CurrencyService);
+  private categoriesHttpService = inject(CategoriesHttpService);
+
+  categories = injectQuery(() => ({
+    queryKey: ['categories'] as const,
+    queryFn: () => this.categoriesHttpService.getCategories(),
+  }));
 
   get currencyCode(): string {
     return this.data.currencyCode ?? this.currencyService.primaryCode();
@@ -56,6 +69,21 @@ export class GoalAdjustDialogComponent {
   }
   set goalBudget(v: number) {
     this.data.goalBudget = v;
+  }
+
+  /** Нормализованные опции категорий (id как строка) для совпадения с goal.categoryId. */
+  get categoryOptions(): { id: string; title: string; icon: string }[] {
+    const list = this.categories.data() ?? [];
+    return list.map((c) => ({ ...c, id: String(c.id) }));
+  }
+
+  /** Текущая категория цели (строка) для привязки к p-select. */
+  get selectedCategoryId(): string | null {
+    const v = this.data.categoryId;
+    return v != null && v !== '' ? String(v) : null;
+  }
+  set selectedCategoryId(v: string | null) {
+    this.data.categoryId = v ?? undefined;
   }
 
   onCancel() {

@@ -26,10 +26,34 @@
   flex: 1;
   min-width: 0;
   width: 100%;
-}
+  display: flex;
+  flex-direction: column;
 
-controls {
-  margin-bottom: 8px;
+  // На мобилке: секции (summary) сверху, контролы таблицы — под ними
+  .summary-cards {
+    order: 1;
+  }
+  controls {
+    order: 2;
+    margin-bottom: 8px;
+  }
+  .categories-section {
+    order: 3;
+  }
+
+  // На планшете и выше: контролы снова над секциями
+  @include bp.tablet-and-up {
+    .summary-cards {
+      order: 2;
+    }
+    controls {
+      order: 1;
+      margin-bottom: 8px;
+    }
+    .categories-section {
+      order: 3;
+    }
+  }
 }
 
 /* Page header */
@@ -228,6 +252,13 @@ controls {
 /* Categories section */
 .categories-section {
   margin-bottom: 24px;
+}
+
+.pagination-wrap {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  margin-top: 16px;
 }
 
 .section-title {

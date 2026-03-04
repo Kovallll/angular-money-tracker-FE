@@ -37,7 +37,7 @@ export class GoalsHttpService {
   createGoal(goal: CreateGoalItem) {
     const userId = this.auth.getCurrentUserId();
     if (!userId) throw new Error('Not authenticated');
-    const { title, targetBudget, goalBudget, startDate, endDate, currencyCode } = goal;
+    const { title, targetBudget, goalBudget, startDate, endDate, currencyCode, categoryId } = goal;
     return this.http
       .post<CreateGoalItem>(goalsUrl, {
         title,
@@ -47,6 +47,7 @@ export class GoalsHttpService {
         endDate,
         userId,
         ...(currencyCode && { currencyCode }),
+        ...(categoryId != null && categoryId !== '' && { categoryId }),
       })
       .pipe(tap(() => this.loadGoals()));
   }
@@ -65,6 +66,7 @@ export class GoalsHttpService {
       startDate: g.startDate,
       endDate: g.endDate,
       ...(g.status != null && { status: g.status }),
+      ...(g.categoryId !== undefined && { categoryId: g.categoryId }),
     };
     return this.http.patch<CreateGoalItem>(`${goalsUrl}/${idStr}`, payload);
   }

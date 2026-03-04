@@ -1,36 +1,57 @@
-<section class="analytics" aria-label="Category analytics">
+<section
+  class="analytics"
+  [class.analytics--legend-tags]="showLegendTags()"
+  aria-label="Category analytics"
+>
   <h2 class="analytics__title" [class.analytics__title--hidden]="view() === 'row'">Analytics</h2>
   <p class="analytics__desc" [class.analytics__desc--hidden]="view() === 'row'">
     Spending breakdown and trends
   </p>
   <div class="analytics__charts" [class.analytics__charts--row]="view() === 'row'">
-    <article class="chart-card">
+    <article class="chart-card" [class.chart-card--interactive-legend]="showLegendTags()">
       <h3 class="chart-card__title">Categories Share</h3>
-      <div class="chart-card__body">
-        @if (hasPieData()) {
-          <canvas
-            baseChart
-            [type]="'doughnut'"
-            [data]="pieChartData()"
-            [options]="pieOptions()"
-          ></canvas>
-        } @else {
-          <div class="chart-placeholder">
-            <span class="chart-placeholder__icon" aria-hidden="true">📊</span>
-            <p>No data</p>
-          </div>
-        }
+      <p class="chart-card__hint">Click category names to show or hide</p>
+      <div class="chart-card__body chart-card__body--clickable">
+        <div class="chart-card__doughnut-wrap">
+          @if (overviewLoading()) {
+            <div class="chart-loading">
+              <p-progress-spinner ariaLabel="Loading" strokeWidth="3" />
+            </div>
+          } @else if (hasPieData()) {
+            <canvas
+              baseChart
+              [type]="'doughnut'"
+              [data]="pieChartData()"
+              [options]="pieOptions()"
+              [plugins]="chartPluginsDoughnut"
+            ></canvas>
+          } @else {
+            <div class="chart-placeholder">
+              <span class="chart-placeholder__icon" aria-hidden="true">📊</span>
+              <p>No data</p>
+            </div>
+          }
+        </div>
       </div>
     </article>
-    <article class="chart-card">
+    <article
+      class="chart-card chart-card--bar"
+      [class.chart-card--interactive-legend]="showLegendTags()"
+    >
       <h3 class="chart-card__title">Spending by Month</h3>
-      <div class="chart-card__body">
-        @if (hasBarData()) {
+      <p class="chart-card__hint">Click category names above to show or hide</p>
+      <div class="chart-card__body chart-card__body--clickable">
+        @if (overviewLoading()) {
+          <div class="chart-loading">
+            <p-progress-spinner ariaLabel="Loading" strokeWidth="3" />
+          </div>
+        } @else if (hasBarData()) {
           <canvas
             baseChart
             [type]="'bar'"
             [data]="barChartData()"
             [options]="barOptions()"
+            [plugins]="chartPluginsBar"
           ></canvas>
         } @else {
           <div class="chart-placeholder">
@@ -40,10 +61,14 @@
         }
       </div>
     </article>
-    <article class="chart-card">
+    <article class="chart-card chart-card--line">
       <h3 class="chart-card__title">Spending Over Time</h3>
       <div class="chart-card__body">
-        @if (hasLineData()) {
+        @if (overviewLoading()) {
+          <div class="chart-loading">
+            <p-progress-spinner ariaLabel="Loading" strokeWidth="3" />
+          </div>
+        } @else if (hasLineData()) {
           <canvas
             baseChart
             [type]="'line'"

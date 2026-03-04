@@ -1,11 +1,18 @@
 @use 'theme' as *;
 
 :host {
+  display: flex;
+  flex-direction: column;
   width: 100%;
+  min-width: 0;
+  min-height: 0;
 }
 
 .body {
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  height: 100%;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
 }

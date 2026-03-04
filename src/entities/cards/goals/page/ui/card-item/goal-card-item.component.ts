@@ -1,21 +1,17 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AppCurrencyPrimaryPipe } from '@/shared/pipes/app-currency-primary.pipe';
-import { MatIconModule } from '@angular/material/icon';
 import { CardBodyComponent, DashboardCardComponent } from '@/entities/cards/card';
-import { GoalAdjustCardButtonComponent } from '@/features/goal/adjust-goal-card/adjust-card.component';
+import { getGoalProgress } from '@/entities/cards/goals/services/goals.service';
 
 @Component({
   selector: 'goal-card-item',
   standalone: true,
-  host: { '[class.is-active]': 'isActive()' },
-  imports: [
-    CommonModule,
-    AppCurrencyPrimaryPipe,
-    DashboardCardComponent,
-    CardBodyComponent,
-    GoalAdjustCardButtonComponent,
-  ],
+  host: {
+    '[class.is-active]': 'isActive()',
+    '[class.is-completed]': 'isCompleted()',
+  },
+  imports: [CommonModule, AppCurrencyPrimaryPipe, DashboardCardComponent, CardBodyComponent],
   templateUrl: './goal-card-item.component.html',
   styleUrls: ['./goal-card-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,4 +19,7 @@ import { GoalAdjustCardButtonComponent } from '@/features/goal/adjust-goal-card/
 export class GoalCardItemComponent {
   goal = input.required<any>();
   isActive = input<boolean>(false);
+  isCompleted = input<boolean>(false);
+
+  getProgress = getGoalProgress;
 }

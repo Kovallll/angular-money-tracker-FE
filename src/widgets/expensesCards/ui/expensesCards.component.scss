@@ -53,6 +53,31 @@
   }
 }
 
+.cards-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 64px 24px;
+  min-height: 320px;
+  width: 100%;
+  background: rgba($secondary, 0.5);
+  border: 1px dashed rgba($accent, 0.2);
+  border-radius: 16px;
+
+  .p-progress-spinner {
+    opacity: 0.9;
+  }
+}
+
+.cards-loading__text {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  color: $gray;
+}
+
 .empty-state {
   gap: 16px !important;
 
@@ -162,8 +187,11 @@
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 16px;
   overflow: hidden;
-  padding: 24px;
+  padding: 8px;
 
+  @include bp.tablet-and-up {
+    padding: 24px;
+  }
   ::ng-deep .body,
   ::ng-deep card-body {
     min-height: 320px;

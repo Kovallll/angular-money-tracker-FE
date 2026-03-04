@@ -8,7 +8,9 @@
       </div>
     </div>
     <div class="right-side">
-      <goal-adjust-card-button [goal]="goal()" />
+      <span class="progress-badge" [class.progress-badge--full]="getProgress(goal()) >= 100">
+        {{ getProgress(goal()) | number: '1.0-0' }}%
+      </span>
     </div>
   </card-body>
 </dashboard-card>

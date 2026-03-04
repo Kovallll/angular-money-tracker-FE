@@ -20,6 +20,7 @@ export class CategoriesHttpService {
 
   readonly categories = signal<CategoryItem[]>([]);
   readonly charts = signal<CategoryLineChartDto[]>([]);
+  readonly isLoading = signal(false);
 
   constructor() {
     this.loadCategories();
@@ -30,12 +31,18 @@ export class CategoriesHttpService {
     const userId = this.auth.getCurrentUserId();
     if (!userId) {
       this.categories.set([]);
+      this.isLoading.set(false);
       return;
     }
-    const data = await lastValueFrom(
-      this.http.get<CategoryItem[]>(`${categoriesUrl}/user/${userId}`),
-    );
-    this.categories.set(data);
+    this.isLoading.set(true);
+    try {
+      const data = await lastValueFrom(
+        this.http.get<CategoryItem[]>(`${categoriesUrl}/user/${userId}`),
+      );
+      this.categories.set(data);
+    } finally {
+      this.isLoading.set(false);
+    }
   }
 
   /** Принудительно обновить категории (после добавления/редактирования/удаления транзакции). */
@@ -105,6 +112,7 @@ export class CategoriesHttpService {
     );
   }
 
+  /** Сумма процентов по категориям (старая логика). Оставлено для совместимости при необходимости. */
   getOverageDeltaCompare(data: CategoryLineChartDto[]) {
     const delta = data.reduce((acc, cur) => {
       const delta = this.getChartDeltaCompare(cur);
@@ -116,8 +124,35 @@ export class CategoriesHttpService {
       return acc;
     }, 0);
 
-    if (delta < 0) return { value: Math.abs(delta).toFixed(2), negative: true };
-    return { value: Math.abs(delta).toFixed(2), negative: false };
+    if (delta < 0) return { value: Math.abs(delta).toFixed(2), negative: true, comparable: true };
+    return { value: Math.abs(delta).toFixed(2), negative: false, comparable: true };
+  }
+
+  /**
+   * Сравнение общих расходов: сумма по всем категориям за текущий месяц vs за предыдущий.
+   * Процент изменения = (текущая сумма − предыдущая) / предыдущая * 100.
+   * N/A, если в одном из месяцев сумма 0.
+   */
+  getTotalExpensesVsLastMonth(data: CategoryLineChartDto[]): {
+    value: string;
+    negative: boolean;
+    comparable: boolean;
+  } {
+    let totalCurrent = 0;
+    let totalPrevious = 0;
+    for (const chart of data) {
+      const raw = chart?.datasets?.[0]?.data ?? [];
+      const values = raw.map((v) => (typeof v === 'number' && Number.isFinite(v) ? v : 0));
+      if (values.length > 0) totalCurrent += values.at(-1) ?? 0;
+      if (values.length > 1) totalPrevious += values.at(-2) ?? 0;
+    }
+    if (totalPrevious === 0 || totalCurrent === 0) {
+      return { value: '0', negative: false, comparable: false };
+    }
+    const percent = ((totalCurrent - totalPrevious) / totalPrevious) * 100;
+    const value = Math.abs(percent).toFixed(2);
+    const negative = totalCurrent < totalPrevious;
+    return { value, negative, comparable: true };
   }
 
   createCategory(category: CreateCategoryItem) {

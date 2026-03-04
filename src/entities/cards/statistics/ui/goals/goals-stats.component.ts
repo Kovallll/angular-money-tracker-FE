@@ -5,8 +5,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { goalsOptions, formatAmountWithCurrency } from '../../lib';
 import { GoalsStatisticsService } from '../../services/goals-statistics.service';
+import { GoalsHttpService } from '@/shared';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
+import { ProgressSpinner } from 'primeng/progressspinner';
 import { ChartConfiguration, TooltipItem } from 'chart.js';
 
 @Component({
@@ -18,6 +20,7 @@ import { ChartConfiguration, TooltipItem } from 'chart.js';
     BaseChartDirective,
     MatSelectModule,
     MatIconModule,
+    ProgressSpinner,
   ],
   templateUrl: './goals-stats.component.html',
   styleUrl: `./goals-stats.component.scss`,
@@ -25,13 +28,18 @@ import { ChartConfiguration, TooltipItem } from 'chart.js';
 })
 export class GoalsStatisticCardComponent {
   private goalsStatisticsService = inject(GoalsStatisticsService);
+  private goalsHttpService = inject(GoalsHttpService);
   private currencyService = inject(CurrencyService);
   private exchangeRates = inject(ExchangeRatesService);
+
+  isLoading = this.goalsHttpService.isLoading;
 
   maxDisplay = input<number>();
   title = input<string>('Goals statistics');
 
   chartData = computed(() => this.goalsStatisticsService.getGoalsChartData());
+
+  hasChartData = computed(() => (this.data().datasets?.length ?? 0) > 0);
 
   /** Chart data with amounts converted to primary currency (reactive to header). */
   data = computed(() => {

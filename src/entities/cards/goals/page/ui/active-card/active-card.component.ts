@@ -5,6 +5,7 @@ import { BaseChartDirective } from 'ng2-charts';
 import { DividerComponent } from '@/shared/components/divider/divider';
 import { CardBodyComponent, DashboardCardComponent } from '@/entities/cards/card';
 import { GoalAdjustCardButtonComponent } from '@/features/goal/adjust-goal-card/adjust-card.component';
+import { GoalQuickAddFundsComponent } from '@/features/goal/quick-add-funds/quick-add-funds.component';
 import { ChartOptions } from 'chart.js';
 
 @Component({
@@ -19,6 +20,7 @@ import { ChartOptions } from 'chart.js';
     DashboardCardComponent,
     CardBodyComponent,
     GoalAdjustCardButtonComponent,
+    GoalQuickAddFundsComponent,
   ],
   templateUrl: './active-card.component.html',
   styleUrls: ['./active-card.component.scss'],
@@ -28,12 +30,19 @@ export class GoalActiveCardComponent {
   goal = input<any>();
   labels = ['Target', 'Remaining'];
 
-  chartOptions: ChartOptions<'doughnut'> = {
+  private readonly devicePixelRatio =
+    typeof window !== 'undefined' ? Math.min(window.devicePixelRatio || 1, 3) : 1;
+
+  private readonly chartOptionsBase: ChartOptions<'doughnut'> = {
     cutout: '72%',
     responsive: true,
     maintainAspectRatio: true,
     plugins: { legend: { display: false } },
   };
+
+  get chartOptions(): ChartOptions<'doughnut'> {
+    return { ...this.chartOptionsBase, devicePixelRatio: this.devicePixelRatio };
+  }
 
   getProgress(item: { targetBudget?: number; goalBudget?: number }): number {
     const goal = item.goalBudget ?? 0;

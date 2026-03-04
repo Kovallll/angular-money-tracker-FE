@@ -1,23 +1,32 @@
 @use 'theme' as *;
 @use 'shared/styles/breakpoints' as bp;
 
+:host {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+}
+
 .content {
   display: flex;
-  gap: 12px;
+  gap: 14px;
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  height: 100%;
   min-width: 0;
-  padding: 12px 0;
+  padding: 8px 0;
+  overflow: hidden;
 
   @include bp.tablet-and-up {
-    padding: 14px 0;
+    padding: 12px 0;
+    gap: 16px;
   }
 }
 
 .left {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   flex: 1 1 auto;
   min-width: 0;
   align-items: center;
@@ -29,17 +38,17 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
   padding: 6px;
   background: linear-gradient(135deg, rgba($accent, 0.15) 0%, rgba($accent, 0.06) 100%);
   border: 1px solid rgba($accent, 0.18);
   border-radius: 10px;
+  width: 52px;
+  height: 70px;
 }
 
 .date p {
   margin: 0;
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -48,13 +57,13 @@
 }
 
 .date .day {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 700;
   color: $accent;
   line-height: 1.2;
 
   @include bp.tablet-and-up {
-    font-size: 18px;
+    font-size: 20px;
   }
 }
 
@@ -63,62 +72,77 @@
   flex: 1 1 auto;
 }
 
-.info p,
-.info__meta {
-  margin: 0;
-  font-size: 13px;
+.name {
+  margin: 0 0 6px 0;
+  font-weight: 600;
+  font-size: 16px;
+  color: $white;
+  min-width: 0;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+
+  @include bp.tablet-and-up {
+    font-size: 17px;
+    margin-bottom: 8px;
+  }
+}
+
+.info__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.type-tag {
+  display: inline-block;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: rgba($white, 0.9);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+}
+
+.info__next {
+  font-size: 12px;
   color: $gray;
   line-height: 1.3;
 }
 
-.name {
-  font-weight: 600;
-  font-size: 15px;
-  color: $white;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  min-width: 0;
-  margin-bottom: 2px;
-
-  @include bp.tablet-and-up {
-    font-size: 16px;
-  }
-}
-
 .price-block {
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: center;
+  align-items: center;
+  justify-content: flex-end;
   flex-shrink: 0;
-  gap: 2px;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .price {
-  margin: 0;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
   color: $accent;
-  padding: 8px 12px;
-  background: rgba($accent, 0.1);
+  padding: 10px 14px;
+  background: rgba($accent, 0.12);
   border-radius: 10px;
   border: 1px solid rgba($accent, 0.2);
+  white-space: nowrap;
 
   @include bp.tablet-and-up {
-    font-size: 16px;
-    padding: 9px 14px;
+    font-size: 17px;
+    padding: 11px 16px;
   }
 }
 
-.price-yearly {
+.divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
   margin: 0;
-  font-size: 10px;
-  font-weight: 500;
-  color: $gray;
-  line-height: 1.2;
-
-  @include bp.tablet-and-up {
-    font-size: 11px;
-  }
 }

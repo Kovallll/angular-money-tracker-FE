@@ -5,9 +5,11 @@ import { ChartConfiguration } from 'chart.js';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { ExpensesStatisticsService } from '../../services/expenses-statistic.service';
+import { CategoriesHttpService } from '@/shared';
 import { expensesOptions, formatAmountWithCurrency } from '../../lib';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
+import { ProgressSpinner } from 'primeng/progressspinner';
 
 @Component({
   selector: 'expenses-statistic-card',
@@ -18,6 +20,7 @@ import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.
     BaseChartDirective,
     MatSelectModule,
     MatIconModule,
+    ProgressSpinner,
   ],
   templateUrl: './expenses-stats.component.html',
   styleUrl: `./expenses-stats.component.scss`,
@@ -25,11 +28,19 @@ import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.
 })
 export class ExpensesStatisticCardComponent {
   private expensesStatisticsService = inject(ExpensesStatisticsService);
+  private categoriesHttpService = inject(CategoriesHttpService);
   private currencyService = inject(CurrencyService);
   private exchangeRates = inject(ExchangeRatesService);
 
   maxDisplay = input<number>();
   title = input<string>('Expenses');
+  /** Когда true, показывается спиннер (например, на странице Expenses — пока грузятся транзакции). */
+  loadingOverride = input<boolean | undefined>(undefined);
+
+  /** Спиннер: от родителя (loadingOverride) или пока грузятся категории (на странице статистики). */
+  isLoading = computed(
+    () => this.loadingOverride() === true || this.categoriesHttpService.isLoading(),
+  );
 
   chartData = computed(() =>
     this.expensesStatisticsService.getCategoriesChartData(this.maxDisplay()),
@@ -52,6 +63,13 @@ export class ExpensesStatisticCardComponent {
         },
       ],
     };
+  });
+
+  hasChartData = computed(() => {
+    const d = this.data();
+    return (
+      (d?.labels?.length ?? 0) > 0 && (d?.datasets?.[0]?.data?.some((v) => Number(v) > 0) ?? false)
+    );
   });
 
   /** Options with axis and tooltip in primary currency. */

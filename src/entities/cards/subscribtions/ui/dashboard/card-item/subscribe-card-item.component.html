@@ -7,27 +7,23 @@
 
     <div class="info">
       <p class="name">{{ subscribe().subscribeName }}</p>
-      @if (subscribe() | nextChargeDate; as nextDate) {
-        <p class="info__meta">
-          {{ subscribe().type | titlecase }} · Next: {{ nextDate | date: 'MMM d' }}
-        </p>
-      } @else {
-        <p class="info__meta">{{ subscribe().type | titlecase }}</p>
-      }
+      <div class="info__row">
+        <span class="type-tag">{{ subscribe().type | titlecase }}</span>
+        @if (subscribe() | nextChargeDate; as nextDate) {
+          <span class="info__next">Next: {{ nextDate | date: 'MMM d' }}</span>
+        }
+      </div>
     </div>
   </div>
 
   <div class="price-block">
-    <p class="price">
+    <span class="price">
       {{ subscribe().amount | appCurrencyPrimary: subscribe().currencyCode
       }}{{ (subscribe() | subscriptionYearly).periodLabel }}
-    </p>
-    @if ((subscribe() | subscriptionYearly).yearlyFormatted; as yearly) {
-      <p class="price-yearly">· {{ yearly }}</p>
-    }
+    </span>
   </div>
 </div>
 
 @if (!isLast()) {
-  <divider />
+  <div class="divider" aria-hidden="true"></div>
 }

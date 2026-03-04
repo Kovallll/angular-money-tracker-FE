@@ -8,12 +8,11 @@ import {
   BalancesHttpService,
   CategoriesHttpService,
   CreateTransactionPayload,
-  ExpensesHttpService,
   TransactionsHttpService,
 } from '@/shared';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
-import { injectMutation, injectQuery, QueryClient } from '@tanstack/angular-query-experimental';
+import { injectMutation, injectQuery } from '@tanstack/angular-query-experimental';
 import { DatePickerModule } from 'primeng/datepicker';
 import { Select } from 'primeng/select';
 import { PriceCurrencyFieldComponent } from '@/shared/components/price-currency-field/price-currency-field.component';
@@ -39,9 +38,7 @@ import { AppIconComponent } from '@/shared/components/app-icon/app-icon.componen
 export class AddTransactionModalComponent implements OnInit {
   private messageService = inject(MessageService);
   private transactionsHttpService = inject(TransactionsHttpService);
-  private expensesHttpService = inject(ExpensesHttpService);
   private ref = inject(DynamicDialogRef);
-  private queryClient = inject(QueryClient);
   private categoriesHttpService = inject(CategoriesHttpService);
   private balancesHttpService = inject(BalancesHttpService);
   protected currencyService = inject(CurrencyService);
@@ -57,10 +54,6 @@ export class AddTransactionModalComponent implements OnInit {
     mutationFn: (payload: CreateTransactionPayload) =>
       this.transactionsHttpService.createTransaction(payload),
     onSuccess: () => {
-      this.queryClient.invalidateQueries({ queryKey: ['transactions'] });
-      this.transactionsHttpService.loadTransactions();
-      this.expensesHttpService.refreshExpenses();
-      this.categoriesHttpService.refreshCategories();
       this.messageService.add({
         key: 'toast',
         severity: 'success',
@@ -135,13 +128,6 @@ export class AddTransactionModalComponent implements OnInit {
       description: f.description || undefined,
       paymentMethod: f.paymentMethod || undefined,
     };
-  }
-
-  /** When card changes, set currency to card's currency or primary. */
-  onCardChange(cardId: string | number): void {
-    const id = typeof cardId === 'number' ? cardId : Number(cardId);
-    const card = this.cards().find((c) => c.id === id);
-    this.form.currencyCode = card?.currencyCode ?? this.currencyService.primaryCode();
   }
 
   ngOnInit(): void {

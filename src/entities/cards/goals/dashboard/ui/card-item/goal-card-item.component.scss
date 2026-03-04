@@ -1,83 +1,240 @@
 @use 'theme' as *;
+@use 'shared/styles/breakpoints' as bp;
+
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
 
 .card {
   display: flex;
   flex-direction: column;
-  justify-content: start;
+  justify-content: space-between;
   width: 100%;
-  height: 100%;
   min-width: 0;
   box-sizing: border-box;
+  gap: 12px;
+
+  @include bp.tablet-and-up {
+    gap: 14px;
+  }
 }
 
 .header {
   display: flex;
-  justify-content: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
   width: 100%;
+  min-width: 0;
+  gap: 10px;
 }
 
 .left-header {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-  flex-wrap: nowrap;
-  gap: 8px;
-}
-
-.title {
-  display: flex;
+  flex: 1;
+  min-width: 0;
 }
 
 .goal-title {
-  font-size: 20px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  word-break: break-word;
+  letter-spacing: -0.02em;
   color: $white;
-  white-space: nowrap;
-  margin-bottom: -12px;
+
+  @include bp.tablet-and-up {
+    font-size: 18px;
+  }
+}
+
+.progress-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: rgba($accent, 0.2);
+  color: $accent;
+  margin: 0;
+
+  &.complete {
+    background: rgba($success, 0.2);
+    color: $success;
+  }
+
+  @include bp.tablet-and-up {
+    font-size: 12px;
+  }
+}
+
+.right-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  text-align: right;
 }
 
 .date {
-  font-size: 16px;
   color: $gray;
+  font-size: 12px;
+  margin: 0;
+  white-space: nowrap;
+
+  @include bp.tablet-and-up {
+    font-size: 13px;
+  }
+}
+
+.time-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.time-badge {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 8px;
+  color: $gray;
+
+  &--elapsed {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  &--remaining {
+    background: rgba($accent, 0.12);
+    color: $accent;
+    border: 1px solid rgba($accent, 0.2);
+  }
+
+  &--ended {
+    background: rgba($success, 0.12);
+    color: $success;
+    border-color: rgba($success, 0.2);
+  }
+
+  @include bp.tablet-and-up {
+    font-size: 12px;
+    padding: 4px 10px;
+  }
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  gap: 12px;
 }
 
 .content {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
+  min-width: 0;
+  gap: 16px;
 }
 
 .left-side {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+}
+
+.stat-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.stat-icon {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba($accent, 0.15);
+  border-radius: 10px;
+  color: $accent;
+  font-size: 16px;
+
+  @include bp.tablet-and-up {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
 }
 
 .text-block {
   display: flex;
-  align-items: start;
   flex-direction: column;
   justify-content: center;
+  min-width: 0;
 }
 
 .text {
-  margin-left: 8px;
+  margin: 0;
+  font-weight: 600;
+  font-size: 11px;
+  color: $gray;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+
+  @include bp.tablet-and-up {
+    font-size: 13px;
+  }
+}
+
+.text-block .price {
+  margin: 2px 0 0;
+  font-size: 14px;
   font-weight: 700;
-  font-size: 16px;
+  color: $white;
+
+  @include bp.tablet-and-up {
+    font-size: 16px;
+  }
 }
 
-.goal-price {
-  margin-top: 2px;
-  display: flex;
-  align-items: center;
-  height: 100%;
-}
-
-.left-side {
-  gap: 12px;
-}
 .right-side {
+  flex-shrink: 0;
+}
+
+.chart-wrap {
+  position: relative;
   width: 100px;
   height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @include bp.tablet-and-up {
+    width: 110px;
+    height: 110px;
+  }
+}
+
+.chart-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 700;
+  color: $white;
+
+  @include bp.tablet-and-up {
+    font-size: 18px;
+  }
 }

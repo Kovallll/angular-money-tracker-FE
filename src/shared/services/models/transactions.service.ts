@@ -4,8 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { delay, lastValueFrom, tap } from 'rxjs';
 import { AuthService } from '@/shared/services/auth/auth.service';
-import { CategoriesHttpService } from './categories.service';
-import { ExpensesHttpService } from './expenses.service';
+import { StatisticsRefreshService } from './statistics-refresh.service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,8 +12,7 @@ import { ExpensesHttpService } from './expenses.service';
 export class TransactionsHttpService {
   private http = inject(HttpClient);
   private auth = inject(AuthService);
-  private expensesHttpService = inject(ExpensesHttpService);
-  private categoriesHttpService = inject(CategoriesHttpService);
+  private statisticsRefreshService = inject(StatisticsRefreshService);
 
   readonly transactions = signal<Transaction[]>([]);
 
@@ -62,6 +60,7 @@ export class TransactionsHttpService {
         this.http.post<Transaction>(transactionsUrl, { ...transaction, userId }),
       );
       this.transactions.update((prev) => [...prev, created]);
+      this.statisticsRefreshService.refresh();
       return created;
     } catch (err: any) {
       this.error.set('Error creating transaction');
@@ -78,8 +77,7 @@ export class TransactionsHttpService {
       .pipe(
         tap(() => {
           this.loadTransactions();
-          this.expensesHttpService.refreshExpenses();
-          this.categoriesHttpService.refreshCategories();
+          this.statisticsRefreshService.refresh();
         }),
       )
       .subscribe({

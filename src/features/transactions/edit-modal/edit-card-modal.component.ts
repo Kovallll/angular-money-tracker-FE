@@ -7,13 +7,13 @@ import { MessageModule } from 'primeng/message';
 import {
   CategoriesHttpService,
   CreateTransaction,
-  ExpensesHttpService,
+  StatisticsRefreshService,
   Transaction,
   TransactionsHttpService,
 } from '@/shared';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { injectQuery, QueryClient } from '@tanstack/angular-query-experimental';
+import { injectQuery } from '@tanstack/angular-query-experimental';
 import { Select } from 'primeng/select';
 import { PriceCurrencyFieldComponent } from '@/shared/components/price-currency-field/price-currency-field.component';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
@@ -38,11 +38,10 @@ import { catchError, of, tap } from 'rxjs';
 export class EditTransactionModalComponent implements OnInit {
   messageService = inject(MessageService);
   private transactionsHttpService = inject(TransactionsHttpService);
-  private expensesHttpService = inject(ExpensesHttpService);
   private config = inject(DynamicDialogConfig);
   private categoriesHttpService = inject(CategoriesHttpService);
+  private statisticsRefreshService = inject(StatisticsRefreshService);
   private ref = inject(DynamicDialogRef);
-  private queryClient = inject(QueryClient);
   protected currencyService = inject(CurrencyService);
   transaction = this.config.data as Transaction;
 
@@ -56,10 +55,8 @@ export class EditTransactionModalComponent implements OnInit {
       .updateTransaction(this.transaction.id, transaction)
       .pipe(
         tap(() => {
-          this.queryClient.invalidateQueries({ queryKey: ['transactions'] });
           this.transactionsHttpService.loadTransactions();
-          this.expensesHttpService.refreshExpenses();
-          this.categoriesHttpService.refreshCategories();
+          this.statisticsRefreshService.refresh();
           this.messageService.add({
             key: 'toast',
             severity: 'success',

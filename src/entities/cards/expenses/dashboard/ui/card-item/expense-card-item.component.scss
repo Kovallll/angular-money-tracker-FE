@@ -6,6 +6,8 @@
   align-items: center;
   width: 100%;
   min-height: 88px;
+  min-width: 0;
+  overflow: hidden;
   border: 1px solid rgba($tertiary, 0.6);
   border-radius: 12px;
   box-sizing: border-box;
@@ -55,6 +57,7 @@
 
 .text {
   min-width: 0;
+  overflow: hidden;
 }
 
 .category {
@@ -63,6 +66,12 @@
   font-weight: 600;
   color: $white;
   letter-spacing: 0.5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-height: 1.3;
 }
 
 .cost {
@@ -70,6 +79,9 @@
   font-size: 15px;
   font-weight: 500;
   color: $gray;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .right-content {

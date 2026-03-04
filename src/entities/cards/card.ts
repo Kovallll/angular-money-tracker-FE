@@ -39,6 +39,7 @@ export class DashboardCardComponent {
   title = input<string>('');
   seeAllPath = input<string>('');
   isWithSeeAll = input(false);
+  hideHeaderDivider = input(false);
   @ContentChild(CardHeaderComponent) cardHeader?: CardHeaderComponent;
 
   onRedirect(path: string) {

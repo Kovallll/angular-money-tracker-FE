@@ -86,6 +86,27 @@
           </div>
         </div>
 
+        <div class="field form-field--full">
+          <label for="categoryId">Category</label>
+          <p-select
+            inputId="categoryId"
+            name="categoryId"
+            [options]="categories.data() ?? []"
+            optionLabel="title"
+            optionValue="id"
+            [(ngModel)]="newGoal.categoryId"
+            placeholder="Select category"
+            appendTo="body"
+          >
+            <ng-template let-item pTemplate="item">
+              <div class="icon-row">
+                <app-icon [icon]="item.icon" />
+                <span>{{ item.title }}</span>
+              </div>
+            </ng-template>
+          </p-select>
+        </div>
+
         <div class="form-row">
           <div class="field">
             <label for="startDate">Start Date&#42;</label>

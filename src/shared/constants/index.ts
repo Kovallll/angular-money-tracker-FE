@@ -16,6 +16,9 @@ export const chartColors = { blue: '#3b82f6', red: '#ef4444' };
 /** Имя категории подписок, создаётся по умолчанию на бэке. */
 export const SUBSCRIPTIONS_CATEGORY_NAME = 'Subscriptions';
 
+/** Имя категории целей, создаётся по умолчанию на бэке. */
+export const GOALS_CATEGORY_NAME = 'Goals';
+
 export {
   DEFAULT_CATEGORY_ICON,
   CATEGORY_ICON_OPTIONS,

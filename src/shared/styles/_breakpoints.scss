@@ -5,6 +5,7 @@ $bp-desktop-large: 1920px;
 $bp-desktop: 1440px;
 $bp-sidebar-to-tabs: 1200px; // при < 1200 сайдбар скрывается, показываются нижние табы
 $bp-tablet: 780px;
+$bp-mobile: 480px;
 
 @mixin desktop-large {
   @media (min-width: $bp-desktop-large) {
@@ -50,6 +51,12 @@ $bp-tablet: 780px;
 
 @mixin desktop-down {
   @media (max-width: #{$bp-desktop - 1px}) {
+    @content;
+  }
+}
+
+@mixin mobile-mini {
+  @media (max-width: #{$bp-mobile - 1px}) {
     @content;
   }
 }

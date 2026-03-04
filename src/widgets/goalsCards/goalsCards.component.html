@@ -13,59 +13,97 @@
         <p-progress-spinner ariaLabel="Loading" strokeWidth="3" />
         <p class="cards-loading__text">Loading goals…</p>
       </div>
-    } @else if (goals().length) {
+    } @else if (activeGoals().length || completedGoals().length) {
       <section class="summary-cards" aria-label="Overview">
         <div class="summary-card summary-card--primary">
           <span class="summary-card__icon" aria-hidden="true">
             <i class="pi pi-flag"></i>
           </span>
           <div class="summary-card__content">
-            <span class="summary-card__label">Total Goals</span>
-            <span class="summary-card__value">{{ goals().length }}</span>
+            <span class="summary-card__label">Active goals</span>
+            <span class="summary-card__value">{{ activeGoals().length }}</span>
           </div>
         </div>
-        <div class="summary-card">
+        <div class="summary-card summary-card--completed">
+          <span class="summary-card__icon" aria-hidden="true">
+            <i class="pi pi-check-circle"></i>
+          </span>
+          <div class="summary-card__content">
+            <span class="summary-card__label">Completed</span>
+            <span class="summary-card__value">{{ completedGoals().length }}</span>
+          </div>
+        </div>
+        <div class="summary-card summary-card--budget">
           <span class="summary-card__icon" aria-hidden="true">
             <i class="pi pi-wallet"></i>
           </span>
-          <div class="summary-card__content">
-            <span class="summary-card__label">Total Target Budget</span>
-            <span class="summary-card__value">{{ totalTargetBudget() | appCurrency }}</span>
-          </div>
-        </div>
-        <div class="summary-card">
-          <span class="summary-card__icon" aria-hidden="true">
-            <i class="pi pi-chart-line"></i>
-          </span>
-          <div class="summary-card__content">
-            <span class="summary-card__label">Total Goal Budget</span>
-            <span class="summary-card__value">{{ totalGoalBudget() | appCurrency }}</span>
+          <div class="summary-card__content summary-card__content--grid">
+            <span class="summary-card__budget-label">Target</span>
+            <span class="summary-card__budget-label">Goal</span>
+            <span class="summary-card__budget-value">{{ totalTargetBudget() | appCurrency }}</span>
+            <span class="summary-card__budget-value">{{ totalGoalBudget() | appCurrency }}</span>
           </div>
         </div>
       </section>
 
-      <section class="hero-section">
-        <goal-active-card [goal]="activeCard()" />
-        <div class="chart-section">
-          <goals-statistic-card />
-        </div>
-      </section>
+      @if (activeGoals().length || completedGoals().length) {
+        <section class="hero-section">
+          <goal-active-card [goal]="activeCard()" />
+          <div class="chart-section">
+            <goals-statistic-card />
+          </div>
+        </section>
+      }
 
-      <section class="goals-section">
-        <h2 class="section-title">All goals</h2>
+      <section
+        class="goals-section"
+        [attr.aria-label]="showCompleted() ? 'Completed goals' : 'Active goals'"
+      >
+        <div class="section-header">
+          <h2 class="section-title">Goals</h2>
+          <div class="switcher" role="tablist" aria-label="Filter goals">
+            <button
+              type="button"
+              class="switcher__btn"
+              [class.switcher__btn--active]="!showCompleted()"
+              role="tab"
+              [attr.aria-selected]="!showCompleted()"
+              (click)="setShowActive()"
+            >
+              Active ({{ activeGoals().length }})
+            </button>
+            <button
+              type="button"
+              class="switcher__btn"
+              [class.switcher__btn--active]="showCompleted()"
+              role="tab"
+              [attr.aria-selected]="showCompleted()"
+              (click)="setShowCompleted()"
+            >
+              Completed ({{ completedGoals().length }})
+            </button>
+          </div>
+        </div>
         <div class="content">
-          <div class="cards">
-            @for (goal of goals(); track goal.id) {
-              <goal-card-item
-                [goal]="goal"
-                [isActive]="activeCard()?.id === goal.id"
-                (click)="handleActiveCardChange(goal.id)"
-              />
-            }
-          </div>
-          <div class="pagination-wrap">
-            <pagination [pageSize]="pageSize" />
-          </div>
+          @if (goals().length) {
+            <div class="cards">
+              @for (goal of goals(); track goal.id) {
+                <goal-card-item
+                  [goal]="goal"
+                  [isActive]="activeCard()?.id === goal.id"
+                  [isCompleted]="showCompleted()"
+                  (click)="handleGoalClick(goal)"
+                />
+              }
+            </div>
+            <div class="pagination-wrap">
+              <pagination [pageSize]="pageSize" />
+            </div>
+          } @else {
+            <p class="goals-empty-tab">
+              {{ showCompleted() ? 'No completed goals yet' : 'No active goals' }}
+            </p>
+          }
         </div>
       </section>
     } @else {

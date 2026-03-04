@@ -7,7 +7,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import { DashboardCardComponent, CardBodyComponent, CardHeaderComponent } from '../../../card';
-import { MatTabsModule } from '@angular/material/tabs';
 import { RoutePaths, tabs, Transaction, TransactionsHttpService } from '@/shared';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
@@ -26,7 +25,6 @@ import { EditTransactionModalComponent } from '@/features/transactions/edit-moda
     DashboardCardComponent,
     CardBodyComponent,
     CardHeaderComponent,
-    MatTabsModule,
     TransactionCardItemComponent,
     ProgressSpinner,
     ContextMenuComponent,
@@ -64,8 +62,8 @@ export class DashboardTransactionCardComponent {
     }));
   });
 
-  onSelectedIndexChange(index: number) {
-    this.tabFilter.set(this.tabs[index] ?? 'All');
+  selectTab(tab: string) {
+    this.tabFilter.set(tab);
   }
 
   openContextMenu(event: MouseEvent, item: Transaction) {

@@ -53,6 +53,27 @@
       </div>
 
       <div class="field">
+        <label for="categoryId" class="label">Category</label>
+        <p-select
+          inputId="categoryId"
+          name="categoryId"
+          [options]="categoryOptions"
+          optionLabel="title"
+          optionValue="id"
+          [(ngModel)]="selectedCategoryId"
+          placeholder="Select category"
+          appendTo="body"
+        >
+          <ng-template let-item pTemplate="item">
+            <div class="icon-row">
+              <app-icon [icon]="item.icon" />
+              <span>{{ item.title }}</span>
+            </div>
+          </ng-template>
+        </p-select>
+      </div>
+
+      <div class="field">
         <label for="startDate" class="label">Start Date</label>
         <p-datepicker
           id="startDate"

@@ -21,9 +21,10 @@ import { BudgetStatisticsService } from '../../services/budget-statistics.servic
 import { MatIconModule } from '@angular/material/icon';
 import { SelectComponent } from '@/entities/select/ui/select.component';
 import { SelectOption } from '@/entities/select/lib';
-import { chartColors } from '@/shared';
+import { chartColors, TransactionsHttpService } from '@/shared';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
+import { ProgressSpinner } from 'primeng/progressspinner';
 
 @Component({
   selector: 'budget-statistic-card',
@@ -35,6 +36,7 @@ import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.
     MatSelectModule,
     MatIconModule,
     SelectComponent,
+    ProgressSpinner,
   ],
   templateUrl: './budget-stats.component.html',
   styleUrl: `./budget-stats.component.scss`,
@@ -42,8 +44,11 @@ import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.
 })
 export class BudgetStatisticCardComponent {
   private budgetStatisticsService = inject(BudgetStatisticsService);
+  private transactionsHttpService = inject(TransactionsHttpService);
   private currencyService = inject(CurrencyService);
   private exchangeRates = inject(ExchangeRatesService);
+
+  isLoading = this.transactionsHttpService.isLoading;
 
   isWithSeeAll = input(false);
   seeAllPath = input<string>('');
@@ -82,6 +87,14 @@ export class BudgetStatisticCardComponent {
         },
       ],
     };
+  });
+
+  hasChartData = computed(() => {
+    const d = this.data();
+    if (!d?.labels?.length) return false;
+    const hasExpenses = d.datasets?.[0]?.data?.some((v) => Number(v) > 0);
+    const hasRevenue = d.datasets?.[1]?.data?.some((v) => Number(v) > 0);
+    return hasExpenses || hasRevenue;
   });
 
   /** Options with tooltip and y-axis label in primary currency. */

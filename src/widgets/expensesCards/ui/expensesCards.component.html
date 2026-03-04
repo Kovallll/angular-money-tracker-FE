@@ -6,7 +6,12 @@
     </div>
   </header>
 
-  @if (hasAnyExpenses()) {
+  @if (isLoading()) {
+    <div class="cards-loading">
+      <p-progress-spinner ariaLabel="Loading" strokeWidth="3" />
+      <p class="cards-loading__text">Loading expenses…</p>
+    </div>
+  } @else if (hasAnyExpenses()) {
     <section class="summary-cards" aria-label="Overview">
       <div class="summary-card summary-card--primary">
         <span class="summary-card__icon" aria-hidden="true">

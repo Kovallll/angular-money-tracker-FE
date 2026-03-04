@@ -82,6 +82,8 @@ export interface CategoryItem {
   icon: string;
   /** Дата создания категории (если приходит с API). Для сортировки по «что было раньше». */
   createdAt?: string;
+  /** Обновляется при редактировании категории или при добавлении транзакции в эту категорию. */
+  updatedAt?: string;
 }
 
 export interface CreateCategoryItem {
@@ -91,6 +93,8 @@ export interface CreateCategoryItem {
 
 export interface GoalItem {
   id: number;
+  /** Category ID (e.g. Goals category). */
+  categoryId?: string | null;
   targetBudget: number;
   goalBudget: number;
   /** Currency code (e.g. BYN, EUR). Used for display; default BYN if missing. */
@@ -100,6 +104,10 @@ export interface GoalItem {
   endDate?: string;
   title: string;
   status?: string;
+  /** ISO date string. Used for dashboard sorting (newest first). */
+  createdAt?: string;
+  /** ISO date string. Used for dashboard sorting (newest first). */
+  updatedAt?: string;
 }
 
 export type CreateGoalItem = Omit<GoalItem, 'id'>;
@@ -165,6 +173,6 @@ export interface ExpensesOverviewDto {
     monthIndex: number; // 0..11 текущий месяц
     year: number;
     monthsBar: number;
-    topK: number;
+    topK?: number; // при отсутствии показываются все категории
   };
 }

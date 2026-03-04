@@ -1,0 +1,52 @@
+<div class="quick-add">
+  <button
+    type="button"
+    class="quick-add__trigger"
+    [class.quick-add__trigger--open]="expanded()"
+    (click)="toggle()"
+    aria-label="Add funds to goal"
+    [attr.aria-expanded]="expanded()"
+  >
+    <mat-icon>add_circle_outline</mat-icon>
+    <span>Add funds</span>
+  </button>
+  @if (expanded()) {
+    <div class="quick-add__popover" (click)="$event.stopPropagation()">
+      <div class="quick-add__form">
+        <div class="quick-add__input-wrap">
+          <input
+            type="text"
+            inputmode="decimal"
+            class="quick-add__input"
+            [class.quick-add__input--error]="amountInvalid"
+            placeholder="0"
+            [ngModel]="amount()"
+            (ngModelChange)="amount.set($event)"
+            (keydown.enter)="add()"
+            (keydown.escape)="cancel()"
+            autofocus
+          />
+          <span class="quick-add__currency">{{ currencyCode }}</span>
+        </div>
+        <div class="quick-add__actions">
+          <button
+            type="button"
+            class="quick-add__btn quick-add__btn--add"
+            [disabled]="amountInvalid || isSubmitting()"
+            (click)="add()"
+          >
+            {{ isSubmitting() ? '…' : 'Add' }}
+          </button>
+          <button
+            type="button"
+            class="quick-add__btn quick-add__btn--cancel"
+            [disabled]="isSubmitting()"
+            (click)="cancel()"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

@@ -1,20 +1,157 @@
-import { ExpensesOverviewDto, StatisticsHttpService } from '@/shared';
+import {
+  ChartJsBar,
+  ChartJsPie,
+  ExpensesOverviewDto,
+  StatisticsHttpService,
+  StatisticsRefreshService,
+} from '@/shared';
 import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   inject,
   input,
   signal,
   OnInit,
 } from '@angular/core';
-import { ChartConfiguration } from 'chart.js';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChartConfiguration, LegendItem, Plugin } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
+import { ProgressSpinner } from 'primeng/progressspinner';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
 
 const EMPTY_BAR: ChartConfiguration<'bar'>['data'] = { labels: [], datasets: [] };
 const EMPTY_LINE: ChartConfiguration<'line'>['data'] = { labels: [], datasets: [] };
+
+const LEGEND_TAGS_CONTAINER = 'chart-legend-tags-container';
+
+/** Общая палитра для синхронизации цветов категорий между pie и bar. */
+const CATEGORY_COLOR_PALETTE = [
+  '#5b7cff', // синий
+  '#33a0a0', // бирюзовый
+  '#cc9933', // оранжевый
+  '#339966', // зелёный
+  '#cc3333', // красный
+  '#9966cc', // фиолетовый
+  '#e06666', // светло-красный
+  '#6fa86f', // зелёный 2
+  '#cc79a7', // розовый
+  '#88cc88', // салатовый
+  '#6699cc', // голубой
+  '#cc6666', // коралловый
+];
+
+function applySyncedColors(
+  pie: ChartJsPie | undefined,
+  bar: ChartJsBar | undefined,
+): { pie: ChartJsPie | undefined; bar: ChartJsBar | undefined } {
+  const names = new Set<string>();
+  if (pie?.labels?.length) pie.labels.forEach((l) => names.add(l));
+  if (bar?.datasets?.length) bar.datasets.forEach((ds) => names.add(ds.label));
+  const sorted = Array.from(names).sort();
+  const colorByLabel = new Map<string, string>();
+  sorted.forEach((label, i) => {
+    colorByLabel.set(label, CATEGORY_COLOR_PALETTE[i % CATEGORY_COLOR_PALETTE.length]);
+  });
+  const getColor = (label: string) => colorByLabel.get(label) ?? CATEGORY_COLOR_PALETTE[0];
+  const newPie: ChartJsPie | undefined =
+    pie?.labels?.length && pie?.datasets?.[0]
+      ? {
+          ...pie,
+          datasets: pie.datasets.map((ds) => ({
+            ...ds,
+            backgroundColor: pie.labels.map((l) => getColor(l)),
+          })),
+        }
+      : pie;
+  const newBar: ChartJsBar | undefined = bar?.datasets?.length
+    ? {
+        ...bar,
+        datasets: bar.datasets.map((ds) => ({ ...ds, backgroundColor: getColor(ds.label) })),
+      }
+    : bar;
+  return { pie: newPie, bar: newBar };
+}
+
+/** Плагин: рисует легенду как HTML-теги (чипы) над графиком и скрывает стандартную легенду. */
+const htmlLegendTagsPlugin: Plugin<'bar' | 'doughnut'> = {
+  id: 'htmlLegendTags',
+  afterUpdate(chart) {
+    const legend = chart.legend;
+    if (!legend?.legendItems?.length) return;
+    const container = getOrCreateLegendContainer(chart);
+    container.innerHTML = '';
+    container.className = `${LEGEND_TAGS_CONTAINER} chart-legend-tags`;
+    const chartType = (chart as { config?: { type?: string } }).config?.type;
+    legend.legendItems.forEach((item: LegendItem) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      const datasetIndex = (item as LegendItem & { datasetIndex?: number }).datasetIndex;
+      const dataIndex = item.index;
+      let hidden = item.hidden ?? false;
+      if (chartType === 'doughnut' && dataIndex !== undefined) {
+        const meta = chart.getDatasetMeta(0);
+        const el = meta?.data?.[dataIndex] as { hidden?: boolean } | undefined;
+        hidden = el?.hidden ?? false;
+      } else if (datasetIndex !== undefined) {
+        const meta = chart.getDatasetMeta(datasetIndex);
+        hidden = meta?.hidden ?? false;
+      }
+      btn.className = 'chart-legend-tag' + (hidden ? ' chart-legend-tag--hidden' : '');
+      btn.setAttribute('role', 'button');
+      btn.setAttribute('aria-pressed', hidden ? 'false' : 'true');
+      const dot = document.createElement('span');
+      dot.className = 'chart-legend-tag__dot';
+      dot.style.backgroundColor =
+        typeof item.fillStyle === 'string' ? item.fillStyle : 'transparent';
+      const textEl = document.createElement('span');
+      textEl.className = 'chart-legend-tag__label';
+      textEl.textContent = item.text ?? (item as { label?: string }).label ?? '';
+      btn.appendChild(dot);
+      btn.appendChild(textEl);
+      btn.addEventListener('click', () => {
+        if (chartType === 'doughnut' && dataIndex !== undefined) {
+          const meta = chart.getDatasetMeta(0);
+          const el = meta?.data?.[dataIndex] as { hidden?: boolean } | undefined;
+          if (el) {
+            el.hidden = !el.hidden;
+            chart.update();
+          }
+        } else if (datasetIndex !== undefined) {
+          const meta = chart.getDatasetMeta(datasetIndex);
+          if (meta) {
+            meta.hidden = !meta.hidden;
+            chart.update();
+          }
+        }
+      });
+      container.appendChild(btn);
+    });
+  },
+};
+
+const DOUGHNUT_WRAP_CLASS = 'chart-card__doughnut-wrap';
+
+function getOrCreateLegendContainer(chart: { canvas: HTMLCanvasElement }): HTMLElement {
+  const directParent = chart.canvas.parentElement;
+  if (!directParent) return document.createElement('div');
+  // Для doughnut легенду вставляем в body перед обёрткой, чтобы график не пропадал
+  const insertParent = directParent.classList?.contains(DOUGHNUT_WRAP_CLASS)
+    ? (directParent.parentElement ?? directParent)
+    : directParent;
+  const insertBefore = directParent.classList?.contains(DOUGHNUT_WRAP_CLASS)
+    ? directParent
+    : chart.canvas;
+  let el = insertParent?.querySelector<HTMLElement>(`.${LEGEND_TAGS_CONTAINER}`);
+  if (!el && insertParent) {
+    el = document.createElement('div');
+    el.className = LEGEND_TAGS_CONTAINER;
+    insertParent.insertBefore(el, insertBefore);
+  }
+  return el ?? document.createElement('div');
+}
 
 @Component({
   selector: 'category-analitics',
@@ -22,14 +159,28 @@ const EMPTY_LINE: ChartConfiguration<'line'>['data'] = { labels: [], datasets: [
   styleUrls: ['./analitics.component.scss'],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [BaseChartDirective],
+  imports: [BaseChartDirective, ProgressSpinner],
 })
 export class CategoryAnaliticsComponent implements OnInit {
   private statisticsHttpService = inject(StatisticsHttpService);
+  private statisticsRefreshService = inject(StatisticsRefreshService);
+  private destroyRef = inject(DestroyRef);
   private currencyService = inject(CurrencyService);
   private exchangeRates = inject(ExchangeRatesService);
 
   view = input<'row' | 'column'>('column');
+
+  /** Показывать ли легенду в виде кликабельных тегов (только на странице статистики). */
+  showLegendTags = input<boolean>(true);
+
+  /** Плагин для отображения легенды в виде тегов (для pie и bar). Всегда подключён; видимость тегов через CSS по классу .analytics--legend-tags. */
+  /** Плагины для doughnut — отдельный массив с типом, чтобы не было TS2322 с bar. */
+  chartPluginsDoughnut = [htmlLegendTagsPlugin] as Plugin<'doughnut'>[];
+  /** Плагины для bar. */
+  chartPluginsBar = [htmlLegendTagsPlugin] as Plugin<'bar'>[];
+
+  /** true пока запрос overview в процессе (показываем спиннер на всех трёх графиках). */
+  overviewLoading = signal(true);
 
   pieData = signal<ChartConfiguration<'doughnut'>['data']>({ labels: [], datasets: [] });
   barData = signal<ChartConfiguration<'bar'>['data']>(EMPTY_BAR);
@@ -101,19 +252,10 @@ export class CategoryAnaliticsComponent implements OnInit {
       responsive: true,
       maintainAspectRatio: false,
       layout: {
-        padding: { top: 8, bottom: 8, left: 4, right: 4 },
+        padding: { top: 4, bottom: 0, left: 0, right: 0 },
       },
       plugins: {
-        legend: {
-          position: 'top',
-          align: 'center',
-          labels: {
-            usePointStyle: true,
-            color: 'white',
-            font: { size: 13, weight: 500 },
-            padding: 12,
-          },
-        },
+        legend: { display: false },
         tooltip: {
           backgroundColor: 'rgba(7, 17, 30, 0.96)',
           borderColor: 'rgba(255,255,255,0.12)',
@@ -144,17 +286,9 @@ export class CategoryAnaliticsComponent implements OnInit {
       responsive: true,
       maintainAspectRatio: false,
       interaction: { mode: 'index', intersect: false },
-      layout: { padding: { top: 8, right: 8, left: 4, bottom: 4 } },
+      layout: { padding: { top: 4, right: 0, left: 0, bottom: 0 } },
       plugins: {
-        legend: {
-          position: 'top',
-          labels: {
-            usePointStyle: true,
-            color: 'white',
-            font: { size: 13, weight: 500 },
-            padding: 12,
-          },
-        },
+        legend: { display: false },
         tooltip: {
           backgroundColor: 'rgba(7, 17, 30, 0.96)',
           borderColor: 'rgba(255,255,255,0.12)',
@@ -179,7 +313,13 @@ export class CategoryAnaliticsComponent implements OnInit {
         x: {
           stacked: false,
           grid: { color: 'rgba(255,255,255,0.06)', drawBorder: false },
-          ticks: { color: 'rgba(255,255,255,0.7)', font: { size: 11 } },
+          ticks: {
+            color: 'rgba(255,255,255,0.7)',
+            font: { size: 11 },
+            padding: 6,
+            maxRotation: 45,
+            autoSkip: true,
+          },
         },
         y: {
           beginAtZero: true,
@@ -188,6 +328,7 @@ export class CategoryAnaliticsComponent implements OnInit {
             callback: (v) => this.formatWithCurrency(Number(v), code),
             color: 'rgba(255,255,255,0.7)',
             font: { size: 11 },
+            padding: 6,
           },
         },
       },
@@ -200,7 +341,7 @@ export class CategoryAnaliticsComponent implements OnInit {
       responsive: true,
       maintainAspectRatio: false,
       interaction: { mode: 'nearest', intersect: false },
-      layout: { padding: { top: 8, right: 8, left: 4, bottom: 4 } },
+      layout: { padding: { top: 4, right: 0, left: 0, bottom: 0 } },
       plugins: {
         legend: { display: false },
         tooltip: {
@@ -230,7 +371,13 @@ export class CategoryAnaliticsComponent implements OnInit {
       scales: {
         x: {
           grid: { color: 'rgba(255,255,255,0.06)', drawBorder: false },
-          ticks: { color: 'rgba(255,255,255,0.7)', font: { size: 11 } },
+          ticks: {
+            color: 'rgba(255,255,255,0.7)',
+            font: { size: 11 },
+            padding: 6,
+            maxRotation: 45,
+            autoSkip: true,
+          },
         },
         y: {
           beginAtZero: true,
@@ -239,33 +386,44 @@ export class CategoryAnaliticsComponent implements OnInit {
             callback: (v) => this.formatWithCurrency(Number(v), code),
             color: 'rgba(255,255,255,0.7)',
             font: { size: 11 },
+            padding: 6,
           },
         },
       },
     };
   });
 
-  ngOnInit() {
-    this.statisticsHttpService
-      .getExpensesOverview({ monthsBar: 6, topK: 5, locale: 'en' })
-      .subscribe({
-        next: (res: ExpensesOverviewDto) => {
-          this.pieData.set(res.pie ?? { labels: [], datasets: [] });
-          this.barData.set(res.bar ?? EMPTY_BAR);
-          this.lineData.set(res.line ?? EMPTY_LINE);
-        },
-        error: () => {
-          this.pieData.set({ labels: [], datasets: [] });
-          this.barData.set(EMPTY_BAR);
-          this.lineData.set(EMPTY_LINE);
-        },
-      });
+  /** Запрос актуальных данных для графиков (вызывается при открытии и после изменений транзакций). */
+  private loadOverview(): void {
+    this.overviewLoading.set(true);
+    this.statisticsHttpService.getExpensesOverview({ monthsBar: 6, locale: 'en' }).subscribe({
+      next: (res: ExpensesOverviewDto) => {
+        const { pie, bar } = applySyncedColors(res.pie, res.bar);
+        this.pieData.set(pie ?? { labels: [], datasets: [] });
+        this.barData.set(bar ?? EMPTY_BAR);
+        this.lineData.set(res.line ?? EMPTY_LINE);
+        this.overviewLoading.set(false);
+      },
+      error: () => {
+        this.pieData.set({ labels: [], datasets: [] });
+        this.barData.set(EMPTY_BAR);
+        this.lineData.set(EMPTY_LINE);
+        this.overviewLoading.set(false);
+      },
+    });
+  }
+
+  ngOnInit(): void {
+    this.loadOverview();
+    this.statisticsRefreshService.onRefresh
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.loadOverview());
   }
 }
 
 function hasChartData(
   data: ChartConfiguration<'doughnut' | 'bar' | 'line'>['data'] | undefined,
-  kind: 'doughnut' | 'bar' | 'line',
+  _kind: 'doughnut' | 'bar' | 'line',
 ): boolean {
   if (!data?.datasets?.length) return false;
   const labels = data.labels as string[] | undefined;

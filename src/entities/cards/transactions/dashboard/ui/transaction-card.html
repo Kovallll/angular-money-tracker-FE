@@ -1,14 +1,24 @@
-<dashboard-card [title]="title" [isWithSeeAll]="true" [seeAllPath]="seeAllPath">
+<dashboard-card
+  [title]="title"
+  [isWithSeeAll]="true"
+  [seeAllPath]="seeAllPath"
+  [hideHeaderDivider]="true"
+>
   <card-header class="header">
-    <mat-tab-group
-      [selectedIndex]="tabs.indexOf(tabFilter())"
-      (selectedIndexChange)="onSelectedIndexChange($event)"
-      class="tabs"
-    >
+    <div class="segment-control" role="tablist" aria-label="Transaction type">
       @for (tab of tabs; track tab) {
-      <mat-tab [label]="tab" class="tab" />
+      <button
+        type="button"
+        class="segment-control__item"
+        [class.segment-control__item--active]="tabFilter() === tab"
+        [attr.aria-selected]="tabFilter() === tab"
+        role="tab"
+        (click)="selectTab(tab)"
+      >
+        {{ tab }}
+      </button>
       }
-    </mat-tab-group>
+    </div>
   </card-header>
   <card-body class="body">
     @if (isLoading()) {

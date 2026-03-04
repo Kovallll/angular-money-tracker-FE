@@ -87,6 +87,22 @@
 
 .right-side {
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.progress-badge {
+  font-size: 15px;
+  font-weight: 700;
+  color: $accent;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: rgba($accent, 0.15);
+
+  &--full {
+    color: $success;
+    background: rgba($success, 0.2);
+  }
 }
 
 :host.is-active {
@@ -101,5 +117,17 @@
   .card-icon {
     background: linear-gradient(135deg, rgba($accent, 0.3) 0%, rgba($accent, 0.15) 100%);
     color: $accent;
+  }
+}
+
+:host.is-completed {
+  ::ng-deep .content {
+    border: 2px solid rgba($success, 0.6);
+    box-shadow: 0 0 0 1px rgba($success, 0.25);
+  }
+
+  .card-icon {
+    background: linear-gradient(135deg, rgba($success, 0.25) 0%, rgba($success, 0.1) 100%);
+    color: $success;
   }
 }

@@ -1,6 +1,24 @@
 import { CreateGoalItem, GoalItem, GoalsHttpService } from '@/shared';
 import { computed, inject, Injectable, Signal } from '@angular/core';
 import { MessageService } from 'primeng/api';
+import { Observable, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
+
+/** Метка времени для сортировки: что свежее — updatedAt или createdAt. */
+function getGoalFreshnessTs(g: GoalItem): number {
+  const raw = g.updatedAt ?? g.createdAt;
+  if (!raw) return 0;
+  const t = new Date(raw).getTime();
+  return Number.isFinite(t) ? t : 0;
+}
+
+/** Прогресс цели в процентах (0–100). Цель считается выполненной при 100. */
+export function getGoalProgress(goal: GoalItem): number {
+  const target = goal.goalBudget ?? 0;
+  const current = goal.targetBudget ?? 0;
+  if (target <= 0) return 0;
+  return Math.min(100, (current / target) * 100);
+}
 
 @Injectable({
   providedIn: 'root',
@@ -38,8 +56,18 @@ export class GoalsService {
   }
 
   public updateGoal(id: number | string, goal: Partial<GoalItem> | CreateGoalItem) {
-    return this.goalsHttpService.updateGoal(id, goal).subscribe({
-      next: () => {
+    return this.updateGoal$(id, goal).subscribe({
+      error: () => {},
+    });
+  }
+
+  /** Returns an Observable so callers can subscribe and handle loading state (e.g. quick-add). */
+  public updateGoal$(
+    id: number | string,
+    goal: Partial<GoalItem> | CreateGoalItem,
+  ): Observable<unknown> {
+    return this.goalsHttpService.updateGoal(id, goal).pipe(
+      tap(() => {
         this.messageService.add({
           key: 'toast',
           severity: 'success',
@@ -48,8 +76,8 @@ export class GoalsService {
           life: 3000,
         });
         this.goalsHttpService.loadGoals();
-      },
-      error: () => {
+      }),
+      catchError(() => {
         this.messageService.add({
           key: 'toast',
           severity: 'error',
@@ -57,8 +85,9 @@ export class GoalsService {
           detail: 'Failed to update goal',
           life: 4000,
         });
-      },
-    });
+        return throwError(() => new Error('Failed to update goal'));
+      }),
+    );
   }
 
   public deleteGoal(id: number) {
@@ -89,14 +118,50 @@ export class GoalsService {
     return this.goalsHttpService.isLoading;
   }
 
+  /**
+   * Все цели (для страницы целей).
+   * С сортировкой по свежести (updatedAt/createdAt), новое первое.
+   */
+  getGoals(): Signal<GoalItem[]>;
+  /**
+   * Цели для дашборда: только активные (прогресс < 100), по свежести, топ max.
+   * Выполненные цели на дашборде не показываются.
+   */
+  getGoals(max: number): Signal<GoalItem[]>;
   getGoals(max?: number): Signal<GoalItem[]> {
     return computed(() => {
       const all = this.goals() ?? [];
-      return max ? all.slice(0, max) : all;
+      const onlyActive = max != null;
+      const filtered = onlyActive ? all.filter((g) => getGoalProgress(g) < 100) : all;
+      const sorted = [...filtered].sort((a, b) => {
+        const tsA = getGoalFreshnessTs(a);
+        const tsB = getGoalFreshnessTs(b);
+        return tsB - tsA; // новое первое
+      });
+      return max != null ? sorted.slice(0, max) : sorted;
     });
   }
 
-  getGoal(id: number): Signal<GoalItem | undefined> {
-    return computed(() => this.goals().find((g) => g.id === id));
+  /** Активные цели (прогресс < 100), по свежести. */
+  getActiveGoals(): Signal<GoalItem[]> {
+    return computed(() => {
+      const all = this.goals() ?? [];
+      const active = all.filter((g) => getGoalProgress(g) < 100);
+      return [...active].sort((a, b) => getGoalFreshnessTs(b) - getGoalFreshnessTs(a));
+    });
+  }
+
+  /** Выполненные цели (прогресс >= 100), по свежести. */
+  getCompletedGoals(): Signal<GoalItem[]> {
+    return computed(() => {
+      const all = this.goals() ?? [];
+      const completed = all.filter((g) => getGoalProgress(g) >= 100);
+      return [...completed].sort((a, b) => getGoalFreshnessTs(b) - getGoalFreshnessTs(a));
+    });
+  }
+
+  getGoal(id: number | string): Signal<GoalItem | undefined> {
+    const idStr = String(id);
+    return computed(() => this.goals().find((g) => String(g.id) === idStr));
   }
 }

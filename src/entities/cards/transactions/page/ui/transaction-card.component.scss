@@ -1,5 +1,4 @@
 @use 'theme' as *;
-@use '@angular/material' as mat;
 @use 'shared/styles/breakpoints' as bp;
 
 :host {
@@ -58,56 +57,56 @@
   width: 100%;
 }
 
-.tabs {
-  @include bp.mobile {
-    ::ng-deep .mat-mdc-tab-header {
-      overflow-x: auto;
-      overflow-y: hidden;
-      -webkit-overflow-scrolling: touch;
-    }
+/* Сегментированный переключатель: все варианты в один ряд без скролла (UI/UX для мобильных) */
+.segment-control {
+  display: flex;
+  width: 100%;
+  gap: 0;
+  border-radius: 12px;
+  padding: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
 
-    ::ng-deep .mat-mdc-tab .mdc-tab__text-label {
-      font-size: 14px;
-    }
-  }
+.segment-control__item {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: $gray;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 
-  @include mat.tabs-overrides(
-    (
-      active-focus-indicator-color: $accent,
-      active-focus-label-text-color: $white,
-      active-hover-indicator-color: $accent,
-      active-hover-label-text-color: $white,
-      active-indicator-color: $accent,
-      active-label-text-color: $white,
-      inactive-label-text-color: $gray,
-      inactive-hover-label-text-color: $white,
-      inactive-focus-label-text-color: $white,
-      divider-color: $accent,
-    )
-  );
-
-  ::ng-deep .mat-mdc-tab .mdc-tab__text-label {
-    font-size: 16px;
-    font-weight: 500;
-  }
-
-  ::ng-deep .mat-mdc-tab.mdc-tab--active {
-    background-color: $accent;
+  &:hover {
     color: $white;
-    border-radius: 10px;
+    background: rgba($accent, 0.12);
+  }
 
-    .mdc-tab__text-label {
+  &:focus-visible {
+    outline: 2px solid $accent;
+    outline-offset: 2px;
+  }
+
+  &--active {
+    color: $white;
+    background: $accent;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+
+    &:hover {
+      background: $accent;
       color: $white;
     }
   }
 
-  ::ng-deep .mat-mdc-tab {
-    border-radius: 10px;
-    transition: background-color 0.2s ease;
-  }
-
-  ::ng-deep .mat-mdc-tab:not(.mdc-tab--active):hover {
-    background-color: rgba($accent, 0.15);
+  @include bp.tablet-and-up {
+    padding: 12px 16px;
+    font-size: 15px;
   }
 }
 

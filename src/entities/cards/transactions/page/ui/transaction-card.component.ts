@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { DashboardCardComponent, CardBodyComponent } from '../../../card';
-import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import {
   CategoriesHttpService,
@@ -31,7 +30,6 @@ import { ConfirmationService } from 'primeng/api';
   imports: [
     DashboardCardComponent,
     CardBodyComponent,
-    MatTabsModule,
     MatIconModule,
     TransactionsListViewComponent,
     ControlsComponent,
@@ -131,6 +129,10 @@ export class TransactionsComponent extends UrlSyncedComponent<Transaction> {
 
   onSelectedIndexChange(index: number) {
     this.tabFilter.set(this.tabs[index] ?? Tabs.All);
+  }
+
+  selectTab(tab: string) {
+    this.tabFilter.set(tab);
   }
 
   override get isEmpty() {

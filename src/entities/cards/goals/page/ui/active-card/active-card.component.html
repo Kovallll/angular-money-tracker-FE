@@ -32,13 +32,16 @@
         <div class="wrapper">
           <div class="content">
             <div class="left-side">
-              <div class="stat-row">
+              <div class="stat-row stat-row--target">
                 <span class="stat-icon"><i class="pi pi-wallet"></i></span>
                 <div class="text-block">
                   <p class="text">Target Budget</p>
                   <p class="price">
                     {{ goal()!.targetBudget | appCurrencyPrimary: goal()!.currencyCode }}
                   </p>
+                  @if (getProgress(goal()!) < 100) {
+                    <goal-quick-add-funds [goal]="goal()!" />
+                  }
                 </div>
               </div>
               <div class="stat-row">

@@ -1,24 +1,34 @@
 @use 'shared/styles/breakpoints' as bp;
 
 :host {
+  display: flex;
+  flex-direction: column;
   width: 100%;
+  min-width: 0;
 }
 
 .body {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   width: 100%;
+  min-width: 0;
   gap: 12px;
-  min-height: 160px;
+  min-height: 140px;
+
+  // На мобилке — не более 2 карточек в ряд
+  grid-template-columns: repeat(2, 1fr);
+
+  @include bp.mobile-mini {
+    grid-template-columns: repeat(1, 1fr);
+  }
 
   @include bp.tablet-and-up {
     gap: 16px;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(160px, 100%), 1fr));
   }
 
   @include bp.desktop-and-up {
     gap: 20px;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(180px, 100%), 1fr));
   }
 
   &:has(.data-placeholder:only-child) {

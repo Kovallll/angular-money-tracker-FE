@@ -214,6 +214,11 @@
     background: rgba($accent, 0.25);
     color: $white;
   }
+
+  .summary-card--completed & {
+    background: rgba($success, 0.2);
+    color: $success;
+  }
 }
 
 .summary-card__content {
@@ -241,6 +246,31 @@
 
   @include bp.desktop-and-up {
     font-size: 22px;
+  }
+}
+
+.summary-card__content--grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 16px;
+  align-content: center;
+  min-width: 0;
+}
+
+.summary-card__content--grid .summary-card__budget-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: $gray;
+}
+
+.summary-card__content--grid .summary-card__budget-value {
+  font-size: 15px;
+  font-weight: 700;
+
+  @include bp.tablet-and-up {
+    font-size: 16px;
   }
 }
 
@@ -314,17 +344,67 @@
   }
 }
 
-.section-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: $gray;
-  margin: 0 0 16px 0;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+.section-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
 
   @include bp.tablet-and-up {
     margin-bottom: 20px;
   }
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: $gray;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.switcher {
+  display: inline-flex;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 4px;
+  gap: 2px;
+}
+
+.switcher__btn {
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: $gray;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+
+  &:hover {
+    color: $white;
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  &--active {
+    color: $white;
+    background: rgba($accent, 0.35);
+  }
+}
+
+.goals-empty-tab {
+  margin: 0;
+  padding: 24px 16px;
+  text-align: center;
+  color: $gray;
+  font-size: 15px;
 }
 
 .pagination-wrap {

@@ -25,27 +25,22 @@ const CATEGORY_DISPLAYED_FIELDS = [
 
 /** Возвращает метку времени «первой активности»: что было раньше — создание категории или первая транзакция. */
 function getFirstActivitySortKey(cat: CategoryItem): number {
-  const allTx = [...(cat.expenses ?? []), ...(cat.revenues ?? [])];
-  const txTimestamps = allTx
-    .map((t) => (t as { date?: string }).date)
-    .filter((d): d is string => Boolean(d))
-    .map((d) => new Date(d).getTime())
-    .filter((ms) => Number.isFinite(ms));
-  const firstTxMs = txTimestamps.length > 0 ? Math.min(...txTimestamps) : null;
   const createdStr = cat.createdAt;
-  const createdMs =
-    createdStr && Number.isFinite(new Date(createdStr).getTime())
-      ? new Date(createdStr).getTime()
-      : null;
+  const updatedStr = cat.updatedAt;
 
-  if (createdMs != null && firstTxMs != null) return Math.min(createdMs, firstTxMs);
-  if (firstTxMs != null) return firstTxMs;
-  if (createdMs != null) return createdMs;
-  return cat.id;
+  if (updatedStr) {
+    return new Date(updatedStr).getTime();
+  }
+
+  if (createdStr) {
+    return new Date(createdStr).getTime();
+  }
+
+  return 0;
 }
 
 function sortCategoriesByFirstActivity(list: CategoryItem[]): CategoryItem[] {
-  return [...list].sort((a, b) => getFirstActivitySortKey(a) - getFirstActivitySortKey(b));
+  return [...list].sort((a, b) => getFirstActivitySortKey(b) - getFirstActivitySortKey(a));
 }
 
 @Component({
@@ -93,6 +88,8 @@ export class CategoriesCardsComponent extends UrlSyncedComponent<CategoryItem> {
   categories = injectQuery(() => ({
     queryKey: ['categories'],
     queryFn: () => this.categoriesHttpService.getCategories(),
+    staleTime: 0,
+    refetchOnMount: 'always',
   }));
 
   charts = injectQuery(() => ({

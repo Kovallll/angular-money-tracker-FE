@@ -10,6 +10,11 @@ import { GoalsService } from '@/entities/cards/goals/services/goals.service';
 import { DatePickerModule } from 'primeng/datepicker';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { PriceCurrencyFieldComponent } from '@/shared/components/price-currency-field/price-currency-field.component';
+import { CategoriesHttpService } from '@/shared/services/models/categories.service';
+import { GOALS_CATEGORY_NAME } from '@/shared/constants';
+import { injectQuery } from '@tanstack/angular-query-experimental';
+import { Select } from 'primeng/select';
+import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 
 @Component({
   standalone: true,
@@ -26,15 +31,23 @@ import { PriceCurrencyFieldComponent } from '@/shared/components/price-currency-
     InputTextModule,
     DatePickerModule,
     PriceCurrencyFieldComponent,
+    Select,
+    AppIconComponent,
   ],
 })
 export class GoalAddCardButtonComponent {
   private goalsService = inject(GoalsService);
   private currencyService = inject(CurrencyService);
+  private categoriesHttpService = inject(CategoriesHttpService);
   visible = signal(false);
+
+  categories = injectQuery(() => ({
+    queryKey: ['categories'] as const,
+    queryFn: () => this.categoriesHttpService.getCategories(),
+  }));
   @ViewChild('f') form?: NgForm;
 
-  newGoal: Partial<GoalItem> & { currencyCode?: string } = {
+  newGoal: Partial<GoalItem> & { currencyCode?: string; categoryId?: string } = {
     title: '',
     targetBudget: 0,
     goalBudget: 0,
@@ -65,6 +78,7 @@ export class GoalAddCardButtonComponent {
 
   openDialog() {
     this.newGoal.currencyCode = this.currencyService.primaryCode();
+    this.newGoal.categoryId = this.findGoalsCategoryId() ?? undefined;
     this.visible.set(true);
   }
 
@@ -113,6 +127,16 @@ export class GoalAddCardButtonComponent {
     this.newGoal.startDate = '';
     this.newGoal.endDate = '';
     this.newGoal.currencyCode = this.currencyService.primaryCode();
+    this.newGoal.categoryId = undefined;
+  }
+
+  private findGoalsCategoryId(): string | undefined {
+    const cats = this.categories.data();
+    if (!cats?.length) return undefined;
+    const goalsCat = cats.find(
+      (c) => String(c.title ?? '').toLowerCase() === GOALS_CATEGORY_NAME.toLowerCase(),
+    );
+    return goalsCat != null ? String(goalsCat.id) : undefined;
   }
 
   onSubmit(form: NgForm) {
@@ -121,6 +145,10 @@ export class GoalAddCardButtonComponent {
     const startStr = this.formatDate(this.newGoal.startDate as string | Date);
     const endStr = this.formatDate(this.newGoal.endDate as string | Date);
     if (!startStr) return;
+    const categoryId =
+      this.newGoal.categoryId != null && this.newGoal.categoryId !== ''
+        ? String(this.newGoal.categoryId)
+        : this.findGoalsCategoryId();
     const payload: CreateGoalItem = {
       title: (this.newGoal.title ?? '').trim(),
       targetBudget: Number(this.newGoal.targetBudget) ?? 0,
@@ -128,6 +156,7 @@ export class GoalAddCardButtonComponent {
       currencyCode: this.newGoal.currencyCode || undefined,
       startDate: startStr,
       endDate: endStr || undefined,
+      categoryId: categoryId ?? undefined,
     };
     this.goalsService.createGoal(payload);
     this.visible.set(false);

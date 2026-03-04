@@ -5,6 +5,8 @@ import { Tabs, Transaction, TransactionsHttpService } from '@/shared';
 export class DashboardTransactionsService {
   private readonly http = inject(TransactionsHttpService);
 
+  private readonly countOfTransactions = 6;
+
   private readonly all: Signal<Transaction[]> = this.http.transactions;
 
   /** Приводит значение таба к типу транзакции в API (expense/revenue). */
@@ -26,7 +28,7 @@ export class DashboardTransactionsService {
 
   dashboardTransactions(tabFilter: Signal<string>): Signal<Transaction[]> {
     const source = this.tabTransactions(tabFilter);
-    return computed(() => source().slice(0, 9));
+    return computed(() => source().slice(0, this.countOfTransactions));
   }
 
   displayedCells() {

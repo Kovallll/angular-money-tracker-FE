@@ -21,8 +21,6 @@
         <category-add-button />
       </div>
     } @else {
-      <controls [controlsProps]="controlsProps()" />
-
       <section class="summary-cards" aria-label="Overview">
         <div class="summary-card summary-card--primary">
           <span class="summary-card__icon" aria-hidden="true">
@@ -38,7 +36,7 @@
             <i class="pi pi-chart-bar"></i>
           </span>
           <div class="summary-card__content">
-            <span class="summary-card__label">Transactions in busiest</span>
+            <span class="summary-card__label">Transactions in most active category</span>
             <span class="summary-card__value">{{ topCategoryTransactions() }}</span>
           </div>
         </div>
@@ -47,7 +45,7 @@
             <i class="pi pi-percentage"></i>
           </span>
           <div class="summary-card__content">
-            <span class="summary-card__label">vs last month</span>
+            <span class="summary-card__label">vs last month (summary)</span>
             <span
               class="summary-card__value"
               [class.negative]="!overageDeltaCompare().negative"
@@ -66,6 +64,8 @@
         </div>
       </section>
 
+      <controls [controlsProps]="controlsProps()" />
+
       <section class="categories-section">
         <h2 class="section-title">Your categories</h2>
         <div class="content">
@@ -73,11 +73,13 @@
             <category-card [category]="category" [chart]="getCurrentChart(category.id)" />
           }
         </div>
-        <pagination [pageSize]="pageSize" />
+        <div class="pagination-wrap">
+          <pagination [pageSize]="pageSize" />
+        </div>
       </section>
     }
   </div>
   <aside class="analytics-sidebar">
-    <category-analitics />
+    <category-analitics [showLegendTags]="false" />
   </aside>
 </div>

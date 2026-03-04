@@ -24,14 +24,25 @@
     }
 
     <div class="chart-wrap">
-      <canvas
-        class="chart"
-        baseChart
-        [data]="data()"
-        [options]="options()"
-        [type]="'bar'"
-        aria-label="Budget statistics chart"
-      ></canvas>
+      @if (isLoading()) {
+        <div class="chart-loading">
+          <p-progress-spinner ariaLabel="Loading" strokeWidth="3" />
+        </div>
+      } @else if (hasChartData()) {
+        <canvas
+          class="chart"
+          baseChart
+          [data]="data()"
+          [options]="options()"
+          [type]="'bar'"
+          aria-label="Budget statistics chart"
+        ></canvas>
+      } @else {
+        <div class="chart-placeholder">
+          <span class="chart-placeholder__icon" aria-hidden="true">📊</span>
+          <p>No data</p>
+        </div>
+      }
     </div>
   </card-body>
 </dashboard-card>

@@ -5,3 +5,4 @@ export { ExpensesHttpService } from './expenses.service';
 export { GoalsHttpService } from './goals.service';
 export { CategoriesHttpService } from './categories.service';
 export { StatisticsHttpService } from './statistics.service';
+export { StatisticsRefreshService } from './statistics-refresh.service';
