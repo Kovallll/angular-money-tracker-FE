@@ -18,13 +18,13 @@ import {
 } from '../../lib';
 import { MatSelectModule } from '@angular/material/select';
 import { BudgetStatisticsService } from '../../services/budget-statistics.service';
-import { MatIconModule } from '@angular/material/icon';
 import { SelectComponent } from '@/entities/select/ui/select.component';
 import { SelectOption } from '@/entities/select/lib';
 import { chartColors, TransactionsHttpService } from '@/shared';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
 import { ProgressSpinner } from 'primeng/progressspinner';
+import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 
 @Component({
   selector: 'budget-statistic-card',
@@ -34,9 +34,9 @@ import { ProgressSpinner } from 'primeng/progressspinner';
     CardBodyComponent,
     BaseChartDirective,
     MatSelectModule,
-    MatIconModule,
     SelectComponent,
     ProgressSpinner,
+    AppIconComponent,
   ],
   templateUrl: './budget-stats.component.html',
   styleUrl: `./budget-stats.component.scss`,

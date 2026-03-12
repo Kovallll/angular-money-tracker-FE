@@ -66,10 +66,11 @@
   color: $accent;
 }
 
-.mobile-card__category-icon {
-  font-size: 22px !important;
-  width: 22px !important;
-  height: 22px !important;
+:host .mobile-card__category-icon app-icon,
+:host .mobile-card__category-icon .mat-icon.mat-icon {
+  font-size: 22px;
+  width: 22px;
+  height: 22px;
 }
 
 .mobile-card__main {
@@ -108,10 +109,11 @@
   user-select: none;
 }
 
-.mobile-card__type-icon {
-  font-size: 16px !important;
-  width: 16px !important;
-  height: 16px !important;
+:host .mobile-card__type-icon app-icon,
+:host .mobile-card__type-icon .mat-icon.mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
   vertical-align: -3px;
   color: rgba(201, 43, 18, 0.95);
 }

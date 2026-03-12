@@ -1,6 +1,6 @@
 <div class="container">
   <a [routerLink]="['/', RoutePaths.CATEGORIES]" class="back-link">
-    <i class="pi pi-arrow-left" aria-hidden="true"></i>
+    <app-icon prime="arrow-left" [sizePx]="14" />
     Back to categories
   </a>
 
@@ -20,7 +20,17 @@
           <span class="total-label">Revenue</span>
           <span class="total-value">{{ displayTotalRevenues() | appCurrency }}</span>
         </div>
-        @if (compareDelta().value !== 0) {
+        @if (lastActivityDateFormatted(); as lastFormatted) {
+        <div class="total-item">
+          <span class="total-label">Last</span>
+          <span class="total-value">{{ lastFormatted }}</span>
+        </div>
+        } @if (averageExpense() !== null) {
+        <div class="total-item">
+          <span class="total-label">Avg</span>
+          <span class="total-value">{{ averageExpense() | appCurrency }}</span>
+        </div>
+        } @if (compareDelta().value !== 0) {
         <div class="total-item">
           <span class="total-label">vs last month</span>
           <span
@@ -29,9 +39,9 @@
             [class.positive]="compareDelta().negative"
           >
             {{ compareDelta().value }}% @if (!compareDelta().negative) {
-            <i class="pi pi-arrow-down trend-arrow" aria-hidden="true"></i>
+            <app-icon prime="arrow-down" [sizePx]="14" iconClass="trend-arrow" />
             } @else {
-            <i class="pi pi-arrow-up trend-arrow" aria-hidden="true"></i>
+            <app-icon prime="arrow-up" [sizePx]="14" iconClass="trend-arrow" />
             }
           </span>
         </div>

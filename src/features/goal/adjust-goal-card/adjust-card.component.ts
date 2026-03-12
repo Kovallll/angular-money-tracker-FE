@@ -3,18 +3,18 @@ import { Component, inject, input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GoalAdjustDialogComponent } from './modal/modal.component';
 import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
-import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { GoalsService } from '@/entities/cards/goals/services/goals.service';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { GoalItem } from '@/shared';
+import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 
 @Component({
   standalone: true,
   selector: 'goal-adjust-card-button',
   templateUrl: './adjust-card.component.html',
   styleUrls: ['./adjust-card.component.scss'],
-  imports: [CommonModule, AppButtonComponent, MatIconModule],
+  imports: [CommonModule, AppButtonComponent, AppIconComponent],
 })
 export class GoalAdjustCardButtonComponent {
   private dialog = inject(MatDialog);

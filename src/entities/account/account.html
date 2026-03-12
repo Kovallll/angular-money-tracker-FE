@@ -8,7 +8,7 @@
     (error)="avatarLoadError.set(true)"
   />
   } @else {
-  <i class="pi pi-user avatar-placeholder"></i>
+  <app-icon prime="user" [sizePx]="22" iconClass="avatar-placeholder" />
   }
   <div class="info">
     <div class="name">{{ user()!.name }}</div>

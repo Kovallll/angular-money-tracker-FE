@@ -2,11 +2,11 @@ import { Component, input } from '@angular/core';
 import { Items } from '../lib';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
-import { MatIconModule } from '@angular/material/icon';
+import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 
 @Component({
   selector: 'menu-tabs',
-  imports: [MatButtonModule, RouterModule, MatIconModule],
+  imports: [MatButtonModule, RouterModule, AppIconComponent],
   templateUrl: './tabs.html',
   styleUrls: ['./tabs.scss'],
 })

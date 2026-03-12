@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
+import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 
 /**
  * Shared modal content shell. Use for consistent modal styling across the app.
@@ -11,7 +12,7 @@ import { AppButtonComponent } from '@/shared/components/app-button/app-button.co
 @Component({
   selector: 'app-modal-shell',
   standalone: true,
-  imports: [AppButtonComponent],
+  imports: [AppButtonComponent, AppIconComponent],
   templateUrl: './app-modal-shell.component.html',
   styleUrls: ['./app-modal-shell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

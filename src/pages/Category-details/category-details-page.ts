@@ -1,4 +1,5 @@
 import { Component, computed, effect, inject, OnInit, signal } from '@angular/core';
+import { formatDate } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { map } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -125,6 +126,34 @@ export class CategoryDetailsPageComponent
   compareDelta = computed(() => {
     const ch = this.chart();
     return this.categoriesHttpService.getChartDeltaCompare(ch ?? undefined);
+  });
+
+  /** Дата последней транзакции в категории (для страницы деталей). */
+  lastActivityDate = computed(() => {
+    const cat = this.category();
+    if (!cat) return null;
+    const all = [...(cat.expenses ?? []), ...(cat.revenues ?? [])];
+    if (!all.length) return null;
+    const dates = all.map((t) => (t as { date?: string }).date).filter(Boolean) as string[];
+    if (!dates.length) return null;
+    return new Date(Math.max(...dates.map((d) => new Date(d).getTime())));
+  });
+
+  /** Отформатированная дата последней транзакции (d MMM). */
+  lastActivityDateFormatted = computed(() => {
+    const d = this.lastActivityDate();
+    return d ? formatDate(d, 'd MMM', 'en') : null;
+  });
+
+  /** Средняя сумма расхода по категории в выбранной валюте (для страницы деталей). */
+  averageExpense = computed(() => {
+    const cat = this.category();
+    const count = cat?.expenses?.length ?? 0;
+    if (!cat || count === 0) return null;
+    const total = cat.totalExpenses ?? 0;
+    const avgByn = total / count;
+    const primary = this.currencyService.primaryCode();
+    return this.exchangeRates.convert(avgByn, 'BYN', primary);
   });
 
   hasChartData = computed(() => {

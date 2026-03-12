@@ -45,7 +45,7 @@ $bp-goal-card: 480px;
   font-weight: 700;
   margin: 0 0 6px 0;
   word-break: break-word;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.3px;
 
   @include bp.tablet-and-up {
     font-size: 19px;
@@ -195,7 +195,7 @@ $bp-goal-card: 480px;
   font-size: 13px;
   color: $gray;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.6px;
 
   @include bp.tablet-and-up {
     font-size: 14px;
@@ -218,11 +218,10 @@ $bp-goal-card: 480px;
 
 .right-side {
   flex-shrink: 0;
-  width: 100%;
   display: flex;
   justify-content: center;
 
-  @media (min-width: $bp-goal-card) {
+  @include bp.tablet-and-up {
     width: auto;
     justify-content: flex-end;
   }

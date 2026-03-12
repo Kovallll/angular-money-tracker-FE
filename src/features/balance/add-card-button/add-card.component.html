@@ -1,6 +1,7 @@
 <ng-container>
-  <app-button appearance="primary" size="md" (buttonClick)="show()">
-    <mat-icon>add</mat-icon>
-    Add Card
+  <app-button appearance="primary" size="md" (buttonClick)="show()" class="add-card-btn">
+    <app-icon material="add" [sizePx]="20" iconClass="icon" />
+    <span class="add-card-btn__label add-card-btn__label--short">Add</span>
+    <span class="add-card-btn__label add-card-btn__label--full">Add Card</span>
   </app-button>
 </ng-container>

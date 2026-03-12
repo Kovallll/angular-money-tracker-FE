@@ -1,14 +1,14 @@
 import { Component, inject } from '@angular/core';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
-import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterModule } from '@angular/router';
 import { MoreSheetComponent } from './more-sheet/more-sheet.component';
 import { moreMenuItems, primaryTabItems } from '../lib/constants';
+import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 
 @Component({
   selector: 'app-bottom-tabs',
   standalone: true,
-  imports: [RouterModule, MatIconModule],
+  imports: [RouterModule, AppIconComponent],
   templateUrl: './bottom-tabs.component.html',
   styleUrls: ['./bottom-tabs.component.scss'],
 })

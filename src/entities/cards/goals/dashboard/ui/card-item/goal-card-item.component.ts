@@ -4,11 +4,19 @@ import { AppCurrencyPrimaryPipe } from '@/shared/pipes/app-currency-primary.pipe
 import { BaseChartDirective } from 'ng2-charts';
 import { DividerComponent } from '@/shared/components/divider/divider';
 import { ChartOptions } from 'chart.js';
+import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 
 @Component({
   selector: 'goal-card-item',
   standalone: true,
-  imports: [CommonModule, DatePipe, AppCurrencyPrimaryPipe, BaseChartDirective, DividerComponent],
+  imports: [
+    CommonModule,
+    DatePipe,
+    AppCurrencyPrimaryPipe,
+    BaseChartDirective,
+    DividerComponent,
+    AppIconComponent,
+  ],
   templateUrl: './goal-card-item.component.html',
   styleUrls: ['./goal-card-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

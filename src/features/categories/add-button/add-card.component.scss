@@ -1,3 +1,5 @@
+@use 'shared/styles/breakpoints' as bp;
+
 .button {
   color: white;
   font-size: 18px;
@@ -6,4 +8,22 @@
 
 .icon {
   font-size: 20px;
+}
+
+.add-category-btn__label--full {
+  display: none;
+}
+
+.add-category-btn__label--short {
+  display: inline;
+}
+
+@include bp.tablet-and-up {
+  .add-category-btn__label--short {
+    display: none;
+  }
+
+  .add-category-btn__label--full {
+    display: inline;
+  }
 }

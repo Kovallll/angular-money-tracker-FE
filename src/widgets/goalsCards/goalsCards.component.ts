@@ -13,6 +13,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { AppCurrencyPipe } from '@/shared/pipes/app-currency.pipe';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
+import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 
 const GOAL_PAGE_SIZE_WIDE = 9;
 const GOAL_PAGE_SIZE_TWO_COLUMNS = 8;
@@ -30,6 +31,7 @@ const GOAL_PAGE_SIZE_TWO_COLUMNS = 8;
     GoalAddCardButtonComponent,
     ProgressSpinnerModule,
     AppCurrencyPipe,
+    AppIconComponent,
   ],
 })
 export class GoalsCardsComponent extends UrlSyncedComponent<GoalItem> {

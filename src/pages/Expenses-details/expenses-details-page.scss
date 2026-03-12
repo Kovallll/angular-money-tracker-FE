@@ -79,11 +79,11 @@
   border: 1px solid rgba($accent, 0.25);
   border-radius: 14px;
 
-  ::ng-deep app-icon,
-  ::ng-deep .mat-icon {
-    font-size: 28px !important;
-    width: 28px !important;
-    height: 28px !important;
+  .page-header__icon-wrap ::ng-deep app-icon,
+  .page-header__icon-wrap ::ng-deep .mat-icon.mat-icon {
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
     color: $white;
   }
 }
@@ -97,7 +97,7 @@
   font-size: 20px;
   font-weight: 600;
   color: $white;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.3px;
 
   @include bp.tablet-and-up {
     font-size: 24px;

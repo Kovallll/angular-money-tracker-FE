@@ -74,9 +74,17 @@ export class TransactionsComponent extends UrlSyncedComponent<Transaction> {
     const apiType = tab === Tabs.All ? null : tab === Tabs.Expenses ? 'expense' : 'revenue';
     const filtered = apiType == null ? [...base] : base.filter((t) => t.type === apiType);
     return [...filtered].sort((a, b) => {
-      const dateA = a.date ? new Date(a.date).getTime() : 0;
-      const dateB = b.date ? new Date(b.date).getTime() : 0;
-      return dateB - dateA;
+      const timeA = a.createdAt
+        ? new Date(a.createdAt).getTime()
+        : a.date
+          ? new Date(a.date).getTime()
+          : 0;
+      const timeB = b.createdAt
+        ? new Date(b.createdAt).getTime()
+        : b.date
+          ? new Date(b.date).getTime()
+          : 0;
+      return timeB - timeA;
     });
   });
 

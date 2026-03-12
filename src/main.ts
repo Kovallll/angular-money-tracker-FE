@@ -12,15 +12,31 @@ import { provideTanStackQuery, QueryClient } from '@tanstack/angular-query-exper
 import { APP_INITIALIZER, isDevMode } from '@angular/core';
 import { provideServiceWorker } from '@angular/service-worker';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { AuthService } from './shared/services/auth/auth.service';
 import { ExchangeRatesService } from './shared/services/currency/exchange-rates.service';
+import { firstValueFrom } from 'rxjs';
+
+/** Сначала проверка/обновление сессии (auth), затем загрузка курсов валют. */
+function appInitializer(
+  auth: AuthService,
+  exchangeRates: ExchangeRatesService,
+): () => Promise<void> {
+  return async () => {
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (refreshToken?.trim()) {
+      await firstValueFrom(auth.refreshToken()).catch(() => undefined);
+    }
+    await exchangeRates.loadRates();
+  };
+}
 
 const providers = [
   MessageService,
   ConfirmationService,
   {
     provide: APP_INITIALIZER,
-    useFactory: (exchangeRates: ExchangeRatesService) => () => exchangeRates.loadRates(),
-    deps: [ExchangeRatesService],
+    useFactory: appInitializer,
+    deps: [AuthService, ExchangeRatesService],
     multi: true,
   },
   provideTanStackQuery(new QueryClient()),

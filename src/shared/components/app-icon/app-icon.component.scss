@@ -1,0 +1,39 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+
+  --app-icon-size: 1em;
+  --app-icon-color: currentColor;
+
+  font-size: var(--app-icon-size);
+  color: var(--app-icon-color);
+}
+
+.app-icon__material,
+.app-icon__prime,
+.app-icon__emoji {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.app-icon__material {
+  font-size: inherit;
+  width: 1em;
+  height: 1em;
+}
+
+.app-icon__prime {
+  font-size: inherit;
+  width: 1em;
+  height: 1em;
+}
+
+.app-icon__emoji {
+  font-size: inherit;
+  width: 1em;
+  height: 1em;
+}

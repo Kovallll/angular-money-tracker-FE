@@ -66,13 +66,6 @@
   border-radius: 14px;
   background: linear-gradient(135deg, rgba($accent, 0.25) 0%, rgba($accent, 0.15) 100%);
   border: 1px solid rgba($accent, 0.2);
-
-  ::ng-deep app-icon,
-  ::ng-deep .mat-icon {
-    font-size: 26px !important;
-    width: 26px !important;
-    height: 26px !important;
-  }
 }
 
 .card__meta {
@@ -130,9 +123,9 @@
   }
 }
 
-.card__trend-icon {
+.card__trend-icon.card__trend-icon {
   font-size: 14px;
-  color: $accent !important;
+  color: $accent;
 }
 
 .card__trend-value {
@@ -146,8 +139,8 @@
   align-items: center;
   gap: 4px;
 
-  ::ng-deep .mat-icon {
-    color: $accent !important;
+  .card__trend-main ::ng-deep .mat-icon.mat-icon {
+    color: $accent;
   }
 }
 

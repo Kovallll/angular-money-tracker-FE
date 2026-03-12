@@ -1,5 +1,5 @@
 import { Component, input, computed, inject } from '@angular/core';
-import { MatIconModule } from '@angular/material/icon';
+import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 
 import { MatDialog } from '@angular/material/dialog';
 import { SorterModalComponent } from './modal/sorter-modal.component';
@@ -10,7 +10,7 @@ import { SorterService } from '../services/sorter.service';
   selector: 'sorters',
   templateUrl: './sorter.component.html',
   styleUrls: ['./sorter.component.scss'],
-  imports: [MatIconModule],
+  imports: [AppIconComponent],
   standalone: true,
 })
 export class SorterComponent {

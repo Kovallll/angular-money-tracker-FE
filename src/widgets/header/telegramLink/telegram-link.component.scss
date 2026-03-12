@@ -14,9 +14,9 @@
   transition: all 0.2s ease;
 
   &:hover {
-    color: #2aabee;
-    border-color: #2aabee;
-    background: rgba(42, 171, 238, 0.08);
+    color: $telegram;
+    border-color: $telegram;
+    background: rgba($telegram, 0.08);
   }
 
   &:disabled {
@@ -25,13 +25,13 @@
   }
 
   &.linked {
-    color: #2aabee;
-    border-color: #2aabee;
+    color: $telegram;
+    border-color: $telegram;
 
     &:hover {
       color: $white;
-      background: rgba(239, 68, 68, 0.15);
-      border-color: #ef4444;
+      background: rgba($error, 0.15);
+      border-color: $error;
     }
   }
 }

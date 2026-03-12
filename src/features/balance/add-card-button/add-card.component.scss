@@ -1,7 +1,27 @@
+@use 'shared/styles/breakpoints' as bp;
+
 .icon {
   font-size: 20px;
 }
 
 .modal {
   padding: 24px;
+}
+
+.add-card-btn__label--full {
+  display: none;
+}
+
+.add-card-btn__label--short {
+  display: inline;
+}
+
+@include bp.tablet-and-up {
+  .add-card-btn__label--short {
+    display: none;
+  }
+
+  .add-card-btn__label--full {
+    display: inline;
+  }
 }

@@ -16,14 +16,14 @@
   }
 
   // Переопределяем overflow: auto из PrimeNG — убираем скроллбар; контент растягивается, пагинация внизу
-  .p-carousel-content-container {
+  .p-carousel-content-container.p-carousel-content-container {
     height: 100%;
     min-height: 0;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: stretch;
-    overflow: hidden !important;
+    overflow: hidden;
     scrollbar-width: none;
     -ms-overflow-style: none;
 
@@ -65,7 +65,7 @@
     }
   }
 
-  .p-carousel-item-list {
+  .p-carousel-item-list.p-carousel-item-list {
     scrollbar-width: none;
     -ms-overflow-style: none;
 
@@ -104,8 +104,8 @@
     align-self: center;
   }
 
-  .p-carousel-prev-button,
-  .p-carousel-next-button {
+  .p-carousel-prev-button.p-button,
+  .p-carousel-next-button.p-button {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -118,43 +118,43 @@
     margin-top: 4px;
     padding: 0;
     overflow: hidden;
-    box-shadow: none !important;
+    box-shadow: none;
     outline: none;
 
     // Скрываем ripple/серый круг при наведении и клике
-    .p-ink {
-      display: none !important;
+    .p-ink.p-ink {
+      display: none;
     }
 
     &::before,
     &::after {
-      display: none !important;
+      display: none;
     }
 
     // Центрируем иконку
-    .p-button-icon,
-    svg {
-      margin: 0 !important;
+    .p-button-icon.p-button-icon,
+    .p-button-icon svg {
+      margin: 0;
     }
 
     @include bp.tablet-and-up {
-      border-radius: 12px !important;
-      width: 40px !important;
-      height: 40px !important;
+      border-radius: 12px;
+      width: 40px;
+      height: 40px;
     }
 
     &:hover:not(:disabled),
     &:focus,
     &:focus-visible {
-      border-color: rgba($accent, 0.5) !important;
-      color: $accent !important;
-      box-shadow: none !important;
+      border-color: rgba($accent, 0.5);
+      color: $accent;
+      box-shadow: none;
       outline: none;
     }
 
     &:disabled {
       opacity: 0.7;
-      color: rgba($gray, 0.5) !important;
+      color: rgba($gray, 0.5);
     }
   }
 
@@ -183,9 +183,9 @@
   }
 
   // Активный слайд — синяя точка
-  .p-carousel-indicator-active .p-carousel-indicator-button,
-  .p-carousel-indicator-button.p-highlight {
-    background: $accent !important;
-    border-color: $accent !important;
+  .p-carousel-indicator-active .p-carousel-indicator-button.p-carousel-indicator-button,
+  .p-carousel-indicator-button.p-highlight.p-carousel-indicator-button {
+    background: $accent;
+    border-color: $accent;
   }
 }

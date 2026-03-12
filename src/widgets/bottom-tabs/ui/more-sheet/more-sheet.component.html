@@ -3,7 +3,7 @@
   <div class="more-sheet__list">
     @for (item of items; track item.id) {
       <button type="button" class="more-sheet__item" (click)="select(item)">
-        <mat-icon class="more-sheet__icon">{{ item.icon }}</mat-icon>
+        <app-icon [material]="item.icon" [sizePx]="20" iconClass="more-sheet__icon" />
         <span>{{ item.title }}</span>
       </button>
     }

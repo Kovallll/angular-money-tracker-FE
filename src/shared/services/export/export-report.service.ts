@@ -292,12 +292,12 @@ export class ExportReportService {
 <style>
   * { box-sizing: border-box; }
   body { font-family: system-ui, sans-serif; max-width: 900px; margin: 0 auto; padding: 24px; background: #0f172a; color: #e2e8f0; line-height: 1.5; }
-  h1 { font-size: 1.75rem; margin-bottom: 8px; color: #fff; }
-  h2 { font-size: 1.25rem; margin: 24px 0 12px; color: #94a3b8; border-bottom: 1px solid #334155; padding-bottom: 6px; }
-  .meta { color: #64748b; font-size: 0.875rem; margin-bottom: 24px; }
+  h1 { font-size: 28px; margin-bottom: 8px; color: #fff; }
+  h2 { font-size: 20px; margin: 24px 0 12px; color: #94a3b8; border-bottom: 1px solid #334155; padding-bottom: 6px; }
+  .meta { color: #64748b; font-size: 14px; margin-bottom: 24px; }
   table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
   th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #334155; }
-  th { color: #94a3b8; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; }
+  th { color: #94a3b8; font-weight: 600; font-size: 12px; text-transform: uppercase; }
   tr:hover { background: rgba(255,255,255,0.04); }
   .charts-row { display: flex; flex-direction: column; gap: 16px; margin: 16px 0; }
   .chart-img { width: 100%; max-width: 100%; height: auto; max-height: 320px; object-fit: contain; border-radius: 8px; border: 1px solid #334155; }

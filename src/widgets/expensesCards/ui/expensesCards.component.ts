@@ -6,6 +6,7 @@ import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
 import { ExpensesStatisticCardComponent } from '@/entities/cards/statistics/ui/expenses/expenses-stats.component';
 import { ProgressSpinner } from 'primeng/progressspinner';
+import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 
 @Component({
   standalone: true,
@@ -17,6 +18,7 @@ import { ProgressSpinner } from 'primeng/progressspinner';
     ExpensesStatisticCardComponent,
     AppCurrencyPipe,
     ProgressSpinner,
+    AppIconComponent,
   ],
 })
 export class ExpensesCardsComponent {

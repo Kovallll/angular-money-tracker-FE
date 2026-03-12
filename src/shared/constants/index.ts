@@ -10,6 +10,7 @@ export const goalsUrl = 'goals';
 export const transactionsUrl = 'transactions';
 export const statisticsUrl = 'statistics';
 export const usersUrl = 'users';
+export const exchangeRatesUrl = 'exchange-rates';
 
 export const chartColors = { blue: '#3b82f6', red: '#ef4444' };
 

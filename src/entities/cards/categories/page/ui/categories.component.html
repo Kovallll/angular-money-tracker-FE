@@ -20,19 +20,6 @@
           @if (transactionCount() > 0) {
             <span class="card__badge">{{ transactionCount() }} transactions</span>
           }
-          @if (lastActivityDate() || averageExpense() !== null) {
-            <span class="card__meta-line">
-              @if (lastActivityDate(); as last) {
-                <span class="card__meta-line-item">Last: {{ last | date: 'd MMM' }}</span>
-              }
-              @if (lastActivityDate() && averageExpense() !== null) {
-                <span class="card__meta-line-sep">·</span>
-              }
-              @if (averageExpense() !== null) {
-                <span class="card__meta-line-item">Avg: {{ averageExpense() | appCurrency }}</span>
-              }
-            </span>
-          }
         </div>
       </div>
     </div>
@@ -51,9 +38,9 @@
         </span>
         @if (compareDelta().comparable && compareDelta().value !== 0) {
           @if (!compareDelta().negative) {
-            <i class="pi pi-arrow-down" aria-hidden="true"></i>
+            <app-icon prime="arrow-down" [sizePx]="14" ariaLabel="" />
           } @else {
-            <i class="pi pi-arrow-up" aria-hidden="true"></i>
+            <app-icon prime="arrow-up" [sizePx]="14" ariaLabel="" />
           }
         }
       </div>

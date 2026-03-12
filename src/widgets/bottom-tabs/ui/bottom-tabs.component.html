@@ -1,7 +1,7 @@
 <nav class="bottom-tabs">
   @for (item of primaryItems; track item.id) {
     <a [routerLink]="['/', item.path]" routerLinkActive="active" class="tab">
-      <mat-icon class="tab__icon">{{ item.icon }}</mat-icon>
+      <app-icon [material]="item.icon" [sizePx]="22" iconClass="tab__icon" />
       <span class="tab__label">{{ item.title }}</span>
     </a>
   }
@@ -12,7 +12,7 @@
       [class.active]="isMoreActive()"
       (click)="openMore()"
     >
-      <mat-icon class="tab__icon">more_horiz</mat-icon>
+      <app-icon material="more_horiz" [sizePx]="22" iconClass="tab__icon" />
       <span class="tab__label">More</span>
     </button>
   }

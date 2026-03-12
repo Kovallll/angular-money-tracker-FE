@@ -2,14 +2,14 @@ import { Component, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
-import { MatIconModule } from '@angular/material/icon';
 import { User } from '@/shared';
 import { UserService } from '@/shared/services/user/user.service';
 import { environment } from '@/environments/environment';
+import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 
 @Component({
   selector: 'account',
-  imports: [MatButtonModule, RouterModule, MatIconModule],
+  imports: [MatButtonModule, RouterModule, AppIconComponent],
   templateUrl: './account.html',
   styleUrls: ['./account.scss'],
 })

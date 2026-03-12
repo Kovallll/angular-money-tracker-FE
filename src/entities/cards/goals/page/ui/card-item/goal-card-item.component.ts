@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AppCurrencyPrimaryPipe } from '@/shared/pipes/app-currency-primary.pipe';
 import { CardBodyComponent, DashboardCardComponent } from '@/entities/cards/card';
 import { getGoalProgress } from '@/entities/cards/goals/services/goals.service';
+import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 
 @Component({
   selector: 'goal-card-item',
@@ -11,7 +12,13 @@ import { getGoalProgress } from '@/entities/cards/goals/services/goals.service';
     '[class.is-active]': 'isActive()',
     '[class.is-completed]': 'isCompleted()',
   },
-  imports: [CommonModule, AppCurrencyPrimaryPipe, DashboardCardComponent, CardBodyComponent],
+  imports: [
+    CommonModule,
+    AppCurrencyPrimaryPipe,
+    DashboardCardComponent,
+    CardBodyComponent,
+    AppIconComponent,
+  ],
   templateUrl: './goal-card-item.component.html',
   styleUrls: ['./goal-card-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

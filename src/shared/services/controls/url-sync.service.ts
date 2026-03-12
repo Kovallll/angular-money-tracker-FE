@@ -85,10 +85,11 @@ export class UrlSyncService {
   }
 
   getPaginationSyncData(data: any[], params: Params, pageSize: number = defaultPageSize) {
-    const page = this.getControlsPaginationData(params);
-    if (!page) return data;
+    const pageRaw = this.getControlsPaginationData(params);
+    const page = pageRaw ? +pageRaw : 1;
+    if (page < 1) return data;
     this.paginationService.setLength(data.length);
-    return data.slice((+page - 1) * pageSize, +page * pageSize);
+    return data.slice((page - 1) * pageSize, page * pageSize);
   }
 
   getSyncData(data: any[], params: Params, pageSize: number = defaultPageSize) {

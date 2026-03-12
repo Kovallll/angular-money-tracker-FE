@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
-import { MatIconModule } from '@angular/material/icon';
 import { AddCardModalComponent } from './modal/add-card-modal.component';
 import { DialogService, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
+import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 
 @Component({
   standalone: true,
@@ -10,7 +10,7 @@ import { AppButtonComponent } from '@/shared/components/app-button/app-button.co
   templateUrl: './add-card.component.html',
   styleUrls: ['./add-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatIconModule, AppButtonComponent, DynamicDialogModule],
+  imports: [AppButtonComponent, DynamicDialogModule, AppIconComponent],
   providers: [DialogService],
 })
 export class BalanceAddCardButtonComponent {

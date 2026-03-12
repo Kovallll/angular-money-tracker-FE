@@ -1,5 +1,5 @@
 import { Component, input, computed, inject } from '@angular/core';
-import { MatIconModule } from '@angular/material/icon';
+import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 
 import { MatDialog } from '@angular/material/dialog';
 import { FiltersModalComponent } from './modal/filters-modal.component';
@@ -10,7 +10,7 @@ import { FiltersService } from '../services/filters.service';
   selector: 'filters',
   templateUrl: './filters.component.html',
   styleUrls: ['./filters.component.scss'],
-  imports: [MatIconModule],
+  imports: [AppIconComponent],
   standalone: true,
 })
 export class FiltersComponent {

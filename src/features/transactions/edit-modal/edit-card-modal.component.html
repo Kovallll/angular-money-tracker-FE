@@ -43,7 +43,7 @@
           </div>
         } @else if (input.field === 'category') {
           <div class="field">
-            <label [for]="input.name" class="label">{{ input.placeholder }}</label>
+            <label [for]="input.name" class="label">{{ categoryFieldLabel }}</label>
             <p-select
               class="select"
               [options]="categories.data()"
@@ -53,6 +53,7 @@
               [name]="input.name"
               [ngModel]="card()[input.field]"
               (ngModelChange)="updateCardField($event)"
+              [loading]="categorizerLoading"
               #model="ngModel"
               [invalid]="model.invalid && (model.touched || cardForm.submitted)"
               required
@@ -69,6 +70,25 @@
                 </div>
               </ng-template>
             </p-select>
+            @if (categorizerLoading) {
+              <div class="form-field-hint categorizer-loading">
+                <span class="hint-text">Detecting category…</span>
+              </div>
+            }
+            @if (suggestedAlternatives.length && !categorizerLoading) {
+              <div class="category-tags">
+                @for (alt of suggestedAlternatives; track alt.title) {
+                  <button
+                    type="button"
+                    class="category-tag"
+                    [class.selected]="card()[input.field] === alt.title"
+                    (click)="selectSuggestedCategoryTitle(alt.title)"
+                  >
+                    {{ alt.title }}
+                  </button>
+                }
+              </div>
+            }
             <div class="error-slot">
               @if (model.invalid && (model.touched || cardForm.submitted)) {
                 <small class="error">{{ input.placeholder }} is required.</small>
@@ -85,7 +105,8 @@
               [id]="input.name"
               [placeholder]="input.placeholder"
               [name]="input.name"
-              [(ngModel)]="card()[input.field]"
+              [ngModel]="card()[input.field]"
+              (ngModelChange)="setCardFieldAndNotifyTitle(input.field, $event)"
               #model="ngModel"
               [invalid]="model.invalid && (model.touched || cardForm.submitted)"
               required

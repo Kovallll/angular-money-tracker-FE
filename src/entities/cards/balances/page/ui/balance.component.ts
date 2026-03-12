@@ -1,20 +1,110 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { DashboardCardComponent, CardBodyComponent } from '../../../card';
 import { BalanceCardItemComponent } from './card-item/balance-card-item.component';
-import { BalancesHttpService } from '@/shared';
+import { BalancesHttpService, UrlSyncedComponent } from '@/shared';
 import { ProgressSpinner } from 'primeng/progressspinner';
+import { BalanceCard } from '@/shared/types';
+import { ControlsComponent } from '@/widgets/controls/ui/controls.component';
+import { ControlsProps } from '@/widgets/controls/lib';
+import { PaginationComponent } from '@/entities/pagination/ui/pagination.component';
+import { SortersField } from '@/entities/sorters/lib';
+import { FiltersField } from '@/entities/filters/lib';
+
+const CARDS_PAGE_SIZE = 6;
+const CARD_CONTROLS_THRESHOLD = 6;
+
+type CardWithSearch = BalanceCard & { searchText: string };
+
+const balanceSortersFields: SortersField[] = [
+  { field: 'cardName', name: 'Name' },
+  { field: 'bankName', name: 'Bank' },
+  { field: 'cardBalance', name: 'Balance' },
+  { field: 'cardType', name: 'Type' },
+];
+
+const balanceFilterFields: FiltersField[] = [
+  { field: 'cardType', name: 'Type' },
+  { field: 'currencyCode', name: 'Currency' },
+];
+
+const balanceSearchProps = {
+  searchField: 'searchText',
+  placeholder: 'Search by name, bank, number',
+};
 
 @Component({
   selector: 'balance-card',
   standalone: true,
-  imports: [DashboardCardComponent, CardBodyComponent, BalanceCardItemComponent, ProgressSpinner],
+  imports: [
+    DashboardCardComponent,
+    CardBodyComponent,
+    BalanceCardItemComponent,
+    ProgressSpinner,
+    ControlsComponent,
+    PaginationComponent,
+  ],
   templateUrl: './balance.component.html',
-  styleUrl: `./balance.component.scss`,
+  styleUrl: './balance.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BalanceCardComponent {
+export class BalanceCardComponent extends UrlSyncedComponent<CardWithSearch> {
   private balansesHttpService = inject(BalancesHttpService);
   title = 'Balances';
   cards = this.balansesHttpService.cards;
   isLoading = this.balansesHttpService.isLoading;
+
+  /** Full list with searchText for URL sync (search/filter/sort/paginate). */
+  override allData = computed(() => {
+    return this.cards().map((c) => ({
+      ...c,
+      searchText: `${c.cardName ?? ''} ${c.bankName ?? ''} ${c.cardNumber ?? ''}`.toLowerCase(),
+    }));
+  });
+
+  /** Shown list: synced result when > 6 cards. */
+  displayedCards = signal<BalanceCard[]>([]);
+
+  override get isEmpty() {
+    return (this.displayedCards().length || this.cards().length) === 0;
+  }
+
+  showControls = computed(() => this.cards().length > CARD_CONTROLS_THRESHOLD);
+
+  controlsProps = computed<ControlsProps>(() => ({
+    filterProps: {
+      data: this.allData(),
+      filterFields: balanceFilterFields,
+    },
+    sortersProps: {
+      sortersFields: balanceSortersFields,
+    },
+    searchProps: balanceSearchProps,
+  }));
+
+  constructor() {
+    super();
+    this.initPageSize(CARDS_PAGE_SIZE);
+    effect(() => {
+      this.cards();
+      this.sync();
+    });
+  }
+
+  override setUpdatedData(updatedData: CardWithSearch[]): void {
+    this.displayedCards.set(updatedData);
+  }
+
+  /** Cards to render: when ≤ 6 show all, otherwise show paginated result. */
+  cardsToShow = computed(() => {
+    const list = this.cards();
+    if (list.length <= CARD_CONTROLS_THRESHOLD) return list;
+    return this.displayedCards();
+  });
 }

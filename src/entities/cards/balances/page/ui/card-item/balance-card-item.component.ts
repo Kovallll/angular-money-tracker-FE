@@ -1,10 +1,12 @@
 import { BalanceCard, RoutePaths } from '@/shared';
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { AssetPathPipe } from '@/shared/pipes/asset-path.pipe';
 import { AppCurrencyPipe } from '@/shared/pipes/app-currency.pipe';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
+import { BalancesHttpService } from '@/shared/services/models/balances.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'balance-card-item',
@@ -19,6 +21,9 @@ export class BalanceCardItemComponent {
   card = input.required<BalanceCard>();
   readonly currencyService = inject(CurrencyService);
   private exchangeRates = inject(ExchangeRatesService);
+  private balancesHttp = inject(BalancesHttpService);
+  private messageService = inject(MessageService);
+  settingPrimary = signal(false);
 
   /** Card balance in app primary currency (main line). */
   balancePrimary = computed(() => {
@@ -39,5 +44,33 @@ export class BalanceCardItemComponent {
 
   handleCheckDetails() {
     this.router.navigate([RoutePaths.BALANCE_DETAILS, this.card().id]);
+  }
+
+  setAsPrimary($event: Event) {
+    $event.stopPropagation();
+    if (this.card().isPrimary || this.settingPrimary()) return;
+    this.settingPrimary.set(true);
+    this.balancesHttp.setPrimaryCard(this.card().id).subscribe({
+      next: () => {
+        this.settingPrimary.set(false);
+        this.messageService.add({
+          key: 'toast',
+          severity: 'success',
+          summary: 'Primary card',
+          detail: 'This card is now used for automatic transactions.',
+          life: 3000,
+        });
+      },
+      error: () => {
+        this.settingPrimary.set(false);
+        this.messageService.add({
+          key: 'toast',
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Could not set primary card.',
+          life: 3000,
+        });
+      },
+    });
   }
 }

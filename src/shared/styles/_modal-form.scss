@@ -59,12 +59,12 @@
     font-size: 13px;
     font-weight: 600;
     letter-spacing: 0.5px;
-    color: rgba(255, 255, 255, 0.85);
+    color: $surface-85;
   }
 
   .optional {
     font-weight: 400;
-    color: rgba(255, 255, 255, 0.5);
+    color: $surface-50;
   }
 }
 
@@ -82,7 +82,7 @@
   .error,
   small.error,
   p-message {
-    color: #f87171;
+    color: $error-light;
     font-size: 13px;
     font-weight: 500;
     margin: 0;
@@ -92,36 +92,37 @@
   width: 100%;
 }
 
-// Инпуты и селекты внутри модальной формы
-.app-modal-form .input,
-.app-modal-form .field input.p-inputtext,
+.app-modal-form .form-field .p-inputwrapper .p-inputtext,
 .app-modal-form .form-field input.p-inputtext,
+.app-modal-form .field .p-inputwrapper .p-inputtext,
+.app-modal-form .field input.p-inputtext,
+.app-modal-form .input.p-inputtext,
 .app-modal-form app-modal-field input.p-inputtext,
 .app-modal-form ::ng-deep .p-inputtext,
 .app-modal-form ::ng-deep .p-inputnumber-input {
   width: 100%;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.06) !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  padding: 10px 14px !important;
-  font-size: 15px !important;
+  background: $surface-06;
+  border: 1px solid $surface-12;
+  padding: 10px 14px;
+  font-size: 15px;
   transition:
     border-color 0.2s,
     box-shadow 0.2s;
 
   &::placeholder {
-    color: rgba(255, 255, 255, 0.4);
+    color: $surface-40;
   }
 
   &:hover:not(:disabled) {
-    border-color: rgba(255, 255, 255, 0.2) !important;
+    border-color: $surface-20;
   }
 
   &:focus,
   &.p-focus {
     outline: none;
-    border-color: $accent !important;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+    border-color: $accent;
+    box-shadow: 0 0 0 2px rgba($accent, 0.25);
   }
 }
 
@@ -132,24 +133,24 @@
 .app-modal-form .form-field ::ng-deep .p-select {
   width: 100%;
 
-  .p-select-label,
-  .p-dropdown {
+  .p-select-label.p-dropdown,
+  .p-dropdown.p-dropdown {
     border-radius: 10px;
-    background: rgba(255, 255, 255, 0.06) !important;
-    border: 1px solid rgba(255, 255, 255, 0.12) !important;
-    padding: 10px 14px !important;
+    background: $surface-06;
+    border: 1px solid $surface-12;
+    padding: 10px 14px;
     transition:
       border-color 0.2s,
       box-shadow 0.2s;
   }
 
   .p-dropdown:hover:not(.p-disabled) .p-dropdown-label {
-    border-color: rgba(255, 255, 255, 0.2);
+    border-color: $surface-20;
   }
 
-  .p-dropdown.p-focus {
-    border-color: $accent !important;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+  .p-dropdown.p-focus.p-dropdown {
+    border-color: $accent;
+    box-shadow: 0 0 0 2px rgba($accent, 0.25);
   }
 }
 
@@ -191,18 +192,18 @@
     max-width: 100%;
   }
 
-  ::ng-deep .p-inputnumber-input,
-  ::ng-deep .p-inputtext {
+  ::ng-deep .p-inputnumber-input.p-inputtext,
+  ::ng-deep .p-inputtext.p-inputtext {
     border-radius: 10px;
-    background: rgba(255, 255, 255, 0.06) !important;
-    border: 1px solid rgba(255, 255, 255, 0.12) !important;
-    padding: 10px 14px !important;
+    background: $surface-06;
+    border: 1px solid $surface-12;
+    padding: 10px 14px;
   }
 
-  ::ng-deep .p-select .p-dropdown {
+  ::ng-deep .p-select .p-dropdown.p-dropdown {
     border-radius: 10px;
-    background: rgba(255, 255, 255, 0.06) !important;
-    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    background: $surface-06;
+    border: 1px solid $surface-12;
   }
 }
 
@@ -214,47 +215,49 @@
   align-items: center;
   gap: 12px;
   padding-top: 16px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid $surface-08;
 }
 
 // Кнопка отмены
-.app-modal-form .cancel-btn,
+.app-modal-form .actions .cancel-btn,
+.app-modal-form .form-submit .cancel-btn,
 .app-modal-form button[pButton][severity='secondary'] {
-  color: rgba(255, 255, 255, 0.9) !important;
-  border: 1px solid rgba(255, 255, 255, 0.25) !important;
-  background: rgba(255, 255, 255, 0.08) !important;
-  border-radius: 10px !important;
-  padding: 10px 20px !important;
-  font-weight: 600 !important;
+  color: $surface-90;
+  border: 1px solid $surface-25;
+  background: $surface-08;
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-weight: 600;
   transition:
     background 0.2s,
     border-color 0.2s;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.14) !important;
-    border-color: rgba(255, 255, 255, 0.4) !important;
+    background: $surface-15;
+    border-color: $surface-40;
   }
 }
 
 // Основная кнопка (Submit / Save / Add)
-.app-modal-form .submit-btn,
+.app-modal-form .actions .submit-btn,
+.app-modal-form .form-submit .submit-btn,
 .app-modal-form button[pButton][severity='primary'],
 .app-modal-form button[pButton][type='submit']:not(.cancel-btn) {
-  background: $accent !important;
-  color: $white !important;
-  border-radius: 10px !important;
-  padding: 10px 24px !important;
-  font-weight: 600 !important;
-  border: none !important;
-  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.35);
+  background: $accent;
+  color: $white;
+  border-radius: 10px;
+  padding: 10px 24px;
+  font-weight: 600;
+  border: none;
+  box-shadow: 0 2px 8px rgba($accent, 0.35);
   transition:
     background 0.2s,
     box-shadow 0.2s,
     transform 0.1s;
 
   &:hover:not(:disabled) {
-    background: #2563eb !important;
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.45);
+    background: map-get($my-accent, 600);
+    box-shadow: 0 4px 12px rgba($accent, 0.45);
   }
 
   &:active:not(:disabled) {
@@ -276,11 +279,12 @@
   max-width: 100%;
 }
 
-.app-modal-form ::ng-deep .p-datepicker.p-inputwrapper,
-.app-modal-form ::ng-deep .field .p-datepicker,
-.app-modal-form ::ng-deep .form-field .p-datepicker {
-  width: 100% !important;
-  max-width: 100% !important;
+.app-modal-form .field:has(p-datepicker) ::ng-deep .p-datepicker.p-inputwrapper,
+.app-modal-form .form-field:has(p-datepicker) ::ng-deep .p-datepicker.p-inputwrapper,
+.app-modal-form ::ng-deep .field .p-datepicker.p-inputwrapper,
+.app-modal-form ::ng-deep .form-field .p-datepicker.p-inputwrapper {
+  width: 100%;
+  max-width: 100%;
   min-width: 0;
   box-sizing: border-box;
 }
@@ -291,11 +295,11 @@
   box-sizing: border-box;
 }
 
-.app-modal-form ::ng-deep .p-datepicker-trigger {
+.app-modal-form ::ng-deep .p-datepicker .p-datepicker-trigger {
   border-radius: 0 10px 10px 0;
-  background: rgba(255, 255, 255, 0.08) !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  color: rgba(255, 255, 255, 0.8);
+  background: $surface-08;
+  border: 1px solid $surface-12;
+  color: $surface-90;
   flex-shrink: 0;
 }
 

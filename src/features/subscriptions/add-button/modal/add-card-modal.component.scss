@@ -9,14 +9,12 @@
   margin: 0;
 }
 
-:host ::ng-deep .field--has-error {
-  .p-datepicker .p-inputtext,
-  .p-select .p-select-label,
-  .p-inputnumber-input,
-  input.p-inputtext {
-    border-color: #f87171 !important;
-    background: rgba(239, 68, 68, 0.08) !important;
-  }
+:host ::ng-deep .field--has-error .p-datepicker .p-inputtext.p-inputtext,
+:host ::ng-deep .field--has-error .p-select .p-select-label,
+:host ::ng-deep .field--has-error .p-inputnumber-input.p-inputnumber-input,
+:host ::ng-deep .field--has-error input.p-inputtext {
+  border-color: #f87171;
+  background: rgba(239, 68, 68, 0.08);
 }
 
 :host .app-modal-form .error-slot {

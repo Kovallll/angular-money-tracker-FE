@@ -31,7 +31,7 @@
   font-size: 24px;
   font-weight: 700;
   margin: 0 0 4px 0;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.3px;
 
   @include bp.tablet-and-up {
     font-size: 28px;
@@ -78,8 +78,8 @@
   color: $gray;
 }
 
-.empty-state {
-  gap: 16px !important;
+:host .empty-state.empty-state {
+  gap: 16px;
 
   .empty-title {
     font-size: 18px;
@@ -217,7 +217,7 @@
   color: $gray;
   margin: 0 0 16px 0;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 1px;
 
   @include bp.tablet-and-up {
     margin-bottom: 20px;

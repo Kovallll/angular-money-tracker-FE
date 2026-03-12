@@ -15,6 +15,7 @@ import { CategoryAnaliticsComponent } from '@/widgets/categoryAnalitics/ui/anali
 import { ControlsComponent } from '@/widgets/controls/ui/controls.component';
 import { ControlsProps } from '@/widgets/controls/lib';
 import { PaginationComponent } from '@/entities/pagination/ui/pagination.component';
+import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 
 const CATEGORY_PAGE_SIZE_WIDE = 9;
 const CATEGORY_PAGE_SIZE_TWO_COLUMNS = 8;
@@ -55,6 +56,7 @@ function sortCategoriesByFirstActivity(list: CategoryItem[]): CategoryItem[] {
     ProgressSpinnerModule,
     ControlsComponent,
     PaginationComponent,
+    AppIconComponent,
   ],
   standalone: true,
 })

@@ -9,7 +9,7 @@
           (click)="closeRequest.emit()"
           aria-label="Close"
         >
-          <i class="pi pi-times"></i>
+          <app-icon prime="times" [sizePx]="16" />
         </button>
       }
     </header>
@@ -21,14 +21,14 @@
     <footer class="app-modal-shell__footer">
       @if (showDelete()) {
         <app-button appearance="danger" size="md" (buttonClick)="deleteRequest.emit()">
-          <i class="pi pi-trash"></i>
+          <app-icon prime="trash" [sizePx]="16" />
           {{ deleteLabel() }}
         </app-button>
       }
       <span class="app-modal-shell__spacer"></span>
       @if (showCancel()) {
         <app-button appearance="secondary" size="md" (buttonClick)="cancelRequest.emit()">
-          <i class="pi pi-times"></i>
+          <app-icon prime="times" [sizePx]="16" />
           {{ cancelLabel() }}
         </app-button>
       }
@@ -40,7 +40,7 @@
           [loading]="saveLoading()"
           (buttonClick)="saveRequest.emit()"
         >
-          <i class="pi pi-check"></i>
+          <app-icon prime="check" [sizePx]="16" />
           {{ saveLabel() }}
         </app-button>
       }

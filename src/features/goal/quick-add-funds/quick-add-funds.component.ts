@@ -20,6 +20,7 @@ import { ExpensesHttpService } from '@/shared/services/models/expenses.service';
 import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
 import { GOALS_CATEGORY_NAME } from '@/shared/constants';
 import { MessageService } from 'primeng/api';
+import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 
 @Component({
   standalone: true,
@@ -27,7 +28,7 @@ import { MessageService } from 'primeng/api';
   templateUrl: './quick-add-funds.component.html',
   styleUrls: ['./quick-add-funds.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, MatIconModule],
+  imports: [FormsModule, AppIconComponent],
 })
 export class GoalQuickAddFundsComponent {
   private goalsService = inject(GoalsService);
@@ -87,7 +88,8 @@ export class GoalQuickAddFundsComponent {
   private async createGoalContributionTransaction(goal: GoalItem, amount: number): Promise<void> {
     try {
       const cards = this.balancesHttpService.cards();
-      const cardId = cards[0]?.id;
+      const primaryCard = cards.find((c) => c.isPrimary) ?? cards[0];
+      const cardId = primaryCard?.id;
       let categoryId: string | undefined =
         goal.categoryId != null && goal.categoryId !== '' ? String(goal.categoryId) : undefined;
       if (categoryId == null) {
@@ -126,6 +128,7 @@ export class GoalQuickAddFundsComponent {
         date: dateStr,
         title: `Goal: ${goal.title ?? 'Contribution'}`,
       });
+      this.balancesHttpService.refresh();
       this.transactionsHttpService.loadTransactions();
       this.categoriesHttpService.refreshCategories();
       this.expensesHttpService.refreshExpenses();

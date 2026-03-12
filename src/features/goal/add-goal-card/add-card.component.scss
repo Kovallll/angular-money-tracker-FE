@@ -1,1 +1,20 @@
 @use 'theme' as *;
+@use 'shared/styles/breakpoints' as bp;
+
+.add-goal-btn__label--full {
+  display: none;
+}
+
+.add-goal-btn__label--short {
+  display: inline;
+}
+
+@include bp.tablet-and-up {
+  .add-goal-btn__label--short {
+    display: none;
+  }
+
+  .add-goal-btn__label--full {
+    display: inline;
+  }
+}

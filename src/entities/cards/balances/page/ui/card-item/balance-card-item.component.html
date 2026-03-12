@@ -1,6 +1,13 @@
 <article class="card" (click)="handleCheckDetails()">
   <div class="card__header">
-    <span class="card__badge">{{ card().cardType }}</span>
+    <div class="card__badges">
+      <span class="card__badge">{{ card().cardType }}</span>
+      @if (card().isPrimary) {
+        <span class="card__badge card__badge--primary" title="Used for automatic transactions"
+          >Default</span
+        >
+      }
+    </div>
     <div class="card__brand">
       @if (card().cardName === 'Visa') {
         <svg
@@ -48,6 +55,17 @@
     }}</span>
   </div>
   <footer class="card__footer">
+    @if (!card().isPrimary) {
+      <button
+        type="button"
+        class="card__action card__action--secondary"
+        (click)="setAsPrimary($event)"
+        [disabled]="settingPrimary()"
+        title="Use this card for subscriptions and automatic transactions"
+      >
+        {{ settingPrimary() ? 'Setting…' : 'Set as default' }}
+      </button>
+    }
     <button
       type="button"
       class="card__action"

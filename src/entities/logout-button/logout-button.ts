@@ -1,14 +1,14 @@
 import { Component, inject } from '@angular/core';
 
 import { Router, RouterModule } from '@angular/router';
-import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '@/shared/services/auth/auth.service';
 import { ConfirmationService } from 'primeng/api';
 import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
+import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 
 @Component({
   selector: 'logout-button',
-  imports: [AppButtonComponent, RouterModule, MatIconModule],
+  imports: [AppButtonComponent, RouterModule, AppIconComponent],
   templateUrl: './logout-button.html',
   styleUrls: ['./logout-button.scss'],
 })

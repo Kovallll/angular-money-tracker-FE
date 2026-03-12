@@ -10,6 +10,7 @@ import {
   type ExportData,
 } from '@/shared/services/export/export-report.service';
 import { MessageService } from 'primeng/api';
+import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 
 const CHART_IDS = ['budget', 'expenses', 'goals', 'category'] as const;
 const CHART_RENDER_DELAY_MS = 1200;
@@ -27,7 +28,7 @@ type ExportFormat = 'csv' | 'pdf' | 'excel' | 'json' | 'html';
   templateUrl: './export-report.component.html',
   styleUrls: ['./export-report.component.scss'],
   standalone: true,
-  imports: [ButtonModule, ProgressSpinnerModule, TieredMenuModule],
+  imports: [ButtonModule, ProgressSpinnerModule, TieredMenuModule, AppIconComponent],
 })
 export class ExportReportComponent {
   @ViewChild(TieredMenu) menu!: TieredMenu;

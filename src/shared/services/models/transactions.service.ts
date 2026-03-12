@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { delay, lastValueFrom, tap } from 'rxjs';
 import { AuthService } from '@/shared/services/auth/auth.service';
+import { BalancesHttpService } from './balances.service';
 import { StatisticsRefreshService } from './statistics-refresh.service';
 
 @Injectable({
@@ -13,6 +14,7 @@ export class TransactionsHttpService {
   private http = inject(HttpClient);
   private auth = inject(AuthService);
   private statisticsRefreshService = inject(StatisticsRefreshService);
+  private balancesHttpService = inject(BalancesHttpService);
 
   readonly transactions = signal<Transaction[]>([]);
 
@@ -76,6 +78,7 @@ export class TransactionsHttpService {
       .delete(`${transactionsUrl}/${id}`)
       .pipe(
         tap(() => {
+          this.balancesHttpService.refresh();
           this.loadTransactions();
           this.statisticsRefreshService.refresh();
         }),

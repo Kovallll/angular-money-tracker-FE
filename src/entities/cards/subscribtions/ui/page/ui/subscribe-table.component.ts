@@ -29,6 +29,7 @@ import { SubscriptionAddButtonComponent } from '@/features/subscriptions/add-but
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { firstValueFrom } from 'rxjs';
 import dayjs from 'dayjs';
+import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 
 @Component({
   selector: 'subscribe-table',
@@ -45,6 +46,7 @@ import dayjs from 'dayjs';
     ContextMenuComponent,
     SubscriptionAddButtonComponent,
     ProgressSpinner,
+    AppIconComponent,
   ],
   standalone: true,
   providers: [DialogService],
@@ -224,6 +226,8 @@ export class SubscribeTableComponent extends UrlSyncedComponent<SubscribeItem> {
           );
 
           const cards = this.balancesHttpService.cards();
+          const primaryCard = cards.find((c) => c.isPrimary) ?? cards[0];
+          const cardId = primaryCard?.id;
           const categories = await this.categoriesHttpService.getCategories();
           const categoryId =
             subscribe.categoryId ||
@@ -231,7 +235,6 @@ export class SubscribeTableComponent extends UrlSyncedComponent<SubscribeItem> {
               (c) =>
                 String(c.title ?? '').toLowerCase() === SUBSCRIPTIONS_CATEGORY_NAME.toLowerCase(),
             )?.id;
-          const cardId = cards[0]?.id;
           if (!categoryId || !cardId) {
             this.messageService.add({
               key: 'toast',
@@ -254,6 +257,7 @@ export class SubscribeTableComponent extends UrlSyncedComponent<SubscribeItem> {
             date: paidDateStr,
             title: subscribe.subscribeName,
           });
+          this.balancesHttpService.refresh();
           this.subscribeHttpService.loadAll();
           this.categoriesHttpService.refreshCategories();
           this.transactionsHttpService.loadTransactions();

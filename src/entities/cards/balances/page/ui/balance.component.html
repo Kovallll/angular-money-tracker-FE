@@ -1,11 +1,14 @@
+@if (showControls()) {
+  <controls [controlsProps]="controlsProps()" />
+}
 <div class="container">
   @if (isLoading()) {
     <div class="cards-loading">
       <p-progress-spinner ariaLabel="Loading" strokeWidth="3" />
       <p class="cards-loading__text">Loading balances…</p>
     </div>
-  } @else if (cards().length) {
-    @for (card of cards(); track card.id) {
+  } @else if (cardsToShow().length) {
+    @for (card of cardsToShow(); track card.id) {
       <dashboard-card class="card">
         <card-body class="body">
           <balance-card-item [card]="card" />
@@ -15,8 +18,18 @@
   } @else {
     <div class="data-placeholder data-placeholder--page">
       <span class="data-placeholder__icon" aria-hidden="true">💳</span>
-      <p>No cards</p>
-      <p>Add a card using the "Add Card" button</p>
+      @if (showControls() && cards().length) {
+        <p>No cards match your search or filters</p>
+        <p>Try changing the search or filter criteria</p>
+      } @else {
+        <p>No cards</p>
+        <p>Add a card using the "Add Card" button</p>
+      }
     </div>
   }
 </div>
+@if (showControls() && cards().length) {
+  <footer class="page-footer">
+    <pagination [pageSize]="6" />
+  </footer>
+}

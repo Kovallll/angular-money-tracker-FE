@@ -41,7 +41,7 @@
   font-weight: 700;
   margin: 0 0 6px 0;
   word-break: break-word;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.3px;
   color: $white;
 
   @include bp.tablet-and-up {
@@ -188,7 +188,7 @@
   font-size: 11px;
   color: $gray;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.6px;
 
   @include bp.tablet-and-up {
     font-size: 13px;

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AddCategoryModalComponent } from './modal/add-card-modal.component';
+import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 
 @Component({
   standalone: true,
@@ -9,7 +10,7 @@ import { AddCategoryModalComponent } from './modal/add-card-modal.component';
   templateUrl: './add-card.component.html',
   styleUrls: ['./add-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [AppButtonComponent],
+  imports: [AppButtonComponent, AppIconComponent],
   providers: [DialogService],
 })
 export class GategoryAddButtonComponent {

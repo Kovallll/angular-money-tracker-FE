@@ -12,6 +12,44 @@ $white: #ffffff;
 $light-primary: #1e2535;
 $balance-card-color: #178075;
 
+// Текст и бренд
+$text-muted: #6b7280;
+$telegram: #2aabee;
+$error-light: #f87171;
+
+// Оверлеи (белый с альфой) — границы и фоны поверх тёмного
+$surface-04: rgba($white, 0.04);
+$surface-06: rgba($white, 0.06);
+$surface-08: rgba($white, 0.08);
+$surface-10: rgba($white, 0.1);
+$surface-12: rgba($white, 0.12);
+$surface-15: rgba($white, 0.15);
+$surface-18: rgba($white, 0.18);
+$surface-20: rgba($white, 0.2);
+$surface-25: rgba($white, 0.25);
+$surface-35: rgba($white, 0.35);
+$surface-40: rgba($white, 0.4);
+$surface-50: rgba($white, 0.5);
+$surface-60: rgba($white, 0.6);
+$surface-70: rgba($white, 0.7);
+$surface-75: rgba($white, 0.75);
+$surface-85: rgba($white, 0.85);
+$surface-90: rgba($white, 0.9);
+$surface-95: rgba($white, 0.95);
+
+// Тени (чёрный с альфой)
+$shadow-08: rgba(0, 0, 0, 0.08);
+$shadow-12: rgba(0, 0, 0, 0.12);
+$shadow-15: rgba(0, 0, 0, 0.15);
+$shadow-18: rgba(0, 0, 0, 0.18);
+$shadow-20: rgba(0, 0, 0, 0.2);
+$shadow-25: rgba(0, 0, 0, 0.25);
+$shadow-28: rgba(0, 0, 0, 0.28);
+$shadow-35: rgba(0, 0, 0, 0.35);
+$shadow-40: rgba(0, 0, 0, 0.4);
+$shadow-50: rgba(0, 0, 0, 0.5);
+$shadow-55: rgba(0, 0, 0, 0.55);
+
 $my-primary: (
   50: #f1f5f9,
   100: #e2e8f0,

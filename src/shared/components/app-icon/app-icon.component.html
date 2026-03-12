@@ -1,0 +1,25 @@
+@if (mode() === 'emoji') {
+  <span
+    [class]="emojiClassAttr()"
+    [attr.aria-hidden]="ariaHidden() ? 'true' : null"
+    [attr.aria-label]="ariaHidden() ? null : (ariaLabel() ?? null)"
+    role="img"
+  >
+    {{ emoji() }}
+  </span>
+} @else if (mode() === 'prime') {
+  <i
+    [class]="primeClassAttr()"
+    [attr.aria-hidden]="ariaHidden() ? 'true' : null"
+    [attr.aria-label]="ariaHidden() ? null : (ariaLabel() ?? null)"
+    role="img"
+  ></i>
+} @else {
+  <mat-icon
+    [fontIcon]="materialName()"
+    [class]="materialClassAttr()"
+    [attr.aria-hidden]="ariaHidden() ? 'true' : null"
+    [attr.aria-label]="ariaHidden() ? null : (ariaLabel() ?? null)"
+    role="img"
+  ></mat-icon>
+}

@@ -1,9 +1,9 @@
 import { BalancesHttpService } from '@/shared';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 
 @Component({
   standalone: true,
@@ -11,7 +11,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
   templateUrl: './remove-card.component.html',
   styleUrls: ['./remove-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatIconModule, AppButtonComponent],
+  imports: [AppButtonComponent, AppIconComponent],
 })
 export class BalanceRemoveCardButtonComponent {
   private balancesHttpService = inject(BalancesHttpService);

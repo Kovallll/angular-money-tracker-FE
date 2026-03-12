@@ -1,7 +1,26 @@
 @use 'theme' as *;
+@use 'shared/styles/breakpoints' as bp;
 
 :host {
   display: inline-block;
+}
+
+.edit-card-btn__label--full {
+  display: none;
+}
+
+.edit-card-btn__label--short {
+  display: inline;
+}
+
+@include bp.tablet-and-up {
+  .edit-card-btn__label--short {
+    display: none;
+  }
+
+  .edit-card-btn__label--full {
+    display: inline;
+  }
 }
 
 .icon {
@@ -12,7 +31,7 @@
   vertical-align: middle;
 }
 
-.button {
+:host .button.button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -20,9 +39,9 @@
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.5px;
-  color: $white !important;
-  background: $accent !important;
-  border: 1px solid rgba($accent, 0.9) !important;
+  color: $white;
+  background: $accent;
+  border: 1px solid rgba($accent, 0.9);
   border-radius: 10px;
   cursor: pointer;
   transition:
@@ -31,9 +50,9 @@
     transform 0.15s ease;
 
   &:hover {
-    background: lighten($accent, 6%) !important;
-    border-color: lighten($accent, 6%) !important;
-    color: $white !important;
+    background: lighten($accent, 6%);
+    border-color: lighten($accent, 6%);
+    color: $white;
   }
 
   &:active {

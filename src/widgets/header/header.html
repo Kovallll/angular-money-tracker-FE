@@ -3,7 +3,7 @@
     <div class="user-hello">
       <h2 class="hello-text">Hello {{user?.name}}</h2>
       <div class="date">
-        <mat-icon>calendar_today</mat-icon>
+        <app-icon material="calendar_today" [sizePx]="16" />
         <p class="date-text">{{date}}</p>
       </div>
     </div>
@@ -17,7 +17,9 @@
         (error)="avatarLoadError = true"
       />
       } @else {
-      <span class="avatar-placeholder pi pi-user"></span>
+      <span class="avatar-placeholder" aria-hidden="true">
+        <app-icon prime="user" [sizePx]="18" />
+      </span>
       }
       <span class="user-name">{{ user.name }}</span>
       }

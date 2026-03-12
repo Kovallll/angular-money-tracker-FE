@@ -9,7 +9,7 @@
             (click)="handleClickPrev()"
             aria-label="Previous period"
           >
-            <mat-icon>keyboard_arrow_left</mat-icon>
+            <app-icon material="keyboard_arrow_left" [sizePx]="20" />
           </button>
           <select-component
             [options]="chartViewChoices()"
@@ -17,7 +17,7 @@
             (valueChange)="onValueChange($event)"
           />
           <button class="toggle" type="button" (click)="handleClickNext()" aria-label="Next period">
-            <mat-icon>keyboard_arrow_right</mat-icon>
+            <app-icon material="keyboard_arrow_right" [sizePx]="20" />
           </button>
         </div>
       </div>

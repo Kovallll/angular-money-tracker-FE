@@ -49,7 +49,7 @@
                     [attr.aria-label]="'Mark ' + subscribe.subscribeName + ' as paid'"
                     title="Mark as paid"
                   >
-                    <i class="pi pi-check" aria-hidden="true"></i>
+                    <app-icon prime="check" [sizePx]="14" />
                     <span>Mark paid</span>
                   </button>
                   <div class="card__amount-row">
@@ -75,7 +75,7 @@
     } @else {
       <div class="empty-state">
         <div class="empty-state__icon" aria-hidden="true">
-          <i class="pi pi-credit-card"></i>
+          <app-icon prime="credit-card" [sizePx]="22" />
         </div>
         <h3 class="empty-state__title">No subscriptions yet</h3>
         <p class="empty-state__text">Add your first subscription to track recurring payments</p>

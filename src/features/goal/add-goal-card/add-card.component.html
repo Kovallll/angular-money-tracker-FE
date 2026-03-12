@@ -1,6 +1,13 @@
-<app-button appearance="primary" size="md" (buttonClick)="openDialog()" ariaLabel="Add Goal">
-  <i class="pi pi-plus"></i>
-  Add Goal
+<app-button
+  appearance="primary"
+  size="md"
+  (buttonClick)="openDialog()"
+  ariaLabel="Add Goal"
+  class="add-goal-btn"
+>
+  <app-icon prime="plus" [sizePx]="16" />
+  <span class="add-goal-btn__label add-goal-btn__label--short">Add</span>
+  <span class="add-goal-btn__label add-goal-btn__label--full">Add Goal</span>
 </app-button>
 
 <p-dialog

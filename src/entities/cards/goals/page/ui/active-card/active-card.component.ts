@@ -7,6 +7,7 @@ import { CardBodyComponent, DashboardCardComponent } from '@/entities/cards/card
 import { GoalAdjustCardButtonComponent } from '@/features/goal/adjust-goal-card/adjust-card.component';
 import { GoalQuickAddFundsComponent } from '@/features/goal/quick-add-funds/quick-add-funds.component';
 import { ChartOptions } from 'chart.js';
+import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 
 @Component({
   selector: 'goal-active-card',
@@ -21,6 +22,7 @@ import { ChartOptions } from 'chart.js';
     CardBodyComponent,
     GoalAdjustCardButtonComponent,
     GoalQuickAddFundsComponent,
+    AppIconComponent,
   ],
   templateUrl: './active-card.component.html',
   styleUrls: ['./active-card.component.scss'],

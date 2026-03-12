@@ -1,6 +1,6 @@
 <div class="card">
   <div class="left-side">
-    <p>{{ card().cardName }}</p>
+    <p>{{ card().cardName }}{{ card().isPrimary ? ' · Default' : '' }}</p>
     <p>{{ card().cardNumber }}</p>
   </div>
   <div class="right-side">

@@ -77,22 +77,22 @@ th.mat-mdc-header-cell {
 
 // Мобильный вид: карточки вместо таблицы (ячейки вертикально)
 @include bp.mobile {
-  :host ::ng-deep .table-wrap .mat-mdc-table,
+  :host ::ng-deep .table-wrap .mat-mdc-table.mat-mdc-table,
   :host ::ng-deep .table-wrap table {
-    display: block !important;
+    display: block;
   }
 
   :host ::ng-deep .table-wrap thead {
-    display: none !important;
+    display: none;
   }
 
   :host ::ng-deep .table-wrap tbody {
-    display: block !important;
+    display: block;
   }
 
   :host ::ng-deep .table-wrap tr.mat-mdc-row,
   :host ::ng-deep .table-wrap tbody tr {
-    display: block !important;
+    display: block;
     margin-bottom: 12px;
     border-radius: 12px;
     border: 1px solid $tertiary;
@@ -105,12 +105,12 @@ th.mat-mdc-header-cell {
     margin-bottom: 0;
   }
 
-  :host ::ng-deep .table-wrap .mat-mdc-cell,
+  :host ::ng-deep .table-wrap .mat-mdc-cell.mat-mdc-cell,
   :host ::ng-deep .table-wrap td {
-    display: block !important;
-    width: 100% !important;
+    display: block;
+    width: 100%;
     box-sizing: border-box;
-    padding: 10px 16px !important;
+    padding: 10px 16px;
     border-bottom: 1px solid rgba($tertiary, 0.5);
     color: $white;
   }

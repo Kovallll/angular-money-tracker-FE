@@ -1,29 +1,27 @@
 import { inject, Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { exchangeRatesUrl } from '@/shared/constants';
 
-const NBRB_BASE = 'https://api.nbrb.by/exrates';
-
-/** NBRB returns rates in BYN per Cur_Scale units of foreign currency. 1 USD = Cur_OfficialRate/Cur_Scale BYN. */
-export interface NbrbRateItem {
-  Cur_Abbreviation: string;
-  Cur_Scale: number;
-  Cur_OfficialRate: number;
+/** Ответ бэкенда: курсы к BYN (1 единица валюты = X BYN). */
+export interface ExchangeRatesResponse {
+  rateToByn: Record<string, number>;
+  date: string;
 }
 
-/** NBRB dynamics item: rate on a date (per Cur_Scale units). */
+/** NBRB dynamics item (только для истории курсов для графиков). */
 export interface NbrbDynamicsItem {
   Cur_OfficialRate: number;
   Date: string;
 }
 
-/** NBRB internal currency IDs for dynamics API. */
+const NBRB_DYNAMICS_BASE = 'https://api.nbrb.by/exrates';
 const NBRB_CURRENCY_IDS: Record<string, number> = {
   USD: 431,
   EUR: 451,
   RUB: 456,
 };
 
-/** Fallback when API fails. 1 unit of key = value BYN (e.g. 1 USD = 3.27 BYN). */
+/** Запасные курсы при недоступности бэкенда. 1 единица = X BYN. */
 const FALLBACK_RATES_TO_BYN: Record<string, number> = {
   BYN: 1,
   USD: 3.27,
@@ -41,7 +39,7 @@ export class ExchangeRatesService {
   readonly isLoading = this.loading;
   readonly ratesReady = computed(() => this.cache() !== null);
 
-  /** Get exchange rate: 1 unit of fromCode = X units of toCode. */
+  /** Курс: 1 fromCode = X toCode. */
   getRate(fromCode: string, toCode: string): number {
     if (fromCode === toCode) return 1;
     const from = fromCode.toUpperCase();
@@ -52,25 +50,23 @@ export class ExchangeRatesService {
     return fallback[from]?.[to] ?? 1;
   }
 
-  /** Convert amount from one currency to another. */
+  /** Конвертация суммы из одной валюты в другую. */
   convert(amount: number, fromCode: string, toCode: string): number {
     return amount * this.getRate(fromCode, toCode);
   }
 
-  /** Load latest rates from NBRB (api.nbrb.by). All rates are in BYN per 1 unit of foreign currency. */
+  /** Загрузка курсов с бэкенда. При ошибке используются запасные курсы. */
   async loadRates(): Promise<void> {
     const today = new Date().toISOString().slice(0, 10);
     if (this.cacheDate() === today && this.cache()) return;
 
     this.loading.set(true);
     try {
-      const list = await this.http
-        .get<NbrbRateItem[]>(`${NBRB_BASE}/rates?ondate=${today}&periodicity=0`)
-        .toPromise();
-      const rateToByn = this.parseNbrbRates(list ?? []);
+      const res = await this.http.get<ExchangeRatesResponse>(exchangeRatesUrl).toPromise();
+      const rateToByn = res?.rateToByn ?? FALLBACK_RATES_TO_BYN;
       const matrix = this.buildMatrixFromRateToByn(rateToByn);
       this.cache.set(matrix);
-      this.cacheDate.set(today);
+      this.cacheDate.set(res?.date ?? today);
     } catch {
       this.cache.set(this.getFallbackMatrix());
       this.cacheDate.set(today);
@@ -79,22 +75,6 @@ export class ExchangeRatesService {
     }
   }
 
-  /** Parse NBRB response: Cur_OfficialRate/Cur_Scale = BYN per 1 unit of foreign currency. */
-  private parseNbrbRates(list: NbrbRateItem[]): Record<string, number> {
-    const rateToByn: Record<string, number> = { BYN: 1 };
-    for (const item of list) {
-      const code = item.Cur_Abbreviation?.toUpperCase();
-      if (!code || code === 'BYN') continue;
-      const scale = Math.max(1, Number(item.Cur_Scale) || 1);
-      rateToByn[code] = Number(item.Cur_OfficialRate) / scale;
-    }
-    for (const [k, v] of Object.entries(FALLBACK_RATES_TO_BYN)) {
-      if (k !== 'BYN' && rateToByn[k] == null) rateToByn[k] = v;
-    }
-    return rateToByn;
-  }
-
-  /** Build matrix[from][to] = how many "to" per 1 "from". From rateToByn: 1 C = rateToByn[C] BYN. */
   private buildMatrixFromRateToByn(
     rateToByn: Record<string, number>,
   ): Record<string, Record<string, number>> {
@@ -123,8 +103,8 @@ export class ExchangeRatesService {
   }
 
   /**
-   * Load historical rates for chart (BYN per 1 unit of currency).
-   * Returns array of { date, rate } for the last daysBack days.
+   * История курсов для графиков (NBRB dynamics).
+   * Оставлен запрос к NBRB, т.к. бэкенд отдаёт только текущие курсы.
    */
   async getRatesHistory(
     currencyCode: string,
@@ -148,7 +128,7 @@ export class ExchangeRatesService {
     const endStr = end.toISOString().slice(0, 10);
 
     try {
-      const url = `${NBRB_BASE}/rates/dynamics/${curId}?startdate=${startStr}&enddate=${endStr}`;
+      const url = `${NBRB_DYNAMICS_BASE}/rates/dynamics/${curId}?startdate=${startStr}&enddate=${endStr}`;
       const list = await this.http.get<NbrbDynamicsItem[]>(url).toPromise();
       return (list ?? []).map((item) => ({
         date: item.Date.slice(0, 10),
@@ -159,7 +139,7 @@ export class ExchangeRatesService {
     }
   }
 
-  /** Current rate to BYN for display (1 unit of code = X BYN). Uses cache or fallback. */
+  /** Текущий курс к BYN для отображения. */
   getRateToByn(currencyCode: string): number {
     return this.getRate(currencyCode, 'BYN');
   }

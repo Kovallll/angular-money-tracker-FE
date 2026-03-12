@@ -1,5 +1,5 @@
 @use 'theme' as *;
-
+@use 'shared/styles/breakpoints' as bp;
 @use '@angular/material' as mat;
 
 .container {
@@ -12,6 +12,10 @@
   max-width: 400px;
   padding: 24px;
   box-sizing: border-box;
+
+  @include bp.mobile {
+    padding-inline: 8px;
+  }
 
   @include mat.form-field-overrides(
     (
@@ -58,9 +62,10 @@
   flex-shrink: 0;
   --mdc-circular-progress-active-indicator-color: #{$white};
 
-  ::ng-deep circle,
-  ::ng-deep .mdc-circular-progress__indeterminate-circle-graphic {
-    stroke: $white !important;
+  ::ng-deep circle.mdc-circular-progress__indeterminate-circle-graphic,
+  ::ng-deep
+    .mdc-circular-progress__indeterminate-circle-graphic.mdc-circular-progress__indeterminate-circle-graphic {
+    stroke: $white;
   }
 }
 

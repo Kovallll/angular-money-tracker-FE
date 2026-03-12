@@ -21,6 +21,8 @@ export type Transaction = {
   date: string;
   type: string;
   paymentMethod?: string;
+  /** ISO date string when the transaction was created (for sorting by creation time). */
+  createdAt?: string;
 };
 
 export type CreateTransaction = Omit<Transaction, 'id' | 'userId' | 'cardId' | 'categoryId'>;
@@ -48,6 +50,8 @@ export interface BalanceCard {
   cardType: string;
   bankName: string;
   expiry?: string | null;
+  /** When true, this card is used for automatic transactions (subscriptions, goals). Only one per user. */
+  isPrimary?: boolean;
   transactions: Transaction[];
 }
 
@@ -175,4 +179,20 @@ export interface ExpensesOverviewDto {
     monthsBar: number;
     topK?: number; // при отсутствии показываются все категории
   };
+}
+
+/** Результат предсказания категории от ML (categorizer/predict) */
+export interface CategorizerPredictionResult {
+  category_id: string;
+  category_name: string;
+  category_icon: string;
+  category_color: string;
+  confidence: number;
+}
+
+export interface CategorizerPrediction {
+  primary: CategorizerPredictionResult;
+  alternatives: CategorizerPredictionResult[];
+  needs_confirmation: boolean;
+  source: string;
 }

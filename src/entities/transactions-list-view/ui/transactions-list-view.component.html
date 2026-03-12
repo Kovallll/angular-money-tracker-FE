@@ -25,15 +25,17 @@
               @if (row.type) {
                 <span class="mobile-card__dot">·</span>
                 @if (row.type === 'expense') {
-                  <mat-icon class="mobile-card__type-icon" aria-hidden="true"
-                    >trending_down</mat-icon
-                  >
+                  <app-icon
+                    material="trending_down"
+                    [sizePx]="16"
+                    iconClass="mobile-card__type-icon"
+                  />
                 } @else {
-                  <mat-icon
-                    class="mobile-card__type-icon mobile-card__type-icon--revenue"
-                    aria-hidden="true"
-                    >trending_up</mat-icon
-                  >
+                  <app-icon
+                    material="trending_up"
+                    [sizePx]="16"
+                    iconClass="mobile-card__type-icon mobile-card__type-icon--revenue"
+                  />
                 }
               }
             </p>
@@ -46,7 +48,7 @@
               aria-label="Delete"
               (click)="onDelete.emit(row); $event.stopPropagation()"
             >
-              <mat-icon>delete_outline</mat-icon>
+              <app-icon material="delete_outline" [sizePx]="18" />
             </button>
           }
         </article>

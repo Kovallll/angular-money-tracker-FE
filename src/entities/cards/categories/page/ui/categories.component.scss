@@ -74,11 +74,11 @@
   border: 1px solid rgba($accent, 0.2);
   overflow: visible;
 
-  ::ng-deep app-icon,
-  ::ng-deep .mat-icon {
-    font-size: 26px !important;
-    width: 26px !important;
-    height: 26px !important;
+  .card__icon-wrap ::ng-deep app-icon,
+  .card__icon-wrap ::ng-deep .mat-icon.mat-icon {
+    font-size: 26px;
+    width: 26px;
+    height: 26px;
   }
 }
 
@@ -94,7 +94,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.2px;
 
   @include bp.tablet-and-up {
     font-size: 18px;
@@ -190,6 +190,10 @@
   flex-wrap: wrap;
   gap: 6px;
   margin: 0;
+
+  @include bp.mobile {
+    display: none; /* Last/Avg только на странице деталей категории */
+  }
   font-size: 14px;
   font-weight: 500;
   color: $gray;

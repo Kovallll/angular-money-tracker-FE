@@ -24,7 +24,7 @@
       <section class="summary-cards" aria-label="Overview">
         <div class="summary-card summary-card--primary">
           <span class="summary-card__icon" aria-hidden="true">
-            <i class="pi pi-wallet"></i>
+            <app-icon prime="wallet" [sizePx]="18" />
           </span>
           <div class="summary-card__content">
             <span class="summary-card__label">Total Expenses</span>
@@ -33,7 +33,7 @@
         </div>
         <div class="summary-card">
           <span class="summary-card__icon" aria-hidden="true">
-            <i class="pi pi-chart-bar"></i>
+            <app-icon prime="chart-bar" [sizePx]="18" />
           </span>
           <div class="summary-card__content">
             <span class="summary-card__label">Transactions in most active category</span>
@@ -42,7 +42,7 @@
         </div>
         <div class="summary-card">
           <span class="summary-card__icon" aria-hidden="true">
-            <i class="pi pi-percentage"></i>
+            <app-icon prime="percentage" [sizePx]="18" />
           </span>
           <div class="summary-card__content">
             <span class="summary-card__label">vs last month (summary)</span>
@@ -53,9 +53,9 @@
             >
               @if (overageDeltaCompare().value !== '0.00') {
                 @if (!overageDeltaCompare().negative) {
-                  <i class="pi pi-arrow-down"></i>
+                  <app-icon prime="arrow-down" [sizePx]="14" />
                 } @else {
-                  <i class="pi pi-arrow-up"></i>
+                  <app-icon prime="arrow-up" [sizePx]="14" />
                 }
               }
               {{ overageDeltaCompare().value }}%

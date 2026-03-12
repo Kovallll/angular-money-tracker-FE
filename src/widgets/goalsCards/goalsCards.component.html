@@ -17,7 +17,7 @@
       <section class="summary-cards" aria-label="Overview">
         <div class="summary-card summary-card--primary">
           <span class="summary-card__icon" aria-hidden="true">
-            <i class="pi pi-flag"></i>
+            <app-icon prime="flag" [sizePx]="18" />
           </span>
           <div class="summary-card__content">
             <span class="summary-card__label">Active goals</span>
@@ -26,7 +26,7 @@
         </div>
         <div class="summary-card summary-card--completed">
           <span class="summary-card__icon" aria-hidden="true">
-            <i class="pi pi-check-circle"></i>
+            <app-icon prime="check-circle" [sizePx]="18" />
           </span>
           <div class="summary-card__content">
             <span class="summary-card__label">Completed</span>
@@ -35,7 +35,7 @@
         </div>
         <div class="summary-card summary-card--budget">
           <span class="summary-card__icon" aria-hidden="true">
-            <i class="pi pi-wallet"></i>
+            <app-icon prime="wallet" [sizePx]="18" />
           </span>
           <div class="summary-card__content summary-card__content--grid">
             <span class="summary-card__budget-label">Target</span>
@@ -109,7 +109,7 @@
     } @else {
       <div class="empty-state">
         <div class="empty-state__icon" aria-hidden="true">
-          <i class="pi pi-flag"></i>
+          <app-icon prime="flag" [sizePx]="22" />
         </div>
         <h3 class="empty-state__title">No goals yet</h3>
         <p class="empty-state__text">Create your first goal to start tracking savings</p>

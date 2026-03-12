@@ -3,15 +3,15 @@ import { SelectComponent } from '@/entities/select/ui/select.component';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { defaultSorter, DialogData, Sorter } from '../../lib';
-import { MatIconModule } from '@angular/material/icon';
 import { SorterService } from '../../services/sorter.service';
 import { ActivatedRoute } from '@angular/router';
+import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 
 @Component({
   selector: 'sorters-modal',
   templateUrl: './sorter-modal.component.html',
   styleUrls: ['./sorter-modal.component.scss'],
-  imports: [SelectComponent, AppModalShellComponent, MatIconModule],
+  imports: [SelectComponent, AppModalShellComponent, AppIconComponent],
   standalone: true,
 })
 export class SorterModalComponent implements OnInit {

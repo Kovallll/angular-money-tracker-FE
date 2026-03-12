@@ -49,11 +49,11 @@
     line-height: 1;
   }
 
-  ::ng-deep mat-icon,
-  ::ng-deep .app-icon {
-    font-size: 22px !important;
-    width: 22px !important;
-    height: 22px !important;
+  ::ng-deep mat-icon.mat-icon,
+  ::ng-deep .app-icon.app-icon {
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
   }
 }
 

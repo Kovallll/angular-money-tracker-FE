@@ -59,6 +59,7 @@
           name="title"
           placeholder="e.g. Shopping"
           [(ngModel)]="form.title"
+          (ngModelChange)="onTitleChange($event)"
           #titleField="ngModel"
         />
         <div class="form-field-error"></div>
@@ -87,7 +88,7 @@
 
     <div class="form-row">
       <div class="form-field">
-        <label for="categoryId">Category</label>
+        <label for="categoryId">Category{{ isCategorySuggested ? ' (предугадано)' : '' }}</label>
         <p-select
           inputId="categoryId"
           name="categoryId"
@@ -97,6 +98,7 @@
           [(ngModel)]="form.categoryId"
           placeholder="Select category"
           appendTo="body"
+          [loading]="categorizerLoading"
           #categoryField="ngModel"
           required
         >
@@ -107,6 +109,25 @@
             </div>
           </ng-template>
         </p-select>
+        @if (categorizerLoading) {
+          <div class="form-field-hint categorizer-loading">
+            <span class="hint-text">Detecting category…</span>
+          </div>
+        }
+        @if (suggestedAlternatives.length && !categorizerLoading) {
+          <div class="category-tags">
+            @for (alt of suggestedAlternatives; track alt.id) {
+              <button
+                type="button"
+                class="category-tag"
+                [class.selected]="form.categoryId === alt.id"
+                (click)="selectSuggestedCategory(alt.id)"
+              >
+                {{ alt.title }}
+              </button>
+            }
+          </div>
+        }
         <div class="form-field-error">
           @if (categoryField.invalid && (categoryField.touched || cardForm.submitted)) {
             <p-message severity="error" size="small" variant="simple">Select category</p-message>
@@ -129,7 +150,10 @@
           required
         >
           <ng-template let-item pTemplate="item">
-            <span>{{ item.bankName }} — {{ item.cardNumber }}</span>
+            <span
+              >{{ item.bankName }} — {{ item.cardNumber
+              }}{{ item.isPrimary ? ' (Default)' : '' }}</span
+            >
           </ng-template>
         </p-select>
         <div class="form-field-error">
@@ -172,3 +196,4 @@
     </div>
   </form>
 </app-modal-shell>
+

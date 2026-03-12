@@ -1,13 +1,13 @@
 import { Component, inject } from '@angular/core';
 import { MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef } from '@angular/material/bottom-sheet';
-import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { MenuItem } from '../types';
+import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 
 @Component({
   selector: 'app-more-sheet',
   standalone: true,
-  imports: [MatIconModule],
+  imports: [AppIconComponent],
   templateUrl: './more-sheet.component.html',
   styleUrls: ['./more-sheet.component.scss'],
 })

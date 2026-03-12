@@ -75,4 +75,14 @@ export class BalancesHttpService {
       }),
     );
   }
+
+  /** Set this card as the primary one (used for automatic transactions). */
+  setPrimaryCard(id: number) {
+    return this.http.patch<BalanceCard>(`${balancesUrl}/${id}/set-primary`, {}).pipe(
+      tap(() => this.refresh()),
+      catchError((err) => {
+        throw err;
+      }),
+    );
+  }
 }

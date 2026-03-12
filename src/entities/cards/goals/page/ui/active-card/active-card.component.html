@@ -33,7 +33,7 @@
           <div class="content">
             <div class="left-side">
               <div class="stat-row stat-row--target">
-                <span class="stat-icon"><i class="pi pi-wallet"></i></span>
+                <span class="stat-icon"><app-icon prime="wallet" [sizePx]="18" /></span>
                 <div class="text-block">
                   <p class="text">Target Budget</p>
                   <p class="price">
@@ -45,7 +45,7 @@
                 </div>
               </div>
               <div class="stat-row">
-                <span class="stat-icon"><i class="pi pi-flag"></i></span>
+                <span class="stat-icon"><app-icon prime="flag" [sizePx]="18" /></span>
                 <div class="text-block">
                   <p class="text">Goal Budget</p>
                   <p class="price">
@@ -77,7 +77,7 @@
   </dashboard-card>
 } @else {
   <div class="empty-active">
-    <span class="empty-icon" aria-hidden="true"><i class="pi pi-flag"></i></span>
+    <span class="empty-icon" aria-hidden="true"><app-icon prime="flag" [sizePx]="22" /></span>
     <p class="empty-text">Select a goal above to view details</p>
   </div>
 }

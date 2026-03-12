@@ -1,4 +1,5 @@
-<app-button appearance="primary" size="md" (buttonClick)="show()">
-  <i class="pi pi-plus" style="font-size: 16px"></i>
-  Add Category
+<app-button appearance="primary" size="md" (buttonClick)="show()" class="add-category-btn">
+  <app-icon prime="plus" [sizePx]="16" />
+  <span class="add-category-btn__label add-category-btn__label--short">Add</span>
+  <span class="add-category-btn__label add-category-btn__label--full">Add Category</span>
 </app-button>

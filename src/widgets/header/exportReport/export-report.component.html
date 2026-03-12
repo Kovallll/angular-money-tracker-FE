@@ -1,15 +1,15 @@
 <button
   pButton
   type="button"
-  [label]="buttonLabel()"
-  icon="pi pi-download"
-  iconPos="left"
   (click)="openMenu($event)"
   [disabled]="isLoading()"
   class="export-btn"
   severity="primary"
   aria-label="Export report"
-></button>
+>
+  <app-icon prime="download" [sizePx]="16" />
+  <span class="p-button-label">{{ buttonLabel() }}</span>
+</button>
 <p-tieredMenu
   #menu
   [model]="menuItems"

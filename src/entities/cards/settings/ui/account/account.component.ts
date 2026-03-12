@@ -8,12 +8,19 @@ import { MessageService } from 'primeng/api';
 import { environment } from '@/environments/environment';
 import { DialogService } from 'primeng/dynamicdialog';
 import { DynamicDialogModule } from 'primeng/dynamicdialog';
+import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 
 @Component({
   selector: 'settings-account',
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.scss'],
-  imports: [CommonModule, UpdateProfileButtonComponent, LogoutButtonComponent, DynamicDialogModule],
+  imports: [
+    CommonModule,
+    UpdateProfileButtonComponent,
+    LogoutButtonComponent,
+    DynamicDialogModule,
+    AppIconComponent,
+  ],
   providers: [DialogService],
 })
 export class AccountComponent {

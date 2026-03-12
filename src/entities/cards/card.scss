@@ -32,8 +32,8 @@
   flex-direction: column;
   gap: 12px;
   min-height: 0;
-  border: 1px solid rgba($white, 0.06);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  border: 1px solid $surface-06;
+  box-shadow: 0 1px 3px $shadow-20;
 
   @include bp.tablet-and-up {
     border-radius: 14px;
@@ -45,7 +45,7 @@
     border-radius: 16px;
     padding: 24px;
     gap: 16px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 2px 8px $shadow-25;
   }
 }
 
@@ -87,7 +87,7 @@
 
   &:hover {
     color: $white;
-    background: rgba($white, 0.08);
+    background: $surface-08;
   }
 
   &:focus-visible {

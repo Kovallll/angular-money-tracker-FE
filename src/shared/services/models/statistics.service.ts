@@ -1,4 +1,4 @@
-import { ExpensesOverviewDto } from '@/shared/types';
+import { CategorizerPrediction, ExpensesOverviewDto } from '@/shared/types';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { AuthService } from '@/shared/services/auth/auth.service';
@@ -31,8 +31,9 @@ export class StatisticsHttpService {
     return this.http.post<any>('categories/predict', { name, synonyms, description });
   }
 
+  /** Предсказание категории по тексту (название транзакции). */
   predict(text: string) {
-    return this.http.post<any>('categorizer/predict', { text });
+    return this.http.post<CategorizerPrediction>('categorizer/predict', { text });
   }
   retrain(full: boolean = false) {
     return this.http.post<any>('categorizer/retrain', { full });

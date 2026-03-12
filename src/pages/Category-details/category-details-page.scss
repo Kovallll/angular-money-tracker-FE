@@ -49,11 +49,11 @@
   background: $accent;
   border-radius: 12px;
 
-  ::ng-deep app-icon,
-  ::ng-deep .mat-icon {
-    font-size: 28px !important;
-    width: 28px !important;
-    height: 28px !important;
+  .category-icon ::ng-deep app-icon,
+  .category-icon ::ng-deep .mat-icon.mat-icon {
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
   }
 }
 
