@@ -81,6 +81,10 @@ export class AddTransactionModalComponent implements OnInit {
   protected isCategorySuggested = false;
   /** Альтернативные категории от ML для тегов (id + title из списка пользователя) */
   protected suggestedAlternatives: { id: number; title: string }[] = [];
+  /** Cache key from last predict response (for feedback on submit). */
+  private currentPredictionKey = '';
+  /** Category id we suggested (primary or selected alternative). */
+  private currentPredictedCategoryId = '';
 
   categories = injectQuery(() => ({
     queryKey: ['categories'],
@@ -133,9 +137,13 @@ export class AddTransactionModalComponent implements OnInit {
       .subscribe((prediction) => {
         this.categorizerLoading = false;
         if (!prediction?.primary) {
+          this.currentPredictionKey = '';
+          this.currentPredictedCategoryId = '';
           this.cdr.markForCheck();
           return;
         }
+        this.currentPredictionKey = prediction.predictionKey ?? '';
+        this.currentPredictedCategoryId = prediction.primary.category_id ?? '';
         const list = this.categories.data() ?? [];
         const byId = (id: string) => list.find((c) => String(c.id) === id || c.id === Number(id));
         const primary = byId(prediction.primary.category_id);
@@ -162,12 +170,15 @@ export class AddTransactionModalComponent implements OnInit {
     if (!(value ?? '').trim()) {
       this.isCategorySuggested = false;
       this.suggestedAlternatives = [];
+      this.currentPredictionKey = '';
+      this.currentPredictedCategoryId = '';
       this.cdr.markForCheck();
     }
   }
 
   protected selectSuggestedCategory(id: number): void {
     this.form.categoryId = id;
+    this.currentPredictedCategoryId = String(id);
     this.cdr.markForCheck();
   }
 
@@ -241,7 +252,7 @@ export class AddTransactionModalComponent implements OnInit {
 
   protected buildPayload(): CreateTransactionPayload {
     const f = this.form;
-    return {
+    const payload: CreateTransactionPayload = {
       cardId: String(f.cardId),
       categoryId: String(f.categoryId),
       type: f.type,
@@ -252,6 +263,11 @@ export class AddTransactionModalComponent implements OnInit {
       description: f.description || undefined,
       paymentMethod: f.paymentMethod || undefined,
     };
+    if (this.currentPredictionKey && this.currentPredictedCategoryId) {
+      payload.predictionKey = this.currentPredictionKey;
+      payload.predictedCategoryId = this.currentPredictedCategoryId;
+    }
+    return payload;
   }
 
   ngOnInit(): void {

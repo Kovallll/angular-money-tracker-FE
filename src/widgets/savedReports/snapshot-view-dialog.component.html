@@ -1,0 +1,29 @@
+<div class="snapshot-view">
+  @if (hasPie()) {
+    <div class="snapshot-view__chart">
+      <h3 class="snapshot-view__chart-title">Categories share</h3>
+      <div class="snapshot-view__chart-body">
+        <canvas baseChart [type]="'doughnut'" [data]="pieData" [options]="chartOptions"></canvas>
+      </div>
+    </div>
+  }
+  @if (hasBar()) {
+    <div class="snapshot-view__chart">
+      <h3 class="snapshot-view__chart-title">Spending by month</h3>
+      <div class="snapshot-view__chart-body">
+        <canvas baseChart [type]="'bar'" [data]="barData" [options]="barOptions"></canvas>
+      </div>
+    </div>
+  }
+  @if (hasLine()) {
+    <div class="snapshot-view__chart">
+      <h3 class="snapshot-view__chart-title">Spending over time</h3>
+      <div class="snapshot-view__chart-body">
+        <canvas baseChart [type]="'line'" [data]="lineData" [options]="lineOptions"></canvas>
+      </div>
+    </div>
+  }
+  @if (!hasPie() && !hasBar() && !hasLine()) {
+    <p class="snapshot-view__empty">No chart data in this report.</p>
+  }
+</div>

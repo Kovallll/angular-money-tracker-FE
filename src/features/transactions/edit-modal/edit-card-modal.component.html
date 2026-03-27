@@ -77,12 +77,12 @@
             }
             @if (suggestedAlternatives.length && !categorizerLoading) {
               <div class="category-tags">
-                @for (alt of suggestedAlternatives; track alt.title) {
+                @for (alt of suggestedAlternatives; track alt.id) {
                   <button
                     type="button"
                     class="category-tag"
                     [class.selected]="card()[input.field] === alt.title"
-                    (click)="selectSuggestedCategoryTitle(alt.title)"
+                    (click)="selectSuggestedCategoryTitle(alt.title, alt.id)"
                   >
                     {{ alt.title }}
                   </button>

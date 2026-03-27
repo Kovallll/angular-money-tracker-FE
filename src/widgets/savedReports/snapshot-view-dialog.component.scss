@@ -1,0 +1,30 @@
+.snapshot-view {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-height: 200px;
+}
+
+.snapshot-view__chart {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.snapshot-view__chart-title {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.snapshot-view__chart-body {
+  height: 260px;
+  position: relative;
+}
+
+.snapshot-view__empty {
+  margin: 0;
+  color: var(--text-secondary, #888);
+  text-align: center;
+  padding: 2rem;
+}

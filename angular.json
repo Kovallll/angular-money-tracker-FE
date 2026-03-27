@@ -50,6 +50,7 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/assets",
+              "src/config.js",
               "src/manifest.webmanifest",
               {
                 "glob": "**/*",

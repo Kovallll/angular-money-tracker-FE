@@ -1,0 +1,28 @@
+.container {
+  padding: 0.5rem 0;
+}
+
+.section-desc {
+  margin-bottom: 1rem;
+  color: var(--text-secondary, #666);
+  font-size: 0.9rem;
+}
+
+.field {
+  margin-bottom: 1rem;
+}
+
+.full-width {
+  width: 100%;
+  max-width: 280px;
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.toggle-label {
+  font-size: 0.95rem;
+}

@@ -3,7 +3,19 @@ import { BalanceCard, CreateCard } from '@/shared/types';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { startWith, switchMap, tap, catchError, Subject, of, combineLatest } from 'rxjs';
+import {
+  startWith,
+  switchMap,
+  tap,
+  catchError,
+  Subject,
+  of,
+  combineLatest,
+  merge,
+  fromEvent,
+  filter,
+  map,
+} from 'rxjs';
 import { AuthService } from '@/shared/services/auth/auth.service';
 
 @Injectable({ providedIn: 'root' })
@@ -12,13 +24,22 @@ export class BalancesHttpService {
   private auth = inject(AuthService);
 
   private readonly refresh$ = new Subject<void>();
+  private readonly focusRefresh$ =
+    typeof window !== 'undefined' && typeof document !== 'undefined'
+      ? merge(
+          fromEvent(window, 'focus'),
+          fromEvent(document, 'visibilitychange').pipe(
+            filter(() => document.visibilityState === 'visible'),
+          ),
+        ).pipe(map(() => void 0))
+      : of(void 0);
 
   /** true пока идёт запрос списка карт (первая загрузка или refresh). */
   private readonly loadingSignal = signal(true);
 
   private readonly cards$ = combineLatest([
     this.auth.user$,
-    this.refresh$.pipe(startWith(void 0)),
+    merge(this.refresh$, this.focusRefresh$).pipe(startWith(void 0)),
   ]).pipe(
     switchMap(([user]) => {
       if (!user?.id) {

@@ -1,0 +1,124 @@
+<section class="saved-reports" aria-label="Saved analytics reports">
+  <h2 class="saved-reports__title">Saved reports</h2>
+  <p class="saved-reports__desc">
+    View previously saved analytics snapshots. Reports are saved automatically according to your
+    <a routerLink="/settings">Analytics settings</a>.
+  </p>
+
+  <div class="saved-reports__toolbar">
+    <div class="toolbar-row">
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Search by period (e.g. Mar 2025)"
+        [ngModel]="searchQuery()"
+        (ngModelChange)="searchQuery.set($event)"
+        (keyup.enter)="onSearch()"
+      />
+      <button type="button" class="btn btn--primary" (click)="onSearch()">Search</button>
+    </div>
+    <div class="toolbar-row filters">
+      <label class="filter-label">
+        Period type
+        <select
+          class="filter-select"
+          [ngModel]="periodTypeFilter()"
+          (ngModelChange)="periodTypeFilter.set($event); onFilterChange()"
+        >
+          <option value="">All</option>
+          <option value="week">Week</option>
+          <option value="month">Month</option>
+          <option value="quarter">Quarter</option>
+        </select>
+      </label>
+      <label class="filter-label">
+        From
+        <input
+          type="date"
+          class="filter-input"
+          [ngModel]="dateFrom()"
+          (ngModelChange)="dateFrom.set($event); onFilterChange()"
+        />
+      </label>
+      <label class="filter-label">
+        To
+        <input
+          type="date"
+          class="filter-input"
+          [ngModel]="dateTo()"
+          (ngModelChange)="dateTo.set($event); onFilterChange()"
+        />
+      </label>
+      <label class="filter-label">
+        Sort
+        <select
+          class="filter-select"
+          [ngModel]="sortOrder()"
+          (ngModelChange)="onSortChange($event)"
+        >
+          <option value="desc">Newest first</option>
+          <option value="asc">Oldest first</option>
+        </select>
+      </label>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="saved-reports__loading">
+      <p>Loading…</p>
+    </div>
+  } @else if (items().length === 0) {
+    <div class="saved-reports__empty">
+      <p>No saved reports yet.</p>
+      <p class="saved-reports__empty-hint">
+        Reports are created automatically. Check Analytics settings to set the save frequency.
+      </p>
+    </div>
+  } @else {
+    <div class="saved-reports__table-wrap">
+      <table class="reports-table">
+        <thead>
+          <tr>
+            <th>Period</th>
+            <th>Type</th>
+            <th>Saved at</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of items(); track item._id) {
+            <tr (click)="openSnapshot(item)" class="reports-table__row">
+              <td>{{ formatPeriod(item) }}</td>
+              <td>{{ item.periodType }}</td>
+              <td>{{ formatDate(item.createdAt) }}</td>
+              <td><span class="view-link">View</span></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    @if (totalPages() > 1) {
+      <div class="saved-reports__pagination">
+        <button
+          type="button"
+          class="btn btn--small"
+          [disabled]="page() <= 1"
+          (click)="goToPage(page() - 1)"
+        >
+          Previous
+        </button>
+        <span class="pagination-info">
+          Page {{ page() }} of {{ totalPages() }} ({{ total() }} total)
+        </span>
+        <button
+          type="button"
+          class="btn btn--small"
+          [disabled]="page() >= totalPages()"
+          (click)="goToPage(page() + 1)"
+        >
+          Next
+        </button>
+      </div>
+    }
+  }
+</section>

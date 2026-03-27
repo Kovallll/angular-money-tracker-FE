@@ -18,6 +18,8 @@ interface AuthResponse {
     lastname?: string;
     phone?: string;
     avatar?: string | null;
+    analytics_snapshot_periodicity?: 'week' | 'month' | 'quarter';
+    analytics_snapshots_enabled?: boolean;
   };
   accessToken: string;
   refreshToken: string;

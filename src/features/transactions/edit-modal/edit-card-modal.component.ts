@@ -77,7 +77,9 @@ export class EditTransactionModalComponent implements OnInit {
   private titleInput$ = new Subject<string>();
   categorizerLoading = false;
   isCategorySuggested = false;
-  suggestedAlternatives: { title: string }[] = [];
+  suggestedAlternatives: { id: number; title: string }[] = [];
+  private currentPredictionKey = '';
+  private currentPredictedCategoryId = '';
 
   categories = injectQuery(() => ({
     queryKey: ['categories'],
@@ -134,7 +136,17 @@ export class EditTransactionModalComponent implements OnInit {
       const list = this.categories.data() ?? [];
       const cat = list.find((c) => c.title === categoryTitle);
       if (cat) value['categoryId'] = String(cat.id);
-      this.updateTransaction(value as CreateTransaction & { categoryId?: string });
+      if (this.currentPredictionKey && this.currentPredictedCategoryId) {
+        value['predictionKey'] = this.currentPredictionKey;
+        value['predictedCategoryId'] = this.currentPredictedCategoryId;
+      }
+      this.updateTransaction(
+        value as CreateTransaction & {
+          categoryId?: string;
+          predictionKey?: string;
+          predictedCategoryId?: string;
+        },
+      );
     }
   }
 
@@ -195,9 +207,13 @@ export class EditTransactionModalComponent implements OnInit {
       .subscribe((prediction) => {
         this.categorizerLoading = false;
         if (!prediction?.primary) {
+          this.currentPredictionKey = '';
+          this.currentPredictedCategoryId = '';
           this.cdr.markForCheck();
           return;
         }
+        this.currentPredictionKey = prediction.predictionKey ?? '';
+        this.currentPredictedCategoryId = prediction.primary.category_id ?? '';
         const list = this.categories.data() ?? [];
         const byId = (id: string) => list.find((c) => String(c.id) === id || c.id === Number(id));
         const primary = byId(prediction.primary.category_id);
@@ -205,13 +221,13 @@ export class EditTransactionModalComponent implements OnInit {
           this.updateCardField(primary.title);
         }
         const allSuggested = [prediction.primary, ...(prediction.alternatives ?? [])];
-        const seen = new Set<string>();
+        const seen = new Set<number>();
         this.suggestedAlternatives = [];
         for (const p of allSuggested) {
           const cat = byId(p.category_id);
-          if (cat && !seen.has(cat.title)) {
-            seen.add(cat.title);
-            this.suggestedAlternatives.push({ title: cat.title });
+          if (cat && !seen.has(cat.id)) {
+            seen.add(cat.id);
+            this.suggestedAlternatives.push({ id: cat.id, title: cat.title });
           }
         }
         this.isCategorySuggested = this.suggestedAlternatives.length > 0;
@@ -224,6 +240,8 @@ export class EditTransactionModalComponent implements OnInit {
     if (!(value ?? '').trim()) {
       this.isCategorySuggested = false;
       this.suggestedAlternatives = [];
+      this.currentPredictionKey = '';
+      this.currentPredictedCategoryId = '';
       this.cdr.markForCheck();
     }
   }
@@ -232,8 +250,9 @@ export class EditTransactionModalComponent implements OnInit {
     return this.isCategorySuggested ? 'Category (предугадано)' : 'Category';
   }
 
-  selectSuggestedCategoryTitle(title: string): void {
+  selectSuggestedCategoryTitle(title: string, id?: number): void {
     this.updateCardField(title);
+    if (id != null) this.currentPredictedCategoryId = String(id);
     this.cdr.markForCheck();
   }
 

@@ -6,3 +6,8 @@ export { GoalsHttpService } from './goals.service';
 export { CategoriesHttpService } from './categories.service';
 export { StatisticsHttpService } from './statistics.service';
 export { StatisticsRefreshService } from './statistics-refresh.service';
+export {
+  AnalyticsSnapshotsHttpService,
+  type ListSnapshotsParams,
+  type PeriodType,
+} from './analytics-snapshots.service';

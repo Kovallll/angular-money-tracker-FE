@@ -12,6 +12,9 @@
       @case ('Security') {
         <settings-security />
       }
+      @case ('Analytics') {
+        <settings-analytics [user]="user()" />
+      }
     }
   </card-body>
 </dashboard-card>

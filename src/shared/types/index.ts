@@ -6,6 +6,9 @@ export type User = {
   email: string;
   password: string;
   avatar?: string;
+  /** Periodicity for auto-saving analytics snapshots: week | month | quarter. Default month. */
+  analytics_snapshot_periodicity?: 'week' | 'month' | 'quarter';
+  analytics_snapshots_enabled?: boolean;
 };
 
 export type Transaction = {
@@ -38,6 +41,10 @@ export interface CreateTransactionPayload {
   title?: string;
   description?: string;
   paymentMethod?: 'cash' | 'card';
+  /** For ML prediction feedback: cache key from categorizer/predict. */
+  predictionKey?: string;
+  /** For ML prediction feedback: category id that was predicted (primary or chosen alternative). */
+  predictedCategoryId?: string;
 }
 
 export interface BalanceCard {
@@ -181,6 +188,26 @@ export interface ExpensesOverviewDto {
   };
 }
 
+/** Saved analytics snapshot (from MongoDB). */
+export interface AnalyticsSnapshotItem {
+  _id: string;
+  userId: string;
+  periodType: 'week' | 'month' | 'quarter';
+  periodStart: string;
+  periodEnd: string;
+  overview: ExpensesOverviewDto;
+  categoryLineCharts?: CategoryLineChartDto[];
+  createdAt: string;
+}
+
+export interface AnalyticsSnapshotsListResponse {
+  items: AnalyticsSnapshotItem[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
 /** Результат предсказания категории от ML (categorizer/predict) */
 export interface CategorizerPredictionResult {
   category_id: string;
@@ -195,4 +222,6 @@ export interface CategorizerPrediction {
   alternatives: CategorizerPredictionResult[];
   needs_confirmation: boolean;
   source: string;
+  /** Redis cache key for feedback when user creates a transaction with this prediction. */
+  predictionKey?: string;
 }

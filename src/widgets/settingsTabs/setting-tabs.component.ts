@@ -5,6 +5,7 @@ import { MatTabGroup } from '@angular/material/tabs';
 import { MatTab } from '@angular/material/tabs';
 import { AccountComponent } from '@/entities/cards/settings/ui/account/account.component';
 import { SecurityComponent } from '@/entities/cards/settings/ui/security/security.component';
+import { AnalyticsSettingsComponent } from '@/entities/cards/settings/ui/analytics/analytics-settings.component';
 import { UserService } from '@/shared';
 
 @Component({
@@ -18,6 +19,7 @@ import { UserService } from '@/shared';
     MatTab,
     AccountComponent,
     SecurityComponent,
+    AnalyticsSettingsComponent,
   ],
 })
 export class SettingsTabsComponent {
@@ -30,5 +32,5 @@ export class SettingsTabsComponent {
     this.selectedTab.set(tabLabel);
   }
 
-  tabs = ['Account', 'Security'];
+  tabs = ['Account', 'Security', 'Analytics'];
 }
