@@ -1,6 +1,6 @@
 {
-  "name": "first-app",
-  "short_name": "first-app",
+  "name": "MoneyTracker",
+  "short_name": "MoneyTracker",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",

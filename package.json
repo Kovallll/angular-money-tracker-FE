@@ -1,5 +1,5 @@
 {
-  "name": "first-app",
+  "name": "moneytracker",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -11,8 +11,6 @@
     "lint:fix": "ng lint --fix",
     "format": "prettier --write \"src/**/*.{ts,html,scss,css,json,md}\"",
     "prepare": "husky",
-    "build:single-spa:first-app": "ng build first-app --configuration production",
-    "serve:single-spa:first-app": "ng s --project first-app --disable-host-check --port 4200 --live-reload false",
     "build:mobile": "node scripts/sync-env-config.js && node scripts/generate-ngsw-config.js && ng build",
     "cap:copy": "npx cap copy",
     "cap:open:android": "npx cap open android",
