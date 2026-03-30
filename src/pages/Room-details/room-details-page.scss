@@ -1,0 +1,160 @@
+.room-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.room-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0.25rem 0 0.5rem;
+}
+
+.room-tab {
+  border: 1px solid #3b3b3b;
+  background: #111;
+  color: inherit;
+  border-radius: 8px;
+  padding: 0.45rem 0.75rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.room-tab.active {
+  border-color: #5b8def;
+  background: #1a2338;
+}
+
+.room-tab-panels {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.muted-hint {
+  opacity: 0.85;
+}
+
+.page-head h1 {
+  margin: 0;
+}
+
+.page-head p {
+  margin: 0.25rem 0 0;
+  opacity: 0.8;
+}
+
+.card {
+  border: 1px solid #2e2e2e;
+  border-radius: 12px;
+  padding: 0.85rem;
+  background: #171717;
+}
+
+.member-row,
+.tx-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border-top: 1px solid #2e2e2e;
+  padding: 0.55rem 0;
+}
+
+.member-row:first-of-type,
+.tx-row:first-of-type {
+  border-top: 0;
+}
+
+.member-row p,
+.tx-row p {
+  margin: 0.1rem 0 0;
+  opacity: 0.8;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.role {
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.tx-form {
+  display: grid;
+  grid-template-columns: 1.2fr 0.9fr 1fr 1.1fr auto;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  align-items: center;
+}
+
+.mini-form,
+.stack-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.65rem;
+  align-items: center;
+}
+
+.stack-form {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.stack-form .row {
+  width: 100%;
+}
+
+.muted {
+  margin: 0.15rem 0 0;
+  opacity: 0.75;
+  font-size: 0.9rem;
+}
+
+select {
+  background: #111;
+  border: 1px solid #3b3b3b;
+  border-radius: 8px;
+  padding: 0.5rem 0.65rem;
+  color: inherit;
+}
+
+input {
+  background: #111;
+  border: 1px solid #3b3b3b;
+  border-radius: 8px;
+  padding: 0.5rem 0.65rem;
+  color: inherit;
+}
+
+button {
+  border: 0;
+  border-radius: 8px;
+  padding: 0.55rem 0.85rem;
+  cursor: pointer;
+}
+
+button.ghost {
+  background: transparent;
+  border: 1px solid #4a4a4a;
+}
+
+.token {
+  word-break: break-all;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+}
+
+.error {
+  color: #ff7e7e;
+}
+
+@media (max-width: 900px) {
+  .tx-form {
+    grid-template-columns: 1fr;
+  }
+}

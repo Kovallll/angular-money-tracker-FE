@@ -67,10 +67,17 @@ export class CategoriesHttpService {
     return this.categories().find((c) => c.id === id) ?? null;
   });
 
-  getCategoryExpenseLineCharts(year = new Date().getFullYear(), top?: number, userId?: string) {
+  getCategoryExpenseLineCharts(
+    year = new Date().getFullYear(),
+    top?: number,
+    userId?: string,
+    roomId?: string,
+  ) {
     const params: Record<string, string> = { year: String(year), limitToCurrent: 'true' };
     if (top != null) params['top'] = String(top);
-    if (userId) params['userId'] = userId;
+    const rid = roomId?.trim();
+    if (rid) params['roomId'] = rid;
+    else if (userId) params['userId'] = userId;
     return lastValueFrom(
       this.http.get<CategoryLineChartDto[]>('statistics/categories/line/year', { params }),
     );
@@ -176,5 +183,18 @@ export class CategoriesHttpService {
   deleteCategory(id: number | string, reassignTo?: string) {
     const options = reassignTo ? { params: { reassignTo } } : {};
     return lastValueFrom(this.http.delete(`${categoriesUrl}/${id}`, options));
+  }
+
+  fetchCategoriesByRoom(roomId: string): Promise<CategoryItem[]> {
+    return lastValueFrom(this.http.get<CategoryItem[]>(`${categoriesUrl}/room/${roomId}`));
+  }
+
+  createCategoryInRoom(roomId: string, category: CreateCategoryItem): Promise<CategoryItem> {
+    return lastValueFrom(
+      this.http.post<CategoryItem>(`${categoriesUrl}/room/${roomId}`, {
+        name: category.title,
+        icon: category.icon,
+      }),
+    );
   }
 }

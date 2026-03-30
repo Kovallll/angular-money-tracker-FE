@@ -123,7 +123,7 @@ export class CategoriesCardsComponent extends UrlSyncedComponent<CategoryItem> {
     searchProps: { searchField: 'title', placeholder: 'Search by name' },
   }));
 
-  getCurrentChart(id: number) {
+  getCurrentChart(id: string | number) {
     return this.charts.data()?.find((c) => String(c.categoryId) === String(id));
   }
 

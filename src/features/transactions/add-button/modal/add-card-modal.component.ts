@@ -80,7 +80,7 @@ export class AddTransactionModalComponent implements OnInit {
   /** Есть ли предугаданная категория (для подписи «предугадано» в заголовке) */
   protected isCategorySuggested = false;
   /** Альтернативные категории от ML для тегов (id + title из списка пользователя) */
-  protected suggestedAlternatives: { id: number; title: string }[] = [];
+  protected suggestedAlternatives: { id: string | number; title: string }[] = [];
   /** Cache key from last predict response (for feedback on submit). */
   private currentPredictionKey = '';
   /** Category id we suggested (primary or selected alternative). */
@@ -151,12 +151,13 @@ export class AddTransactionModalComponent implements OnInit {
           this.form.categoryId = primary.id;
         }
         const allSuggested = [prediction.primary, ...(prediction.alternatives ?? [])];
-        const seen = new Set<number>();
+        const seen = new Set<string>();
         this.suggestedAlternatives = [];
         for (const p of allSuggested) {
           const cat = byId(p.category_id);
-          if (cat && !seen.has(cat.id)) {
-            seen.add(cat.id);
+          const key = cat ? String(cat.id) : '';
+          if (cat && key && !seen.has(key)) {
+            seen.add(key);
             this.suggestedAlternatives.push({ id: cat.id, title: cat.title });
           }
         }
@@ -176,7 +177,7 @@ export class AddTransactionModalComponent implements OnInit {
     }
   }
 
-  protected selectSuggestedCategory(id: number): void {
+  protected selectSuggestedCategory(id: string | number): void {
     this.form.categoryId = id;
     this.currentPredictedCategoryId = String(id);
     this.cdr.markForCheck();

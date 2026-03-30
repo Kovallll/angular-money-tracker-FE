@@ -8,13 +8,24 @@ export class StatisticsHttpService {
   private http = inject(HttpClient);
   private auth = inject(AuthService);
 
-  getExpensesOverview(params?: { monthsBar?: number; topK?: number; locale?: string }) {
+  getExpensesOverview(params?: {
+    monthsBar?: number;
+    topK?: number;
+    locale?: string;
+    /** Взаимоисключимо с userId: аналитика по групповым транзакциям комнаты. */
+    roomId?: string;
+  }) {
     const qp: Record<string, string | number> = {};
     if (params?.monthsBar) qp['monthsBar'] = params.monthsBar;
     if (params?.topK) qp['topK'] = params.topK;
     if (params?.locale) qp['locale'] = params.locale;
-    const userId = this.auth.getCurrentUserId();
-    if (userId) qp['userId'] = userId;
+    const rid = params?.roomId?.trim();
+    if (rid) {
+      qp['roomId'] = rid;
+    } else {
+      const userId = this.auth.getCurrentUserId();
+      if (userId) qp['userId'] = userId;
+    }
     return this.http.get<ExpensesOverviewDto>('statistics/expenses/overview', { params: qp });
   }
 

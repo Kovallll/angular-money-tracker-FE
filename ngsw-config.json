@@ -28,7 +28,7 @@
   "dataGroups": [
     {
       "name": "api-data",
-      "urls": ["https://nest-money-tracker-be.onrender.com/**", "/api/**"],
+      "urls": ["https://money-tracker-be-482189160004.europe-west1.run.app/**", "/api/**"],
       "cacheConfig": {
         "strategy": "freshness",
         "maxSize": 100,

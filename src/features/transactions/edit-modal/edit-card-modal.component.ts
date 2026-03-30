@@ -77,7 +77,7 @@ export class EditTransactionModalComponent implements OnInit {
   private titleInput$ = new Subject<string>();
   categorizerLoading = false;
   isCategorySuggested = false;
-  suggestedAlternatives: { id: number; title: string }[] = [];
+  suggestedAlternatives: { id: string | number; title: string }[] = [];
   private currentPredictionKey = '';
   private currentPredictedCategoryId = '';
 
@@ -221,12 +221,13 @@ export class EditTransactionModalComponent implements OnInit {
           this.updateCardField(primary.title);
         }
         const allSuggested = [prediction.primary, ...(prediction.alternatives ?? [])];
-        const seen = new Set<number>();
+        const seen = new Set<string>();
         this.suggestedAlternatives = [];
         for (const p of allSuggested) {
           const cat = byId(p.category_id);
-          if (cat && !seen.has(cat.id)) {
-            seen.add(cat.id);
+          const key = cat ? String(cat.id) : '';
+          if (cat && key && !seen.has(key)) {
+            seen.add(key);
             this.suggestedAlternatives.push({ id: cat.id, title: cat.title });
           }
         }
@@ -250,7 +251,7 @@ export class EditTransactionModalComponent implements OnInit {
     return this.isCategorySuggested ? 'Category (предугадано)' : 'Category';
   }
 
-  selectSuggestedCategoryTitle(title: string, id?: number): void {
+  selectSuggestedCategoryTitle(title: string, id?: string | number): void {
     this.updateCardField(title);
     if (id != null) this.currentPredictedCategoryId = String(id);
     this.cdr.markForCheck();

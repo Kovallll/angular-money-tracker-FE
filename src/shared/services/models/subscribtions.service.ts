@@ -12,6 +12,7 @@ import {
   retry,
   timer,
   timeout,
+  Observable,
 } from 'rxjs';
 import { subscriptionsUrl } from '@/shared/constants';
 import { SubscribeItem } from '@/shared/types';
@@ -73,11 +74,24 @@ export class SubscribtionsHttpService {
     return this.http.get<SubscribeItem>(`${subscriptionsUrl}/${id}`);
   }
 
-  create(payload: Omit<SubscribeItem, 'id'>) {
+  create(payload: Omit<SubscribeItem, 'id'>, opts?: { groupRoomId?: string }) {
     const userId = this.auth.getCurrentUserId();
+    const roomId = opts?.groupRoomId?.trim();
+    const body: Record<string, unknown> = { ...payload };
+    if (roomId) {
+      body['groupRoomId'] = roomId;
+      delete body['userId'];
+    } else {
+      if (!userId) throw new Error('Not authenticated');
+      body['userId'] = userId;
+    }
     return this.http
-      .post<SubscribeItem>(subscriptionsUrl, { ...payload, userId })
-      .pipe(tap(() => this.refresh$.next()));
+      .post<SubscribeItem>(subscriptionsUrl, body)
+      .pipe(tap(() => !roomId && this.refresh$.next()));
+  }
+
+  fetchSubscriptionsForRoom(roomId: string): Observable<SubscribeItem[]> {
+    return this.http.get<SubscribeItem[]>(`${subscriptionsUrl}/room/${roomId}`);
   }
 
   update(id: number | string, payload: Partial<SubscribeItem>) {

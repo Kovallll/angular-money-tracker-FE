@@ -104,6 +104,17 @@ const routes: Routes = [
         loadComponent: () => import('../pages/Rates/rates-page').then((m) => m.RatesPageComponent),
         title: 'Banking tools',
       },
+      {
+        path: RoutePaths.ROOMS,
+        loadComponent: () => import('../pages/Rooms/rooms-page').then((m) => m.RoomsPageComponent),
+        title: 'Rooms',
+      },
+      {
+        path: `${RoutePaths.ROOM_DETAILS}/:roomId`,
+        loadComponent: () =>
+          import('../pages/Room-details/room-details-page').then((m) => m.RoomDetailsPageComponent),
+        title: 'Room details',
+      },
     ],
   },
   {

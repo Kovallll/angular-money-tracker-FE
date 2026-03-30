@@ -141,7 +141,7 @@ export class AddSubscriptionModalComponent implements OnInit {
     });
   }
 
-  private findSubscriptionsCategory(cats: { id: number; title?: string }[]) {
+  private findSubscriptionsCategory(cats: { id: string | number; title?: string }[]) {
     return cats.find(
       (c) => String(c.title ?? '').toLowerCase() === SUBSCRIPTIONS_CATEGORY_NAME.toLowerCase(),
     );

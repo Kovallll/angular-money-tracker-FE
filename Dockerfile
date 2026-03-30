@@ -8,6 +8,9 @@ RUN yarn install
 
 COPY frontend/ .
 
+ARG API_URL
+ENV API_URL=${API_URL}
+
 RUN yarn build
 
 # Production stage
@@ -15,11 +18,11 @@ FROM node:22-slim
 
 WORKDIR /app
 
-# Copy built files from builder
+# Статика Angular + минимальный Node-сервер (см. server.js)
 COPY --from=builder /app/dist ./dist
-
+COPY --from=builder /app/server.js ./server.js
 
 EXPOSE 80
 
-# Run the server on port 80
+# PORT подставляет платформа (например 8080); server.js читает process.env.PORT
 CMD ["node", "server.js"]

@@ -84,7 +84,8 @@ export interface ExpenseItem {
 }
 
 export interface CategoryItem {
-  id: number;
+  /** UUID с бэкенда; в старых местах мог встречаться number. */
+  id: string | number;
   title: string;
   expenses: Transaction[];
   revenues: Transaction[];
@@ -103,7 +104,10 @@ export interface CreateCategoryItem {
 }
 
 export interface GoalItem {
-  id: number;
+  id: string | number;
+  /** Личная цель: userId; комнатная: groupRoomId. */
+  userId?: string;
+  groupRoomId?: string | null;
   /** Category ID (e.g. Goals category). */
   categoryId?: string | null;
   targetBudget: number;
@@ -125,6 +129,8 @@ export type CreateGoalItem = Omit<GoalItem, 'id'>;
 
 export interface SubscribeItem {
   id: number | string;
+  userId?: string;
+  groupRoomId?: string | null;
   amount: number;
   /** Currency code (e.g. BYN, EUR). Used for display; default BYN if missing. */
   currencyCode?: string;
@@ -224,4 +230,57 @@ export interface CategorizerPrediction {
   source: string;
   /** Redis cache key for feedback when user creates a transaction with this prediction. */
   predictionKey?: string;
+}
+
+export interface GroupRoomItem {
+  id: string;
+  name: string;
+  description?: string | null;
+  avatar?: string | null;
+  currencyCode: string;
+  role: 'owner' | 'admin' | 'member';
+  membersCount: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface GroupRoomMember {
+  userId: string;
+  role: 'owner' | 'admin' | 'member';
+  invitedBy?: string | null;
+  joinedAt: string;
+  name: string;
+  lastname?: string | null;
+  email: string;
+  avatar?: string | null;
+}
+
+export interface GroupRoomDetails extends Omit<GroupRoomItem, 'role' | 'membersCount'> {
+  createdBy: string;
+  members: GroupRoomMember[];
+}
+
+export interface GroupInviteItem {
+  id: string;
+  roomId: string;
+  createdBy: string;
+  token: string;
+  expiresAt: string;
+  createdAt: string;
+}
+
+export interface GroupTransactionItem {
+  id: string;
+  roomId: string;
+  paidBy: string;
+  createdBy: string;
+  categoryId?: string | null;
+  amount: number;
+  currencyCode: string;
+  title: string;
+  description?: string | null;
+  date: string;
+  isSplit: boolean;
+  createdAt: string;
+  updatedAt: string;
 }

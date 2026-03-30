@@ -1,6 +1,9 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const { loadEnv, requireApiUrl } = require('./scripts/load-env');
+
+loadEnv();
 
 const PORT = process.env.PORT || 80;
 
@@ -20,6 +23,16 @@ function findDistDir() {
 
 const DIST_DIR = findDistDir();
 console.log('Serving static files from:', DIST_DIR);
+
+function writeRuntimeConfig() {
+  const apiUrl = requireApiUrl();
+  const configPath = path.join(DIST_DIR, 'config.js');
+  const configContent = `window.API_URL = ${JSON.stringify(apiUrl)};\n`;
+  fs.writeFileSync(configPath, configContent, 'utf-8');
+  console.log('Runtime config generated:', configPath, 'API_URL:', apiUrl);
+}
+
+writeRuntimeConfig();
 
 const server = http.createServer((req, res) => {
   console.log(`${req.method} ${req.url}`);

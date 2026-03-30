@@ -2,7 +2,7 @@ import { goalsUrl } from '@/shared/constants';
 import { CreateGoalItem, GoalItem } from '@/shared/types';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { delay, finalize, tap } from 'rxjs';
+import { delay, finalize, Observable, tap } from 'rxjs';
 import { AuthService } from '@/shared/services/auth/auth.service';
 
 @Injectable({
@@ -34,25 +34,34 @@ export class GoalsHttpService {
       });
   }
 
-  createGoal(goal: CreateGoalItem) {
-    const userId = this.auth.getCurrentUserId();
-    if (!userId) throw new Error('Not authenticated');
-    const { title, targetBudget, goalBudget, startDate, endDate, currencyCode, categoryId } = goal;
-    return this.http
-      .post<CreateGoalItem>(goalsUrl, {
-        title,
-        targetBudget,
-        goalBudget,
-        startDate,
-        endDate,
-        userId,
-        ...(currencyCode && { currencyCode }),
-        ...(categoryId != null && categoryId !== '' && { categoryId }),
-      })
-      .pipe(tap(() => this.loadGoals()));
+  /** Список целей комнаты (не трогает глобальный signal `goals`). */
+  fetchGoalsForRoom(roomId: string): Observable<GoalItem[]> {
+    return this.http.get<GoalItem[]>(`${goalsUrl}/room/${roomId}`);
   }
 
-  deleteGoal(id: number) {
+  createGoal(goal: CreateGoalItem, opts?: { groupRoomId?: string }) {
+    const userId = this.auth.getCurrentUserId();
+    const roomId = opts?.groupRoomId?.trim();
+    if (!roomId && !userId) throw new Error('Not authenticated');
+    const { title, targetBudget, goalBudget, startDate, endDate, currencyCode, categoryId } = goal;
+    const body: Record<string, unknown> = {
+      title,
+      targetBudget,
+      goalBudget,
+      startDate,
+      endDate,
+      ...(currencyCode && { currencyCode }),
+      ...(categoryId != null && categoryId !== '' && { categoryId }),
+    };
+    if (roomId) {
+      body['groupRoomId'] = roomId;
+    } else {
+      body['userId'] = userId;
+    }
+    return this.http.post<GoalItem>(goalsUrl, body).pipe(tap(() => !roomId && this.loadGoals()));
+  }
+
+  deleteGoal(id: number | string) {
     return this.http.delete(`${goalsUrl}/${id}`);
   }
 

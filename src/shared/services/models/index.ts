@@ -11,3 +11,5 @@ export {
   type ListSnapshotsParams,
   type PeriodType,
 } from './analytics-snapshots.service';
+export { GroupRoomsHttpService } from './group-rooms.service';
+export { SseEventsService } from './sse-events.service';

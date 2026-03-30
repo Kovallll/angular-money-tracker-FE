@@ -25,5 +25,6 @@ export const menuItems = [
     icon: 'subscriptions',
   },
   { id: 10, path: RoutePaths.RATES, title: 'Banking tools', icon: 'account_balance' },
+  { id: 11, path: RoutePaths.ROOMS, title: 'Rooms', icon: 'groups' },
   { id: 9, path: RoutePaths.SETTINGS, title: 'Settings', icon: 'settings' },
 ];

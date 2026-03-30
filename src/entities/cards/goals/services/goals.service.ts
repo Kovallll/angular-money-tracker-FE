@@ -90,7 +90,7 @@ export class GoalsService {
     );
   }
 
-  public deleteGoal(id: number) {
+  public deleteGoal(id: number | string) {
     return this.goalsHttpService.deleteGoal(id).subscribe({
       next: () => {
         this.messageService.add({

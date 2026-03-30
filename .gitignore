@@ -7,6 +7,8 @@ yarn.lock
 dist
 
 .env
+# Генерируется из .env скриптом scripts/sync-env-config.js
+src/config.js
 .env.local
 .env.development.local
 .env.test.local

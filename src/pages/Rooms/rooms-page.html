@@ -1,0 +1,88 @@
+<section class="rooms-page">
+  <header class="rooms-header">
+    <h1>Rooms</h1>
+    <p>Manage shared spaces for collaborative finances.</p>
+  </header>
+
+  <div class="rooms-stats">
+    <div class="stat-card">
+      <span class="label">Total rooms</span>
+      <strong>{{ roomStats().total }}</strong>
+    </div>
+    <div class="stat-card">
+      <span class="label">Owned</span>
+      <strong>{{ roomStats().owned }}</strong>
+    </div>
+    <div class="stat-card">
+      <span class="label">Joined</span>
+      <strong>{{ roomStats().joined }}</strong>
+    </div>
+  </div>
+
+  <div class="actions-grid">
+    <article class="panel">
+      <h2>Create room</h2>
+      <input
+        type="text"
+        placeholder="Room name"
+        [ngModel]="roomName()"
+        (ngModelChange)="roomName.set($event)"
+      />
+      <textarea
+        placeholder="Description (optional)"
+        [ngModel]="roomDescription()"
+        (ngModelChange)="roomDescription.set($event)"
+      ></textarea>
+      <label class="field-label">
+        Currency
+        <select [ngModel]="roomCurrencyCode()" (ngModelChange)="roomCurrencyCode.set($event)">
+          <option *ngFor="let c of currencyOptions" [value]="c">{{ c }}</option>
+        </select>
+      </label>
+      <input
+        type="url"
+        placeholder="Avatar URL (optional)"
+        [ngModel]="roomAvatarUrl()"
+        (ngModelChange)="roomAvatarUrl.set($event)"
+      />
+      <button (click)="createRoom()" [disabled]="isSubmitting()">Create room</button>
+    </article>
+
+    <article class="panel">
+      <h2>Join by invite token</h2>
+      <input
+        type="text"
+        placeholder="Paste invite token"
+        [ngModel]="inviteToken()"
+        (ngModelChange)="inviteToken.set($event)"
+      />
+      <div class="row">
+        <button (click)="acceptInvite()" [disabled]="isSubmitting()">Accept</button>
+        <button class="ghost" (click)="rejectInvite()" [disabled]="isSubmitting()">Reject</button>
+      </div>
+    </article>
+  </div>
+
+  <p class="error" *ngIf="error()">{{ error() }}</p>
+
+  <section class="rooms-list">
+    <h2>My rooms</h2>
+    <p *ngIf="isLoading()">Loading...</p>
+    <p *ngIf="!isLoading() && rooms().length === 0">No rooms yet.</p>
+
+    <a
+      class="room-card"
+      *ngFor="let room of rooms()"
+      [routerLink]="['/', routePaths.ROOM_DETAILS, room.id]"
+    >
+      <div>
+        <h3>{{ room.name }}</h3>
+        <p>{{ room.description || 'No description' }}</p>
+      </div>
+      <div class="meta">
+        <span>{{ room.role }}</span>
+        <span>{{ room.membersCount }} members</span>
+      </div>
+    </a>
+  </section>
+</section>
