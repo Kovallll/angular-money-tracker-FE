@@ -5,11 +5,18 @@ import { ExpensesHttpService, RoutePaths } from '@/shared';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
 import { ProgressSpinner } from 'primeng/progressspinner';
+import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 
 @Component({
   selector: 'dash-expense-card',
   standalone: true,
-  imports: [DashboardCardComponent, CardBodyComponent, ExpenseCardItemComponent, ProgressSpinner],
+  imports: [
+    DashboardCardComponent,
+    CardBodyComponent,
+    ExpenseCardItemComponent,
+    ProgressSpinner,
+    AppIconComponent,
+  ],
   templateUrl: './expense-card.component.html',
   styleUrls: ['./expense-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

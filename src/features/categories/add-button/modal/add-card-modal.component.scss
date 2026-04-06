@@ -1,57 +1,23 @@
 @use 'theme' as *;
 
-.form {
-  min-height: 280px;
-  height: 100%;
+:host ::ng-deep .category-modal .form-fields {
+  padding-bottom: 8px;
 }
 
-.wrapper {
-  margin-bottom: 12px;
+.field-label-main {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.35px;
+  color: $gray;
+  margin-bottom: 8px;
 }
 
-// Поле с иконкой: выравнивание по высоте с полем "Category Name"
 .field--icon {
-  .icons {
-    display: flex;
-    align-items: stretch;
-    gap: 8px;
-    min-height: 44px; // как у .p-inputtext (padding 10*2 + line)
-  }
-
-  .preview {
-    flex-shrink: 0;
-    background: $accent;
-    border-radius: 50%;
-    width: 44px;
-    height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .select {
-    flex: 1;
-    min-width: 0;
-
-    ::ng-deep .p-select .p-dropdown {
-      min-height: 44px;
-      display: flex;
-      align-items: center;
-    }
-  }
-}
-
-.select {
-  width: 100%;
-  min-width: 0;
+  margin-bottom: 0;
 }
 
 .input {
   width: 100%;
-}
-
-.icon-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }

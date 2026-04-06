@@ -80,6 +80,8 @@ export class EditTransactionModalComponent implements OnInit {
   suggestedAlternatives: { id: string | number; title: string }[] = [];
   private currentPredictionKey = '';
   private currentPredictedCategoryId = '';
+  private userChangedCategoryManually = false;
+  private lastPredictedTitle = '';
 
   categories = injectQuery(() => ({
     queryKey: ['categories'],
@@ -207,18 +209,25 @@ export class EditTransactionModalComponent implements OnInit {
       .subscribe((prediction) => {
         this.categorizerLoading = false;
         if (!prediction?.primary) {
-          this.currentPredictionKey = '';
-          this.currentPredictedCategoryId = '';
+          this.resetPredictionState();
+          this.cdr.markForCheck();
+          return;
+        }
+        const primaryId = String(prediction.primary.category_id ?? '').trim();
+        if (!primaryId) {
+          this.resetPredictionState();
           this.cdr.markForCheck();
           return;
         }
         this.currentPredictionKey = prediction.predictionKey ?? '';
-        this.currentPredictedCategoryId = prediction.primary.category_id ?? '';
         const list = this.categories.data() ?? [];
         const byId = (id: string) => list.find((c) => String(c.id) === id || c.id === Number(id));
-        const primary = byId(prediction.primary.category_id);
-        if (primary) {
+        const primary = byId(primaryId);
+        if (primary && !this.userChangedCategoryManually) {
           this.updateCardField(primary.title);
+          this.currentPredictedCategoryId = String(primary.id);
+        } else if (primary) {
+          this.currentPredictedCategoryId = String(primary.id);
         }
         const allSuggested = [prediction.primary, ...(prediction.alternatives ?? [])];
         const seen = new Set<string>();
@@ -237,13 +246,16 @@ export class EditTransactionModalComponent implements OnInit {
   }
 
   onTitleChange(value: string): void {
+    const normalized = (value ?? '').trim().toLowerCase().replace(/\s+/g, ' ');
+    if (normalized !== this.lastPredictedTitle) {
+      this.userChangedCategoryManually = false;
+    }
     this.titleInput$.next(value ?? '');
-    if (!(value ?? '').trim()) {
-      this.isCategorySuggested = false;
-      this.suggestedAlternatives = [];
-      this.currentPredictionKey = '';
-      this.currentPredictedCategoryId = '';
+    if (normalized.length < EditTransactionModalComponent.MIN_TITLE_LENGTH_FOR_PREDICT) {
+      this.resetPredictionState();
       this.cdr.markForCheck();
+    } else {
+      this.lastPredictedTitle = normalized;
     }
   }
 
@@ -254,6 +266,7 @@ export class EditTransactionModalComponent implements OnInit {
   selectSuggestedCategoryTitle(title: string, id?: string | number): void {
     this.updateCardField(title);
     if (id != null) this.currentPredictedCategoryId = String(id);
+    this.userChangedCategoryManually = true;
     this.cdr.markForCheck();
   }
 
@@ -278,7 +291,17 @@ export class EditTransactionModalComponent implements OnInit {
   }
 
   setCardField(field: string, value: any) {
+    if (field === 'category') {
+      this.userChangedCategoryManually = true;
+    }
     this.card.update((state: any) => ({ ...state, [field]: value }));
+  }
+
+  private resetPredictionState(): void {
+    this.isCategorySuggested = false;
+    this.suggestedAlternatives = [];
+    this.currentPredictionKey = '';
+    this.currentPredictedCategoryId = '';
   }
 
   get amount(): number {

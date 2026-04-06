@@ -29,7 +29,7 @@
   );
 
   .mat-mdc-text-field-wrapper {
-    height: 36px;
+    height: 32px;
     width: 100%;
     max-width: 100%;
 
@@ -39,7 +39,7 @@
   }
 
   .mat-mdc-form-field-infix.mat-mdc-form-field-infix {
-    height: 36px;
+    height: 32px;
     min-height: 0;
     padding: 0;
 
@@ -59,12 +59,37 @@
 }
 
 :host .input.input {
+  box-sizing: border-box;
   width: 100%;
-  height: 36px;
-  font-size: 14px;
+  height: 32px;
+  font-size: 13px;
+  line-height: 32px;
+  padding: 0 10px;
+  text-align: start;
+
+  &:placeholder-shown {
+    text-align: center;
+  }
+
+  @include bp.mobile {
+    font-size: 12px;
+
+    &::placeholder {
+      font-size: 11px;
+      font-weight: 500;
+    }
+  }
 
   @include bp.tablet-and-up {
     height: 40px;
+    line-height: 40px;
     font-size: 16px;
+    padding: 0 12px;
   }
+}
+
+.mat-mdc-form-field-infix {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

@@ -21,21 +21,9 @@
 
   .amount-input {
     min-width: 0;
-
-    ::ng-deep .p-inputnumber.p-inputnumber {
-      width: 100%;
-      max-width: 100%;
-      min-width: 0;
-      box-sizing: border-box;
-    }
-
-    ::ng-deep .p-inputnumber .p-inputnumber-input.p-inputnumber-input,
-    ::ng-deep .p-inputnumber-input.p-inputnumber-input {
-      width: 100%;
-      max-width: 100%;
-      min-width: 0;
-      box-sizing: border-box;
-    }
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   ::ng-deep .currency-select {

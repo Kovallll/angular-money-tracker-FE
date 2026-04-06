@@ -1,5 +1,5 @@
 @use 'theme' as *;
-@use 'shared/styles/breakpoints' as bp;
+@use 'shared/styles/page-shell' as shell;
 
 :host {
   display: block;
@@ -9,8 +9,5 @@
 }
 
 .container {
-  width: 100%;
-  min-width: 0;
-  max-width: 100%;
-  box-sizing: border-box;
+  @include shell.pageShell;
 }

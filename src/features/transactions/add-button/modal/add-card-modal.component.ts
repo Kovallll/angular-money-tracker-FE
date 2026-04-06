@@ -16,13 +16,15 @@ import { MessageModule } from 'primeng/message';
 import {
   BalancesHttpService,
   CategoriesHttpService,
+  CategoryItem,
   CreateTransactionPayload,
+  GroupRoomsHttpService,
   StatisticsHttpService,
   TransactionsHttpService,
 } from '@/shared';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
-import { DynamicDialogRef } from 'primeng/dynamicdialog';
-import { injectMutation, injectQuery } from '@tanstack/angular-query-experimental';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { injectMutation, injectQuery, QueryClient } from '@tanstack/angular-query-experimental';
 import { DatePickerModule } from 'primeng/datepicker';
 import { Select } from 'primeng/select';
 import { PriceCurrencyFieldComponent } from '@/shared/components/price-currency-field/price-currency-field.component';
@@ -65,9 +67,12 @@ export class AddTransactionModalComponent implements OnInit {
   private messageService = inject(MessageService);
   private transactionsHttpService = inject(TransactionsHttpService);
   private ref = inject(DynamicDialogRef);
+  private dialogConfig = inject(DynamicDialogConfig, { optional: true });
+  private groupRoomsHttp = inject(GroupRoomsHttpService);
   private categoriesHttpService = inject(CategoriesHttpService);
   private balancesHttpService = inject(BalancesHttpService);
   private statisticsHttpService = inject(StatisticsHttpService);
+  private queryClient = inject(QueryClient);
   private cdr = inject(ChangeDetectorRef);
   private destroyRef = inject(DestroyRef);
   protected currencyService = inject(CurrencyService);
@@ -85,13 +90,30 @@ export class AddTransactionModalComponent implements OnInit {
   private currentPredictionKey = '';
   /** Category id we suggested (primary or selected alternative). */
   private currentPredictedCategoryId = '';
+  /** Prevents ML from overriding category after user changed it manually. */
+  private userChangedCategoryManually = false;
+  /** Normalized title used for the latest prediction. */
+  private lastPredictedTitle = '';
 
-  categories = injectQuery(() => ({
-    queryKey: ['categories'],
-    queryFn: () => this.categoriesHttpService.getCategories(),
-  }));
+  categories = injectQuery(() => {
+    const roomId = this.getGroupRoomId() ?? '';
+    return {
+      queryKey: ['categories', 'scope', roomId] as const,
+      queryFn: () =>
+        roomId
+          ? this.categoriesHttpService.fetchCategoriesByRoom(roomId)
+          : this.categoriesHttpService.getCategories(),
+    };
+  });
 
   cards = this.balancesHttpService.cards;
+
+  /** Group room: создаём group transaction вместо личной транзакции. */
+  protected getGroupRoomId(): string | undefined {
+    const d = this.dialogConfig?.data as { groupRoomId?: unknown } | undefined;
+    const v = d?.groupRoomId;
+    return typeof v === 'string' && v.trim() ? v.trim() : undefined;
+  }
 
   constructor() {
     effect(() => {
@@ -124,37 +146,44 @@ export class AddTransactionModalComponent implements OnInit {
           this.isCategorySuggested = false;
           this.suggestedAlternatives = [];
           this.cdr.markForCheck();
-          return this.statisticsHttpService.predict(text.trim()).pipe(
-            catchError(() => {
-              this.categorizerLoading = false;
-              this.cdr.markForCheck();
-              return of(null);
-            }),
-          );
+          return this.statisticsHttpService
+            .predict(text.trim(), { roomId: this.getGroupRoomId() })
+            .pipe(
+              catchError(() => {
+                this.categorizerLoading = false;
+                this.cdr.markForCheck();
+                return of(null);
+              }),
+            );
         }),
         takeUntilDestroyed(this.destroyRef),
       )
       .subscribe((prediction) => {
         this.categorizerLoading = false;
         if (!prediction?.primary) {
-          this.currentPredictionKey = '';
-          this.currentPredictedCategoryId = '';
+          this.resetPredictionState();
           this.cdr.markForCheck();
           return;
         }
         this.currentPredictionKey = prediction.predictionKey ?? '';
-        this.currentPredictedCategoryId = prediction.primary.category_id ?? '';
         const list = this.categories.data() ?? [];
-        const byId = (id: string) => list.find((c) => String(c.id) === id || c.id === Number(id));
-        const primary = byId(prediction.primary.category_id);
-        if (primary) {
+        const primary = this.resolveCategoryFromPrediction(list, prediction.primary);
+        if (!primary) {
+          this.resetPredictionState();
+          this.cdr.markForCheck();
+          return;
+        }
+        if (!this.userChangedCategoryManually) {
           this.form.categoryId = primary.id;
+          this.currentPredictedCategoryId = String(primary.id);
+        } else {
+          this.currentPredictedCategoryId = String(primary.id);
         }
         const allSuggested = [prediction.primary, ...(prediction.alternatives ?? [])];
         const seen = new Set<string>();
         this.suggestedAlternatives = [];
         for (const p of allSuggested) {
-          const cat = byId(p.category_id);
+          const cat = this.resolveCategoryFromPrediction(list, p);
           const key = cat ? String(cat.id) : '';
           if (cat && key && !seen.has(key)) {
             seen.add(key);
@@ -166,21 +195,47 @@ export class AddTransactionModalComponent implements OnInit {
       });
   }
 
+  /**
+   * Личные категории совпадают с ML по id; в комнате — свои UUID, поэтому дополнительно матчим по названию.
+   */
+  private resolveCategoryFromPrediction(
+    list: CategoryItem[],
+    p: { category_id?: string; category_name?: string },
+  ): CategoryItem | undefined {
+    const id = String(p.category_id ?? '').trim();
+    if (id) {
+      const byId = list.find((c) => String(c.id) === id || c.id === Number(id));
+      if (byId) return byId;
+    }
+    const rawName = (p.category_name ?? '').trim();
+    const name = rawName.toLowerCase();
+    if (!name || name === 'неизвестно' || name === 'unknown') return undefined;
+    return list.find((c) => (c.title ?? '').trim().toLowerCase() === name);
+  }
+
   protected onTitleChange(value: string): void {
+    const normalized = (value ?? '').trim().toLowerCase().replace(/\s+/g, ' ');
+    if (normalized !== this.lastPredictedTitle) {
+      this.userChangedCategoryManually = false;
+    }
     this.titleInput$.next(value ?? '');
-    if (!(value ?? '').trim()) {
-      this.isCategorySuggested = false;
-      this.suggestedAlternatives = [];
-      this.currentPredictionKey = '';
-      this.currentPredictedCategoryId = '';
+    if (normalized.length < AddTransactionModalComponent.MIN_TITLE_LENGTH_FOR_PREDICT) {
+      this.resetPredictionState();
       this.cdr.markForCheck();
+    } else {
+      this.lastPredictedTitle = normalized;
     }
   }
 
   protected selectSuggestedCategory(id: string | number): void {
     this.form.categoryId = id;
     this.currentPredictedCategoryId = String(id);
+    this.userChangedCategoryManually = true;
     this.cdr.markForCheck();
+  }
+
+  protected onCategoryChange(): void {
+    this.userChangedCategoryManually = true;
   }
 
   mutation = injectMutation(() => ({
@@ -271,6 +326,13 @@ export class AddTransactionModalComponent implements OnInit {
     return payload;
   }
 
+  private resetPredictionState(): void {
+    this.isCategorySuggested = false;
+    this.suggestedAlternatives = [];
+    this.currentPredictionKey = '';
+    this.currentPredictedCategoryId = '';
+  }
+
   ngOnInit(): void {
     if (!this.form.currencyCode) {
       this.form.currencyCode = this.currencyService.primaryCode();
@@ -283,7 +345,67 @@ export class AddTransactionModalComponent implements OnInit {
     }
   }
 
-  onSubmit(form: NgForm) {
+  protected isSaveDisabled(form: NgForm | null | undefined): boolean {
+    if (!form) return true;
+    const amount = Number(this.form.amount) || 0;
+    if (amount <= 0) return true;
+    if (this.getGroupRoomId()) {
+      const title = (this.form.title ?? '').trim();
+      if (!title) return true;
+      const dateStr = this.formatDateLocal(this.form.date);
+      if (!dateStr) return true;
+      const cid = this.form.cardId;
+      if (cid === '' || cid === null || cid === undefined) return true;
+      const cardNum = Number(cid);
+      return !Number.isFinite(cardNum) || cardNum < 1;
+    }
+    return form.invalid || !this.form.cardId || !this.form.categoryId || this.form.amount <= 0;
+  }
+
+  async onSubmit(form: NgForm) {
+    const roomId = this.getGroupRoomId();
+    if (roomId) {
+      form.form.markAllAsTouched();
+      const title = (this.form.title ?? '').trim();
+      const dateStr = this.formatDateLocal(this.form.date);
+      const cardNum = Number(this.form.cardId);
+      if (!title || this.form.amount <= 0 || !dateStr || !Number.isFinite(cardNum) || cardNum < 1)
+        return;
+      try {
+        await this.groupRoomsHttp.createRoomTransaction(roomId, {
+          title,
+          amount: Number(this.form.amount) || 0,
+          date: dateStr,
+          currencyCode: this.form.currencyCode || this.currencyService.primaryCode(),
+          cardId: Math.trunc(cardNum),
+          ...(this.form.categoryId !== '' && this.form.categoryId != null
+            ? { categoryId: String(this.form.categoryId) }
+            : {}),
+          ...(this.form.description?.trim() ? { description: this.form.description.trim() } : {}),
+        });
+        this.balancesHttpService.refresh();
+        this.messageService.add({
+          key: 'toast',
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Transaction added',
+          life: 3000,
+        });
+        void this.queryClient.invalidateQueries({ queryKey: ['groupTransactions', roomId] });
+        void this.queryClient.invalidateQueries({ queryKey: ['charts', 'room', roomId] });
+        void this.queryClient.invalidateQueries({ queryKey: ['roomContributions', roomId] });
+        this.ref.close(true);
+      } catch {
+        this.messageService.add({
+          key: 'toast',
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to add transaction',
+          life: 3000,
+        });
+      }
+      return;
+    }
     if (form.valid && this.form.cardId && this.form.categoryId && this.form.amount > 0) {
       this.mutation.mutate(this.buildPayload());
     }

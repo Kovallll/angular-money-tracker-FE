@@ -1,11 +1,27 @@
-<div class="container">
-  <header class="page-header">
-    <div class="page-header__text">
-      <h1 class="page-title">Goals</h1>
-      <p class="page-subtitle">Track your savings targets and monitor progress</p>
-    </div>
-    <goal-add-card-button />
-  </header>
+<div class="container" [class.container--embedded]="embedded()">
+  @if (!embedded()) {
+    <header class="app-page-head app-page-head--single-row">
+      <div class="app-page-head__text">
+        <h1 class="app-page-head__title">Goals</h1>
+        <p class="app-page-head__subtitle">Track your savings targets and monitor progress</p>
+      </div>
+      <div class="app-page-head__actions">
+        <goal-add-card-button
+          [groupRoomId]="groupRoomId()"
+          (roomGoalCreated)="onRoomGoalCreated()"
+        />
+      </div>
+    </header>
+  } @else {
+    <header class="app-page-head app-page-head--compact">
+      <div class="app-page-head__actions">
+        <goal-add-card-button
+          [groupRoomId]="groupRoomId()"
+          (roomGoalCreated)="onRoomGoalCreated()"
+        />
+      </div>
+    </header>
+  }
 
   <div class="content">
     @if (isLoading()) {
@@ -17,7 +33,7 @@
       <section class="summary-cards" aria-label="Overview">
         <div class="summary-card summary-card--primary">
           <span class="summary-card__icon" aria-hidden="true">
-            <app-icon prime="flag" [sizePx]="18" />
+            <app-icon prime="flag" [sizePx]="20" />
           </span>
           <div class="summary-card__content">
             <span class="summary-card__label">Active goals</span>
@@ -26,7 +42,7 @@
         </div>
         <div class="summary-card summary-card--completed">
           <span class="summary-card__icon" aria-hidden="true">
-            <app-icon prime="check-circle" [sizePx]="18" />
+            <app-icon prime="check-circle" [sizePx]="20" />
           </span>
           <div class="summary-card__content">
             <span class="summary-card__label">Completed</span>
@@ -35,7 +51,7 @@
         </div>
         <div class="summary-card summary-card--budget">
           <span class="summary-card__icon" aria-hidden="true">
-            <app-icon prime="wallet" [sizePx]="18" />
+            <app-icon prime="wallet" [sizePx]="20" />
           </span>
           <div class="summary-card__content summary-card__content--grid">
             <span class="summary-card__budget-label">Target</span>
@@ -49,9 +65,11 @@
       @if (activeGoals().length || completedGoals().length) {
         <section class="hero-section">
           <goal-active-card [goal]="activeCard()" />
-          <div class="chart-section">
-            <goals-statistic-card />
-          </div>
+          @if (!groupRoomId()) {
+            <div class="chart-section">
+              <goals-statistic-card />
+            </div>
+          }
         </section>
       }
 
@@ -60,7 +78,7 @@
         [attr.aria-label]="showCompleted() ? 'Completed goals' : 'Active goals'"
       >
         <div class="section-header">
-          <h2 class="section-title">Goals</h2>
+          <h2 class="app-page-section-title">Goals</h2>
           <div class="switcher" role="tablist" aria-label="Filter goals">
             <button
               type="button"
@@ -109,12 +127,15 @@
     } @else {
       <div class="empty-state">
         <div class="empty-state__icon" aria-hidden="true">
-          <app-icon prime="flag" [sizePx]="22" />
+          <app-icon prime="flag" [sizePx]="20" />
         </div>
         <h3 class="empty-state__title">No goals yet</h3>
         <p class="empty-state__text">Create your first goal to start tracking savings</p>
         <div class="empty-state__action">
-          <goal-add-card-button />
+          <goal-add-card-button
+            [groupRoomId]="groupRoomId()"
+            (roomGoalCreated)="onRoomGoalCreated()"
+          />
         </div>
       </div>
     }

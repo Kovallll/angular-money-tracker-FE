@@ -1,12 +1,12 @@
 @use 'theme' as *;
 @use 'shared/styles/breakpoints' as bp;
+@use 'shared/styles/page-shell' as shell;
 
 .container {
   display: flex;
   flex-direction: column;
   gap: 24px;
-  width: 100%;
-  min-width: 0;
+  @include shell.pageShell;
 }
 
 .back-link {
@@ -48,13 +48,7 @@
   justify-content: center;
   background: $accent;
   border-radius: 12px;
-
-  .category-icon ::ng-deep app-icon,
-  .category-icon ::ng-deep .mat-icon.mat-icon {
-    font-size: 28px;
-    width: 28px;
-    height: 28px;
-  }
+  color: $white;
 }
 
 .category-info {
@@ -62,15 +56,8 @@
   min-width: 0;
 }
 
-.category-title {
+.category-header .app-page-head__title {
   margin: 0 0 12px 0;
-  font-size: 20px;
-  font-weight: 600;
-  color: $white;
-
-  @include bp.tablet-and-up {
-    font-size: 24px;
-  }
 }
 
 .totals-row {

@@ -31,7 +31,9 @@
     </p-carousel>
     } @else {
     <div class="data-placeholder">
-      <span class="data-placeholder__icon" aria-hidden="true">💳</span>
+      <div class="dash-empty-icon" aria-hidden="true">
+        <app-icon prime="wallet" [sizePx]="26" />
+      </div>
       <p>No cards added</p>
       <p>Add a card to see balance</p>
     </div>

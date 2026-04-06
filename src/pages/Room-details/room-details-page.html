@@ -1,17 +1,24 @@
 <section class="room-details" *ngIf="room() as roomData; else loadingTpl">
-  <header class="page-head">
-    <h1>{{ roomData.name }}</h1>
-    <p>{{ roomData.description || 'No description' }}</p>
+  <a [routerLink]="['/', routePaths.ROOMS]" class="room-back">
+    <app-icon prime="arrow-left" [sizePx]="20" />
+    <span>Rooms</span>
+  </a>
+
+  <header class="app-page-head app-page-head--tight">
+    <div class="app-page-head__text">
+      <h1 class="app-page-head__title">{{ roomData.name }}</h1>
+      <p class="app-page-head__subtitle" *ngIf="roomData.description?.trim()">{{ roomData.description }}</p>
+    </div>
   </header>
 
-  <p class="error" *ngIf="error()">{{ error() }}</p>
+  <p class="room-error" *ngIf="error()">{{ error() }}</p>
 
   <nav class="room-tabs" role="tablist" aria-label="Room sections">
     <button
       type="button"
       *ngFor="let t of tabDefs"
       class="room-tab"
-      [class.active]="activeTab() === t.id"
+      [class.room-tab--active]="activeTab() === t.id"
       [attr.aria-selected]="activeTab() === t.id"
       (click)="setTab(t.id)"
     >
@@ -19,207 +26,129 @@
     </button>
   </nav>
 
-  <div class="room-tab-panels" [ngSwitch]="activeTab()">
-    <ng-container *ngSwitchCase="'overview'">
-      <section class="card">
-        <h2>Room spending (this month)</h2>
-        <ng-container *ngIf="roomOverview(); else noRoomStats">
-          <p class="muted">
-            Total expenses in current month (from group transactions):
-            <strong>{{ overviewMonthTotal() | number : '1.2-2' }}</strong>
-          </p>
-        </ng-container>
-        <ng-template #noRoomStats>
-          <p class="muted">No overview yet — add group transactions or check access.</p>
-        </ng-template>
-      </section>
-      <section class="card muted-hint">
-        <p>
-          Use the tabs above for transactions, shared categories, goals, subscriptions, and member
-          management.
-        </p>
-      </section>
-    </ng-container>
+  <div class="room-panels" [ngSwitch]="activeTab()">
+    <div class="room-embed" *ngSwitchCase="'overview'">
+      <dashboard-cards [groupRoomId]="roomId()" />
+    </div>
 
-    <section class="card" *ngSwitchCase="'transactions'">
-      <h2>Group transactions</h2>
-      <div class="tx-form">
-        <input
-          type="text"
-          placeholder="Title"
-          [ngModel]="txTitle()"
-          (ngModelChange)="txTitle.set($event)"
-        />
-        <input
-          type="number"
-          step="0.01"
-          min="0"
-          placeholder="Amount"
-          [ngModel]="txAmount()"
-          (ngModelChange)="txAmount.set(+$event)"
-        />
-        <input type="date" [ngModel]="txDate()" (ngModelChange)="txDate.set($event)" />
-        <select
-          [ngModel]="txCategoryId()"
-          (ngModelChange)="txCategoryId.set($event)"
-          title="Category"
-        >
-          <option value="">Category (optional)</option>
-          <option *ngFor="let c of roomCategories()" [value]="c.id">{{ c.title }}</option>
-        </select>
-        <button type="button" (click)="createTransaction()">Add transaction</button>
-      </div>
+    <div class="room-embed" *ngSwitchCase="'transactions'">
+      <transaction-widget [groupRoomId]="roomId()" [embedded]="true" />
+    </div>
 
-      <div class="tx-row" *ngFor="let tx of transactions()">
-        <div>
-          <strong>{{ tx.title }}</strong>
-          <p>{{ tx.date }}</p>
-        </div>
-        <strong>{{ tx.amount }} {{ tx.currencyCode }}</strong>
-      </div>
-    </section>
+    <div class="room-embed" *ngSwitchCase="'categories'">
+      <categories-cards [groupRoomId]="roomId()" [embedded]="true" />
+    </div>
 
-    <section class="card" *ngSwitchCase="'categories'">
-      <h2>Categories</h2>
-      <div class="mini-form">
-        <input
-          type="text"
-          placeholder="New category name"
-          [ngModel]="catTitle()"
-          (ngModelChange)="catTitle.set($event)"
-        />
-        <button type="button" (click)="createRoomCategory()">Add category</button>
-      </div>
-      <div class="tx-row" *ngFor="let c of roomCategories()">
-        <div>
-          <strong>{{ c.title }}</strong>
-          <p class="muted">Expenses: {{ c.totalExpenses | number : '1.2-2' }}</p>
-        </div>
-      </div>
-    </section>
+    <div class="room-embed" *ngSwitchCase="'goals'">
+      <goals-cards [groupRoomId]="roomId()" [embedded]="true" />
+    </div>
 
-    <section class="card" *ngSwitchCase="'goals'">
-      <h2>Goals</h2>
-      <div class="stack-form">
-        <input
-          type="text"
-          placeholder="Title"
-          [ngModel]="gTitle()"
-          (ngModelChange)="gTitle.set($event)"
-        />
-        <div class="row">
-          <input
-            type="number"
-            min="0"
-            step="0.01"
-            placeholder="Target"
-            [ngModel]="gTarget()"
-            (ngModelChange)="gTarget.set(+$event)"
-          />
-          <input
-            type="number"
-            min="0"
-            step="0.01"
-            placeholder="Saved"
-            [ngModel]="gGoal()"
-            (ngModelChange)="gGoal.set(+$event)"
-          />
-        </div>
-        <div class="row">
-          <input type="date" [ngModel]="gStart()" (ngModelChange)="gStart.set($event)" />
-          <input type="date" [ngModel]="gEnd()" (ngModelChange)="gEnd.set($event)" />
-        </div>
-        <button type="button" (click)="createRoomGoal()">Add goal</button>
-      </div>
-      <div class="tx-row" *ngFor="let g of roomGoals()">
-        <div>
-          <strong>{{ g.title }}</strong>
-          <p class="muted">{{ g.goalBudget }} / {{ g.targetBudget }}</p>
-        </div>
-        <button type="button" class="ghost" (click)="deleteRoomGoal(g.id)">Remove</button>
-      </div>
-    </section>
-
-    <section class="card" *ngSwitchCase="'subscriptions'">
-      <h2>Subscriptions</h2>
-      <div class="stack-form">
-        <input
-          type="text"
-          placeholder="Name"
-          [ngModel]="sName()"
-          (ngModelChange)="sName.set($event)"
-        />
-        <div class="row">
-          <input
-            type="number"
-            min="0.01"
-            step="0.01"
-            placeholder="Amount"
-            [ngModel]="sAmount()"
-            (ngModelChange)="sAmount.set(+$event)"
-          />
-          <input type="date" [ngModel]="sDate()" (ngModelChange)="sDate.set($event)" />
-        </div>
-        <input
-          type="text"
-          placeholder="Type (e.g. monthly)"
-          [ngModel]="sType()"
-          (ngModelChange)="sType.set($event)"
-        />
-        <button type="button" (click)="createRoomSubscription()">Add subscription</button>
-      </div>
-      <div class="tx-row" *ngFor="let s of roomSubscriptions()">
-        <div>
-          <strong>{{ s.subscribeName }}</strong>
-          <p class="muted">{{ s.amount }} · {{ s.subscribeDate }}</p>
-        </div>
-        <button type="button" class="ghost" (click)="deleteRoomSubscription(s.id)">Remove</button>
-      </div>
-    </section>
+    <div class="room-embed" *ngSwitchCase="'subscriptions'">
+      <subscribe-table [groupRoomId]="roomId()" [embedded]="true" />
+    </div>
 
     <ng-container *ngSwitchCase="'members'">
-      <section class="card">
-        <h2>Members</h2>
-        <div class="member-row" *ngFor="let member of roomData.members">
-          <div>
-            <strong>{{ member.name }} {{ member.lastname || '' }}</strong>
-            <p>{{ member.email }}</p>
-          </div>
-          <div class="row">
-            <span class="role">{{ member.role }}</span>
-            <button type="button" *ngIf="member.role === 'member'" (click)="updateRole(member.userId, 'admin')">
-              Make admin
-            </button>
-            <button type="button" *ngIf="member.role === 'admin'" (click)="updateRole(member.userId, 'member')">
-              Make member
-            </button>
-            <button type="button" class="ghost" *ngIf="member.role !== 'owner'" (click)="removeMember(member.userId)">
-              Remove
-            </button>
+      <section class="room-card">
+        <div class="room-card__head">
+          <h2 class="room-card__title room-card__title--inline">Members</h2>
+          <app-button appearance="primary" size="sm" type="button" (buttonClick)="openInviteDialog()">
+            <app-icon prime="link" [sizePx]="18" />
+            Create invite
+          </app-button>
+        </div>
+        <div class="room-list">
+          <div class="room-list__row room-list__row--members" *ngFor="let member of roomData.members">
+            <div>
+              <strong class="room-list__primary">{{ member.name }} {{ member.lastname || '' }}</strong>
+              <p class="room-muted">{{ member.email }}</p>
+            </div>
+            <div class="room-member-actions">
+              <span class="room-role">{{ member.role }}</span>
+              <app-button
+                *ngIf="member.role === 'member'"
+                appearance="secondary"
+                size="sm"
+                type="button"
+                (buttonClick)="updateRole(member.userId, 'admin')"
+              >
+                Make admin
+              </app-button>
+              <app-button
+                *ngIf="member.role === 'admin'"
+                appearance="secondary"
+                size="sm"
+                type="button"
+                (buttonClick)="updateRole(member.userId, 'member')"
+              >
+                Make member
+              </app-button>
+              <app-button
+                *ngIf="member.role !== 'owner'"
+                appearance="outline"
+                size="sm"
+                type="button"
+                (buttonClick)="removeMember(member.userId)"
+              >
+                Remove
+              </app-button>
+            </div>
           </div>
         </div>
-      </section>
-
-      <section class="card">
-        <h2>Create invite</h2>
-        <div class="row">
-          <label>
-            Expires in hours:
-            <input
-              type="number"
-              min="1"
-              [ngModel]="inviteHours()"
-              (ngModelChange)="inviteHours.set(+$event)"
-            />
-          </label>
-          <button type="button" (click)="createInvite()">Generate token</button>
+        <div class="room-token" *ngIf="createdInviteToken()">
+          <span class="room-token__label">Invite token</span>
+          <code class="room-token__value">{{ createdInviteToken() }}</code>
         </div>
-        <p class="token" *ngIf="createdInviteToken()">{{ createdInviteToken() }}</p>
       </section>
     </ng-container>
   </div>
 </section>
 
+<p-dialog
+  header="Create invite"
+  [visible]="inviteDialogVisible()"
+  (visibleChange)="onInviteDialogVisibleChange($event)"
+  [modal]="true"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [dismissableMask]="true"
+  styleClass="rooms-dialog"
+>
+  <app-modal-shell
+    [embedded]="true"
+    [showCloseButton]="false"
+    [showCancel]="true"
+    [showSave]="true"
+    saveLabel="Generate token"
+    [saveDisabled]="!inviteHoursValid() || isCreatingInvite()"
+    [saveLoading]="isCreatingInvite()"
+    (cancelRequest)="closeInviteDialog()"
+    (saveRequest)="createInvite()"
+  >
+    <form class="app-modal-form" (ngSubmit)="$event.preventDefault()">
+      <div class="form-fields form-fields--stack">
+        <div class="field form-field--full">
+          <label for="roomInviteHours">Expires in (hours)</label>
+          <input
+            pInputText
+            type="number"
+            name="inviteHours"
+            min="1"
+            max="8760"
+            id="roomInviteHours"
+            placeholder="72"
+            [ngModel]="inviteHours()"
+            (ngModelChange)="onInviteHoursInput($event)"
+          />
+          <p class="room-invite-hint">Between 1 and 8760 hours (1 year).</p>
+        </div>
+      </div>
+    </form>
+  </app-modal-shell>
+</p-dialog>
+
 <ng-template #loadingTpl>
-  <p>Loading room...</p>
+  <div class="room-loading">
+    <p>Loading room…</p>
+  </div>
 </ng-template>

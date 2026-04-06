@@ -1,0 +1,54 @@
+<div class="icon-picker">
+  <div class="icon-picker__toolbar">
+    <div class="icon-picker__preview" [attr.aria-label]="'Selected: ' + selectedLabel()">
+      <app-icon [icon]="selectedIcon()" [sizePx]="20" />
+    </div>
+    <div class="icon-picker__search-wrap">
+      <input
+        pInputText
+        type="search"
+        class="icon-picker__search"
+        [placeholder]="'Search icons'"
+        [ngModel]="searchQuery()"
+        (ngModelChange)="searchQuery.set($event)"
+        autocomplete="off"
+        [attr.aria-label]="'Filter icons by name'"
+      />
+    </div>
+  </div>
+
+  <div class="icon-picker__scroll" role="listbox" [attr.aria-label]="'Category icons'">
+    @if (filteredOptions().length === 0) {
+      <p class="icon-picker__empty">No icons match your search.</p>
+    } @else {
+      <div class="icon-picker__grid">
+        @for (opt of filteredOptions(); track opt.value) {
+          <button
+            type="button"
+            class="icon-picker__cell"
+            [class.icon-picker__cell--active]="isActive(opt.value)"
+            (click)="pick(opt.value)"
+            [attr.aria-selected]="isActive(opt.value)"
+            [title]="opt.label"
+            [attr.aria-label]="opt.label"
+            role="option"
+          >
+            <app-icon [icon]="opt.value" [sizePx]="22" />
+          </button>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="icon-picker__meta">
+    <span class="icon-picker__picked">{{ selectedLabel() }}</span>
+    <span class="icon-picker__count">
+      @if (searchQuery().trim()) {
+        {{ filteredOptions().length }} / {{ totalCount() }}
+      } @else {
+        {{ totalCount() }} icons
+      }
+    </span>
+  </div>
+</div>
+

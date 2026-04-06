@@ -1,88 +1,166 @@
 <section class="rooms-page">
-  <header class="rooms-header">
-    <h1>Rooms</h1>
-    <p>Manage shared spaces for collaborative finances.</p>
+  <header class="app-page-head app-page-head--tight">
+    <div class="app-page-head__text">
+      <h1 class="app-page-head__title">Rooms</h1>
+      <p class="app-page-head__subtitle">Manage shared spaces for collaborative finances.</p>
+    </div>
   </header>
 
   <div class="rooms-stats">
     <div class="stat-card">
-      <span class="label">Total rooms</span>
-      <strong>{{ roomStats().total }}</strong>
+      <span class="stat-card__label">Total rooms</span>
+      <strong class="stat-card__value">{{ roomStats().total }}</strong>
     </div>
     <div class="stat-card">
-      <span class="label">Owned</span>
-      <strong>{{ roomStats().owned }}</strong>
+      <span class="stat-card__label">Owned</span>
+      <strong class="stat-card__value">{{ roomStats().owned }}</strong>
     </div>
     <div class="stat-card">
-      <span class="label">Joined</span>
-      <strong>{{ roomStats().joined }}</strong>
+      <span class="stat-card__label">Joined</span>
+      <strong class="stat-card__value">{{ roomStats().joined }}</strong>
     </div>
   </div>
 
-  <div class="actions-grid">
-    <article class="panel">
-      <h2>Create room</h2>
-      <input
-        type="text"
-        placeholder="Room name"
-        [ngModel]="roomName()"
-        (ngModelChange)="roomName.set($event)"
-      />
-      <textarea
-        placeholder="Description (optional)"
-        [ngModel]="roomDescription()"
-        (ngModelChange)="roomDescription.set($event)"
-      ></textarea>
-      <label class="field-label">
-        Currency
-        <select [ngModel]="roomCurrencyCode()" (ngModelChange)="roomCurrencyCode.set($event)">
-          <option *ngFor="let c of currencyOptions" [value]="c">{{ c }}</option>
-        </select>
-      </label>
-      <input
-        type="url"
-        placeholder="Avatar URL (optional)"
-        [ngModel]="roomAvatarUrl()"
-        (ngModelChange)="roomAvatarUrl.set($event)"
-      />
-      <button (click)="createRoom()" [disabled]="isSubmitting()">Create room</button>
-    </article>
-
-    <article class="panel">
-      <h2>Join by invite token</h2>
-      <input
-        type="text"
-        placeholder="Paste invite token"
-        [ngModel]="inviteToken()"
-        (ngModelChange)="inviteToken.set($event)"
-      />
-      <div class="row">
-        <button (click)="acceptInvite()" [disabled]="isSubmitting()">Accept</button>
-        <button class="ghost" (click)="rejectInvite()" [disabled]="isSubmitting()">Reject</button>
-      </div>
-    </article>
+  <div class="rooms-toolbar">
+    <app-button appearance="primary" size="md" (buttonClick)="openCreateRoomDialog()">
+      <app-icon prime="plus" [sizePx]="20" />
+      Create room
+    </app-button>
+    <app-button appearance="secondary" size="md" (buttonClick)="openInviteDialog()">
+      <app-icon prime="link" [sizePx]="20" />
+      Join by invite
+    </app-button>
   </div>
 
-  <p class="error" *ngIf="error()">{{ error() }}</p>
+  <p class="rooms-error" *ngIf="error()">{{ error() }}</p>
 
   <section class="rooms-list">
-    <h2>My rooms</h2>
-    <p *ngIf="isLoading()">Loading...</p>
-    <p *ngIf="!isLoading() && rooms().length === 0">No rooms yet.</p>
+    <h2 class="rooms-list__title">My rooms</h2>
+    <p class="rooms-list__hint" *ngIf="isLoading()">Loading…</p>
+    <p class="rooms-list__hint" *ngIf="!isLoading() && rooms().length === 0">No rooms yet.</p>
 
     <a
       class="room-card"
       *ngFor="let room of rooms()"
       [routerLink]="['/', routePaths.ROOM_DETAILS, room.id]"
     >
-      <div>
-        <h3>{{ room.name }}</h3>
-        <p>{{ room.description || 'No description' }}</p>
+      <div class="room-card__main">
+        <h3 class="room-card__title">{{ room.name }}</h3>
+        <p class="room-card__desc" *ngIf="room.description?.trim()">{{ room.description }}</p>
       </div>
-      <div class="meta">
-        <span>{{ room.role }}</span>
-        <span>{{ room.membersCount }} members</span>
+      <div class="room-card__meta">
+        <span class="room-card__role">{{ room.role }}</span>
+        <span class="room-card__members">{{ room.membersCount }} members</span>
       </div>
     </a>
   </section>
 </section>
+
+<p-dialog
+  header="Create room"
+  [visible]="createRoomDialogVisible()"
+  (visibleChange)="onCreateDialogVisibleChange($event)"
+  [modal]="true"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [dismissableMask]="true"
+  styleClass="rooms-dialog"
+>
+  <app-modal-shell
+    [embedded]="true"
+    [showCloseButton]="false"
+    [showCancel]="true"
+    [showSave]="true"
+    saveLabel="Create"
+    [saveDisabled]="!roomName().trim() || isSubmitting()"
+    [saveLoading]="isSubmitting()"
+    (cancelRequest)="closeCreateRoomDialog()"
+    (saveRequest)="submitCreateRoom(createForm)"
+  >
+    <form #createForm="ngForm" (ngSubmit)="submitCreateRoom(createForm)" class="app-modal-form">
+      <div class="form-fields">
+        <div class="field form-field--full">
+          <label for="roomNameInput">Room name</label>
+          <input
+            pInputText
+            type="text"
+            id="roomNameInput"
+            name="roomName"
+            required
+            maxlength="255"
+            placeholder="e.g. Family budget"
+            [ngModel]="roomName()"
+            (ngModelChange)="roomName.set($event)"
+          />
+        </div>
+        <div class="field form-field--full">
+          <label for="roomDescInput">Description <span class="optional">(optional)</span></label>
+          <textarea
+            id="roomDescInput"
+            name="roomDescription"
+            class="rooms-modal-textarea"
+            rows="3"
+            placeholder="What is this room for?"
+            [ngModel]="roomDescription()"
+            (ngModelChange)="roomDescription.set($event)"
+          ></textarea>
+        </div>
+      </div>
+    </form>
+  </app-modal-shell>
+</p-dialog>
+
+<p-dialog
+  header="Join by invite"
+  [visible]="inviteDialogVisible()"
+  (visibleChange)="onInviteDialogVisibleChange($event)"
+  [modal]="true"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [dismissableMask]="true"
+  styleClass="rooms-dialog"
+>
+  <app-modal-shell
+    [embedded]="true"
+    [showCloseButton]="false"
+    [showCancel]="true"
+    [showSave]="true"
+    saveLabel="Accept"
+    [saveDisabled]="!canSubmitInvite() || isSubmitting()"
+    [saveLoading]="isSubmitting()"
+    (cancelRequest)="closeInviteDialog()"
+    (saveRequest)="acceptInvite()"
+  >
+    <form class="app-modal-form" (ngSubmit)="$event.preventDefault()">
+      <div class="form-fields">
+        <div class="field form-field--full">
+          <label for="inviteTokenInput">Invite token</label>
+          <input
+            pInputText
+            type="text"
+            id="inviteTokenInput"
+            name="inviteToken"
+            autocomplete="off"
+            placeholder="Paste invite token"
+            [ngModel]="inviteToken()"
+            (ngModelChange)="inviteToken.set($event)"
+          />
+        </div>
+        <div class="rooms-invite-extra">
+          <app-button
+            appearance="danger"
+            size="md"
+            type="button"
+            [disabled]="!canSubmitInvite() || isSubmitting()"
+            (buttonClick)="rejectInvite()"
+          >
+            <app-icon prime="times" [sizePx]="20" />
+            Reject invite
+          </app-button>
+        </div>
+      </div>
+    </form>
+  </app-modal-shell>
+</p-dialog>

@@ -1,34 +1,43 @@
-<div class="container">
+<div class="container" [class.container--embedded]="embedded()">
+  <header class="app-page-head" [class.app-page-head--compact]="embedded()">
+    @if (!embedded()) {
+      <div class="app-page-head__text">
+        <h1 class="app-page-head__title">Transactions</h1>
+        <p class="app-page-head__subtitle">
+          View and manage your income and expenses in one place.
+        </p>
+      </div>
+    }
+    <div class="app-page-head__actions">
+      <transaction-add-button [groupRoomId]="groupRoomId()" />
+    </div>
+  </header>
   <controls [controlsProps]="controlsProps()" />
-  <div class="header">
-    <h2>Transactions</h2>
-    <transaction-add-button />
-  </div>
   <dashboard-card class="card">
     <card-body class="body">
       <ng-container class="table">
         <div class="segment-control" role="tablist" aria-label="Transaction type">
           @for (tab of tabs; track tab) {
-            <button
-              type="button"
-              class="segment-control__item"
-              [class.segment-control__item--active]="tabFilter() === tab"
-              [attr.aria-selected]="tabFilter() === tab"
-              role="tab"
-              (click)="selectTab(tab)"
-            >
-              {{ tab }}
-            </button>
+          <button
+            type="button"
+            class="segment-control__item"
+            [class.segment-control__item--active]="tabFilter() === tab"
+            [attr.aria-selected]="tabFilter() === tab"
+            role="tab"
+            (click)="selectTab(tab)"
+          >
+            {{ tab }}
+          </button>
           }
         </div>
-        @if (isLoading()) {
+        @if (isLoadingForView()) {
           <p-progress-spinner />
         } @else {
           <transactions-list-view
             [dataSource]="transactionsForTable()"
             [displayedCells]="displayedCells()"
             [isEmpty]="isEmpty"
-            [showActions]="true"
+            [showActions]="!groupRoomId()"
             (onEdit)="handleEdit($event)"
             (onDelete)="handleDelete($event)"
           />

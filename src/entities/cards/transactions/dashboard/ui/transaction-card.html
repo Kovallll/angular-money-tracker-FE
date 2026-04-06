@@ -2,6 +2,7 @@
   [title]="title"
   [isWithSeeAll]="true"
   [seeAllPath]="seeAllPath"
+  [seeAllNavigation]="seeAllNavigation()"
   [hideHeaderDivider]="true"
 >
   <card-header class="header">
@@ -28,20 +29,36 @@
     } @else if (currentItems().length) {
     <div class="transaction-list">
       @for (item of currentItems(); track item.id) {
-      <div (contextmenu)="openContextMenu($event, item)" class="transaction-row">
-        <transaction-card-item [item]="item" />
-      </div>
+        @if (groupRoomId()) {
+          <div class="transaction-row">
+            <transaction-card-item [item]="item" />
+          </div>
+        } @else {
+          <div (contextmenu)="openContextMenu($event, item)" class="transaction-row">
+            <transaction-card-item [item]="item" />
+          </div>
+        }
       }
     </div>
-    <context-menu-component
-      #ctxMenu
-      (onDelete)="handleDelete(selectedItem())"
-      (onEdit)="handleEdit(selectedItem())"
-    />
+    @if (!groupRoomId()) {
+      <context-menu-component
+        #ctxMenu
+        (onDelete)="handleDelete(selectedItem())"
+        (onEdit)="handleEdit(selectedItem())"
+      />
+    }
     } @else {
     <div class="data-placeholder">
-      <span class="data-placeholder__icon" aria-hidden="true">📋</span>
-      <p>No transactions</p>
+      <div class="dash-empty-icon" aria-hidden="true">
+        <app-icon prime="list" [sizePx]="26" />
+      </div>
+      <p>
+        @if (groupRoomId()) {
+          No transactions in this room yet
+        } @else {
+          No transactions
+        }
+      </p>
     </div>
     }
   </card-body>

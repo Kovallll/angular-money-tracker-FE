@@ -1,5 +1,5 @@
 @use 'theme' as *;
-@use 'shared/styles/breakpoints' as bp;
+@use 'shared/styles/page-shell' as shell;
 
 :host {
   display: block;
@@ -10,9 +10,7 @@
 .container {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
   min-height: 0;
   padding-block-end: env(safe-area-inset-bottom, 0);
+  @include shell.pageShell;
 }

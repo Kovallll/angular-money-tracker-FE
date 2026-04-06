@@ -1,11 +1,14 @@
 <div class="card">
   <div class="left-content">
     <div class="category-icon">
-      <app-icon [icon]="categoryIcon()" />
+      <app-icon [icon]="categoryIcon()" [sizePx]="20" />
     </div>
     <div class="text">
       <p class="title">{{ item().title }}</p>
       <p class="category">{{ item().category }}</p>
+      @if (item().groupCreatedByName) {
+        <p class="added-by">Added by {{ item().groupCreatedByName }}</p>
+      }
     </div>
   </div>
   <div class="right-content">

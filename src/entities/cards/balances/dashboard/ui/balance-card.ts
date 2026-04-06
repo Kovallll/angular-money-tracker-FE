@@ -9,6 +9,7 @@ import { AppCurrencyPipe } from '@/shared/pipes/app-currency.pipe';
 import { ProgressSpinner } from 'primeng/progressspinner';
 import { Carousel } from 'primeng/carousel';
 import { DASHBOARD_CAROUSEL_RESPONSIVE } from '../../../slider/lib/carousel-options';
+import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 
 @Component({
   selector: 'dash-balance-card',
@@ -22,6 +23,7 @@ import { DASHBOARD_CAROUSEL_RESPONSIVE } from '../../../slider/lib/carousel-opti
     BalanceCardItemComponent,
     AppCurrencyPipe,
     ProgressSpinner,
+    AppIconComponent,
   ],
   templateUrl: './balance-card.html',
   styleUrl: `./balance-card.scss`,

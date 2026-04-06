@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { BudgetStatisticCardComponent } from '@/entities/cards/statistics/ui/budget/budget-stats.component';
 import { ExpensesStatisticCardComponent } from '@/entities/cards/statistics/ui/expenses/expenses-stats.component';
 import { GoalsStatisticCardComponent } from '@/entities/cards/statistics/ui/goals/goals-stats.component';
@@ -17,4 +17,10 @@ import { SavedReportsComponent } from '@/widgets/savedReports/saved-reports.comp
   templateUrl: './statistics-page.html',
   styleUrl: `./statistics-page.scss`,
 })
-export class StatisticsPageComponent {}
+export class StatisticsPageComponent {
+  readonly statsView = signal<'charts' | 'reports'>('charts');
+
+  setStatsView(view: 'charts' | 'reports') {
+    this.statsView.set(view);
+  }
+}

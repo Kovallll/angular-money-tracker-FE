@@ -14,6 +14,8 @@ import { BalanceCard } from '@/shared/types';
 import { ControlsComponent } from '@/widgets/controls/ui/controls.component';
 import { ControlsProps } from '@/widgets/controls/lib';
 import { PaginationComponent } from '@/entities/pagination/ui/pagination.component';
+import { BalanceAddCardButtonComponent } from '@/features/balance/add-card-button/add-card.component';
+import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 import { SortersField } from '@/entities/sorters/lib';
 import { FiltersField } from '@/entities/filters/lib';
 
@@ -49,6 +51,8 @@ const balanceSearchProps = {
     ProgressSpinner,
     ControlsComponent,
     PaginationComponent,
+    BalanceAddCardButtonComponent,
+    AppIconComponent,
   ],
   templateUrl: './balance.component.html',
   styleUrl: './balance.component.scss',

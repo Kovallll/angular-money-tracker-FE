@@ -1,5 +1,5 @@
 @use 'theme' as *;
-@use 'shared/styles/breakpoints' as bp;
+@use 'shared/styles/page-shell' as shell;
 
 :host {
   display: block;
@@ -11,19 +11,5 @@
 .container {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  min-width: 0;
-  max-width: 100%;
-  box-sizing: border-box;
-  padding: 0 16px 32px;
-
-  @include bp.tablet-and-up {
-    padding: 0 24px 40px;
-  }
-
-  @include bp.desktop-and-up {
-    padding: 0 32px 48px;
-    max-width: 1400px;
-    margin: 0 auto;
-  }
+  @include shell.pageShell;
 }

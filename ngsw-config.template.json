@@ -25,17 +25,6 @@
       }
     }
   ],
-  "dataGroups": [
-    {
-      "name": "api-data",
-      "urls": ["__API_ORIGIN__/**", "/api/**"],
-      "cacheConfig": {
-        "strategy": "freshness",
-        "maxSize": 100,
-        "maxAge": "7d",
-        "timeout": "10s"
-      }
-    }
-  ],
+  "dataGroups": [],
   "navigationUrls": ["/**", "!/**/*.*", "!/**/__*"]
 }

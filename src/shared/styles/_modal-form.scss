@@ -35,6 +35,11 @@
   }
 }
 
+// Одна колонка (например, категории: имя + сетка иконок на всю ширину)
+.app-modal-form .form-fields.form-fields--stack {
+  grid-template-columns: 1fr;
+}
+
 .app-modal-form .form-row:last-of-type {
   padding-bottom: 0;
 }
@@ -172,8 +177,8 @@
     min-width: 0;
   }
 
-  ::ng-deep .amount-input .p-inputnumber,
-  ::ng-deep .amount-input .p-inputnumber-input {
+  ::ng-deep .amount-input.p-inputtext,
+  ::ng-deep input.amount-input {
     width: 100%;
     max-width: 100%;
     min-width: 0;

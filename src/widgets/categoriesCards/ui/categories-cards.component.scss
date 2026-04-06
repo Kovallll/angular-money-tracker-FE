@@ -56,42 +56,20 @@
   }
 }
 
-/* Page header */
-.page-header {
-  display: flex;
-
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-.header-text {
-  min-width: 0;
-}
-
-.title {
-  font-size: 24px;
-  font-weight: 700;
-  margin: 0 0 4px 0;
-  letter-spacing: -0.3px;
-  line-height: 1.2;
-
-  @include bp.tablet-and-up {
-    font-size: 28px;
+/* В комнате (embedded): поиск/фильтры выше кнопки Add — у header был order:0 и оказывался первым */
+.container--embedded .cards-block {
+  .app-page-head {
+    order: 2;
   }
-
-  @include bp.desktop-and-up {
-    font-size: 32px;
+  controls {
+    order: 1;
+    margin-bottom: 8px;
   }
-}
-
-.subtitle {
-  font-size: 14px;
-  color: $gray;
-  margin: 0;
-  line-height: 1.5;
-
-  @include bp.tablet-and-up {
-    font-size: 15px;
+  .summary-cards {
+    order: 3;
+  }
+  .categories-section {
+    order: 4;
   }
 }
 
@@ -257,19 +235,6 @@
   justify-content: flex-end;
   width: 100%;
   margin-top: 16px;
-}
-
-.section-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: $gray;
-  margin: 0 0 16px 0;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-
-  @include bp.tablet-and-up {
-    margin-bottom: 20px;
-  }
 }
 
 .content {

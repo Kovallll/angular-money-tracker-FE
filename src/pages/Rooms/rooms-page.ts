@@ -1,17 +1,32 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, computed, effect, inject, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { RoutePaths } from '@/shared';
 import { GroupRoomItem } from '@/shared/types';
 import { GroupRoomsHttpService, SseEventsService } from '@/shared/services/models';
 import { AuthService } from '@/shared/services/auth/auth.service';
+import { CurrencyService } from '@/shared/services/currency/currency.service';
+import { DialogModule } from 'primeng/dialog';
+import { InputTextModule } from 'primeng/inputtext';
+import { AppModalShellComponent } from '@/shared/components/app-modal-shell/app-modal-shell.component';
+import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
+import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 
 const ROOM_CURRENCIES = ['BYN', 'USD', 'EUR', 'RUB'] as const;
 
 @Component({
   selector: 'app-rooms-page',
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterLink,
+    DialogModule,
+    InputTextModule,
+    AppModalShellComponent,
+    AppButtonComponent,
+    AppIconComponent,
+  ],
   templateUrl: './rooms-page.html',
   styleUrl: './rooms-page.scss',
 })
@@ -20,6 +35,7 @@ export class RoomsPageComponent implements OnInit, OnDestroy {
   private readonly sseEvents = inject(SseEventsService);
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly currencyService = inject(CurrencyService);
 
   readonly routePaths = RoutePaths;
   readonly rooms = signal<GroupRoomItem[]>([]);
@@ -28,12 +44,11 @@ export class RoomsPageComponent implements OnInit, OnDestroy {
 
   readonly roomName = signal<string>('');
   readonly roomDescription = signal<string>('');
-  readonly roomCurrencyCode = signal<string>('BYN');
-  readonly roomAvatarUrl = signal<string>('');
   readonly inviteToken = signal<string>('');
   readonly isSubmitting = signal<boolean>(false);
 
-  readonly currencyOptions = ROOM_CURRENCIES;
+  readonly createRoomDialogVisible = signal(false);
+  readonly inviteDialogVisible = signal(false);
 
   readonly roomStats = computed(() => {
     const all = this.rooms();
@@ -73,6 +88,43 @@ export class RoomsPageComponent implements OnInit, OnDestroy {
     this.sseEvents.disconnect();
   }
 
+  openCreateRoomDialog(): void {
+    this.createRoomDialogVisible.set(true);
+  }
+
+  closeCreateRoomDialog(): void {
+    this.createRoomDialogVisible.set(false);
+    this.roomName.set('');
+    this.roomDescription.set('');
+  }
+
+  onCreateDialogVisibleChange(visible: boolean): void {
+    if (!visible) this.closeCreateRoomDialog();
+  }
+
+  openInviteDialog(): void {
+    this.inviteDialogVisible.set(true);
+  }
+
+  closeInviteDialog(): void {
+    this.inviteDialogVisible.set(false);
+    this.inviteToken.set('');
+  }
+
+  onInviteDialogVisibleChange(visible: boolean): void {
+    if (!visible) this.closeInviteDialog();
+  }
+
+  submitCreateRoom(form: NgForm): void {
+    form.form.markAllAsTouched();
+    if (!this.roomName().trim()) return;
+    void this.createRoom();
+  }
+
+  canSubmitInvite(): boolean {
+    return this.inviteToken().trim().length > 0;
+  }
+
   async loadRooms() {
     this.isLoading.set(true);
     this.error.set('');
@@ -93,8 +145,7 @@ export class RoomsPageComponent implements OnInit, OnDestroy {
     this.isSubmitting.set(true);
     this.error.set('');
     try {
-      const avatar = this.roomAvatarUrl().trim();
-      const cur = this.roomCurrencyCode().trim().toUpperCase();
+      const cur = this.currencyService.primaryCode().trim().toUpperCase();
       const currencyCode = ROOM_CURRENCIES.includes(cur as (typeof ROOM_CURRENCIES)[number])
         ? cur
         : 'BYN';
@@ -102,12 +153,8 @@ export class RoomsPageComponent implements OnInit, OnDestroy {
         name,
         description: this.roomDescription().trim() || undefined,
         currencyCode,
-        ...(avatar ? { avatar } : {}),
       });
-      this.roomName.set('');
-      this.roomDescription.set('');
-      this.roomAvatarUrl.set('');
-      this.roomCurrencyCode.set('BYN');
+      this.closeCreateRoomDialog();
       await this.loadRooms();
       await this.router.navigate(['/', RoutePaths.ROOM_DETAILS, created.id], {
         queryParams: { tab: 'overview' },
@@ -128,7 +175,7 @@ export class RoomsPageComponent implements OnInit, OnDestroy {
     this.error.set('');
     try {
       await this.groupRoomsHttp.acceptInvite(token);
-      this.inviteToken.set('');
+      this.closeInviteDialog();
       await this.loadRooms();
     } catch (err) {
       console.error(err);
@@ -145,7 +192,7 @@ export class RoomsPageComponent implements OnInit, OnDestroy {
     this.error.set('');
     try {
       await this.groupRoomsHttp.rejectInvite(token);
-      this.inviteToken.set('');
+      this.closeInviteDialog();
     } catch (err) {
       console.error(err);
       this.error.set('Failed to reject invite');

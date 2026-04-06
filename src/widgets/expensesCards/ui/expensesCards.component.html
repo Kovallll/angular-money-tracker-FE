@@ -1,8 +1,8 @@
 <div class="container">
-  <header class="page-header">
-    <div class="header-text">
-      <h1 class="title">Expenses</h1>
-      <p class="subtitle">Track spending by category and see your top expenses</p>
+  <header class="app-page-head">
+    <div class="app-page-head__text">
+      <h1 class="app-page-head__title">Expenses</h1>
+      <p class="app-page-head__subtitle">Track spending by category and see your top expenses</p>
     </div>
   </header>
 
@@ -15,7 +15,7 @@
     <section class="summary-cards" aria-label="Overview">
       <div class="summary-card summary-card--primary">
         <span class="summary-card__icon" aria-hidden="true">
-          <app-icon prime="wallet" [sizePx]="18" />
+          <app-icon prime="wallet" [sizePx]="20" />
         </span>
         <div class="summary-card__content">
           <span class="summary-card__label">Total Expenses</span>
@@ -24,7 +24,7 @@
       </div>
       <div class="summary-card">
         <span class="summary-card__icon" aria-hidden="true">
-          <app-icon prime="chart-bar" [sizePx]="18" />
+          <app-icon prime="chart-bar" [sizePx]="20" />
         </span>
         <div class="summary-card__content">
           <span class="summary-card__label">Categories with expenses</span>
@@ -33,7 +33,7 @@
       </div>
       <div class="summary-card">
         <span class="summary-card__icon" aria-hidden="true">
-          <app-icon prime="list" [sizePx]="18" />
+          <app-icon prime="list" [sizePx]="20" />
         </span>
         <div class="summary-card__content">
           <span class="summary-card__label">Total transactions</span>
@@ -47,7 +47,7 @@
     </section>
 
     <section class="categories-section">
-      <h2 class="section-title">By category</h2>
+      <h2 class="app-page-section-title">By category</h2>
       <div class="content">
         @for (category of categories(); track category.id) {
           @if (category.expenses.length) {
@@ -57,10 +57,12 @@
       </div>
     </section>
   } @else {
-    <div class="data-placeholder data-placeholder--page empty-state">
-      <span class="data-placeholder__icon" aria-hidden="true">📊</span>
-      <h2 class="empty-title">No expenses yet</h2>
-      <p class="empty-desc">Add a transaction to start tracking your spending</p>
+    <div class="empty-state">
+      <div class="empty-state__icon" aria-hidden="true">
+        <app-icon prime="chart-bar" [sizePx]="28" />
+      </div>
+      <h3 class="empty-state__title">No expenses yet</h3>
+      <p class="empty-state__text">Add a transaction to start tracking your spending</p>
     </div>
   }
 </div>

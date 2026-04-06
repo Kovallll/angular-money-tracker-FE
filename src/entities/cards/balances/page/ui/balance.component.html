@@ -15,16 +15,24 @@
         </card-body>
       </dashboard-card>
     }
+  } @else if (showControls() && cards().length) {
+    <div class="empty-state empty-state--no-cta">
+      <div class="empty-state__icon" aria-hidden="true">
+        <app-icon prime="search" [sizePx]="28" />
+      </div>
+      <h3 class="empty-state__title">No cards match your search or filters</h3>
+      <p class="empty-state__text">Try changing the search or filter criteria</p>
+    </div>
   } @else {
-    <div class="data-placeholder data-placeholder--page">
-      <span class="data-placeholder__icon" aria-hidden="true">💳</span>
-      @if (showControls() && cards().length) {
-        <p>No cards match your search or filters</p>
-        <p>Try changing the search or filter criteria</p>
-      } @else {
-        <p>No cards</p>
-        <p>Add a card using the "Add Card" button</p>
-      }
+    <div class="empty-state">
+      <div class="empty-state__icon" aria-hidden="true">
+        <app-icon prime="wallet" [sizePx]="28" />
+      </div>
+      <h3 class="empty-state__title">No balances yet</h3>
+      <p class="empty-state__text">Add your first card to track account balances</p>
+      <div class="empty-state__action">
+        <balance-add-card-button />
+      </div>
     </div>
   }
 </div>

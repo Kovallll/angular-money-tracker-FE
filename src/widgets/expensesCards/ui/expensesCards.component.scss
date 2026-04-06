@@ -19,40 +19,6 @@
   }
 }
 
-.page-header {
-  margin-bottom: 8px;
-}
-
-.header-text {
-  min-width: 0;
-}
-
-.title {
-  font-size: 24px;
-  font-weight: 700;
-  margin: 0 0 4px 0;
-  letter-spacing: -0.3px;
-
-  @include bp.tablet-and-up {
-    font-size: 28px;
-  }
-
-  @include bp.desktop-and-up {
-    font-size: 32px;
-  }
-}
-
-.subtitle {
-  font-size: 14px;
-  color: $gray;
-  margin: 0;
-  line-height: 1.5;
-
-  @include bp.tablet-and-up {
-    font-size: 15px;
-  }
-}
-
 .cards-loading {
   display: flex;
   flex-direction: column;
@@ -76,21 +42,6 @@
   font-size: 15px;
   font-weight: 500;
   color: $gray;
-}
-
-:host .empty-state.empty-state {
-  gap: 16px;
-
-  .empty-title {
-    font-size: 18px;
-    font-weight: 600;
-    margin: 0;
-  }
-
-  .empty-desc {
-    margin: 0;
-    opacity: 0.9;
-  }
 }
 
 .summary-cards {
@@ -209,19 +160,6 @@
 
 .categories-section {
   margin-top: 8px;
-}
-
-.section-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: $gray;
-  margin: 0 0 16px 0;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-
-  @include bp.tablet-and-up {
-    margin-bottom: 20px;
-  }
 }
 
 .content {

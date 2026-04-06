@@ -8,46 +8,16 @@
   (cancelRequest)="close()"
   (saveRequest)="onSubmit(cardForm)"
 >
-  <form #cardForm="ngForm" (ngSubmit)="onSubmit(cardForm)" class="app-modal-form">
-    <div class="form-fields">
+  <form #cardForm="ngForm" (ngSubmit)="onSubmit(cardForm)" class="app-modal-form category-modal">
+    <div class="form-fields form-fields--stack">
       <div class="field">
-        <div class="icons">
-          <div class="preview">
-            <app-icon [icon]="card.icon" />
-          </div>
-          <p-select
-            class="select"
-            [options]="iconOptions"
-            optionLabel="label"
-            optionValue="value"
-            placeholder="Select icon"
-            [(ngModel)]="card.icon"
-            name="categoryIcon"
-          >
-            <ng-template let-item pTemplate="item">
-              <div class="icon-row">
-                <app-icon [icon]="item.value" />
-                <span>{{ item.label }}</span>
-              </div>
-            </ng-template>
-            <ng-template let-item pTemplate="selectedItem">
-              <div class="icon-row">
-                <app-icon [icon]="item?.value" />
-                <span>{{ item?.label }}</span>
-              </div>
-            </ng-template>
-          </p-select>
-        </div>
-        <div class="error-slot"></div>
-      </div>
-      <div class="field">
-        <label for="categoryName">Category Name&#42;</label>
+        <label for="categoryName">Category name&#42;</label>
         <input
           class="input"
           pInputText
           type="text"
           id="categoryName"
-          placeholder="Category Name"
+          placeholder="Category name"
           name="categoryName"
           [(ngModel)]="card.title"
           #categoryName="ngModel"
@@ -56,9 +26,13 @@
         />
         <div class="error-slot">
           @if (categoryName.invalid && (categoryName.touched || cardForm.submitted)) {
-            <small class="error">Category Name is required.</small>
+            <small class="error">Category name is required.</small>
           }
         </div>
+      </div>
+      <div class="field field--icon">
+        <span class="field-label-main">Icon</span>
+        <category-icon-picker [(selectedIcon)]="card.icon" />
       </div>
     </div>
   </form>

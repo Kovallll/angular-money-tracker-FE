@@ -24,6 +24,7 @@ export const GOALS_CATEGORY_NAME = 'Goals';
 export {
   DEFAULT_CATEGORY_ICON,
   CATEGORY_ICON_OPTIONS,
+  CATEGORY_ICON_VALUES_ALL,
   getCategoryIconName,
   type CategoryIconOption,
 } from './category-icons';

@@ -12,37 +12,11 @@
   flex-direction: column;
   width: 100%;
   min-width: 0;
-  gap: 16px;
+  gap: 24px;
   box-sizing: border-box;
 
-  @include bp.tablet-and-up {
-    gap: 20px;
-  }
-
   @include bp.desktop-and-up {
-    gap: 24px;
-  }
-}
-
-.head {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-}
-
-.title {
-  font-size: 20px;
-  font-weight: 600;
-  margin: 0;
-
-  @include bp.tablet-and-up {
-    font-size: 24px;
-  }
-
-  @include bp.desktop-and-up {
-    font-size: 28px;
+    gap: 32px;
   }
 }
 

@@ -4,6 +4,7 @@ import {
   GroupRoomDetails,
   GroupRoomItem,
   GroupTransactionItem,
+  RoomContributionsResponse,
 } from '@/shared/types';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
@@ -24,6 +25,8 @@ type CreateInvitePayload = {
 type CreateGroupTxPayload = {
   paidBy?: string;
   categoryId?: string;
+  /** Личная карта пользователя paidBy (по умолчанию — текущий пользователь) */
+  cardId?: number;
   amount: number;
   currencyCode?: string;
   title: string;
@@ -71,6 +74,12 @@ export class GroupRoomsHttpService {
 
   removeMember(roomId: string, userId: string) {
     return lastValueFrom(this.http.delete(`${groupRoomsUrl}/${roomId}/members/${userId}`));
+  }
+
+  getRoomContributions(roomId: string) {
+    return lastValueFrom(
+      this.http.get<RoomContributionsResponse>(`${groupRoomsUrl}/${roomId}/contributions`),
+    );
   }
 
   getRoomTransactions(roomId: string) {

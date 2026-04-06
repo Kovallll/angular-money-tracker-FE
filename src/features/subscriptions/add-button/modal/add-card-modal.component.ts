@@ -9,7 +9,6 @@ import {
   CreateSubscribeItem,
   SubscribtionsHttpService,
   SUBSCRIPTIONS_CATEGORY_NAME,
-  Transaction,
 } from '@/shared';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { QueryClient, injectQuery } from '@tanstack/angular-query-experimental';
@@ -65,12 +64,24 @@ export class AddSubscriptionModalComponent implements OnInit {
   private queryClient = inject(QueryClient);
   private currencyService = inject(CurrencyService);
   private categoriesHttpService = inject(CategoriesHttpService);
-  subscription = this.config.data as Transaction;
 
-  categories = injectQuery(() => ({
-    queryKey: ['categories'],
-    queryFn: () => this.categoriesHttpService.getCategories(),
-  }));
+  protected getGroupRoomId(): string | undefined {
+    const d = this.config.data as { groupRoomId?: unknown } | null | undefined;
+    if (!d || typeof d !== 'object' || !('groupRoomId' in d)) return undefined;
+    const v = (d as { groupRoomId: unknown }).groupRoomId;
+    return typeof v === 'string' && v.trim() ? v.trim() : undefined;
+  }
+
+  categories = injectQuery(() => {
+    const roomId = this.getGroupRoomId() ?? '';
+    return {
+      queryKey: ['categories', 'scope', roomId] as const,
+      queryFn: () =>
+        roomId
+          ? this.categoriesHttpService.fetchCategoriesByRoom(roomId)
+          : this.categoriesHttpService.getCategories(),
+    };
+  });
 
   cardData: SubscriptionFormData = {
     subscribeDate: '',
@@ -206,8 +217,9 @@ export class AddSubscriptionModalComponent implements OnInit {
   }
 
   createSubscription(payload: CreateSubscribeItem) {
+    const roomId = this.getGroupRoomId();
     this.subscriptionsHttpService
-      .create(payload)
+      .create(payload, roomId ? { groupRoomId: roomId } : undefined)
       .pipe(
         tap(() => {
           this.messageService.add({
@@ -217,8 +229,13 @@ export class AddSubscriptionModalComponent implements OnInit {
             detail: 'Subscription created',
             life: 3000,
           });
-          this.ref.close();
+          this.ref.close(true);
           this.queryClient.invalidateQueries({ queryKey: ['subscriptions'] });
+          if (roomId) {
+            void this.queryClient.invalidateQueries({
+              queryKey: ['subscriptions', 'room', roomId],
+            });
+          }
         }),
         catchError(() => {
           this.messageService.add({

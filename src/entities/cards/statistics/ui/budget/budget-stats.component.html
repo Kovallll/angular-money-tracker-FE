@@ -39,7 +39,9 @@
         ></canvas>
       } @else {
         <div class="chart-placeholder">
-          <span class="chart-placeholder__icon" aria-hidden="true">📊</span>
+          <div class="dash-empty-icon" aria-hidden="true">
+            <app-icon prime="chart-bar" [sizePx]="26" />
+          </div>
           <p>No data</p>
         </div>
       }

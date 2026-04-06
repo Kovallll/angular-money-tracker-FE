@@ -3,6 +3,9 @@ import { DividerComponent } from '@/shared/components/divider/divider';
 import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
+import type { SeeAllNavigation } from './see-all-navigation';
+
+export type { SeeAllNavigation } from './see-all-navigation';
 
 @Component({
   selector: 'card-header',
@@ -39,11 +42,21 @@ export class DashboardCardComponent {
 
   title = input<string>('');
   seeAllPath = input<string>('');
+  /** When set (e.g. room overview), takes precedence over {@link seeAllPath}. */
+  seeAllNavigation = input<SeeAllNavigation | null>(null);
   isWithSeeAll = input(false);
   hideHeaderDivider = input(false);
   @ContentChild(CardHeaderComponent) cardHeader?: CardHeaderComponent;
 
-  onRedirect(path: string) {
-    this.router.navigate([path]);
+  onSeeAllClick() {
+    const nav = this.seeAllNavigation();
+    if (nav?.commands?.length) {
+      void this.router.navigate(nav.commands, {
+        queryParams: nav.queryParams,
+      });
+      return;
+    }
+    const path = this.seeAllPath();
+    if (path) void this.router.navigate([path]);
   }
 }

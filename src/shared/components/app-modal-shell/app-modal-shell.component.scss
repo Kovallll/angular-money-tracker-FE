@@ -1,4 +1,5 @@
 @use 'theme' as *;
+@use 'shared/styles/breakpoints' as bp;
 
 .app-modal-shell {
   min-width: 0;
@@ -19,12 +20,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 20px;
+  padding: 16px 8px;
   background: $light-primary;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 
   @media (min-width: 560px) {
-    padding: 20px 24px;
+    padding: 20px 8px;
   }
 }
 
@@ -63,8 +64,12 @@
 }
 
 .app-modal-shell__content {
-  padding: 24px;
+  padding: 16px 8px;
   min-width: 0;
+
+  @media (min-width: 560px) {
+    padding: 24px 8px;
+  }
 }
 
 .app-modal-shell__footer {
@@ -72,8 +77,38 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
-  padding: 16px 24px;
+  padding: 16px 8px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
+
+  @media (min-width: 560px) {
+    padding: 16px 8px;
+  }
+
+  /* Мобилка: без «резинового» спейсера — иначе Cancel уезжает вправо, Save на вторую строку влево */
+  @include bp.mobile {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    align-items: stretch;
+
+    .app-modal-shell__spacer {
+      display: none;
+    }
+
+    > app-button {
+      min-width: 0;
+
+      ::ng-deep .app-btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    /* Delete слева — первая кнопка в DOM; Cancel+Save в один ряд под ней */
+    > app-button:first-child {
+      grid-column: 1 / -1;
+    }
+  }
 }
 
 .app-modal-shell__spacer {

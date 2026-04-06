@@ -8,13 +8,11 @@ import {
   CategoriesHttpService,
   CategoryItem,
   CreateCategoryItem,
-  CATEGORY_ICON_OPTIONS,
   getCategoryIconName,
 } from '@/shared';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { injectMutation, QueryClient } from '@tanstack/angular-query-experimental';
-import { Select } from 'primeng/select';
-import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
+import { CategoryIconPickerComponent } from '@/shared/components/category-icon-picker/category-icon-picker.component';
 
 @Component({
   selector: 'edit-category-modal',
@@ -25,8 +23,7 @@ import { AppIconComponent } from '@/shared/components/app-icon/app-icon.componen
     InputTextModule,
     AppModalShellComponent,
     MessageModule,
-    Select,
-    AppIconComponent,
+    CategoryIconPickerComponent,
   ],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -39,7 +36,6 @@ export class EditCategoryModalComponent {
   queryClient = inject(QueryClient);
 
   category = this.config.data as CategoryItem;
-  iconOptions = CATEGORY_ICON_OPTIONS;
 
   card = {
     title: this.category.title,

@@ -4,16 +4,10 @@ import { MessageService } from 'primeng/api';
 import { AppModalShellComponent } from '@/shared/components/app-modal-shell/app-modal-shell.component';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
-import {
-  CategoriesHttpService,
-  CreateCategoryItem,
-  CATEGORY_ICON_OPTIONS,
-  DEFAULT_CATEGORY_ICON,
-} from '@/shared';
-import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { CategoriesHttpService, CreateCategoryItem, DEFAULT_CATEGORY_ICON } from '@/shared';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { injectMutation, QueryClient } from '@tanstack/angular-query-experimental';
-import { Select } from 'primeng/select';
-import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
+import { CategoryIconPickerComponent } from '@/shared/components/category-icon-picker/category-icon-picker.component';
 
 @Component({
   selector: 'add-card-modal',
@@ -24,8 +18,7 @@ import { AppIconComponent } from '@/shared/components/app-icon/app-icon.componen
     InputTextModule,
     AppModalShellComponent,
     MessageModule,
-    Select,
-    AppIconComponent,
+    CategoryIconPickerComponent,
   ],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,15 +27,15 @@ export class AddCategoryModalComponent {
   messageService = inject(MessageService);
   private categoriesHttpService = inject(CategoriesHttpService);
   private ref = inject(DynamicDialogRef);
+  private dialogConfig = inject(DynamicDialogConfig, { optional: true });
   queryClient = inject(QueryClient);
 
-  iconOptions = CATEGORY_ICON_OPTIONS;
-
-  /** Не закрывать выпадающий список иконок при скролле внутри него */
-  iconSelectOverlayOptions = {
-    listener: (event: Event, ctx?: { type?: string; valid?: boolean }) =>
-      ctx?.type === 'scroll' ? false : (ctx?.valid ?? true),
-  };
+  /** Если задан — категория создаётся в комнате, а не в личном списке. */
+  protected getGroupRoomId(): string | undefined {
+    const d = this.dialogConfig?.data as { groupRoomId?: unknown } | undefined;
+    const v = d?.groupRoomId;
+    return typeof v === 'string' && v.trim() ? v.trim() : undefined;
+  }
 
   card = {
     title: '',
@@ -50,10 +43,19 @@ export class AddCategoryModalComponent {
   };
 
   mutation = injectMutation(() => ({
-    mutationFn: (category: CreateCategoryItem) =>
-      this.categoriesHttpService.createCategory(category),
+    mutationFn: (category: CreateCategoryItem) => {
+      const roomId = this.getGroupRoomId();
+      return roomId
+        ? this.categoriesHttpService.createCategoryInRoom(roomId, category)
+        : this.categoriesHttpService.createCategory(category);
+    },
     onSuccess: () => {
       this.queryClient.invalidateQueries({ queryKey: ['categories'] });
+      const roomId = this.getGroupRoomId();
+      if (roomId) {
+        this.queryClient.invalidateQueries({ queryKey: ['categories', 'scope', roomId] });
+        void this.queryClient.invalidateQueries({ queryKey: ['charts', 'room', roomId] });
+      }
       this.queryClient.invalidateQueries({ queryKey: ['charts'] });
       this.messageService.add({
         key: 'toast',
@@ -62,7 +64,7 @@ export class AddCategoryModalComponent {
         detail: 'Card created successfully',
         life: 3000,
       });
-      this.ref.close();
+      this.ref.close(true);
     },
     onError: () => {
       this.messageService.add({

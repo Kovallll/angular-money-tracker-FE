@@ -1,0 +1,352 @@
+@use 'theme' as *;
+@use 'shared/styles/breakpoints' as bp;
+
+// --- Единая шапка страницы: заголовок, подзаголовок, действия справа ---
+.app-page-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 24px;
+
+  @include bp.mobile {
+    margin-bottom: 16px;
+    gap: 12px;
+  }
+}
+
+.app-page-head--compact {
+  justify-content: flex-end;
+  margin-bottom: 8px;
+}
+
+.app-page-head--tight {
+  margin-bottom: 16px;
+}
+
+.app-page-head--center-y {
+  align-items: center;
+}
+
+// Мобилка: колонка (текст + кнопка), планшет+: строка как у остальных страниц
+.app-page-head--stack-sm {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 16px;
+
+  @include bp.tablet-and-up {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+  }
+}
+
+// Заголовок + подзаголовок слева, кнопка прижата к правому краю в одну строку
+.app-page-head--single-row {
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 16px;
+
+  .app-page-head__text {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .app-page-head__actions {
+    flex-shrink: 0;
+  }
+}
+
+// Statistics: заголовок + якорная навигация
+.app-page-head--with-nav {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+
+  @include bp.desktop-and-up {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+  }
+}
+
+.app-page-head__text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.app-page-head__actions {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+}
+
+.app-page-head__title {
+  margin: 0 0 4px 0;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  line-height: 1.2;
+  color: $white;
+
+  @include bp.mobile {
+    font-size: 20px;
+    letter-spacing: -0.2px;
+  }
+
+  @include bp.tablet-and-up {
+    font-size: 28px;
+  }
+
+  @include bp.desktop-and-up {
+    font-size: 32px;
+  }
+}
+
+.app-page-head__subtitle {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: $gray;
+  line-height: 1.5;
+
+  @include bp.mobile {
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  @include bp.tablet-and-up {
+    font-size: 15px;
+  }
+}
+
+.app-page-head--with-nav .app-page-head__subtitle {
+  max-width: 520px;
+}
+
+.app-page-head__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-start;
+
+  @include bp.tablet-and-up {
+    justify-content: flex-end;
+  }
+}
+
+.app-page-head__nav-link {
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 13px;
+  text-decoration: none;
+  color: $gray;
+  background-color: rgba($white, 0.02);
+  border: 1px solid rgba($white, 0.08);
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease-out,
+    color 0.15s ease-out,
+    border-color 0.15s ease-out;
+
+  @include bp.mobile {
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+
+  &:hover,
+  &:focus-visible {
+    color: $white;
+    border-color: rgba($white, 0.16);
+    background-color: rgba($white, 0.06);
+  }
+
+  @include bp.tablet-and-up {
+    padding: 8px 18px;
+    font-size: 14px;
+  }
+}
+
+// Карточная шапка (детали категории расходов)
+.app-page-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  background: $secondary;
+  border: 1px solid rgba($white, 0.06);
+  border-radius: 16px;
+  margin-bottom: 0;
+  box-sizing: border-box;
+
+  @include bp.tablet-and-up {
+    padding: 24px;
+    gap: 24px;
+  }
+}
+
+.app-page-head__main {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+
+.app-page-head__icon-wrap {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba($accent, 0.3) 0%, rgba($accent, 0.15) 100%);
+  border: 1px solid rgba($accent, 0.25);
+  border-radius: 14px;
+  color: $white;
+}
+
+.app-page-head__info {
+  min-width: 0;
+}
+
+// Внутри панели — чуть плотнее, чем hero-заголовок
+.app-page-panel .app-page-head__title {
+  margin: 0 0 4px 0;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+
+  @include bp.mobile {
+    font-size: 18px;
+  }
+
+  @include bp.tablet-and-up {
+    font-size: 24px;
+  }
+}
+
+.app-page-panel .app-page-head__subtitle {
+  font-size: 13px;
+  font-weight: 500;
+
+  @include bp.mobile {
+    font-size: 12px;
+  }
+
+  @include bp.tablet-and-up {
+    font-size: 14px;
+  }
+}
+
+// --- Иконка в компактных виджетах дашборда (та же стилистика, что empty-state__icon) ---
+.dash-empty-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, rgba($accent, 0.15) 0%, rgba($accent, 0.05) 100%);
+  border-radius: 16px;
+  color: $accent;
+
+  i {
+    font-size: 26px;
+  }
+}
+
+.data-placeholder:has(.dash-empty-icon) {
+  gap: 12px;
+}
+
+// --- Пустое состояние (как на Goals / Balances) ---
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 48px 24px;
+  min-height: 320px;
+  background: rgba($secondary, 0.4);
+  border: 1px dashed rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+}
+
+.empty-state__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, rgba($accent, 0.15) 0%, rgba($accent, 0.05) 100%);
+  border-radius: 20px;
+  color: $accent;
+
+  i {
+    font-size: 32px;
+  }
+}
+
+.empty-state__title {
+  margin: 0 0 8px 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: $white;
+
+  @include bp.mobile {
+    font-size: 17px;
+  }
+
+  @include bp.tablet-and-up {
+    font-size: 22px;
+  }
+}
+
+.empty-state__text {
+  margin: 0 0 24px 0;
+  font-size: 15px;
+  color: $gray;
+  line-height: 1.5;
+  max-width: 280px;
+
+  @include bp.mobile {
+    font-size: 13px;
+  }
+}
+
+.empty-state__action {
+  display: flex;
+  justify-content: center;
+}
+
+// Подзаголовок секции списка («Your categories»)
+.app-page-section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: $gray;
+  margin: 0 0 16px 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+
+  @include bp.mobile {
+    font-size: 13px;
+    letter-spacing: 0.6px;
+    margin-bottom: 12px;
+  }
+
+  @include bp.tablet-and-up {
+    margin-bottom: 20px;
+  }
+}

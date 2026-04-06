@@ -53,8 +53,10 @@
     </div>
   } @else {
     <div class="data-placeholder">
-      <span class="data-placeholder__icon" aria-hidden="true">📋</span>
-      <p>No data</p>
+      <div class="dash-empty-icon" aria-hidden="true">
+        <app-icon prime="list" [sizePx]="26" />
+      </div>
+      <p>No transactions yet</p>
     </div>
   }
 </ng-container>

@@ -73,13 +73,7 @@
   background: linear-gradient(135deg, rgba($accent, 0.25) 0%, rgba($accent, 0.15) 100%);
   border: 1px solid rgba($accent, 0.2);
   overflow: visible;
-
-  .card__icon-wrap ::ng-deep app-icon,
-  .card__icon-wrap ::ng-deep .mat-icon.mat-icon {
-    font-size: 26px;
-    width: 26px;
-    height: 26px;
-  }
+  color: rgba(255, 255, 255, 0.95);
 }
 
 .card__meta {
@@ -190,14 +184,14 @@
   flex-wrap: wrap;
   gap: 6px;
   margin: 0;
-
-  @include bp.mobile {
-    display: none; /* Last/Avg только на странице деталей категории */
-  }
   font-size: 14px;
   font-weight: 500;
   color: $gray;
   line-height: 1.35;
+
+  @include bp.mobile {
+    display: none; /* Last/Avg только на странице деталей категории */
+  }
 
   @include bp.tablet-and-up {
     font-size: 15px;
@@ -239,6 +233,51 @@
   color: rgba($gray, 0.8);
   width: 100%;
   text-align: center;
+}
+
+.card__payers {
+  margin-bottom: 4px;
+}
+
+.card__payers-title {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: $gray;
+  margin-bottom: 8px;
+}
+
+.card__payers-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.card__payers-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.card__payers-name {
+  color: rgba(255, 255, 255, 0.85);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card__payers-amt {
+  flex-shrink: 0;
+  font-weight: 600;
+  color: $white;
 }
 
 .card__footer {

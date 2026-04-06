@@ -3,8 +3,8 @@
   [showCloseButton]="false"
   [showCancel]="true"
   [showSave]="true"
-  saveLabel="Add Transaction"
-  [saveDisabled]="!!cardForm.invalid || form.amount <= 0"
+  saveLabel="Add"
+  [saveDisabled]="isSaveDisabled(cardForm)"
   (cancelRequest)="close()"
   (saveRequest)="onSubmit(cardForm)"
 >
@@ -36,6 +36,7 @@
           amountName="amount"
           [(amount)]="form.amount"
           [(currencyCode)]="form.currencyCode"
+          [showCurrency]="true"
           [required]="true"
         />
         <div class="form-field-error">
@@ -48,47 +49,77 @@
       </div>
     </div>
 
-    <div class="form-row">
-      <div class="form-field">
-        <label for="title">Title</label>
-        <input
-          class="input"
-          pInputText
-          type="text"
-          id="title"
-          name="title"
-          placeholder="e.g. Shopping"
-          [(ngModel)]="form.title"
-          (ngModelChange)="onTitleChange($event)"
-          #titleField="ngModel"
-        />
-        <div class="form-field-error"></div>
-      </div>
+    @if (!getGroupRoomId()) {
+      <div class="form-row">
+        <div class="form-field">
+          <label for="title">Title</label>
+          <input
+            class="input"
+            pInputText
+            type="text"
+            id="title"
+            name="title"
+            placeholder="e.g. Shopping"
+            [(ngModel)]="form.title"
+            (ngModelChange)="onTitleChange($event)"
+            #titleField="ngModel"
+          />
+          <div class="form-field-error"></div>
+        </div>
 
-      <div class="form-field">
-        <label for="type">Type</label>
-        <p-select
-          inputId="type"
-          name="type"
-          [options]="typeOptions"
-          optionLabel="label"
-          optionValue="value"
-          [(ngModel)]="form.type"
-          appendTo="body"
-          #typeField="ngModel"
-          required
-        />
-        <div class="form-field-error">
-          @if (typeField.invalid && (typeField.touched || cardForm.submitted)) {
-            <p-message severity="error" size="small" variant="simple">Select type</p-message>
-          }
+        <div class="form-field">
+          <label for="type">Type</label>
+          <p-select
+            inputId="type"
+            name="type"
+            [options]="typeOptions"
+            optionLabel="label"
+            optionValue="value"
+            [(ngModel)]="form.type"
+            appendTo="body"
+            #typeField="ngModel"
+            required
+          />
+          <div class="form-field-error">
+            @if (typeField.invalid && (typeField.touched || cardForm.submitted)) {
+              <p-message severity="error" size="small" variant="simple">Select type</p-message>
+            }
+          </div>
         </div>
       </div>
-    </div>
+    } @else {
+      <div class="form-row">
+        <div class="form-field form-field--full">
+          <label for="title">Title</label>
+          <input
+            class="input"
+            pInputText
+            type="text"
+            id="title"
+            name="title"
+            placeholder="e.g. Shopping"
+            [(ngModel)]="form.title"
+            (ngModelChange)="onTitleChange($event)"
+            #titleFieldRoom="ngModel"
+            required
+          />
+          <div class="form-field-error">
+            @if (titleFieldRoom.invalid && (titleFieldRoom.touched || cardForm.submitted)) {
+              <p-message severity="error" size="small" variant="simple">Title is required</p-message>
+            }
+          </div>
+        </div>
+      </div>
+    }
 
     <div class="form-row">
       <div class="form-field">
-        <label for="categoryId">Category{{ isCategorySuggested ? ' (предугадано)' : '' }}</label>
+        <label for="categoryId"
+          >Category{{ isCategorySuggested ? ' (предугадано)' : '' }}
+          @if (getGroupRoomId()) {
+            <span class="optional">(optional)</span>
+          }
+        </label>
         <p-select
           inputId="categoryId"
           name="categoryId"
@@ -96,11 +127,13 @@
           optionLabel="title"
           optionValue="id"
           [(ngModel)]="form.categoryId"
-          placeholder="Select category"
+          (ngModelChange)="onCategoryChange()"
+          [placeholder]="getGroupRoomId() ? 'Optional' : 'Select category'"
           appendTo="body"
           [loading]="categorizerLoading"
+          [showClear]="!!getGroupRoomId()"
           #categoryField="ngModel"
-          required
+          [required]="!getGroupRoomId()"
         >
           <ng-template let-item pTemplate="item">
             <div class="icon-row">
@@ -129,7 +162,7 @@
           </div>
         }
         <div class="form-field-error">
-          @if (categoryField.invalid && (categoryField.touched || cardForm.submitted)) {
+          @if (!getGroupRoomId() && categoryField.invalid && (categoryField.touched || cardForm.submitted)) {
             <p-message severity="error" size="small" variant="simple">Select category</p-message>
           }
         </div>
@@ -165,7 +198,7 @@
     </div>
 
     <div class="form-row">
-      <div class="form-field">
+      <div class="form-field" [class.form-field--full]="!!getGroupRoomId()">
         <label for="description">Description <span class="optional">(optional)</span></label>
         <input
           class="input"
@@ -179,20 +212,22 @@
         <div class="form-field-error"></div>
       </div>
 
-      <div class="form-field">
-        <label for="paymentMethod">Payment method <span class="optional">(optional)</span></label>
-        <p-select
-          inputId="paymentMethod"
-          name="paymentMethod"
-          [options]="paymentMethodOptions"
-          optionLabel="label"
-          optionValue="value"
-          [(ngModel)]="form.paymentMethod"
-          placeholder="Select"
-          appendTo="body"
-        />
-        <div class="form-field-error"></div>
-      </div>
+      @if (!getGroupRoomId()) {
+        <div class="form-field">
+          <label for="paymentMethod">Payment method <span class="optional">(optional)</span></label>
+          <p-select
+            inputId="paymentMethod"
+            name="paymentMethod"
+            [options]="paymentMethodOptions"
+            optionLabel="label"
+            optionValue="value"
+            [(ngModel)]="form.paymentMethod"
+            placeholder="Select"
+            appendTo="body"
+          />
+          <div class="form-field-error"></div>
+        </div>
+      }
     </div>
   </form>
 </app-modal-shell>

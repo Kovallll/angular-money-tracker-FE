@@ -57,6 +57,11 @@
     background-color 0.2s ease,
     color 0.2s ease;
 
+  @include bp.mobile {
+    padding: 8px 6px;
+    font-size: 13px;
+  }
+
   &:hover {
     color: $white;
     background: rgba($accent, 0.12);

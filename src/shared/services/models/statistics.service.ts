@@ -29,22 +29,12 @@ export class StatisticsHttpService {
     return this.http.get<ExpensesOverviewDto>('statistics/expenses/overview', { params: qp });
   }
 
-  getCategories(title: string) {
-    return this.http.post<any>('classify', { title });
-  }
-
-  updateCategory(id: string, dto: any) {
-    return this.http.patch<any>(`classify/${id}`, dto);
-  }
-
-  createCategory(obj: any) {
-    const { name, synonyms, description } = obj;
-    return this.http.post<any>('categories/predict', { name, synonyms, description });
-  }
-
   /** Предсказание категории по тексту (название транзакции). */
-  predict(text: string) {
-    return this.http.post<CategorizerPrediction>('categorizer/predict', { text });
+  predict(text: string, opts?: { roomId?: string }) {
+    const body: { text: string; roomId?: string } = { text };
+    const rid = opts?.roomId?.trim();
+    if (rid) body.roomId = rid;
+    return this.http.post<CategorizerPrediction>('categorizer/predict', body);
   }
   retrain(full: boolean = false) {
     return this.http.post<any>('categorizer/retrain', { full });

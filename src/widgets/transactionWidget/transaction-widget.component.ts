@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { TransactionsComponent } from '@/entities/cards/transactions/page/ui/transaction-card.component';
 
 @Component({
@@ -7,4 +7,7 @@ import { TransactionsComponent } from '@/entities/cards/transactions/page/ui/tra
   styleUrls: ['./transaction-widget.component.scss'],
   imports: [TransactionsComponent],
 })
-export class TransactionWidgetComponent {}
+export class TransactionWidgetComponent {
+  groupRoomId = input<string | undefined>(undefined);
+  embedded = input(false);
+}

@@ -1,28 +1,33 @@
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, OnDestroy, OnInit, effect, inject, signal } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  OnDestroy,
+  OnInit,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import {
-  CategoryItem,
-  ExpensesOverviewDto,
-  GoalItem,
-  GroupRoomDetails,
-  GroupTransactionItem,
-  SubscribeItem,
-} from '@/shared/types';
-import {
-  CategoriesHttpService,
-  GoalsHttpService,
-  GroupRoomsHttpService,
-  SseEventsService,
-  StatisticsHttpService,
-  SubscribtionsHttpService,
-} from '@/shared/services/models';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { RoutePaths } from '@/shared';
+import { DialogModule } from 'primeng/dialog';
+import { InputTextModule } from 'primeng/inputtext';
+import { AppModalShellComponent } from '@/shared/components/app-modal-shell/app-modal-shell.component';
+import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
+import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
+import { GroupRoomDetails } from '@/shared/types';
+import { GroupRoomsHttpService, SseEventsService } from '@/shared/services/models';
 import { AuthService } from '@/shared/services/auth/auth.service';
-import { DEFAULT_CATEGORY_ICON } from '@/shared/constants';
 import { shouldSyncTabToUrl } from '@/shared/lib/platform-url-sync';
-import { lastValueFrom } from 'rxjs';
+import { QueryClient } from '@tanstack/angular-query-experimental';
+import { DashboardCardsComponent } from '@/widgets/dashboardCards/dashboardCards.component';
+import { TransactionWidgetComponent } from '@/widgets/transactionWidget/transaction-widget.component';
+import { CategoriesCardsComponent } from '@/widgets/categoriesCards/ui/categoriesCards.component';
+import { GoalsCardsComponent } from '@/widgets/goalsCards/goalsCards.component';
+import { SubscribeTableComponent } from '@/entities/cards/subscribtions/ui/page/ui/subscribe-table.component';
 
 export type RoomTabId =
   | 'overview'
@@ -47,7 +52,21 @@ function isRoomTabId(v: string): v is RoomTabId {
 
 @Component({
   selector: 'app-room-details-page',
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterLink,
+    DialogModule,
+    InputTextModule,
+    AppModalShellComponent,
+    AppButtonComponent,
+    AppIconComponent,
+    DashboardCardsComponent,
+    TransactionWidgetComponent,
+    CategoriesCardsComponent,
+    GoalsCardsComponent,
+    SubscribeTableComponent,
+  ],
   templateUrl: './room-details-page.html',
   styleUrl: './room-details-page.scss',
 })
@@ -58,10 +77,9 @@ export class RoomDetailsPageComponent implements OnInit, OnDestroy {
   private readonly groupRoomsHttp = inject(GroupRoomsHttpService);
   private readonly sseEvents = inject(SseEventsService);
   private readonly auth = inject(AuthService);
-  private readonly categoriesHttp = inject(CategoriesHttpService);
-  private readonly goalsHttp = inject(GoalsHttpService);
-  private readonly subsHttp = inject(SubscribtionsHttpService);
-  private readonly statsHttp = inject(StatisticsHttpService);
+  private readonly queryClient = inject(QueryClient);
+
+  readonly routePaths = RoutePaths;
 
   readonly tabDefs: { id: RoomTabId; label: string }[] = [
     { id: 'overview', label: 'Overview' },
@@ -76,36 +94,36 @@ export class RoomDetailsPageComponent implements OnInit, OnDestroy {
 
   readonly roomId = signal<string>('');
   readonly room = signal<GroupRoomDetails | null>(null);
-  readonly transactions = signal<GroupTransactionItem[]>([]);
-  readonly roomCategories = signal<CategoryItem[]>([]);
-  readonly roomGoals = signal<GoalItem[]>([]);
-  readonly roomSubscriptions = signal<SubscribeItem[]>([]);
-  readonly roomOverview = signal<ExpensesOverviewDto | null>(null);
 
   readonly error = signal<string>('');
   readonly inviteHours = signal<number>(72);
   readonly createdInviteToken = signal<string>('');
-  readonly txTitle = signal<string>('');
-  readonly txAmount = signal<number>(0);
-  readonly txDate = signal<string>(new Date().toISOString().slice(0, 10));
-  readonly txCategoryId = signal<string>('');
+  readonly inviteDialogVisible = signal(false);
+  readonly isCreatingInvite = signal(false);
 
-  readonly catTitle = signal<string>('');
-  readonly gTitle = signal<string>('');
-  readonly gTarget = signal<number>(0);
-  readonly gGoal = signal<number>(0);
-  readonly gStart = signal<string>(new Date().toISOString().slice(0, 10));
-  readonly gEnd = signal<string>('');
-  readonly sName = signal<string>('');
-  readonly sAmount = signal<number>(0);
-  readonly sDate = signal<string>(new Date().toISOString().slice(0, 10));
-  readonly sType = signal<string>('monthly');
+  readonly inviteHoursValid = computed(() => {
+    const h = this.inviteHours();
+    return Number.isFinite(h) && h >= 1 && h <= 8760;
+  });
 
   constructor() {
     effect(() => {
       const event = this.sseEvents.lastGroupEvent();
-      if (!event || event.roomId !== this.roomId()) return;
-      this.reloadAll().catch(() => undefined);
+      const rid = this.roomId();
+      if (!event || event.roomId !== rid || !rid) return;
+      void this.loadRoom();
+      void this.queryClient.invalidateQueries({
+        predicate: (q) => {
+          const k = q.queryKey as unknown[];
+          if (k[0] === 'groupTransactions' && k[1] === rid) return true;
+          if (k[0] === 'categories' && k[1] === 'scope' && k[2] === rid) return true;
+          if (k[0] === 'goals' && k[1] === 'room' && k[2] === rid) return true;
+          if (k[0] === 'subscriptions' && k[1] === 'room' && k[2] === rid) return true;
+          if (k[0] === 'charts' && k[1] === 'room' && k[2] === rid) return true;
+          if (k[0] === 'roomContributions' && k[1] === rid) return true;
+          return false;
+        },
+      });
     });
   }
 
@@ -127,7 +145,7 @@ export class RoomDetailsPageComponent implements OnInit, OnDestroy {
       });
     }
 
-    await this.reloadAll();
+    await this.loadRoom();
 
     const token = this.auth.getAccessToken();
     if (token) {
@@ -151,45 +169,60 @@ export class RoomDetailsPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  async reloadAll() {
+  private async loadRoom() {
     const roomId = this.roomId();
     if (!roomId) return;
     this.error.set('');
     try {
-      const [room, tx, cats, goals, subs, overview] = await Promise.all([
-        this.groupRoomsHttp.getRoomDetails(roomId),
-        this.groupRoomsHttp.getRoomTransactions(roomId),
-        this.categoriesHttp.fetchCategoriesByRoom(roomId).catch(() => [] as CategoryItem[]),
-        lastValueFrom(this.goalsHttp.fetchGoalsForRoom(roomId)).catch(() => [] as GoalItem[]),
-        lastValueFrom(this.subsHttp.fetchSubscriptionsForRoom(roomId)).catch(
-          () => [] as SubscribeItem[],
-        ),
-        lastValueFrom(this.statsHttp.getExpensesOverview({ roomId })).catch(() => null),
-      ]);
-      this.room.set(room);
-      this.transactions.set(tx);
-      this.roomCategories.set(cats);
-      this.roomGoals.set([...goals].reverse());
-      this.roomSubscriptions.set(subs);
-      this.roomOverview.set(overview);
+      const r = await this.groupRoomsHttp.getRoomDetails(roomId);
+      this.room.set(r);
     } catch (err) {
       console.error(err);
       this.error.set('Failed to load room');
     }
   }
 
+  openInviteDialog(): void {
+    this.inviteDialogVisible.set(true);
+  }
+
+  closeInviteDialog(): void {
+    this.inviteDialogVisible.set(false);
+  }
+
+  onInviteDialogVisibleChange(visible: boolean): void {
+    this.inviteDialogVisible.set(visible);
+  }
+
+  onInviteHoursInput(raw: unknown): void {
+    if (raw === null || raw === undefined || raw === '') {
+      this.inviteHours.set(1);
+      return;
+    }
+    const n = Number(raw);
+    if (!Number.isFinite(n) || n < 1) {
+      this.inviteHours.set(1);
+      return;
+    }
+    this.inviteHours.set(Math.min(8760, Math.floor(n)));
+  }
+
   async createInvite() {
     const roomId = this.roomId();
-    if (!roomId) return;
+    if (!roomId || !this.inviteHoursValid()) return;
     this.error.set('');
+    this.isCreatingInvite.set(true);
     try {
       const invite = await this.groupRoomsHttp.createInvite(roomId, {
         expiresInHours: this.inviteHours(),
       });
       this.createdInviteToken.set(invite.token);
+      this.inviteDialogVisible.set(false);
     } catch (err) {
       console.error(err);
       this.error.set('Failed to create invite');
+    } finally {
+      this.isCreatingInvite.set(false);
     }
   }
 
@@ -199,7 +232,7 @@ export class RoomDetailsPageComponent implements OnInit, OnDestroy {
     this.error.set('');
     try {
       await this.groupRoomsHttp.updateMemberRole(roomId, userId, role);
-      await this.reloadAll();
+      await this.loadRoom();
     } catch (err) {
       console.error(err);
       this.error.set('Failed to update role');
@@ -212,138 +245,10 @@ export class RoomDetailsPageComponent implements OnInit, OnDestroy {
     this.error.set('');
     try {
       await this.groupRoomsHttp.removeMember(roomId, userId);
-      await this.reloadAll();
+      await this.loadRoom();
     } catch (err) {
       console.error(err);
       this.error.set('Failed to remove member');
     }
-  }
-
-  async createTransaction() {
-    const roomId = this.roomId();
-    if (!roomId) return;
-    if (!this.txTitle().trim() || this.txAmount() <= 0) return;
-    this.error.set('');
-    try {
-      const cat = this.txCategoryId().trim();
-      await this.groupRoomsHttp.createRoomTransaction(roomId, {
-        title: this.txTitle().trim(),
-        amount: this.txAmount(),
-        date: this.txDate(),
-        ...(cat ? { categoryId: cat } : {}),
-      });
-      this.txTitle.set('');
-      this.txAmount.set(0);
-      await this.reloadAll();
-    } catch (err) {
-      console.error(err);
-      this.error.set('Failed to create transaction');
-    }
-  }
-
-  async createRoomCategory() {
-    const roomId = this.roomId();
-    const title = this.catTitle().trim();
-    if (!roomId || !title) return;
-    this.error.set('');
-    try {
-      await this.categoriesHttp.createCategoryInRoom(roomId, {
-        title,
-        icon: DEFAULT_CATEGORY_ICON,
-      });
-      this.catTitle.set('');
-      await this.reloadAll();
-    } catch (err) {
-      console.error(err);
-      this.error.set('Failed to create category');
-    }
-  }
-
-  async createRoomGoal() {
-    const roomId = this.roomId();
-    const title = this.gTitle().trim();
-    if (!roomId || !title) return;
-    this.error.set('');
-    try {
-      await lastValueFrom(
-        this.goalsHttp.createGoal(
-          {
-            title,
-            targetBudget: this.gTarget(),
-            goalBudget: this.gGoal(),
-            startDate: this.gStart(),
-            endDate: this.gEnd().trim() || undefined,
-          },
-          { groupRoomId: roomId },
-        ),
-      );
-      this.gTitle.set('');
-      this.gTarget.set(0);
-      this.gGoal.set(0);
-      this.gEnd.set('');
-      await this.reloadAll();
-    } catch (err) {
-      console.error(err);
-      this.error.set('Failed to create goal');
-    }
-  }
-
-  async createRoomSubscription() {
-    const roomId = this.roomId();
-    const name = this.sName().trim();
-    if (!roomId || !name || this.sAmount() < 0.01) return;
-    this.error.set('');
-    try {
-      await lastValueFrom(
-        this.subsHttp.create(
-          {
-            subscribeName: name,
-            subscribeDate: this.sDate(),
-            amount: this.sAmount(),
-            lastCharge: null,
-            type: this.sType().trim() || 'monthly',
-            description: undefined,
-          } as Omit<SubscribeItem, 'id'>,
-          { groupRoomId: roomId },
-        ),
-      );
-      this.sName.set('');
-      this.sAmount.set(0);
-      await this.reloadAll();
-    } catch (err) {
-      console.error(err);
-      this.error.set('Failed to create subscription');
-    }
-  }
-
-  async deleteRoomGoal(id: string | number) {
-    this.error.set('');
-    try {
-      await lastValueFrom(this.goalsHttp.deleteGoal(id));
-      await this.reloadAll();
-    } catch (err) {
-      console.error(err);
-      this.error.set('Failed to delete goal');
-    }
-  }
-
-  async deleteRoomSubscription(id: string | number) {
-    this.error.set('');
-    try {
-      await lastValueFrom(this.subsHttp.delete(id));
-      await this.reloadAll();
-    } catch (err) {
-      console.error(err);
-      this.error.set('Failed to delete subscription');
-    }
-  }
-
-  overviewMonthTotal(): number {
-    const line = this.roomOverview()?.line;
-    const data = line?.datasets?.[0]?.data ?? [];
-    const idx = this.roomOverview()?.meta?.monthIndex;
-    if (idx == null || !data.length) return 0;
-    const v = data[idx];
-    return typeof v === 'number' && Number.isFinite(v) ? v : 0;
   }
 }

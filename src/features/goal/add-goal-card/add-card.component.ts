@@ -1,11 +1,19 @@
-import { ChangeDetectionStrategy, Component, inject, signal, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  input,
+  output,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
 import { AppModalShellComponent } from '@/shared/components/app-modal-shell/app-modal-shell.component';
 import { InputTextModule } from 'primeng/inputtext';
-import { CreateGoalItem, GoalItem } from '@/shared/types';
+import { CreateGoalItem, GoalItem, GoalsHttpService } from '@/shared';
 import { GoalsService } from '@/entities/cards/goals/services/goals.service';
 import { DatePickerModule } from 'primeng/datepicker';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
@@ -15,6 +23,8 @@ import { GOALS_CATEGORY_NAME } from '@/shared/constants';
 import { injectQuery } from '@tanstack/angular-query-experimental';
 import { Select } from 'primeng/select';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
+import { MessageService } from 'primeng/api';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -37,14 +47,27 @@ import { AppIconComponent } from '@/shared/components/app-icon/app-icon.componen
 })
 export class GoalAddCardButtonComponent {
   private goalsService = inject(GoalsService);
+  private goalsHttpService = inject(GoalsHttpService);
   private currencyService = inject(CurrencyService);
   private categoriesHttpService = inject(CategoriesHttpService);
+  private messageService = inject(MessageService);
   visible = signal(false);
 
-  categories = injectQuery(() => ({
-    queryKey: ['categories'] as const,
-    queryFn: () => this.categoriesHttpService.getCategories(),
-  }));
+  /** Задан — цель создаётся в групповой комнате. */
+  groupRoomId = input<string | undefined>(undefined);
+  /** После успешного создания цели в комнате. */
+  roomGoalCreated = output<void>();
+
+  categories = injectQuery(() => {
+    const rid = this.groupRoomId()?.trim() ?? '';
+    return {
+      queryKey: ['categories', 'scope', rid] as const,
+      queryFn: () =>
+        rid
+          ? this.categoriesHttpService.fetchCategoriesByRoom(rid)
+          : this.categoriesHttpService.getCategories(),
+    };
+  });
   @ViewChild('f') form?: NgForm;
 
   newGoal: Partial<GoalItem> & { currencyCode?: string; categoryId?: string } = {
@@ -158,6 +181,32 @@ export class GoalAddCardButtonComponent {
       endDate: endStr || undefined,
       categoryId: categoryId ?? undefined,
     };
+    const roomId = this.groupRoomId()?.trim();
+    if (roomId) {
+      lastValueFrom(this.goalsHttpService.createGoal(payload, { groupRoomId: roomId }))
+        .then(() => {
+          this.messageService.add({
+            key: 'toast',
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Goal created',
+            life: 3000,
+          });
+          this.roomGoalCreated.emit();
+          this.visible.set(false);
+          this.resetGoal();
+        })
+        .catch(() => {
+          this.messageService.add({
+            key: 'toast',
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to create goal',
+            life: 4000,
+          });
+        });
+      return;
+    }
     this.goalsService.createGoal(payload);
     this.visible.set(false);
     this.resetGoal();

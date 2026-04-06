@@ -32,8 +32,8 @@ export class GoalsService {
     this.goalsHttpService.loadGoals();
   }
 
-  public createGoal(goal: CreateGoalItem) {
-    return this.goalsHttpService.createGoal(goal).subscribe({
+  public createGoal(goal: CreateGoalItem, opts?: { groupRoomId?: string }) {
+    return this.goalsHttpService.createGoal(goal, opts).subscribe({
       next: () => {
         this.messageService.add({
           key: 'toast',

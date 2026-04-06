@@ -14,6 +14,7 @@ import {
   input,
   signal,
   OnInit,
+  effect,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ChartConfiguration, LegendItem, Plugin } from 'chart.js';
@@ -172,6 +173,9 @@ export class CategoryAnaliticsComponent implements OnInit {
 
   /** Показывать ли легенду в виде кликабельных тегов (только на странице статистики). */
   showLegendTags = input<boolean>(true);
+
+  /** Если задан — обзор расходов по групповой комнате (вместо личного userId). */
+  roomId = input<string | undefined>(undefined);
 
   /** Плагин для отображения легенды в виде тегов (для pie и bar). Всегда подключён; видимость тегов через CSS по классу .analytics--legend-tags. */
   /** Плагины для doughnut — отдельный массив с типом, чтобы не было TS2322 с bar. */
@@ -396,25 +400,34 @@ export class CategoryAnaliticsComponent implements OnInit {
   /** Запрос актуальных данных для графиков (вызывается при открытии и после изменений транзакций). */
   private loadOverview(): void {
     this.overviewLoading.set(true);
-    this.statisticsHttpService.getExpensesOverview({ monthsBar: 6, locale: 'en' }).subscribe({
-      next: (res: ExpensesOverviewDto) => {
-        const { pie, bar } = applySyncedColors(res.pie, res.bar);
-        this.pieData.set(pie ?? { labels: [], datasets: [] });
-        this.barData.set(bar ?? EMPTY_BAR);
-        this.lineData.set(res.line ?? EMPTY_LINE);
-        this.overviewLoading.set(false);
-      },
-      error: () => {
-        this.pieData.set({ labels: [], datasets: [] });
-        this.barData.set(EMPTY_BAR);
-        this.lineData.set(EMPTY_LINE);
-        this.overviewLoading.set(false);
-      },
+    const rid = this.roomId()?.trim();
+    this.statisticsHttpService
+      .getExpensesOverview({ monthsBar: 6, locale: 'en', ...(rid ? { roomId: rid } : {}) })
+      .subscribe({
+        next: (res: ExpensesOverviewDto) => {
+          const { pie, bar } = applySyncedColors(res.pie, res.bar);
+          this.pieData.set(pie ?? { labels: [], datasets: [] });
+          this.barData.set(bar ?? EMPTY_BAR);
+          this.lineData.set(res.line ?? EMPTY_LINE);
+          this.overviewLoading.set(false);
+        },
+        error: () => {
+          this.pieData.set({ labels: [], datasets: [] });
+          this.barData.set(EMPTY_BAR);
+          this.lineData.set(EMPTY_LINE);
+          this.overviewLoading.set(false);
+        },
+      });
+  }
+
+  constructor() {
+    effect(() => {
+      this.roomId();
+      this.loadOverview();
     });
   }
 
   ngOnInit(): void {
-    this.loadOverview();
     this.statisticsRefreshService.onRefresh
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => this.loadOverview());

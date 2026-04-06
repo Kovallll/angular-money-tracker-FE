@@ -1,4 +1,9 @@
-<dashboard-card title="Goals" [isWithSeeAll]="true" [seeAllPath]="seeAllPath">
+<dashboard-card
+  title="Goals"
+  [isWithSeeAll]="true"
+  [seeAllPath]="seeAllPath"
+  [seeAllNavigation]="seeAllNavigation()"
+>
   <card-body class="body">
     @if (isLoading()) {
     <div class="data-loading">
@@ -22,9 +27,17 @@
     </p-carousel>
     } @else {
     <div class="data-placeholder">
-      <span class="data-placeholder__icon" aria-hidden="true">🎯</span>
+      <div class="dash-empty-icon" aria-hidden="true">
+        <app-icon prime="flag" [sizePx]="26" />
+      </div>
       <p>No goals</p>
-      <p>Create a goal on the Goals page</p>
+      <p>
+        @if (groupRoomId()) {
+          Add a goal in the Goals tab
+        } @else {
+          Create a goal on the Goals page
+        }
+      </p>
     </div>
     }
   </card-body>

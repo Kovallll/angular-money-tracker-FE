@@ -1,23 +1,15 @@
 @use 'theme' as *;
 @use 'shared/styles/breakpoints' as bp;
+@use 'shared/styles/page-shell' as shell;
 
 .container {
   display: flex;
   flex-direction: column;
   gap: 24px;
-  width: 100%;
-  min-width: 0;
-  padding: 0 16px 32px;
+  @include shell.pageShell;
 
   @include bp.tablet-and-up {
     gap: 32px;
-    padding: 0 24px 40px;
-  }
-
-  @include bp.desktop-and-up {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 0 32px 48px;
   }
 }
 
@@ -44,70 +36,6 @@
     outline-offset: 2px;
     border-radius: 4px;
   }
-}
-
-.page-header {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding: 20px;
-  background: $secondary;
-  border: 1px solid rgba($white, 0.06);
-  border-radius: 16px;
-
-  @include bp.tablet-and-up {
-    padding: 24px;
-    gap: 24px;
-  }
-}
-
-.page-header__main {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  min-width: 0;
-}
-
-.page-header__icon-wrap {
-  flex-shrink: 0;
-  width: 56px;
-  height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, rgba($accent, 0.3) 0%, rgba($accent, 0.15) 100%);
-  border: 1px solid rgba($accent, 0.25);
-  border-radius: 14px;
-
-  .page-header__icon-wrap ::ng-deep app-icon,
-  .page-header__icon-wrap ::ng-deep .mat-icon.mat-icon {
-    font-size: 28px;
-    width: 28px;
-    height: 28px;
-    color: $white;
-  }
-}
-
-.page-header__info {
-  min-width: 0;
-}
-
-.page-header__title {
-  margin: 0 0 4px 0;
-  font-size: 20px;
-  font-weight: 600;
-  color: $white;
-  letter-spacing: -0.3px;
-
-  @include bp.tablet-and-up {
-    font-size: 24px;
-  }
-}
-
-.page-header__subtitle {
-  margin: 0;
-  font-size: 13px;
-  color: $gray;
 }
 
 .summary-cards {

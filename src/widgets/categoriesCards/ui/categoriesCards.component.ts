@@ -5,7 +5,7 @@ import { AuthService } from '@/shared/services/auth/auth.service';
 import { AppCurrencyPipe } from '@/shared/pipes/app-currency.pipe';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
 import { GategoryAddButtonComponent } from '@/features/categories/add-button/add-card.component';
@@ -16,6 +16,8 @@ import { ControlsComponent } from '@/widgets/controls/ui/controls.component';
 import { ControlsProps } from '@/widgets/controls/lib';
 import { PaginationComponent } from '@/entities/pagination/ui/pagination.component';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
+import { GroupRoomsHttpService } from '@/shared/services/models/group-rooms.service';
+import { mergeContributorsForPrimary } from '@/widgets/roomMemberContributions/room-member-contributions.util';
 
 const CATEGORY_PAGE_SIZE_WIDE = 9;
 const CATEGORY_PAGE_SIZE_TWO_COLUMNS = 8;
@@ -62,10 +64,14 @@ function sortCategoriesByFirstActivity(list: CategoryItem[]): CategoryItem[] {
 })
 export class CategoriesCardsComponent extends UrlSyncedComponent<CategoryItem> {
   private categoriesHttpService = inject(CategoriesHttpService);
+  private groupRoomsHttp = inject(GroupRoomsHttpService);
   private auth = inject(AuthService);
   private currencyService = inject(CurrencyService);
   private exchangeRates = inject(ExchangeRatesService);
   private breakpointObserver = inject(BreakpointObserver);
+
+  groupRoomId = input<string | undefined>(undefined);
+  embedded = input(false);
 
   /** При ширине ≤1440px карточки в 2 колонки — 8 на странице; иначе 9. */
   readonly isTwoColumns = toSignal(
@@ -87,22 +93,66 @@ export class CategoriesCardsComponent extends UrlSyncedComponent<CategoryItem> {
     });
   }
 
-  categories = injectQuery(() => ({
-    queryKey: ['categories'],
-    queryFn: () => this.categoriesHttpService.getCategories(),
-    staleTime: 0,
-    refetchOnMount: 'always',
-  }));
+  categories = injectQuery(() => {
+    const rid = this.groupRoomId()?.trim() ?? '';
+    return {
+      queryKey: ['categories', 'scope', rid] as const,
+      queryFn: () =>
+        rid
+          ? this.categoriesHttpService.fetchCategoriesByRoom(rid)
+          : this.categoriesHttpService.getCategories(),
+      staleTime: 0,
+      refetchOnMount: 'always',
+    };
+  });
 
-  charts = injectQuery(() => ({
-    queryKey: ['charts', this.auth.getCurrentUserId() ?? ''],
-    queryFn: () =>
-      this.categoriesHttpService.getCategoryExpenseLineCharts(
-        new Date().getFullYear(),
-        undefined,
-        this.auth.getCurrentUserId() ?? undefined,
-      ),
-  }));
+  charts = injectQuery(() => {
+    const rid = this.groupRoomId()?.trim() ?? '';
+    const uid = this.auth.getCurrentUserId() ?? '';
+    const year = new Date().getFullYear();
+    return {
+      queryKey: rid ? (['charts', 'room', rid] as const) : (['charts', 'user', uid] as const),
+      queryFn: () =>
+        rid
+          ? this.categoriesHttpService.getCategoryExpenseLineCharts(year, undefined, undefined, rid)
+          : this.categoriesHttpService.getCategoryExpenseLineCharts(
+              year,
+              undefined,
+              uid || undefined,
+            ),
+    };
+  });
+
+  roomContributions = injectQuery(() => {
+    const rid = this.groupRoomId()?.trim() ?? '';
+    return {
+      queryKey: ['roomContributions', rid] as const,
+      queryFn: () => this.groupRoomsHttp.getRoomContributions(rid),
+      enabled: !!rid,
+    };
+  });
+
+  payerRowsForCategory(categoryId: string | number | undefined) {
+    if (categoryId == null) return [];
+    return this.payersForCategory().get(String(categoryId)) ?? [];
+  }
+
+  /** Разбивка по плательщикам для карточки категории (комната). */
+  readonly payersForCategory = computed(() => {
+    const rid = this.groupRoomId()?.trim();
+    const data = this.roomContributions.data();
+    if (!rid || !data?.byCategory?.length) {
+      return new Map<string, Array<{ userId: string; name: string; amount: number }>>();
+    }
+    const primary = this.currencyService.primaryCode();
+    const conv = (a: number, f: string, t: string) => this.exchangeRates.convert(a, f, t);
+    const m = new Map<string, Array<{ userId: string; name: string; amount: number }>>();
+    for (const b of data.byCategory) {
+      const key = b.categoryId != null ? String(b.categoryId) : '';
+      m.set(key, mergeContributorsForPrimary(b.members, primary, conv));
+    }
+    return m;
+  });
 
   override setUpdatedData(updatedData: CategoryItem[]): void {
     this.currentCategories.set([...updatedData]);

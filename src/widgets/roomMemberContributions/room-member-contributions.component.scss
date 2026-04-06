@@ -1,0 +1,48 @@
+@use 'theme' as *;
+
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.contrib {
+  background: $light-primary;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  padding: 16px 18px;
+  box-sizing: border-box;
+}
+
+.contrib__title {
+  margin: 0 0 4px 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: $white;
+}
+
+.contrib__hint {
+  margin: 0 0 12px 0;
+  font-size: 12px;
+  color: $gray;
+  line-height: 1.4;
+}
+
+.contrib__chart {
+  height: 220px;
+  position: relative;
+}
+
+.contrib__loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
+}
+
+.contrib__empty {
+  font-size: 14px;
+  color: $gray;
+  padding: 24px 8px;
+  text-align: center;
+}

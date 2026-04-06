@@ -1,20 +1,37 @@
 <div class="container">
-  <header class="page-header">
-    <div class="page-header__titles">
-      <h1 class="page-header__title">Statistics overview</h1>
-      <p class="page-header__subtitle">
+  <header class="app-page-head">
+    <div class="app-page-head__text">
+      <h1 class="app-page-head__title">Statistics overview</h1>
+      <p class="app-page-head__subtitle">
         Track your budget, expenses, goals and category analytics in a single place.
       </p>
     </div>
-    <nav class="page-header__nav" aria-label="Statistics sections">
-      <a class="page-header__nav-link" href="#transactions">Transactions</a>
-      <a class="page-header__nav-link" href="#expenses">Expenses</a>
-      <a class="page-header__nav-link" href="#goals">Goals</a>
-      <a class="page-header__nav-link" href="#categories">Categories</a>
-      <a class="page-header__nav-link" href="#saved-reports">Saved reports</a>
-    </nav>
   </header>
 
+  <div class="segment-control" role="tablist" aria-label="Statistics view">
+    <button
+      type="button"
+      class="segment-control__item"
+      [class.segment-control__item--active]="statsView() === 'charts'"
+      [attr.aria-selected]="statsView() === 'charts'"
+      role="tab"
+      (click)="setStatsView('charts')"
+    >
+      Charts
+    </button>
+    <button
+      type="button"
+      class="segment-control__item"
+      [class.segment-control__item--active]="statsView() === 'reports'"
+      [attr.aria-selected]="statsView() === 'reports'"
+      role="tab"
+      (click)="setStatsView('reports')"
+    >
+      Reports
+    </button>
+  </div>
+
+  @if (statsView() === 'charts') {
   <main class="cards-grid">
     <section
       id="budget"
@@ -39,7 +56,9 @@
     >
       <category-analitics view="row" />
     </section>
-
+  </main>
+  } @else {
+  <main class="cards-grid">
     <section
       id="saved-reports"
       class="cards-grid__item cards-grid__item--full"
@@ -48,4 +67,5 @@
       <app-saved-reports />
     </section>
   </main>
+  }
 </div>

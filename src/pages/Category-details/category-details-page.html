@@ -1,16 +1,16 @@
 <div class="container">
   <a [routerLink]="['/', RoutePaths.CATEGORIES]" class="back-link">
-    <app-icon prime="arrow-left" [sizePx]="14" />
+    <app-icon prime="arrow-left" [sizePx]="20" />
     Back to categories
   </a>
 
   @if (category()) {
   <div class="category-header">
     <div class="category-icon">
-      <app-icon [icon]="category()!.icon" />
+      <app-icon [icon]="category()!.icon" [sizePx]="20" />
     </div>
     <div class="category-info">
-      <h1 class="category-title">{{ category()!.title }}</h1>
+      <h1 class="app-page-head__title">{{ category()!.title }}</h1>
       <div class="totals-row">
         <div class="total-item">
           <span class="total-label">Expenses</span>
@@ -39,9 +39,9 @@
             [class.positive]="compareDelta().negative"
           >
             {{ compareDelta().value }}% @if (!compareDelta().negative) {
-            <app-icon prime="arrow-down" [sizePx]="14" iconClass="trend-arrow" />
+            <app-icon prime="arrow-down" [sizePx]="20" iconClass="trend-arrow" />
             } @else {
-            <app-icon prime="arrow-up" [sizePx]="14" iconClass="trend-arrow" />
+            <app-icon prime="arrow-up" [sizePx]="20" iconClass="trend-arrow" />
             }
           </span>
         </div>

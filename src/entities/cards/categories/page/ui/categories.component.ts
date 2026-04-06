@@ -1,5 +1,4 @@
 import { Component, computed, inject, input, ViewChild } from '@angular/core';
-import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { AppCurrencyPipe } from '@/shared/pipes/app-currency.pipe';
 import { ChartConfiguration } from 'chart.js';
@@ -25,7 +24,7 @@ import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.
   selector: 'category-card',
   templateUrl: './categories.component.html',
   styleUrls: ['./categories.component.scss'],
-  imports: [AppCurrencyPipe, BaseChartDirective, ContextMenuComponent, AppIconComponent, DatePipe],
+  imports: [AppCurrencyPipe, BaseChartDirective, ContextMenuComponent, AppIconComponent],
   providers: [DialogService],
   standalone: true,
 })
@@ -43,6 +42,8 @@ export class CategoryCardComponent {
   private router = inject(Router);
   category = input<CategoryItem>({ title: '', totalExpenses: 0 } as CategoryItem);
   chart = input<CategoryLineChartDto>();
+  /** Групповая комната: кто сколько внёс по этой категории (уже в основной валюте). */
+  groupPayerRows = input<Array<{ userId: string; name: string; amount: number }>>([]);
   ref: DynamicDialogRef | undefined | null;
 
   compareDelta = computed(() => this.categoriesHttpService.getChartDeltaCompare(this.chart()));

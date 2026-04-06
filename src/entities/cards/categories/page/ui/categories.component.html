@@ -11,7 +11,7 @@
   <div class="card__header">
     <div class="card__main">
       <div class="card__icon-wrap">
-        <app-icon [icon]="category().icon" />
+        <app-icon [icon]="category().icon" [sizePx]="20" />
       </div>
       <div class="card__meta">
         <h3 class="card__title">{{ category().title }}</h3>
@@ -38,9 +38,9 @@
         </span>
         @if (compareDelta().comparable && compareDelta().value !== 0) {
           @if (!compareDelta().negative) {
-            <app-icon prime="arrow-down" [sizePx]="14" ariaLabel="" />
+            <app-icon prime="arrow-down" [sizePx]="20" ariaLabel="" />
           } @else {
-            <app-icon prime="arrow-up" [sizePx]="14" ariaLabel="" />
+            <app-icon prime="arrow-up" [sizePx]="20" ariaLabel="" />
           }
         }
       </div>
@@ -60,6 +60,19 @@
         <div class="chart-placeholder">No chart data</div>
       }
     </div>
+    @if (groupPayerRows().length) {
+      <div class="card__payers" (click)="$event.stopPropagation()">
+        <span class="card__payers-title">By payer</span>
+        <ul class="card__payers-list">
+          @for (row of groupPayerRows(); track row.userId) {
+            <li class="card__payers-row">
+              <span class="card__payers-name">{{ row.name }}</span>
+              <span class="card__payers-amt">{{ row.amount | appCurrency }}</span>
+            </li>
+          }
+        </ul>
+      </div>
+    }
     <div class="card__footer">
       <div class="card__stat">
         <span class="card__stat-label">Expenses</span>

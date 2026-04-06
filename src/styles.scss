@@ -1,5 +1,6 @@
 @use 'theme' as *;
 @use '@angular/material' as mat;
+@use 'shared/styles/app-page' as *;
 @use 'shared/styles/modal-form' as *;
 @use 'entities/cards/slider/lib/dashboard-carousel' as *;
 @use 'shared/styles/breakpoints' as bp;
@@ -90,29 +91,39 @@ auth-layout {
   width: 100%;
 }
 
+/* Модалки PrimeNG: отступ маски от краёв экрана / safe-area (иначе окно визуально «впритык») */
+.p-dialog-mask {
+  padding: max(12px, env(safe-area-inset-top, 0px)) max(8px, env(safe-area-inset-right, 0px))
+    max(12px, env(safe-area-inset-bottom, 0px)) max(8px, env(safe-area-inset-left, 0px));
+  box-sizing: border-box;
+}
+
 /* Модалки PrimeNG: общий стиль окна и контента */
 .p-dialog.modal .p-dialog-content,
 .p-dialog.add-card-modal .p-dialog-content,
 .p-dialog.subscription-modal .p-dialog-content,
-.p-dialog.goal-dialog .p-dialog-content {
+.p-dialog.goal-dialog .p-dialog-content,
+.p-dialog.rooms-dialog .p-dialog-content {
   overflow-x: hidden;
   max-width: 100%;
   min-width: 0;
   box-sizing: border-box;
-  padding: 16px 20px 0;
+  padding: 16px 8px 0;
   background: $secondary;
   color: $white;
 
   @media (min-width: 560px) {
-    padding: 24px 28px 0;
+    padding: 24px 8px 0;
   }
 }
 
 .p-dialog.modal,
 .p-dialog.add-card-modal,
 .p-dialog.subscription-modal,
-.p-dialog.goal-dialog {
-  width: calc(100vw - 24px);
+.p-dialog.goal-dialog,
+.p-dialog.rooms-dialog {
+  /* Всегда заметный зазор от краёв экрана (раньше при ≥400px ломало отступ из‑за 90vw) */
+  width: min(560px, calc(100vw - 48px));
   max-width: 560px;
   box-sizing: border-box;
   border-radius: 16px;
@@ -122,21 +133,15 @@ auth-layout {
     0 24px 48px $shadow-40,
     0 0 0 1px $surface-06;
 
-  @media (min-width: 400px) {
-    width: 90vw;
-    min-width: 340px;
-    max-width: 560px;
-  }
-
   @media (min-width: 600px) {
     width: 560px;
   }
 
   .p-dialog-header {
-    padding: 16px 20px;
+    padding: 16px 8px;
 
     @media (min-width: 560px) {
-      padding: 20px 24px;
+      padding: 20px 8px;
     }
     background: $light-primary;
     border-bottom: 1px solid $surface-08;
@@ -198,6 +203,56 @@ auth-layout {
 @media (max-width: 400px) {
   .p-dialog.goal-dialog .app-modal-form .form-row {
     grid-template-columns: 1fr;
+  }
+}
+
+/* rooms-dialog — создание комнаты / инвайт */
+.p-dialog.rooms-dialog .app-modal-form .form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-bottom: 16px;
+}
+
+.p-dialog.rooms-dialog .app-modal-form .field {
+  min-width: 0;
+}
+
+.p-dialog.rooms-dialog .app-modal-form .rooms-invite-extra {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 4px;
+}
+
+.p-dialog.rooms-dialog .app-modal-form textarea.rooms-modal-textarea {
+  width: 100%;
+  min-height: 96px;
+  resize: vertical;
+  border-radius: 10px;
+  background: $surface-06;
+  border: 1px solid $surface-12;
+  padding: 10px 14px;
+  font-size: 15px;
+  font-family: inherit;
+  color: $white;
+  box-sizing: border-box;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+
+  &::placeholder {
+    color: $surface-40;
+  }
+
+  &:hover:not(:disabled) {
+    border-color: $surface-20;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $accent;
+    box-shadow: 0 0 0 2px rgba($accent, 0.25);
   }
 }
 
@@ -385,3 +440,4 @@ app-currency-selector .currency-selector.p-inputwrapper.p-inputwrapper-focus {
     bottom: 12px;
   }
 }
+

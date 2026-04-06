@@ -1,5 +1,8 @@
+@use 'shared/styles/page-shell' as shell;
+
 .container {
   display: flex;
   flex-direction: column;
   row-gap: 32px;
+  @include shell.pageShell;
 }

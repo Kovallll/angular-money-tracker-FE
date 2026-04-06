@@ -1,15 +1,24 @@
-<div class="content">
-  <dash-balance-card class="block balance-block" />
-  <dash-goal-card class="block goal-block" />
-  <dash-subscribe-card class="block subscribe-block" />
-  <dash-transaction-card class="block transaction-block" />
+<div class="content" [class.content--room]="!!groupRoomId()">
+  @if (!groupRoomId()) {
+    <dash-balance-card class="block balance-block" />
+  }
+  <dash-goal-card class="block goal-block" [groupRoomId]="groupRoomId()" />
+  <dash-subscribe-card class="block subscribe-block" [groupRoomId]="groupRoomId()" />
+  <dash-transaction-card class="block transaction-block" [groupRoomId]="groupRoomId()" />
   <div class="block stats-block">
-    <budget-statistic-card
-      [fixedView]="fixedView()"
-      [title]="'Week statistic'"
-      [isWithSeeAll]="true"
-      [seeAllPath]="seeAllPath"
-    />
+    @if (groupRoomId(); as rid) {
+      <room-member-contributions [roomId]="rid" />
+      <category-analitics [roomId]="rid" view="column" [showLegendTags]="false" />
+    } @else {
+      <budget-statistic-card
+        [fixedView]="fixedView()"
+        [title]="'Week statistic'"
+        [isWithSeeAll]="true"
+        [seeAllPath]="seeAllPath"
+      />
+    }
   </div>
-  <dash-expense-card class="block expense-block" />
+  @if (!groupRoomId()) {
+    <dash-expense-card class="block expense-block" />
+  }
 </div>

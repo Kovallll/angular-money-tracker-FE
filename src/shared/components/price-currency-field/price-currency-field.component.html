@@ -3,17 +3,19 @@
     <label [for]="amountName()" class="label">{{ label() }}{{ required() ? '&#42;' : '' }}</label>
   }
   <div class="row">
-    <p-inputNumber
-      [inputId]="amountName()"
+    <input
+      pInputText
+      type="text"
+      inputmode="decimal"
+      enterkeyhint="done"
+      autocomplete="off"
+      [id]="amountName()"
       [name]="amountName()"
-      [(ngModel)]="amount"
+      [ngModel]="amountStr()"
+      (ngModelChange)="onAmountStringChange($event)"
+      (focus)="onAmountFocus()"
       (blur)="onAmountBlur()"
-      [min]="0"
       [required]="required()"
-      mode="decimal"
-      [minFractionDigits]="0"
-      [maxFractionDigits]="2"
-      [useGrouping]="false"
       class="amount-input"
     />
     @if (lockCurrency()) {

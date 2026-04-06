@@ -25,17 +25,6 @@
       }
     }
   ],
-  "dataGroups": [
-    {
-      "name": "api-data",
-      "urls": ["https://money-tracker-be-482189160004.europe-west1.run.app/**", "/api/**"],
-      "cacheConfig": {
-        "strategy": "freshness",
-        "maxSize": 100,
-        "maxAge": "7d",
-        "timeout": "10s"
-      }
-    }
-  ],
+  "dataGroups": [],
   "navigationUrls": ["/**", "!/**/*.*", "!/**/__*"]
 }

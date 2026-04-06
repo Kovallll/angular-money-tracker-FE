@@ -26,6 +26,8 @@ export type Transaction = {
   paymentMethod?: string;
   /** ISO date string when the transaction was created (for sorting by creation time). */
   createdAt?: string;
+  /** Групповая комната: отображаемое имя участника, создавшего запись. */
+  groupCreatedByName?: string;
 };
 
 export type CreateTransaction = Omit<Transaction, 'id' | 'userId' | 'cardId' | 'categoryId'>;
@@ -269,12 +271,35 @@ export interface GroupInviteItem {
   createdAt: string;
 }
 
+/** Вклады по комнате: сумма по плательщику (paid_by, иначе created_by). */
+export interface RoomContributionMember {
+  userId: string;
+  name: string;
+  amount: number;
+  currencyCode: string;
+}
+
+export interface RoomContributionsResponse {
+  totalsByMember: RoomContributionMember[];
+  byCategory: Array<{
+    categoryId: string | null;
+    categoryName: string;
+    members: RoomContributionMember[];
+  }>;
+}
+
 export interface GroupTransactionItem {
   id: string;
   roomId: string;
   paidBy: string;
   createdBy: string;
+  /** Имя плательщика (JOIN users по paid_by). */
+  paidByName?: string | null;
+  /** Имя создателя (с бэкенда, JOIN users). */
+  createdByName?: string | null;
   categoryId?: string | null;
+  /** Личная карта плательщика; баланс учитывался при создании */
+  cardId?: number | null;
   amount: number;
   currencyCode: string;
   title: string;

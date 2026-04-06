@@ -2,8 +2,10 @@
   <div class="mobile-cards">
     @if (isEmpty()) {
       <div class="mobile-cards__empty">
-        <span class="mobile-cards__empty-icon" aria-hidden="true">📋</span>
-        <p>No data</p>
+        <div class="dash-empty-icon" aria-hidden="true">
+          <app-icon prime="list" [sizePx]="26" />
+        </div>
+        <p>No transactions yet</p>
       </div>
     } @else {
       @for (row of dataSource(); track row.id) {
@@ -14,7 +16,7 @@
           (contextmenu)="$event.preventDefault()"
         >
           <div class="mobile-card__icon-wrap" aria-hidden="true">
-            <app-icon [icon]="row.categoryIcon ?? ''" iconClass="mobile-card__category-icon" />
+            <app-icon [icon]="row.categoryIcon ?? ''" [sizePx]="20" />
           </div>
           <div class="mobile-card__main">
             <p class="mobile-card__title">{{ row.title || '—' }}</p>
@@ -22,19 +24,23 @@
               <span>{{ row.date | date }}</span>
               <span class="mobile-card__dot">·</span>
               <span>{{ row.category ?? '—' }}</span>
+              @if (row.groupCreatedByName) {
+                <span class="mobile-card__dot">·</span>
+                <span class="mobile-card__by">{{ row.groupCreatedByName }}</span>
+              }
               @if (row.type) {
                 <span class="mobile-card__dot">·</span>
                 @if (row.type === 'expense') {
                   <app-icon
                     material="trending_down"
-                    [sizePx]="16"
-                    iconClass="mobile-card__type-icon"
+                    [sizePx]="20"
+                    [color]="'rgba(201, 43, 18, 0.95)'"
                   />
                 } @else {
                   <app-icon
                     material="trending_up"
-                    [sizePx]="16"
-                    iconClass="mobile-card__type-icon mobile-card__type-icon--revenue"
+                    [sizePx]="20"
+                    [color]="'rgba(100, 220, 140, 0.95)'"
                   />
                 }
               }
@@ -48,7 +54,7 @@
               aria-label="Delete"
               (click)="onDelete.emit(row); $event.stopPropagation()"
             >
-              <app-icon material="delete_outline" [sizePx]="18" />
+              <app-icon material="delete_outline" [sizePx]="20" />
             </button>
           }
         </article>

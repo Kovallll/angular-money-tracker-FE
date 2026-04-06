@@ -67,6 +67,42 @@
   }
 }
 
+/* Room overview: no balance/expense cells — grid areas only for goal, subscribe, transaction, stats */
+.content.content--room .stats-block {
+  height: auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@include bp.desktop-and-up {
+  .content.content--room {
+    grid-template-areas:
+      'goal subscribe transaction'
+      'stats stats transaction';
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@include bp.desktop-down {
+  .content.content--room {
+    grid-template-areas:
+      'goal subscribe'
+      'transaction stats';
+  }
+}
+
+@include bp.mobile {
+  .content.content--room {
+    grid-template-areas:
+      'goal'
+      'subscribe'
+      'transaction'
+      'stats';
+  }
+}
+
 /* Desktop: 3 колонки, сбалансированная сетка */
 @include bp.desktop-and-up {
   .content {

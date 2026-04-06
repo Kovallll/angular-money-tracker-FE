@@ -1,4 +1,13 @@
-import { Component, computed, effect, inject, Signal, signal, ViewChild } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  Signal,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { SubscribtionsService } from '../../../services/subscribtions.service';
 import { DatePipe, TitleCasePipe } from '@angular/common';
 import { AppCurrencyPrimaryPipe } from '@/shared/pipes/app-currency-primary.pipe';
@@ -27,7 +36,8 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { EditSubscriptionModalComponent } from '@/features/subscriptions/edit-modal/edit-card-modal.component';
 import { SubscriptionAddButtonComponent } from '@/features/subscriptions/add-button/add-card.component';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, lastValueFrom } from 'rxjs';
+import { injectQuery, QueryClient } from '@tanstack/angular-query-experimental';
 import dayjs from 'dayjs';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 
@@ -55,6 +65,7 @@ export class SubscribeTableComponent extends UrlSyncedComponent<SubscribeItem> {
   @ViewChild('ctxMenu') ctxMenu!: ContextMenuComponent;
   private readonly subscribtionsService = inject(SubscribtionsService);
   private readonly subscribeHttpService = inject(SubscribtionsHttpService);
+  private readonly queryClient = inject(QueryClient);
   private readonly confirmationService = inject(ConfirmationService);
   private readonly transactionsHttpService = inject(TransactionsHttpService);
   private readonly balancesHttpService = inject(BalancesHttpService);
@@ -63,12 +74,32 @@ export class SubscribeTableComponent extends UrlSyncedComponent<SubscribeItem> {
   private readonly messageService = inject(MessageService);
   private readonly exchangeRates = inject(ExchangeRatesService);
 
+  groupRoomId = input<string | undefined>(undefined);
+  embedded = input(false);
+
   subscribes = signal<SubscribeItem[]>([]);
   selectedSubscribe = signal<SubscribeItem | null>(null);
 
-  isLoading = this.subscribeHttpService.isLoading;
+  roomSubsQuery = injectQuery(() => {
+    const rid = this.groupRoomId()?.trim() ?? '';
+    return {
+      queryKey: ['subscriptions', 'room', rid] as const,
+      queryFn: () => lastValueFrom(this.subscribeHttpService.fetchSubscriptionsForRoom(rid)),
+      enabled: !!rid,
+    };
+  });
 
-  allData: Signal<SubscribeItem[]> = computed(() => this.subscribtionsService.getSubscribes());
+  readonly isLoading = computed(() =>
+    this.groupRoomId()?.trim()
+      ? this.roomSubsQuery.isPending()
+      : this.subscribeHttpService.isLoading(),
+  );
+
+  allData: Signal<SubscribeItem[]> = computed(() =>
+    this.groupRoomId()?.trim()
+      ? (this.roomSubsQuery.data() ?? [])
+      : this.subscribtionsService.getSubscribes(),
+  );
 
   displayedCells = signal<TableCell[]>(columns);
 
@@ -84,6 +115,7 @@ export class SubscribeTableComponent extends UrlSyncedComponent<SubscribeItem> {
     // При обновлении списка с сервера (в т.ч. после Mark paid) синхронизируем отображаемый список с URL и данными
     effect(() => {
       this.subscribeHttpService.subscriptions();
+      this.roomSubsQuery.data();
       this.sync();
     });
   }
@@ -125,7 +157,12 @@ export class SubscribeTableComponent extends UrlSyncedComponent<SubscribeItem> {
       rejectLabel: 'Cancel',
       accept: () => {
         this.subscribeHttpService.delete(subscribe.id).subscribe(() => {
-          this.subscribeHttpService.loadAll();
+          const rid = this.groupRoomId()?.trim();
+          if (rid) {
+            void this.queryClient.invalidateQueries({ queryKey: ['subscriptions', 'room', rid] });
+          } else {
+            this.subscribeHttpService.loadAll();
+          }
         });
       },
     });
@@ -181,6 +218,7 @@ export class SubscribeTableComponent extends UrlSyncedComponent<SubscribeItem> {
   }
 
   async markAsPaid(event: MouseEvent, subscribe: SubscribeItem) {
+    if (this.groupRoomId()?.trim()) return;
     event.stopPropagation();
     const today = this.getTodayString();
     const isOneTime = this.isOneTime(subscribe.type);

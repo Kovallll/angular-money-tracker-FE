@@ -1,14 +1,39 @@
+@use 'shared/styles/breakpoints' as bp;
+
 :host {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   line-height: 1;
+  vertical-align: middle;
+  box-sizing: border-box;
+  overflow: visible;
 
   --app-icon-size: 1em;
   --app-icon-color: currentColor;
+  /* Prime/Material: глиф обычно занимает меньше em-квадрата — слега увеличиваем */
+  --app-icon-glyph-scale: 1.22;
 
   font-size: var(--app-icon-size);
   color: var(--app-icon-color);
+
+  /* Явный квадрат под иконку (и с px, и с em от родителя) */
+  width: var(--app-icon-size);
+  height: var(--app-icon-size);
+  min-width: var(--app-icon-size);
+  min-height: var(--app-icon-size);
+}
+
+/* Кнопки Add и т.п.: на узких экранах «+» визуально перебивает текст */
+:host.app-icon--plus-glyph {
+  @include bp.mobile {
+    --app-icon-glyph-scale: 1.02;
+    font-size: calc(var(--app-icon-size, 1em) * 0.78);
+    width: calc(var(--app-icon-size, 1em) * 0.78);
+    height: calc(var(--app-icon-size, 1em) * 0.78);
+    min-width: calc(var(--app-icon-size, 1em) * 0.78);
+    min-height: calc(var(--app-icon-size, 1em) * 0.78);
+  }
 }
 
 .app-icon__material,
@@ -18,22 +43,20 @@
   align-items: center;
   justify-content: center;
   line-height: 1;
+  font-size: inherit;
+  width: 1em;
+  height: 1em;
+  flex: 0 0 auto;
+  transform: scale(var(--app-icon-glyph-scale));
+  transform-origin: center center;
+}
+
+/* Emoji чуть меньше масштаб — иначе «разъезжаются» по строке */
+.app-icon__emoji {
+  transform: scale(calc(var(--app-icon-glyph-scale) * 0.96));
 }
 
 .app-icon__material {
-  font-size: inherit;
-  width: 1em;
-  height: 1em;
-}
-
-.app-icon__prime {
-  font-size: inherit;
-  width: 1em;
-  height: 1em;
-}
-
-.app-icon__emoji {
-  font-size: inherit;
-  width: 1em;
-  height: 1em;
+  /* mat-icon: убираем лишние внутренние поля темы */
+  overflow: visible;
 }

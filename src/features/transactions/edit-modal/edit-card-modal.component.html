@@ -52,7 +52,7 @@
               [placeholder]="input.placeholder"
               [name]="input.name"
               [ngModel]="card()[input.field]"
-              (ngModelChange)="updateCardField($event)"
+              (ngModelChange)="setCardField('category', $event)"
               [loading]="categorizerLoading"
               #model="ngModel"
               [invalid]="model.invalid && (model.touched || cardForm.submitted)"

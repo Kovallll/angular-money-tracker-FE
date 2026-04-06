@@ -43,17 +43,11 @@
   color: $accent;
   flex-shrink: 0;
   overflow: visible;
+  color: $accent;
 
   .category-icon-emoji {
     font-size: 20px;
     line-height: 1;
-  }
-
-  ::ng-deep mat-icon.mat-icon,
-  ::ng-deep .app-icon.app-icon {
-    font-size: 22px;
-    width: 22px;
-    height: 22px;
   }
 }
 
@@ -80,6 +74,17 @@
   font-weight: 500;
   color: $gray;
   letter-spacing: 0.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.added-by {
+  margin: 4px 0 0;
+  font-size: 12px;
+  font-weight: 500;
+  color: $surface-60;
+  letter-spacing: 0.02em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

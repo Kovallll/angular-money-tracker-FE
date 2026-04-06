@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 import { DashboardCardComponent, CardBodyComponent } from '../../../card';
 import { MatIconModule } from '@angular/material/icon';
 import {
@@ -9,6 +9,8 @@ import {
   TransactionsHttpService,
   UrlSyncedComponent,
 } from '@/shared';
+import { GroupRoomsHttpService } from '@/shared/services/models';
+import { mapGroupTxToTransaction } from '../../dashboard/ui/group-tx-map';
 import { AuthService } from '@/shared/services/auth/auth.service';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
@@ -46,6 +48,7 @@ export class TransactionsComponent extends UrlSyncedComponent<Transaction> {
   private transactionsService = inject(DashboardTransactionsService);
   private transactionsHttpService = inject(TransactionsHttpService);
   private categoriesHttpService = inject(CategoriesHttpService);
+  private groupRoomsHttp = inject(GroupRoomsHttpService);
   private auth = inject(AuthService);
   private confirmationService = inject(ConfirmationService);
   private currencyService = inject(CurrencyService);
@@ -53,19 +56,59 @@ export class TransactionsComponent extends UrlSyncedComponent<Transaction> {
   ref: DynamicDialogRef | undefined | null;
   readonly tabs = tabs;
 
-  readonly isLoading = this.transactionsHttpService.isLoading;
+  /** Групповая комната: список общих транзакций вместо личных. */
+  groupRoomId = input<string | undefined>(undefined);
+  /** Скрыть заголовок страницы (вкладка внутри комнаты). */
+  embedded = input(false);
 
   readonly tabFilter = signal('All');
 
-  transactions = injectQuery(() => ({
-    queryKey: ['transactions', this.auth.getCurrentUserId()],
+  personalTxQuery = injectQuery(() => ({
+    queryKey: ['transactions', this.auth.getCurrentUserId() ?? ''],
     queryFn: () => {
       const userId = this.auth.getCurrentUserId();
       if (!userId) return Promise.resolve([] as Transaction[]);
       return this.transactionsHttpService.getTransactions(userId);
     },
+    enabled: !this.groupRoomId()?.trim(),
   }));
-  signalTransactions = computed(() => this.transactions.data());
+
+  groupTxQuery = injectQuery(() => {
+    const rid = this.groupRoomId()?.trim() ?? '';
+    return {
+      queryKey: ['groupTransactions', rid] as const,
+      queryFn: () => this.groupRoomsHttp.getRoomTransactions(rid),
+      enabled: !!rid,
+    };
+  });
+
+  roomCategoriesForTx = injectQuery(() => {
+    const rid = this.groupRoomId()?.trim() ?? '';
+    return {
+      queryKey: ['categories', 'scope', rid] as const,
+      queryFn: () =>
+        rid ? this.categoriesHttpService.fetchCategoriesByRoom(rid) : Promise.resolve([]),
+      enabled: !!rid,
+    };
+  });
+
+  readonly isLoadingForView = computed(() => {
+    if (this.groupRoomId()?.trim()) {
+      return this.groupTxQuery.isPending() || this.roomCategoriesForTx.isPending();
+    }
+    return this.transactionsHttpService.isLoading();
+  });
+
+  signalTransactions = computed((): Transaction[] => {
+    const rid = this.groupRoomId()?.trim();
+    if (rid) {
+      const raw = this.groupTxQuery.data() ?? [];
+      const cats = this.roomCategoriesForTx.data() ?? [];
+      const catMap = new Map(cats.map((c) => [String(c.id), c]));
+      return raw.map((g) => mapGroupTxToTransaction(g, catMap));
+    }
+    return this.personalTxQuery.data() ?? [];
+  });
 
   /** Полный список с учётом фильтра по табу и сортировки по умолчанию (новые сверху). */
   readonly allData = computed(() => {
@@ -103,10 +146,13 @@ export class TransactionsComponent extends UrlSyncedComponent<Transaction> {
   /** Same as transactionsInPrimary with category title and icon (from API or categories list). */
   readonly transactionsForTable = computed(() => {
     const list = this.transactionsInPrimary();
-    const categories = this.categoriesHttpService.categories();
+    const rid = this.groupRoomId()?.trim();
+    const categories = rid
+      ? (this.roomCategoriesForTx.data() ?? [])
+      : this.categoriesHttpService.categories();
     return list.map((t) => {
       const fromApi = t.category != null && t.category !== '';
-      const catById = categories.find((c) => c.id === Number(t.categoryId));
+      const catById = categories.find((c) => String(c.id) === String(t.categoryId));
       const title = fromApi ? t.category! : (catById?.title ?? '—');
       const catByTitle =
         !catById && title !== '—'
@@ -122,7 +168,17 @@ export class TransactionsComponent extends UrlSyncedComponent<Transaction> {
     super();
   }
 
-  readonly displayedCells = signal(this.transactionsService.displayedCells());
+  readonly displayedCells = computed(() => {
+    const base = this.transactionsService.displayedCells();
+    if (!this.groupRoomId()?.trim()) return base;
+    const idx = base.findIndex((c) => c.field === 'category');
+    const insertAt = idx >= 0 ? idx + 1 : 2;
+    return [
+      ...base.slice(0, insertAt),
+      { field: 'groupCreatedByName', name: 'Added by' },
+      ...base.slice(insertAt),
+    ];
+  });
 
   readonly controlsProps = computed<ControlsProps>(() => ({
     filterProps: {
@@ -152,6 +208,7 @@ export class TransactionsComponent extends UrlSyncedComponent<Transaction> {
   }
 
   handleDelete(transaction: Transaction | { id: number; title?: string }) {
+    if (this.groupRoomId()?.trim()) return;
     this.confirmationService.confirm({
       message: `Delete transaction «${transaction.title ?? '—'}»?`,
       header: 'Confirm deletion',
@@ -165,6 +222,7 @@ export class TransactionsComponent extends UrlSyncedComponent<Transaction> {
   }
 
   handleEdit(transaction: Transaction | { id: number }) {
+    if (this.groupRoomId()?.trim()) return;
     const original = this.currentTransactions().find((t) => t.id === transaction.id);
     if (!original) return;
     this.ref = this.dialogService.open(EditTransactionModalComponent, {

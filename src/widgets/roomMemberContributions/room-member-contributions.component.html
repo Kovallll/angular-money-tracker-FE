@@ -1,0 +1,20 @@
+<section class="contrib" aria-label="Contributions by payer">
+  <h3 class="contrib__title">Paid by member</h3>
+  <p class="contrib__hint">Share of total room spending by payer</p>
+  @if (isPending()) {
+    <div class="contrib__loading">
+      <p-progress-spinner ariaLabel="Loading" strokeWidth="3" />
+    </div>
+  } @else if (!hasData()) {
+    <div class="contrib__empty">No group transactions yet</div>
+  } @else {
+    <div class="contrib__chart">
+      <canvas
+        baseChart
+        [type]="'doughnut'"
+        [data]="chartData()"
+        [options]="chartOptions()"
+      ></canvas>
+    </div>
+  }
+</section>

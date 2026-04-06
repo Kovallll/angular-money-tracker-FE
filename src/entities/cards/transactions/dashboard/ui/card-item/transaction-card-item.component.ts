@@ -19,8 +19,9 @@ export class TransactionCardItemComponent {
 
   categoryIcon = computed(() => {
     const i = this.item();
+    if (i?.categoryIcon) return i.categoryIcon;
     const list = this.categoriesHttpService.categories();
-    const c = list.find((x) => x.id === i?.categoryId);
+    const c = list.find((x) => String(x.id) === String(i?.categoryId));
     return c?.icon ?? null;
   });
 }

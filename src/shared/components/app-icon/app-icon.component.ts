@@ -18,6 +18,8 @@ import { getCategoryIconName } from '@/shared/constants/category-icons';
   host: {
     '[style.--app-icon-size]': 'sizeVar()',
     '[style.--app-icon-color]': 'colorVar()',
+    '[style.--app-icon-glyph-scale]': 'glyphScaleVar()',
+    '[class.app-icon--plus-glyph]': 'isPlusGlyph()',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -36,6 +38,12 @@ export class AppIconComponent {
 
   /** Размер в px (если не задан — наследуется от контекста). */
   sizePx = input<number | null | undefined>(null);
+
+  /**
+   * Масштаб глифа относительно em-box (у Prime/Material иконка часто визуально меньше квадрата).
+   * По умолчанию ~1.22 в CSS; задайте 1 чтобы отключить.
+   */
+  glyphScale = input<number | null | undefined>(undefined);
 
   /** Цвет (CSS-значение). По умолчанию наследуется (`currentColor`). */
   color = input<string | null | undefined>(null);
@@ -59,6 +67,14 @@ export class AppIconComponent {
     const direct = this.material();
     if (direct?.trim()) return direct.trim();
     return getCategoryIconName(this.icon());
+  });
+
+  /** Prime «plus» или Material «add» — на мобилке чуть меньше глиф «+». */
+  readonly isPlusGlyph = computed(() => {
+    const p = (this.prime() ?? '').trim().toLowerCase();
+    if (p === 'plus' || p === 'pi-plus') return true;
+    const m = (this.material() ?? '').trim().toLowerCase();
+    return m === 'add';
   });
 
   readonly primeClasses = computed(() => {
@@ -86,6 +102,12 @@ export class AppIconComponent {
   colorVar(): string | null {
     const c = this.color();
     return c && c.trim() ? c.trim() : null;
+  }
+
+  glyphScaleVar(): string | null {
+    const g = this.glyphScale();
+    if (typeof g === 'number' && Number.isFinite(g) && g > 0) return String(g);
+    return null;
   }
 
   materialClassAttr(): string {

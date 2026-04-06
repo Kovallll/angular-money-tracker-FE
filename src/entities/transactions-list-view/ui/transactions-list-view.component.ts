@@ -17,6 +17,8 @@ export interface TransactionListRow {
   category?: string;
   categoryIcon?: string;
   type?: string;
+  /** Групповая комната: кто создал транзакцию. */
+  groupCreatedByName?: string;
   [key: string]: unknown;
 }
 

@@ -1,4 +1,9 @@
-<dashboard-card title="Upcoming Subscribes" [isWithSeeAll]="true" [seeAllPath]="seeAllPath">
+<dashboard-card
+  title="Upcoming Subscribes"
+  [isWithSeeAll]="true"
+  [seeAllPath]="seeAllPath"
+  [seeAllNavigation]="seeAllNavigation()"
+>
   <card-body class="body">
     @if (isLoading()) {
     <div class="data-loading">
@@ -27,9 +32,17 @@
     </p-carousel>
     } @else {
     <div class="data-placeholder">
-      <span class="data-placeholder__icon" aria-hidden="true">🔄</span>
+      <div class="dash-empty-icon" aria-hidden="true">
+        <app-icon prime="sync" [sizePx]="26" />
+      </div>
       <p>No upcoming subscriptions</p>
-      <p>Add a subscription in the Subscriptions section</p>
+      <p>
+        @if (groupRoomId()) {
+          Add a subscription in the Subscriptions tab
+        } @else {
+          Add a subscription in the Subscriptions section
+        }
+      </p>
     </div>
     }
   </card-body>

@@ -1,14 +1,23 @@
-<div class="container">
+<div class="container" [class.container--embedded]="embedded()">
+  @if (!embedded()) {
+    <header class="app-page-head app-page-head--single-row">
+      <div class="app-page-head__text">
+        <h1 class="app-page-head__title">Subscriptions</h1>
+        <p class="app-page-head__subtitle">Manage your recurring payments</p>
+      </div>
+      <div class="app-page-head__actions">
+        <subscription-add-button [groupRoomId]="groupRoomId()" />
+      </div>
+    </header>
+  } @else {
+    <header class="app-page-head app-page-head--compact">
+      <div class="app-page-head__actions">
+        <subscription-add-button [groupRoomId]="groupRoomId()" />
+      </div>
+    </header>
+  }
   <controls [controlsProps]="controlsProps()" />
   <div class="content">
-    <header class="page-header">
-      <div class="page-header__text">
-        <h1 class="page-title">Subscriptions</h1>
-        <p class="page-subtitle">Manage your recurring payments</p>
-      </div>
-      <subscription-add-button />
-    </header>
-
     @if (isLoading()) {
       <div class="cards-loading">
         <p-progress-spinner ariaLabel="Loading" strokeWidth="3" />
@@ -42,16 +51,18 @@
                   <p class="card__description">{{ subscribe.description }}</p>
                 }
                 <div class="card__footer">
-                  <button
-                    type="button"
-                    class="mark-paid-btn"
-                    (click)="markAsPaid($event, subscribe)"
-                    [attr.aria-label]="'Mark ' + subscribe.subscribeName + ' as paid'"
-                    title="Mark as paid"
-                  >
-                    <app-icon prime="check" [sizePx]="14" />
-                    <span>Mark paid</span>
-                  </button>
+                  @if (!groupRoomId()) {
+                    <button
+                      type="button"
+                      class="mark-paid-btn"
+                      (click)="markAsPaid($event, subscribe)"
+                      [attr.aria-label]="'Mark ' + subscribe.subscribeName + ' as paid'"
+                      title="Mark as paid"
+                    >
+                      <app-icon prime="check" [sizePx]="20" />
+                      <span>Mark paid</span>
+                    </button>
+                  }
                   <div class="card__amount-row">
                     <span class="card__amount"
                       >{{ subscribe.amount | appCurrencyPrimary: subscribe.currencyCode
@@ -75,12 +86,12 @@
     } @else {
       <div class="empty-state">
         <div class="empty-state__icon" aria-hidden="true">
-          <app-icon prime="credit-card" [sizePx]="22" />
+          <app-icon prime="credit-card" [sizePx]="20" />
         </div>
         <h3 class="empty-state__title">No subscriptions yet</h3>
         <p class="empty-state__text">Add your first subscription to track recurring payments</p>
         <div class="empty-state__action">
-          <subscription-add-button />
+          <subscription-add-button [groupRoomId]="groupRoomId()" />
         </div>
       </div>
     }

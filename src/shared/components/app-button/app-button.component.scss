@@ -18,6 +18,15 @@
     box-shadow 0.2s,
     transform 0.1s;
 
+  @include bp.mobile {
+    gap: 6px;
+
+    ::ng-deep app-icon {
+      --app-icon-size: 16px !important;
+      --app-icon-glyph-scale: 1.05;
+    }
+  }
+
   &:disabled {
     cursor: not-allowed;
     opacity: 0.6;
@@ -52,6 +61,17 @@
   .app-btn__spinner {
     width: 18px;
     height: 18px;
+  }
+
+  @include bp.mobile {
+    padding: 8px 14px;
+    font-size: 14px;
+    border-radius: 9px;
+
+    .app-btn__spinner {
+      width: 16px;
+      height: 16px;
+    }
   }
 }
 

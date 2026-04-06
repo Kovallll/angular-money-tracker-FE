@@ -1,10 +1,19 @@
 <dashboard-card>
   <card-body class="body">
-    <mat-tab-group (selectedTabChange)="onChangeTabContent($event.tab.textLabel)" class="tabs">
+    <div class="segment-control" role="tablist" aria-label="Settings sections">
       @for (tab of tabs; track tab) {
-        <mat-tab [label]="tab" class="tab" />
+        <button
+          type="button"
+          class="segment-control__item"
+          [class.segment-control__item--active]="selectedTab() === tab"
+          [attr.aria-selected]="selectedTab() === tab"
+          role="tab"
+          (click)="selectTab(tab)"
+        >
+          {{ tab }}
+        </button>
       }
-    </mat-tab-group>
+    </div>
     @switch (selectedTab()) {
       @case ('Account') {
         <settings-account [user]="user()" />

@@ -1,12 +1,22 @@
-<div class="container">
+<div class="container" [class.container--embedded]="embedded()">
   <div class="cards-block">
-    <header class="page-header">
-      <div class="header-text">
-        <h1 class="title">Categories</h1>
-        <p class="subtitle">Track spending by category and view detailed analytics</p>
-      </div>
-      <category-add-button />
-    </header>
+    @if (!embedded()) {
+      <header class="app-page-head">
+        <div class="app-page-head__text">
+          <h1 class="app-page-head__title">Categories</h1>
+          <p class="app-page-head__subtitle">Track spending by category and view detailed analytics</p>
+        </div>
+        <div class="app-page-head__actions">
+          <category-add-button [groupRoomId]="groupRoomId()" />
+        </div>
+      </header>
+    } @else {
+      <header class="app-page-head app-page-head--compact">
+        <div class="app-page-head__actions">
+          <category-add-button [groupRoomId]="groupRoomId()" />
+        </div>
+      </header>
+    }
 
     @if (categories.isPending()) {
       <div class="cards-loading">
@@ -18,13 +28,13 @@
         <span class="data-placeholder__icon" aria-hidden="true">📁</span>
         <h2 class="empty-title">No categories yet</h2>
         <p class="empty-desc">Create your first category to start tracking expenses</p>
-        <category-add-button />
+        <category-add-button [groupRoomId]="groupRoomId()" />
       </div>
     } @else {
       <section class="summary-cards" aria-label="Overview">
         <div class="summary-card summary-card--primary">
           <span class="summary-card__icon" aria-hidden="true">
-            <app-icon prime="wallet" [sizePx]="18" />
+            <app-icon prime="wallet" [sizePx]="20" />
           </span>
           <div class="summary-card__content">
             <span class="summary-card__label">Total Expenses</span>
@@ -33,7 +43,7 @@
         </div>
         <div class="summary-card">
           <span class="summary-card__icon" aria-hidden="true">
-            <app-icon prime="chart-bar" [sizePx]="18" />
+            <app-icon prime="chart-bar" [sizePx]="20" />
           </span>
           <div class="summary-card__content">
             <span class="summary-card__label">Transactions in most active category</span>
@@ -42,7 +52,7 @@
         </div>
         <div class="summary-card">
           <span class="summary-card__icon" aria-hidden="true">
-            <app-icon prime="percentage" [sizePx]="18" />
+            <app-icon prime="percentage" [sizePx]="20" />
           </span>
           <div class="summary-card__content">
             <span class="summary-card__label">vs last month (summary)</span>
@@ -53,9 +63,9 @@
             >
               @if (overageDeltaCompare().value !== '0.00') {
                 @if (!overageDeltaCompare().negative) {
-                  <app-icon prime="arrow-down" [sizePx]="14" />
+                  <app-icon prime="arrow-down" [sizePx]="20" />
                 } @else {
-                  <app-icon prime="arrow-up" [sizePx]="14" />
+                  <app-icon prime="arrow-up" [sizePx]="20" />
                 }
               }
               {{ overageDeltaCompare().value }}%
@@ -67,10 +77,14 @@
       <controls [controlsProps]="controlsProps()" />
 
       <section class="categories-section">
-        <h2 class="section-title">Your categories</h2>
+        <h2 class="app-page-section-title">Your categories</h2>
         <div class="content">
           @for (category of currentCategories(); track category.id) {
-            <category-card [category]="category" [chart]="getCurrentChart(category.id)" />
+            <category-card
+              [category]="category"
+              [chart]="getCurrentChart(category.id)"
+              [groupPayerRows]="payerRowsForCategory(category.id)"
+            />
           }
         </div>
         <div class="pagination-wrap">
@@ -80,6 +94,7 @@
     }
   </div>
   <aside class="analytics-sidebar">
-    <category-analitics [showLegendTags]="false" />
+    <category-analitics [showLegendTags]="false" [roomId]="groupRoomId()" />
   </aside>
 </div>
+

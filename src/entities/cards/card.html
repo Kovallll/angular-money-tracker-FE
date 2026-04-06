@@ -2,9 +2,9 @@
   <div class="header">
     <h3 class="title">{{ title() }}</h3>
     @if(isWithSeeAll()) {
-    <button class="see-all" (click)="onRedirect(seeAllPath())">
+    <button type="button" class="see-all" (click)="onSeeAllClick()">
       See All
-      <app-icon material="keyboard_arrow_right" [sizePx]="18" />
+      <app-icon material="keyboard_arrow_right" [sizePx]="20" />
     </button>
     }
   </div>

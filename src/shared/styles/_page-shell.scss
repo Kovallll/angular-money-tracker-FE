@@ -1,0 +1,30 @@
+// Единые горизонтальные отступы и max-width для основного контента страниц
+// Использование: @use 'shared/styles/page-shell' as shell; @include shell.pageShell;
+
+@use 'breakpoints' as bp;
+
+@mixin pageShell {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 0 16px 32px;
+
+  @include bp.tablet-and-up {
+    padding: 0 24px 40px;
+  }
+
+  @include bp.desktop-and-up {
+    padding: 0 32px 48px;
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 1800px) {
+    max-width: 1840px;
+  }
+
+  @include bp.desktop-large {
+    max-width: 1920px;
+  }
+}

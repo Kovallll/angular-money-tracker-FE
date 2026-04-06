@@ -1,8 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { DashboardCardComponent, CardBodyComponent } from '@/entities/cards/card';
-import { MatTabGroup } from '@angular/material/tabs';
-import { MatTab } from '@angular/material/tabs';
 import { AccountComponent } from '@/entities/cards/settings/ui/account/account.component';
 import { SecurityComponent } from '@/entities/cards/settings/ui/security/security.component';
 import { AnalyticsSettingsComponent } from '@/entities/cards/settings/ui/analytics/analytics-settings.component';
@@ -15,8 +13,6 @@ import { UserService } from '@/shared';
   imports: [
     DashboardCardComponent,
     CardBodyComponent,
-    MatTabGroup,
-    MatTab,
     AccountComponent,
     SecurityComponent,
     AnalyticsSettingsComponent,
@@ -28,7 +24,7 @@ export class SettingsTabsComponent {
   selectedTab = signal('Account');
   user = toSignal(this.userService.currentUser$, { initialValue: this.userService.currentUser });
 
-  onChangeTabContent(tabLabel: string) {
+  selectTab(tabLabel: string) {
     this.selectedTab.set(tabLabel);
   }
 
