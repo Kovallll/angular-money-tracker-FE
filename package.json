@@ -1,6 +1,7 @@
 {
   "name": "moneytracker",
   "version": "0.0.0",
+  "packageManager": "yarn@4.13.0",
   "scripts": {
     "ng": "ng",
     "start": "node scripts/sync-env-config.js && ng serve",

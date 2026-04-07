@@ -331,6 +331,22 @@ app-currency-selector .currency-selector.p-inputwrapper.p-inputwrapper-focus {
   }
 }
 
+/* PrimeNG Select: отступы в выпадающем списке (категории, карты, тип и т.д.) */
+.p-select-overlay.p-component-overlay {
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.p-select-overlay .p-select-option {
+  padding: 10px 12px;
+  border-radius: 10px;
+  transition: background 0.15s ease;
+}
+
+.p-select-overlay .p-select-option + .p-select-option {
+  margin-top: 2px;
+}
+
 /* Dropdown панель выбора валюты */
 .currency-selector-panel.p-select-overlay {
   background: $secondary;
@@ -339,7 +355,7 @@ app-currency-selector .currency-selector.p-inputwrapper.p-inputwrapper-focus {
   box-shadow:
     0 8px 32px $shadow-50,
     0 0 0 1px $surface-06;
-  padding: 6px 0;
+  padding: 8px;
 }
 
 .currency-selector-panel .p-select-option {

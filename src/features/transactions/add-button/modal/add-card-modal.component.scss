@@ -9,6 +9,13 @@
   box-sizing: border-box;
 }
 
+.icon-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
 .form-field-hint {
   margin-top: 4px;
   font-size: 13px;
