@@ -7,13 +7,17 @@
           <p class="app-page-head__subtitle">Track spending by category and view detailed analytics</p>
         </div>
         <div class="app-page-head__actions">
-          <category-add-button [groupRoomId]="groupRoomId()" />
+          @if (!groupRoomId()) {
+            <category-add-button [groupRoomId]="groupRoomId()" />
+          }
         </div>
       </header>
     } @else {
       <header class="app-page-head app-page-head--compact">
         <div class="app-page-head__actions">
-          <category-add-button [groupRoomId]="groupRoomId()" />
+          @if (!groupRoomId()) {
+            <category-add-button [groupRoomId]="groupRoomId()" />
+          }
         </div>
       </header>
     }
@@ -28,7 +32,9 @@
         <span class="data-placeholder__icon" aria-hidden="true">📁</span>
         <h2 class="empty-title">No categories yet</h2>
         <p class="empty-desc">Create your first category to start tracking expenses</p>
-        <category-add-button [groupRoomId]="groupRoomId()" />
+        @if (!groupRoomId()) {
+          <category-add-button [groupRoomId]="groupRoomId()" />
+        }
       </div>
     } @else {
       <section class="summary-cards" aria-label="Overview">
@@ -63,9 +69,9 @@
             >
               @if (overageDeltaCompare().value !== '0.00') {
                 @if (!overageDeltaCompare().negative) {
-                  <app-icon prime="arrow-down" [sizePx]="20" />
+                  <app-icon prime="arrow-down" [sizePx]="14" [glyphScale]="1" />
                 } @else {
-                  <app-icon prime="arrow-up" [sizePx]="20" />
+                  <app-icon prime="arrow-up" [sizePx]="14" [glyphScale]="1" />
                 }
               }
               {{ overageDeltaCompare().value }}%
@@ -84,6 +90,7 @@
               [category]="category"
               [chart]="getCurrentChart(category.id)"
               [groupPayerRows]="payerRowsForCategory(category.id)"
+              [groupRoomContext]="!!groupRoomId()"
             />
           }
         </div>

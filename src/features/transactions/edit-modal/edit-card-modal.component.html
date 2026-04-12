@@ -41,6 +41,28 @@
             />
             <div class="error-slot"></div>
           </div>
+        } @else if (input.field === 'type') {
+          <div class="field">
+            <label [for]="input.name" class="label">{{ input.placeholder }}</label>
+            <p-select
+              class="select"
+              [options]="typeOptions"
+              optionLabel="label"
+              optionValue="value"
+              [inputId]="input.name"
+              [name]="input.name"
+              [ngModel]="card()[input.field]"
+              (ngModelChange)="setCardField('type', $event)"
+              appendTo="body"
+              #typeModel="ngModel"
+              required
+            />
+            <div class="error-slot">
+              @if (typeModel.invalid && (typeModel.touched || cardForm.submitted)) {
+                <small class="error">Select type.</small>
+              }
+            </div>
+          </div>
         } @else if (input.field === 'category') {
           <div class="field">
             <label [for]="input.name" class="label">{{ categoryFieldLabel }}</label>
@@ -119,6 +141,17 @@
           </div>
         }
       }
+      <div class="field">
+        <label class="card-balance-checkbox">
+          <input
+            type="checkbox"
+            name="affectsCardBalance"
+            [ngModel]="card()['affectsCardBalance']"
+            (ngModelChange)="setCardField('affectsCardBalance', $event)"
+          />
+          <span>Deduct from card balance</span>
+        </label>
+      </div>
     </div>
   </form>
 </app-modal-shell>

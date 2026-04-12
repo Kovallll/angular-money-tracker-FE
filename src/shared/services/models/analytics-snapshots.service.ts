@@ -37,4 +37,9 @@ export class AnalyticsSnapshotsHttpService {
   getById(id: string) {
     return this.http.get<AnalyticsSnapshotItem>(`analytics-snapshots/${id}`);
   }
+
+  /** Persist current-period analytics snapshot after manual export (header). */
+  saveFromExport() {
+    return this.http.post<AnalyticsSnapshotItem>('analytics-snapshots/from-export', {});
+  }
 }

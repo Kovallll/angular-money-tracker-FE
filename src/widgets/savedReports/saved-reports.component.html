@@ -2,7 +2,7 @@
   <h2 class="saved-reports__title">Saved reports</h2>
   <p class="saved-reports__desc">
     View previously saved analytics snapshots. Reports are saved automatically according to your
-    <a routerLink="/settings">Analytics settings</a>.
+    <a routerLink="/settings" [queryParams]="{ tab: 'analytics' }">Analytics settings</a>.
   </p>
 
   <div class="saved-reports__toolbar">
@@ -71,7 +71,9 @@
     <div class="saved-reports__empty">
       <p>No saved reports yet.</p>
       <p class="saved-reports__empty-hint">
-        Reports are created automatically. Check Analytics settings to set the save frequency.
+        Reports are created automatically. Check
+        <a routerLink="/settings" [queryParams]="{ tab: 'analytics' }">Analytics settings</a>
+        to set the save frequency.
       </p>
     </div>
   } @else {

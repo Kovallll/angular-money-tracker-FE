@@ -40,7 +40,9 @@
         @if (compareToLastMonth().comparable && compareToLastMonth().value > 0) {
           <app-icon
             [icon]="!compareToLastMonth().isIncrease ? 'arrow_upward' : 'arrow_downward'"
-            [iconClass]="'card__trend-icon'"
+            [sizePx]="16"
+            [glyphScale]="1"
+            [ariaLabel]="compareToLastMonth().isIncrease ? 'Spending up vs last month' : 'Spending down vs last month'"
           />
         }
       </div>

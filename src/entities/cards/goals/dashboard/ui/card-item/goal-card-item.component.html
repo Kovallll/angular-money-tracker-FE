@@ -52,8 +52,7 @@
         <div class="chart-wrap">
           <canvas
             baseChart
-            [labels]="labels"
-            [datasets]="getDataset(item())"
+            [data]="doughnutChartData()"
             [legend]="false"
             [type]="'doughnut'"
             [options]="chartOptions"

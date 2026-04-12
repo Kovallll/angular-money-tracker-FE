@@ -1,0 +1,21 @@
+<button
+  type="button"
+  class="row-menu-button__btn"
+  aria-haspopup="menu"
+  [attr.aria-label]="ariaLabel()"
+  [disabled]="disabled()"
+  (click)="onClick($event)"
+>
+  <svg
+    class="row-menu-button__icon"
+    viewBox="0 0 24 24"
+    width="20"
+    height="20"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <circle cx="12" cy="6" r="1.65" fill="currentColor" />
+    <circle cx="12" cy="12" r="1.65" fill="currentColor" />
+    <circle cx="12" cy="18" r="1.65" fill="currentColor" />
+  </svg>
+</button>

@@ -71,6 +71,19 @@
   display: flex;
 }
 
+.card__title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+
+  .card__title {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
 // --- Subscription Card ---
 .subscription-card {
   display: flex;

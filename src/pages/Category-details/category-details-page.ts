@@ -198,8 +198,20 @@ export class CategoryDetailsPageComponent
   chartOptions: ChartConfiguration['options'] = {
     responsive: true,
     maintainAspectRatio: false,
+    interaction: { mode: 'nearest', intersect: false },
     plugins: {
       legend: { display: false },
+      tooltip: {
+        titleFont: { size: 12, weight: 'bold' },
+        bodyFont: { size: 11 },
+        padding: 8,
+        boxPadding: 4,
+        cornerRadius: 8,
+        callbacks: {
+          label: (ctx) =>
+            `${ctx.dataset.label}: ${this.formatChartTooltipValue(ctx.parsed.y ?? 0)}`,
+        },
+      },
     },
     scales: {
       y: { display: false },
@@ -210,6 +222,16 @@ export class CategoryDetailsPageComponent
       point: { radius: 1 },
     },
   };
+
+  formatChartTooltipValue(v: number) {
+    const primary = this.currencyService.primaryCode();
+    const converted = this.exchangeRates.convert(v, 'BYN', primary);
+    return new Intl.NumberFormat(undefined, {
+      style: 'currency',
+      currency: primary,
+      maximumFractionDigits: 0,
+    }).format(converted);
+  }
 
   constructor() {
     super();

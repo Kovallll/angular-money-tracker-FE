@@ -1,4 +1,4 @@
-import { CategorizerPrediction, ExpensesOverviewDto } from '@/shared/types';
+import { CategorizerPrediction, ExpensesOverviewDto, StatisticsPiePeriod } from '@/shared/types';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { AuthService } from '@/shared/services/auth/auth.service';
@@ -12,6 +12,7 @@ export class StatisticsHttpService {
     monthsBar?: number;
     topK?: number;
     locale?: string;
+    piePeriod?: StatisticsPiePeriod;
     /** Взаимоисключимо с userId: аналитика по групповым транзакциям комнаты. */
     roomId?: string;
   }) {
@@ -19,6 +20,7 @@ export class StatisticsHttpService {
     if (params?.monthsBar) qp['monthsBar'] = params.monthsBar;
     if (params?.topK) qp['topK'] = params.topK;
     if (params?.locale) qp['locale'] = params.locale;
+    if (params?.piePeriod) qp['piePeriod'] = params.piePeriod;
     const rid = params?.roomId?.trim();
     if (rid) {
       qp['roomId'] = rid;

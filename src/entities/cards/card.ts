@@ -22,6 +22,13 @@ export class CardHeaderComponent {}
   template: `<ng-content></ng-content>`,
   styles: `
     :host {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      min-height: 0;
+      flex: 1 1 auto;
       height: 100%;
     }
   `,

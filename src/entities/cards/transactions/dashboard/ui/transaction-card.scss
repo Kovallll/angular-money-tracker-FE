@@ -2,9 +2,37 @@
 @use 'shared/styles/breakpoints' as bp;
 
 :host {
+  display: flex;
+  flex-direction: column;
   width: 100%;
   max-width: 100%;
   min-width: 0;
+  min-height: 0;
+  flex: 1 1 auto;
+  align-self: stretch;
+}
+
+/* Вложенный dashboard-card — без этого цепочка flex/grid не растягивает список на всю ячейку */
+:host ::ng-deep dashboard-card,
+:host ::ng-deep dashboard-card .container,
+:host ::ng-deep dashboard-card .content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+:host ::ng-deep card-body.body {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .body {
@@ -22,13 +50,20 @@
 .transaction-list {
   display: flex;
   flex-direction: column;
+  align-items: stretch;
+  width: 100%;
   gap: 8px;
   margin-top: 4px;
   padding-right: 2px;
+  box-sizing: border-box;
 }
 
 .transaction-row {
-  cursor: context-menu;
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 /* Сегментированный переключатель (как на странице транзакций) */

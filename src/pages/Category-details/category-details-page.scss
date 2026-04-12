@@ -91,11 +91,17 @@
     &.positive {
       color: $success;
     }
+  }
 
-    .pi,
-    .trend-arrow {
-      margin-left: 4px;
-      color: $accent;
+  .total-value--trend {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2px 4px;
+
+    app-icon {
+      flex-shrink: 0;
+      color: inherit;
     }
   }
 }

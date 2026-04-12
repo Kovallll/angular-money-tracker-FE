@@ -1,17 +1,55 @@
 @use 'theme' as *;
 @use 'shared/styles/breakpoints' as bp;
 
+.table-with-menu {
+  position: relative;
+  width: 100%;
+}
+
+/* p-menu + :host inline-flex рядом с таблицей давали лишние пиксели у правого края */
+.table-menu-anchor {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
 .table-wrap {
   width: 100%;
   overflow: auto;
   border-radius: 12px;
   border: 1px solid $tertiary;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+  scrollbar-gutter: stable;
+
+  /* Полоса прокрутки не «режет» последнюю колонку визуально одной линией */
+  scrollbar-width: thin;
+  scrollbar-color: rgba($white, 0.2) transparent;
+
+  &::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba($white, 0.22);
+    border-radius: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
 
   @include bp.mobile {
     overflow: visible;
     border: none;
     box-shadow: none;
+    scrollbar-gutter: auto;
   }
 }
 
@@ -51,6 +89,40 @@ th.mat-mdc-header-cell {
   line-height: 1.4;
   border-bottom: 1px solid rgba($tertiary, 0.5);
   transition: background-color 0.15s ease;
+}
+
+/* Кнопка «⋯» у правого края строки, не широкая колонка */
+:host ::ng-deep .table-wrap tbody tr.mat-mdc-row {
+  position: relative;
+}
+
+:host ::ng-deep .table-wrap thead tr.mat-mdc-header-row {
+  position: relative;
+}
+
+th.mat-mdc-header-cell.mat-mdc-cell-actions-head,
+.mat-mdc-cell.mat-mdc-cell-actions {
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  overflow: visible;
+  background: transparent !important;
+}
+
+/* Место под иконку у последней колонки с данными (перед actions) */
+:host ::ng-deep .table-wrap thead tr.mat-mdc-header-row th:nth-last-child(2),
+:host ::ng-deep .table-wrap tbody tr.mat-mdc-row td:nth-last-child(2) {
+  padding-right: 36px;
+}
+
+:host ::ng-deep .table-wrap tbody tr.mat-mdc-row app-row-menu-button {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
 }
 
 .mat-mdc-row:last-child .mat-mdc-cell {
@@ -134,5 +206,36 @@ th.mat-mdc-header-cell {
 
   :host ::ng-deep .table-wrap .mat-mdc-cell .cell-empty {
     color: $gray;
+  }
+
+  /* Колонка без data-label — иначе пустой ::before на мобилке */
+  :host ::ng-deep .table-wrap .mat-mdc-cell.mat-mdc-cell-actions::before {
+    display: none;
+  }
+
+  :host ::ng-deep .table-wrap thead tr.mat-mdc-header-row th:nth-last-child(2),
+  :host ::ng-deep .table-wrap tbody tr.mat-mdc-row td:nth-last-child(2) {
+    padding-right: 16px;
+  }
+
+  :host ::ng-deep .table-wrap tbody tr.mat-mdc-row {
+    position: relative;
+  }
+
+  :host ::ng-deep .table-wrap .mat-mdc-cell.mat-mdc-cell-actions {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    padding: 8px 4px 8px 16px !important;
+    display: flex;
+    justify-content: flex-end;
+    overflow: visible;
+  }
+
+  :host ::ng-deep .table-wrap tbody tr.mat-mdc-row app-row-menu-button {
+    position: static;
+    transform: none;
+    right: auto;
+    top: auto;
   }
 }

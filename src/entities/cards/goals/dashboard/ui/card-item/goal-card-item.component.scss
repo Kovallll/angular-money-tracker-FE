@@ -10,7 +10,7 @@
 .card {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   width: 100%;
   min-width: 0;
   box-sizing: border-box;
@@ -40,7 +40,8 @@
   font-size: 16px;
   font-weight: 700;
   margin: 0 0 6px 0;
-  word-break: break-word;
+  overflow-wrap: break-word;
+  word-break: normal;
   letter-spacing: -0.3px;
   color: $white;
 

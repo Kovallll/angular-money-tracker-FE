@@ -29,47 +29,10 @@
   display: flex;
   flex-direction: column;
 
-  // На мобилке: секции (summary) сверху, контролы таблицы — под ними
-  .summary-cards {
-    order: 1;
-  }
+  /* Порядок только по разметке: header → summary → controls → categories */
   controls {
-    order: 2;
+    margin-top: 0;
     margin-bottom: 8px;
-  }
-  .categories-section {
-    order: 3;
-  }
-
-  // На планшете и выше: контролы снова над секциями
-  @include bp.tablet-and-up {
-    .summary-cards {
-      order: 2;
-    }
-    controls {
-      order: 1;
-      margin-bottom: 8px;
-    }
-    .categories-section {
-      order: 3;
-    }
-  }
-}
-
-/* В комнате (embedded): поиск/фильтры выше кнопки Add — у header был order:0 и оказывался первым */
-.container--embedded .cards-block {
-  .app-page-head {
-    order: 2;
-  }
-  controls {
-    order: 1;
-    margin-bottom: 8px;
-  }
-  .summary-cards {
-    order: 3;
-  }
-  .categories-section {
-    order: 4;
   }
 }
 
@@ -210,10 +173,9 @@
     color: $success;
   }
 
-  .pi {
+  app-icon {
     margin-right: 4px;
-    font-size: 14px;
-    vertical-align: middle;
+    vertical-align: -0.12em;
   }
 
   @include bp.tablet-and-up {

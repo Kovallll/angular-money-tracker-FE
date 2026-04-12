@@ -1,16 +1,26 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, Input, input, output, ViewChild } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule, MatTooltip } from '@angular/material/tooltip';
 import { TableCell } from '../lib';
 import { ContextMenuComponent } from '@/entities/context-menu/cm.component';
 import { AppCurrencyPipe } from '@/shared/pipes/app-currency.pipe';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
+import { RowMenuButtonComponent } from '@/shared/components/row-menu-button/row-menu-button.component';
 
 @Component({
   selector: 'table-component',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
-  imports: [CommonModule, MatTableModule, ContextMenuComponent, AppCurrencyPipe, AppIconComponent],
+  imports: [
+    CommonModule,
+    MatTableModule,
+    MatTooltipModule,
+    ContextMenuComponent,
+    AppCurrencyPipe,
+    AppIconComponent,
+    RowMenuButtonComponent,
+  ],
   standalone: true,
 })
 export class TableComponent<T> {
@@ -19,7 +29,10 @@ export class TableComponent<T> {
   @Input() isEmpty = false;
   displayedCells = input.required<TableCell[]>();
 
-  displayedColumns = computed(() => this.displayedCells().map((cell) => cell.field));
+  displayedColumns = computed(() => [
+    ...this.displayedCells().map((cell) => cell.field),
+    'actions',
+  ]);
 
   onDelete = output<T>();
   onEdit = output<T>();
@@ -32,10 +45,24 @@ export class TableComponent<T> {
     this.onEdit.emit(row);
   }
 
-  openContextMenu(event: MouseEvent, row: any) {
-    event.preventDefault();
+  openRowMenu(event: Event, row: any) {
+    event.stopPropagation();
     this.selectedRow = row;
-    this.ctxMenu.open(event);
+    this.ctxMenu.toggle(event);
+  }
+
+  rowDescription(row: Record<string, unknown>): string {
+    const d = row['description'];
+    return typeof d === 'string' ? d.trim() : '';
+  }
+
+  onDataRowClick(event: MouseEvent, row: Record<string, unknown>, tip: MatTooltip): void {
+    const text = this.rowDescription(row);
+    if (!text) return;
+    if (!window.matchMedia('(hover: none) and (pointer: coarse)').matches) return;
+    event.preventDefault();
+    tip.show();
+    window.setTimeout(() => tip.hide(), 5000);
   }
 
   /** Значение ячейки для проверки на пустоту (null, undefined, ''). */

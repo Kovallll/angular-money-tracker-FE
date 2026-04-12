@@ -275,6 +275,8 @@ export class AddTransactionModalComponent implements OnInit {
     currencyCode: string;
     description: string;
     paymentMethod?: 'cash' | 'card';
+    /** When true (default), card balance changes; when false, transaction is recorded only. */
+    affectsCardBalance: boolean;
   } = {
     date: this.formatDateLocal(new Date()) as string,
     title: '',
@@ -285,6 +287,7 @@ export class AddTransactionModalComponent implements OnInit {
     currencyCode: '',
     description: '',
     paymentMethod: undefined,
+    affectsCardBalance: true,
   };
 
   protected readonly paymentMethodOptions = [
@@ -318,6 +321,7 @@ export class AddTransactionModalComponent implements OnInit {
       title: f.title || undefined,
       description: f.description || undefined,
       paymentMethod: f.paymentMethod || undefined,
+      affectsCardBalance: f.affectsCardBalance,
     };
     if (this.currentPredictionKey && this.currentPredictedCategoryId) {
       payload.predictionKey = this.currentPredictionKey;
@@ -350,14 +354,8 @@ export class AddTransactionModalComponent implements OnInit {
     const amount = Number(this.form.amount) || 0;
     if (amount <= 0) return true;
     if (this.getGroupRoomId()) {
-      const title = (this.form.title ?? '').trim();
-      if (!title) return true;
-      const dateStr = this.formatDateLocal(this.form.date);
-      if (!dateStr) return true;
-      const cid = this.form.cardId;
-      if (cid === '' || cid === null || cid === undefined) return true;
-      const cardNum = Number(cid);
-      return !Number.isFinite(cardNum) || cardNum < 1;
+      if (!this.form.cardId) return true;
+      return !!form.invalid;
     }
     return form.invalid || !this.form.cardId || !this.form.categoryId || this.form.amount <= 0;
   }
@@ -366,14 +364,16 @@ export class AddTransactionModalComponent implements OnInit {
     const roomId = this.getGroupRoomId();
     if (roomId) {
       form.form.markAllAsTouched();
+      if (form.invalid || this.form.amount <= 0) return;
       const title = (this.form.title ?? '').trim();
       const dateStr = this.formatDateLocal(this.form.date);
       const cardNum = Number(this.form.cardId);
-      if (!title || this.form.amount <= 0 || !dateStr || !Number.isFinite(cardNum) || cardNum < 1)
-        return;
+      if (!title || !dateStr || !Number.isFinite(cardNum) || cardNum < 1) return;
       try {
         await this.groupRoomsHttp.createRoomTransaction(roomId, {
           title,
+          type: this.form.type,
+          affectsCardBalance: this.form.affectsCardBalance,
           amount: Number(this.form.amount) || 0,
           date: dateStr,
           currencyCode: this.form.currencyCode || this.currencyService.primaryCode(),

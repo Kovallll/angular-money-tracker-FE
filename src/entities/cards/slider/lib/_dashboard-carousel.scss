@@ -68,6 +68,7 @@
   .p-carousel-item-list.p-carousel-item-list {
     scrollbar-width: none;
     -ms-overflow-style: none;
+    align-items: flex-start;
 
     &::-webkit-scrollbar {
       display: none;
@@ -77,6 +78,7 @@
   .p-carousel-item {
     box-sizing: border-box;
     min-width: 0;
+    align-self: flex-start;
   }
 
   // Карточка с отступами 6px слева и справа — центрирование, 12px между слайдами (6+6)

@@ -75,3 +75,16 @@
     font-weight: 600;
   }
 }
+
+.card-balance-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: $text-muted;
+  cursor: pointer;
+
+  input {
+    cursor: pointer;
+  }
+}

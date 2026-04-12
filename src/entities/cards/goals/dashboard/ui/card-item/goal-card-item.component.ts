@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { AppCurrencyPrimaryPipe } from '@/shared/pipes/app-currency-primary.pipe';
 import { BaseChartDirective } from 'ng2-charts';
 import { DividerComponent } from '@/shared/components/divider/divider';
-import { ChartOptions } from 'chart.js';
+import { ChartData, ChartOptions } from 'chart.js';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 
 @Component({
@@ -23,23 +23,34 @@ import { AppIconComponent } from '@/shared/components/app-icon/app-icon.componen
 })
 export class GoalCardItemComponent {
   item = input.required<any>();
-  labels = ['Target', 'Remaining'];
 
-  /** DPR для чёткого рендера на мобильных (retina); ограничен 3, на SSR = 1. */
-  private readonly devicePixelRatio =
-    typeof window !== 'undefined' ? Math.min(window.devicePixelRatio || 1, 3) : 1;
+  private static readonly doughnutLabels = ['Target', 'Remaining'] as const;
 
-  private readonly chartOptionsBase: ChartOptions<'doughnut'> = {
+  readonly chartOptions: ChartOptions<'doughnut'> = {
     cutout: '72%',
     responsive: true,
     maintainAspectRatio: true,
+    devicePixelRatio: typeof window !== 'undefined' ? Math.min(window.devicePixelRatio || 1, 3) : 1,
     plugins: { legend: { display: false } },
   };
 
-  /** Опции графика с devicePixelRatio для чёткого рендера на мобильных (retina). */
-  get chartOptions(): ChartOptions<'doughnut'> {
-    return { ...this.chartOptionsBase, devicePixelRatio: this.devicePixelRatio };
-  }
+  readonly doughnutChartData = computed<ChartData<'doughnut'>>(() => {
+    const item = this.item();
+    const target = item.targetBudget ?? 0;
+    const remaining = Math.max(0, (item.goalBudget ?? 0) - target);
+    return {
+      labels: [...GoalCardItemComponent.doughnutLabels],
+      datasets: [
+        {
+          backgroundColor: ['#3b82f6', 'rgba(59, 130, 246, 0.2)'],
+          borderWidth: 0,
+          hoverOffset: 4,
+          spacing: 2,
+          data: [target, remaining],
+        },
+      ],
+    };
+  });
 
   getProgress(item: { targetBudget?: number; goalBudget?: number }): number {
     const goal = item.goalBudget ?? 0;
@@ -86,19 +97,5 @@ export class GoalCardItemComponent {
     const d = new Date();
     d.setHours(0, 0, 0, 0);
     return d;
-  }
-
-  getDataset(item: any) {
-    const target = item.targetBudget ?? 0;
-    const remaining = Math.max(0, (item.goalBudget ?? 0) - target);
-    return [
-      {
-        backgroundColor: ['#3b82f6', 'rgba(59, 130, 246, 0.2)'],
-        borderWidth: 0,
-        hoverOffset: 4,
-        spacing: 2,
-        data: [target, remaining],
-      },
-    ];
   }
 }

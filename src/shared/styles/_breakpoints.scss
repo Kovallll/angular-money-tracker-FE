@@ -1,7 +1,9 @@
-// Брейкпоинты для адаптивного layout (1920, 1440, 1200, 780)
+// Брейкпоинты для адаптивного layout (1920, 1550, 1440, 1200, 780)
 // Использование: @use 'shared/styles/breakpoints' as bp; @include bp.desktop-large { ... }
 
 $bp-desktop-large: 1920px;
+/** Ширина, с которой главная сетка дашборда — 3 колонки вверху (balance | goal | subscribe). */
+$bp-dashboard-wide: 1550px;
 $bp-desktop: 1440px;
 $bp-sidebar-to-tabs: 1200px; // при < 1200 сайдбар скрывается, показываются нижние табы
 $bp-tablet: 780px;
@@ -51,6 +53,18 @@ $bp-mobile: 480px;
 
 @mixin desktop-down {
   @media (max-width: #{$bp-desktop - 1px}) {
+    @content;
+  }
+}
+
+@mixin dashboard-wide-and-up {
+  @media (min-width: $bp-dashboard-wide) {
+    @content;
+  }
+}
+
+@mixin dashboard-wide-down {
+  @media (max-width: #{$bp-dashboard-wide - 1px}) {
     @content;
   }
 }

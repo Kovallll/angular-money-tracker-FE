@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, ViewChild } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppCurrencyPipe } from '@/shared/pipes/app-currency.pipe';
 import { ChartConfiguration } from 'chart.js';
@@ -29,8 +29,6 @@ import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.
   standalone: true,
 })
 export class CategoryCardComponent {
-  @ViewChild('ctxMenu') ctxMenu!: ContextMenuComponent;
-
   private categoriesHttpService = inject(CategoriesHttpService);
   private transactionsHttpService = inject(TransactionsHttpService);
   private expensesHttpService = inject(ExpensesHttpService);
@@ -44,6 +42,8 @@ export class CategoryCardComponent {
   chart = input<CategoryLineChartDto>();
   /** Групповая комната: кто сколько внёс по этой категории (уже в основной валюте). */
   groupPayerRows = input<Array<{ userId: string; name: string; amount: number }>>([]);
+  /** В комнате категории фиксированы (Goals / Subscriptions) — без контекстного меню. */
+  groupRoomContext = input(false);
   ref: DynamicDialogRef | undefined | null;
 
   compareDelta = computed(() => this.categoriesHttpService.getChartDeltaCompare(this.chart()));
@@ -104,8 +104,11 @@ export class CategoryCardComponent {
     plugins: {
       legend: { display: false },
       tooltip: {
-        titleFont: { size: 30 },
-        bodyFont: { size: 20 },
+        titleFont: { size: 12, weight: 'bold' },
+        bodyFont: { size: 11 },
+        padding: 8,
+        boxPadding: 4,
+        cornerRadius: 8,
         callbacks: {
           label: (ctx) => `${ctx.dataset.label}: ${this.formatCurrency(ctx.parsed.y ?? 0)}`,
         },
@@ -185,11 +188,6 @@ export class CategoryCardComponent {
       styleClass: 'modal',
       data: this.category(),
     });
-  }
-
-  openContextMenu(event: MouseEvent) {
-    event.preventDefault();
-    this.ctxMenu.open(event);
   }
 
   handleOpenDetails() {

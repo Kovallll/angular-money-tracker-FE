@@ -113,35 +113,35 @@
   flex-direction: column;
   align-items: flex-end;
   gap: 4px;
-
-  &--up .card__trend-value {
-    color: $error;
-  }
-
-  &--down .card__trend-value {
-    color: $success;
-  }
-}
-
-.card__trend-icon.card__trend-icon {
-  font-size: 14px;
-  color: $accent;
-}
-
-.card__trend-value {
-  font-size: 15px;
-  font-weight: 700;
-  color: $gray;
 }
 
 .card__trend-main {
   display: flex;
   align-items: center;
   gap: 4px;
+}
 
-  .card__trend-main ::ng-deep .mat-icon.mat-icon {
-    color: $accent;
+.card__trend--up .card__trend-main {
+  color: $error;
+}
+
+.card__trend--down .card__trend-main {
+  color: $success;
+}
+
+.card__trend-value {
+  font-size: 15px;
+  font-weight: 700;
+  color: inherit;
+
+  .card__trend:not(.card__trend--up):not(.card__trend--down) & {
+    color: $gray;
   }
+}
+
+.card__trend-main app-icon {
+  flex-shrink: 0;
+  color: inherit;
 }
 
 .card__trend-label {

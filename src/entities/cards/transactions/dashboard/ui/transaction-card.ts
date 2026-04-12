@@ -1,12 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  input,
-  signal,
-  ViewChild,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 import {
   DashboardCardComponent,
   CardBodyComponent,
@@ -26,10 +18,6 @@ import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.
 import { TransactionCardItemComponent } from './card-item/transaction-card-item.component';
 import { DashboardTransactionsService } from '../../services/transactions.service';
 import { ProgressSpinner } from 'primeng/progressspinner';
-import { ContextMenuComponent } from '@/entities/context-menu/cm.component';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { ConfirmationService } from 'primeng/api';
-import { EditTransactionModalComponent } from '@/features/transactions/edit-modal/edit-card-modal.component';
 import { injectQuery } from '@tanstack/angular-query-experimental';
 import { mapGroupTxToTransaction } from './group-tx-map';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
@@ -43,23 +31,19 @@ import { AppIconComponent } from '@/shared/components/app-icon/app-icon.componen
     CardHeaderComponent,
     TransactionCardItemComponent,
     ProgressSpinner,
-    ContextMenuComponent,
     AppIconComponent,
   ],
   templateUrl: './transaction-card.html',
   styleUrls: ['./transaction-card.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [DialogService],
 })
 export class DashboardTransactionCardComponent {
-  private transactionsHttpService = inject(TransactionsHttpService);
   private transactionsService = inject(DashboardTransactionsService);
+  private transactionsHttpService = inject(TransactionsHttpService);
   private categoriesHttpService = inject(CategoriesHttpService);
   private groupRoomsHttp = inject(GroupRoomsHttpService);
   private currencyService = inject(CurrencyService);
   private exchangeRates = inject(ExchangeRatesService);
-  private confirmationService = inject(ConfirmationService);
-  private dialogService = inject(DialogService);
 
   groupRoomId = input<string | undefined>(undefined);
 
@@ -72,14 +56,10 @@ export class DashboardTransactionCardComponent {
     };
   });
 
-  @ViewChild('ctxMenu') ctxMenu!: ContextMenuComponent;
-  ref: DynamicDialogRef | null = null;
-
   readonly tabFilter = signal('All');
   readonly title = 'Recent Transaction';
   readonly tabs = tabs;
   readonly seeAllPath = RoutePaths.TRANSACTIONS;
-  readonly selectedItem = signal<Transaction | null>(null);
 
   private readonly personalRaw = this.transactionsService.dashboardTransactions(this.tabFilter);
 
@@ -139,38 +119,5 @@ export class DashboardTransactionCardComponent {
 
   selectTab(tab: string) {
     this.tabFilter.set(tab);
-  }
-
-  openContextMenu(event: MouseEvent, item: Transaction) {
-    if (this.groupRoomId()?.trim()) return;
-    event.preventDefault();
-    this.selectedItem.set(item);
-    this.ctxMenu.open(event);
-  }
-
-  handleDelete(transaction: Transaction | null) {
-    if (!transaction || this.groupRoomId()?.trim()) return;
-    this.confirmationService.confirm({
-      message: `Delete transaction «${transaction.title}»?`,
-      header: 'Confirm deletion',
-      icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Delete',
-      rejectLabel: 'Cancel',
-      accept: () => {
-        this.transactionsHttpService.deleteTransaction(transaction.id);
-      },
-    });
-  }
-
-  handleEdit(transaction: Transaction | null) {
-    if (!transaction || this.groupRoomId()?.trim()) return;
-    const original = this.personalRaw().find((t) => t.id === transaction.id) ?? transaction;
-    this.ref = this.dialogService.open(EditTransactionModalComponent, {
-      header: 'Edit Transaction',
-      closable: true,
-      dismissableMask: true,
-      styleClass: 'modal',
-      data: original,
-    });
   }
 }

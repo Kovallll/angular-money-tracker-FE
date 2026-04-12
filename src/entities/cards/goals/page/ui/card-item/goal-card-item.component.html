@@ -1,16 +1,18 @@
 <dashboard-card>
-  <card-body class="card">
-    <div class="left-side">
-      <span class="card-icon" aria-hidden="true"><app-icon prime="flag" [sizePx]="20" /></span>
-      <div class="text-block">
-        <p class="text">{{ goal().title }}</p>
-        <p class="price">{{ goal().goalBudget | appCurrencyPrimary: goal().currencyCode }}</p>
+  <card-body>
+    <div class="card">
+      <div class="left-side">
+        <span class="card-icon" aria-hidden="true"><app-icon prime="flag" [sizePx]="20" /></span>
+        <div class="text-block">
+          <p class="text">{{ goal().title }}</p>
+          <p class="price">{{ goal().goalBudget | appCurrencyPrimary: goal().currencyCode }}</p>
+        </div>
       </div>
-    </div>
-    <div class="right-side">
-      <span class="progress-badge" [class.progress-badge--full]="getProgress(goal()) >= 100">
-        {{ getProgress(goal()) | number: '1.0-0' }}%
-      </span>
+      <div class="right-side">
+        <span class="progress-badge" [class.progress-badge--full]="getProgress(goal()) >= 100">
+          {{ getProgress(goal()) | number: '1.0-0' }}%
+        </span>
+      </div>
     </div>
   </card-body>
 </dashboard-card>

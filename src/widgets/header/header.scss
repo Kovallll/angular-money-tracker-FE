@@ -42,6 +42,30 @@
   }
 }
 
+/* Когда сайдбар скрыт: имя не должно раздувать строку — уступает место действиям справа */
+@include bp.sidebar-to-tabs {
+  .header-user {
+    flex: 1 1 0%;
+    min-width: 0;
+  }
+
+  .header-actions {
+    flex-shrink: 0;
+    gap: 8px;
+  }
+}
+
+@include bp.mobile-mini {
+  .header {
+    padding-inline: 8px;
+    gap: 8px;
+  }
+
+  .header-actions {
+    gap: 6px;
+  }
+}
+
 .header .content:first-child {
   flex-direction: row;
   gap: 24px;
@@ -75,6 +99,9 @@
 
   @include bp.sidebar-to-tabs {
     display: flex;
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
   }
 }
 
@@ -101,6 +128,7 @@
 .user-compact .user-name {
   font-size: 16px;
   font-weight: 600;
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

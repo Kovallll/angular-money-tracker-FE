@@ -23,8 +23,11 @@ export const budgetChartOptions: ChartConfiguration<'bar'>['options'] = {
   maintainAspectRatio: false,
   plugins: {
     tooltip: {
-      titleFont: { size: 30 },
-      bodyFont: { size: 20 },
+      titleFont: { size: 12, weight: 600 },
+      bodyFont: { size: 11 },
+      padding: 8,
+      boxPadding: 4,
+      cornerRadius: 8,
       callbacks: {
         label: (ctx) => `${ctx.dataset.label}: ${formatCurrency(ctx.parsed.y ?? 0, 'en', '$')}`,
       },
@@ -54,8 +57,11 @@ export const expensesOptions: ChartConfiguration<'bar'>['options'] = {
   responsive: true,
   plugins: {
     tooltip: {
-      titleFont: { size: 30 },
-      bodyFont: { size: 20 },
+      titleFont: { size: 12, weight: 'bold' },
+      bodyFont: { size: 11 },
+      padding: 8,
+      boxPadding: 4,
+      cornerRadius: 8,
       callbacks: {
         label: (ctx) => `${formatCurrency(ctx.parsed.x ?? 0, 'en', '$')}`,
       },

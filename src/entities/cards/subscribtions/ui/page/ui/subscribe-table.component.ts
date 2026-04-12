@@ -40,6 +40,7 @@ import { firstValueFrom, lastValueFrom } from 'rxjs';
 import { injectQuery, QueryClient } from '@tanstack/angular-query-experimental';
 import dayjs from 'dayjs';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
+import { RowMenuButtonComponent } from '@/shared/components/row-menu-button/row-menu-button.component';
 
 @Component({
   selector: 'subscribe-table',
@@ -57,6 +58,7 @@ import { AppIconComponent } from '@/shared/components/app-icon/app-icon.componen
     SubscriptionAddButtonComponent,
     ProgressSpinner,
     AppIconComponent,
+    RowMenuButtonComponent,
   ],
   standalone: true,
   providers: [DialogService],
@@ -141,10 +143,10 @@ export class SubscribeTableComponent extends UrlSyncedComponent<SubscribeItem> {
     this.subscribes.set(updatedData);
   }
 
-  openContextMenu(event: MouseEvent, subscribe: SubscribeItem) {
-    event.preventDefault();
+  openActionsMenu(event: Event, subscribe: SubscribeItem) {
+    event.stopPropagation();
     this.selectedSubscribe.set(subscribe);
-    this.ctxMenu.open(event);
+    this.ctxMenu.toggle(event);
   }
 
   onDelete(subscribe: SubscribeItem | null) {

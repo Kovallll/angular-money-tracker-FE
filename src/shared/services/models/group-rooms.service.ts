@@ -27,6 +27,8 @@ type CreateGroupTxPayload = {
   categoryId?: string;
   /** Личная карта пользователя paidBy (по умолчанию — текущий пользователь) */
   cardId?: number;
+  type?: 'expense' | 'revenue';
+  affectsCardBalance?: boolean;
   amount: number;
   currencyCode?: string;
   title: string;

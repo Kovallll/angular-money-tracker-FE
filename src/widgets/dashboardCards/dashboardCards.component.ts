@@ -6,7 +6,6 @@ import { DashboardSubscribeCardComponent } from '@/entities/cards/subscribtions/
 import { DashboardTransactionCardComponent } from '@/entities/cards/transactions/dashboard/ui/transaction-card';
 import { BudgetStatisticCardComponent } from '@/entities/cards/statistics/ui/budget/budget-stats.component';
 import { CategoryAnaliticsComponent } from '@/widgets/categoryAnalitics/ui/analitics.component';
-import { RoomMemberContributionsComponent } from '@/widgets/roomMemberContributions/room-member-contributions.component';
 import { RoutePaths } from '@/shared';
 import { SelectOption } from '@/entities/select/lib';
 import { ChartViews } from '@/entities/cards/statistics/lib';
@@ -24,7 +23,6 @@ import { ChartViews } from '@/entities/cards/statistics/lib';
     DashboardExpenseCardComponent,
     BudgetStatisticCardComponent,
     CategoryAnaliticsComponent,
-    RoomMemberContributionsComponent,
   ],
 })
 export class DashboardCardsComponent {

@@ -7,6 +7,7 @@ import { TableCell } from '@/entities/table/lib';
 import { AppCurrencyPipe } from '@/shared/pipes/app-currency.pipe';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 import { DatePipe } from '@angular/common';
+import { MatTooltipModule, MatTooltip } from '@angular/material/tooltip';
 
 /** Строка для отображения в списке: таблица или карточки. Минимум: id, date, title, amount. */
 export interface TransactionListRow {
@@ -17,6 +18,7 @@ export interface TransactionListRow {
   category?: string;
   categoryIcon?: string;
   type?: string;
+  description?: string | null;
   /** Групповая комната: кто создал транзакцию. */
   groupCreatedByName?: string;
   [key: string]: unknown;
@@ -25,7 +27,7 @@ export interface TransactionListRow {
 @Component({
   selector: 'transactions-list-view',
   standalone: true,
-  imports: [TableComponent, AppCurrencyPipe, AppIconComponent, DatePipe],
+  imports: [TableComponent, AppCurrencyPipe, AppIconComponent, DatePipe, MatTooltipModule],
   templateUrl: './transactions-list-view.component.html',
   styleUrl: './transactions-list-view.component.scss',
 })
@@ -45,4 +47,21 @@ export class TransactionsListViewComponent {
     this.breakpointObserver.observe('(max-width: 1199px)').pipe(map((s) => s.matches)),
     { initialValue: false },
   );
+
+  rowDescription(row: TransactionListRow): string {
+    const d = row.description;
+    return typeof d === 'string' ? d.trim() : '';
+  }
+
+  hasDescription(row: TransactionListRow): boolean {
+    return this.rowDescription(row).length > 0;
+  }
+
+  /** Телефон / тач: показать тултип по тапу (hover там нет). */
+  showDescriptionOnTap(event: Event, tip: MatTooltip): void {
+    if (!window.matchMedia('(hover: none) and (pointer: coarse)').matches) return;
+    event.stopPropagation();
+    tip.show();
+    window.setTimeout(() => tip.hide(), 5000);
+  }
 }

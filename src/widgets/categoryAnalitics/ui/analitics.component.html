@@ -7,10 +7,34 @@
   <p class="analytics__desc" [class.analytics__desc--hidden]="view() === 'row'">
     Spending breakdown and trends
   </p>
+  @if (roomId()?.trim(); as rid) {
+    <div class="analytics__member-share">
+      <room-member-contributions [roomId]="rid" />
+    </div>
+  }
   <div class="analytics__charts" [class.analytics__charts--row]="view() === 'row'">
     <article class="chart-card" [class.chart-card--interactive-legend]="showLegendTags()">
-      <h3 class="chart-card__title">Categories Share</h3>
-      <p class="chart-card__hint">Click category names to show or hide</p>
+      <div class="chart-card__head">
+        <div class="chart-card__head-text">
+          <h3 class="chart-card__title">Categories Share</h3>
+          <p class="chart-card__hint">Click category names to show or hide</p>
+        </div>
+        <div class="chart-card__pie-period">
+          <span class="chart-card__pie-period-label" id="categoryAnaliticsPiePeriodLabel">Period</span>
+          <p-select
+            inputId="categoryAnaliticsPiePeriod"
+            ariaLabelledBy="categoryAnaliticsPiePeriodLabel"
+            [options]="piePeriodOptions"
+            optionLabel="label"
+            optionValue="value"
+            [ngModel]="piePeriod()"
+            (ngModelChange)="onPiePeriodModelChange($event)"
+            appendTo="body"
+            styleClass="analytics-pie-period-select"
+            panelStyleClass="analytics-pie-period-panel"
+          />
+        </div>
+      </div>
       <div class="chart-card__body chart-card__body--clickable">
         <div class="chart-card__doughnut-wrap">
           @if (overviewLoading()) {

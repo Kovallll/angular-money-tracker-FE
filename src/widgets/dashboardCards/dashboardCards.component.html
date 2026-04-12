@@ -7,7 +7,6 @@
   <dash-transaction-card class="block transaction-block" [groupRoomId]="groupRoomId()" />
   <div class="block stats-block">
     @if (groupRoomId(); as rid) {
-      <room-member-contributions [roomId]="rid" />
       <category-analitics [roomId]="rid" view="column" [showLegendTags]="false" />
     } @else {
       <budget-statistic-card

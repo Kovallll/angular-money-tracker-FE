@@ -13,6 +13,7 @@
   }
 }
 
+/* Внутренний ряд: иконка + текст слева, процент справа (card-body — column по умолчанию) */
 .card {
   display: flex;
   justify-content: space-between;

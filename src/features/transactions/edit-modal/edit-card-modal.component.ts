@@ -167,15 +167,30 @@ export class EditTransactionModalComponent implements OnInit {
     { label: 'Card', value: 'card' },
   ];
 
+  readonly typeOptions = [
+    { label: 'Expense', value: 'expense' },
+    { label: 'Revenue', value: 'revenue' },
+  ];
+
   card = signal<any>([]);
 
   ngOnInit() {
     const card = this.inputs.reduce((acc, cur) => {
-      acc[cur.field] =
+      let v =
         this.transaction[cur.field as keyof CreateTransaction] ??
         (cur.field === 'currencyCode' ? this.currencyService.primaryCode() : undefined);
+      if (cur.field === 'type') {
+        if (v == null || v === '') {
+          v = 'expense';
+        } else {
+          const t = String(v).toLowerCase();
+          v = t === 'revenue' ? 'revenue' : 'expense';
+        }
+      }
+      acc[cur.field] = v;
       return acc;
     }, {} as any);
+    card['affectsCardBalance'] = this.transaction.affectsCardBalance !== false;
     this.card.set(card);
 
     this.titleInput$

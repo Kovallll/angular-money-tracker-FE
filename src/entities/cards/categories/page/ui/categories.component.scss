@@ -51,6 +51,18 @@
   margin-bottom: 14px;
 }
 
+.card__header-aside {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-shrink: 0;
+  margin-left: auto;
+  /* кнопка «⋯» последняя в ряду — визуально ближе к краю карточки */
+  padding-right: 4px;
+}
+
 .card__main {
   display: flex;
   align-items: center;
@@ -135,11 +147,6 @@
   flex-direction: column;
   align-items: flex-end;
   gap: 4px;
-
-  .pi {
-    font-size: 14px;
-    color: $accent;
-  }
 }
 
 .card__trend-main {
@@ -148,21 +155,26 @@
   gap: 4px;
 }
 
+.card__trend--down .card__trend-main {
+  color: $error;
+}
+
+.card__trend--up .card__trend-main {
+  color: $success;
+}
+
 .card__trend-value {
   font-size: 15px;
   font-weight: 700;
-
-  .card__trend--down & {
-    color: $error;
-  }
-
-  .card__trend--up & {
-    color: $success;
-  }
+  color: inherit;
 
   .card__trend:not(.card__trend--up):not(.card__trend--down) & {
     color: $gray;
   }
+}
+
+.card__trend-arrow {
+  flex-shrink: 0;
 }
 
 .card__trend-label {

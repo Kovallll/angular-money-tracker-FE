@@ -1,1 +1,7 @@
-<p-contextmenu #menu [model]="items()" appendTo="body" />
+@if (showTrigger()) {
+  <app-row-menu-button
+    [ariaLabel]="triggerAriaLabel()"
+    (pressed)="onTriggerClick($event)"
+  />
+}
+<p-menu #menu [model]="items()" [popup]="true" appendTo="body" />

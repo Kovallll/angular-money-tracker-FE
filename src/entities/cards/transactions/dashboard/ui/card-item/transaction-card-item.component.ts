@@ -2,13 +2,21 @@ import { ChangeDetectionStrategy, Component, computed, inject, input } from '@an
 import { CommonModule, DatePipe } from '@angular/common';
 import { AppCurrencyPipe } from '@/shared/pipes/app-currency.pipe';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule, MatTooltip } from '@angular/material/tooltip';
 import { CategoriesHttpService } from '@/shared';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 
 @Component({
   selector: 'transaction-card-item',
   standalone: true,
-  imports: [CommonModule, AppCurrencyPipe, DatePipe, MatIconModule, AppIconComponent],
+  imports: [
+    CommonModule,
+    AppCurrencyPipe,
+    DatePipe,
+    MatIconModule,
+    AppIconComponent,
+    MatTooltipModule,
+  ],
   templateUrl: './transaction-card-item.component.html',
   styleUrls: ['./transaction-card-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,4 +32,17 @@ export class TransactionCardItemComponent {
     const c = list.find((x) => String(x.id) === String(i?.categoryId));
     return c?.icon ?? null;
   });
+
+  descriptionText = computed(() => {
+    const d = this.item()?.description;
+    return typeof d === 'string' ? d.trim() : '';
+  });
+
+  onCardClick(event: MouseEvent, tip: MatTooltip): void {
+    if (!this.descriptionText()) return;
+    if (!window.matchMedia('(hover: none) and (pointer: coarse)').matches) return;
+    event.stopPropagation();
+    tip.show();
+    window.setTimeout(() => tip.hide(), 5000);
+  }
 }

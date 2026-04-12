@@ -4,6 +4,7 @@ import {
   ExpensesOverviewDto,
   StatisticsHttpService,
   StatisticsRefreshService,
+  StatisticsPiePeriod,
 } from '@/shared';
 import {
   ChangeDetectionStrategy,
@@ -19,9 +20,12 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ChartConfiguration, LegendItem, Plugin } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
+import { FormsModule } from '@angular/forms';
 import { ProgressSpinner } from 'primeng/progressspinner';
+import { Select } from 'primeng/select';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
+import { RoomMemberContributionsComponent } from '@/widgets/roomMemberContributions/room-member-contributions.component';
 
 const EMPTY_BAR: ChartConfiguration<'bar'>['data'] = { labels: [], datasets: [] };
 const EMPTY_LINE: ChartConfiguration<'line'>['data'] = { labels: [], datasets: [] };
@@ -135,6 +139,14 @@ const htmlLegendTagsPlugin: Plugin<'bar' | 'doughnut'> = {
 
 const DOUGHNUT_WRAP_CLASS = 'chart-card__doughnut-wrap';
 
+const PIE_PERIOD_OPTIONS: { value: StatisticsPiePeriod; label: string }[] = [
+  { value: 'current_month', label: 'Current month' },
+  { value: 'last_3', label: 'Last 3 months' },
+  { value: 'last_6', label: 'Last 6 months' },
+  { value: 'last_12', label: 'Last 12 months' },
+  { value: 'all', label: 'All time' },
+];
+
 function getOrCreateLegendContainer(chart: { canvas: HTMLCanvasElement }): HTMLElement {
   const directParent = chart.canvas.parentElement;
   if (!directParent) return document.createElement('div');
@@ -160,7 +172,13 @@ function getOrCreateLegendContainer(chart: { canvas: HTMLCanvasElement }): HTMLE
   styleUrls: ['./analitics.component.scss'],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [BaseChartDirective, ProgressSpinner],
+  imports: [
+    BaseChartDirective,
+    ProgressSpinner,
+    RoomMemberContributionsComponent,
+    FormsModule,
+    Select,
+  ],
 })
 export class CategoryAnaliticsComponent implements OnInit {
   private statisticsHttpService = inject(StatisticsHttpService);
@@ -182,6 +200,11 @@ export class CategoryAnaliticsComponent implements OnInit {
   chartPluginsDoughnut = [htmlLegendTagsPlugin] as Plugin<'doughnut'>[];
   /** Плагины для bar. */
   chartPluginsBar = [htmlLegendTagsPlugin] as Plugin<'bar'>[];
+
+  /** Период агрегации для круговой диаграммы Categories share (по умолчанию — текущий календарный месяц). */
+  piePeriod = signal<StatisticsPiePeriod>('current_month');
+
+  readonly piePeriodOptions = PIE_PERIOD_OPTIONS;
 
   /** true пока запрос overview в процессе (показываем спиннер на всех трёх графиках). */
   overviewLoading = signal(true);
@@ -398,11 +421,22 @@ export class CategoryAnaliticsComponent implements OnInit {
   });
 
   /** Запрос актуальных данных для графиков (вызывается при открытии и после изменений транзакций). */
+  onPiePeriodModelChange(value: StatisticsPiePeriod): void {
+    if (PIE_PERIOD_OPTIONS.some((o) => o.value === value)) {
+      this.piePeriod.set(value);
+    }
+  }
+
   private loadOverview(): void {
     this.overviewLoading.set(true);
     const rid = this.roomId()?.trim();
     this.statisticsHttpService
-      .getExpensesOverview({ monthsBar: 6, locale: 'en', ...(rid ? { roomId: rid } : {}) })
+      .getExpensesOverview({
+        monthsBar: 6,
+        locale: 'en',
+        piePeriod: this.piePeriod(),
+        ...(rid ? { roomId: rid } : {}),
+      })
       .subscribe({
         next: (res: ExpensesOverviewDto) => {
           const { pie, bar } = applySyncedColors(res.pie, res.bar);
@@ -423,6 +457,7 @@ export class CategoryAnaliticsComponent implements OnInit {
   constructor() {
     effect(() => {
       this.roomId();
+      this.piePeriod();
       this.loadOverview();
     });
   }

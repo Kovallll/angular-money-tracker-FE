@@ -1,4 +1,14 @@
-<div class="card">
+<div
+  class="card"
+  [class.card--has-desc]="descriptionText()"
+  #txDescTip="matTooltip"
+  [matTooltip]="descriptionText()"
+  [matTooltipDisabled]="!descriptionText()"
+  matTooltipShowDelay="250"
+  matTooltipPosition="above"
+  matTooltipClass="transaction-description-tooltip"
+  (click)="onCardClick($event, txDescTip)"
+>
   <div class="left-content">
     <div class="category-icon">
       <app-icon [icon]="categoryIcon()" [sizePx]="20" />

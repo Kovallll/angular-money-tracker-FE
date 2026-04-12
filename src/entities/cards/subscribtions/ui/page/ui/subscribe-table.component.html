@@ -27,7 +27,7 @@
       <ul class="cards-list" role="list">
         @for (subscribe of subscribes(); track subscribe.id) {
           <li class="card-item">
-            <article class="subscription-card" (contextmenu)="openContextMenu($event, subscribe)">
+            <article class="subscription-card">
               <div class="card__date-badge">
                 <div class="card__date-inner">
                   <span class="card__date-label">Start</span>
@@ -36,7 +36,13 @@
                 </div>
               </div>
               <div class="card__body">
-                <h3 class="card__title">{{ subscribe.subscribeName }}</h3>
+                <div class="card__title-row">
+                  <h3 class="card__title">{{ subscribe.subscribeName }}</h3>
+                  <app-row-menu-button
+                    ariaLabel="Действия с подпиской"
+                    (pressed)="openActionsMenu($event, subscribe)"
+                  />
+                </div>
                 <div class="card__meta">
                   <span class="card__badge">{{ subscribe.type | titlecase }}</span>
                   @if (subscribe | nextChargeDate; as nextDate) {

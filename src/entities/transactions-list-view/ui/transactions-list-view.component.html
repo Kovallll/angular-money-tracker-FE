@@ -47,6 +47,21 @@
             </p>
           </div>
           <div class="mobile-card__amount">{{ row.amount | appCurrency }}</div>
+          @if (hasDescription(row)) {
+            <button
+              type="button"
+              class="mobile-card__desc-btn"
+              [matTooltip]="rowDescription(row)"
+              matTooltipShowDelay="200"
+              matTooltipPosition="above"
+              matTooltipClass="transaction-description-tooltip"
+              #mDescTip="matTooltip"
+              aria-label="Description"
+              (click)="showDescriptionOnTap($event, mDescTip)"
+            >
+              <app-icon material="info_outline" [sizePx]="22" />
+            </button>
+          }
           @if (showActions()) {
             <button
               type="button"

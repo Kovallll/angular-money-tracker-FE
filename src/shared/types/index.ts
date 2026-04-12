@@ -17,6 +17,8 @@ export type Transaction = {
   cardId: number;
   categoryId: number;
   title: string;
+  /** Примечание к транзакции (подсказка при наведении / на телефоне по кнопке). */
+  description?: string | null;
   category: string;
   amount: number;
   /** Currency code (e.g. BYN, USD). Default BYN if missing. */
@@ -24,6 +26,8 @@ export type Transaction = {
   date: string;
   type: string;
   paymentMethod?: string;
+  /** When false, card is only linked; balance was not changed. Default true. */
+  affectsCardBalance?: boolean;
   /** ISO date string when the transaction was created (for sorting by creation time). */
   createdAt?: string;
   /** Групповая комната: отображаемое имя участника, создавшего запись. */
@@ -47,6 +51,8 @@ export interface CreateTransactionPayload {
   predictionKey?: string;
   /** For ML prediction feedback: category id that was predicted (primary or chosen alternative). */
   predictedCategoryId?: string;
+  /** Default true: change card balance. False = record only. */
+  affectsCardBalance?: boolean;
 }
 
 export interface BalanceCard {
@@ -184,8 +190,11 @@ export interface ChartJsLine {
   }>;
 }
 
+/** Период агрегации для круговой диаграммы Categories share (query `piePeriod`). */
+export type StatisticsPiePeriod = 'current_month' | 'last_3' | 'last_6' | 'last_12' | 'all';
+
 export interface ExpensesOverviewDto {
-  pie: ChartJsPie; // доли категорий за текущий месяц
+  pie: ChartJsPie; // доли категорий за период meta.piePeriod
   bar: ChartJsBar; // по категориям за последние N месяцев (топ-K)
   line: ChartJsLine; // суммарно по всем категориям за 12 мес.
   meta: {
@@ -193,6 +202,7 @@ export interface ExpensesOverviewDto {
     year: number;
     monthsBar: number;
     topK?: number; // при отсутствии показываются все категории
+    piePeriod: StatisticsPiePeriod;
   };
 }
 
@@ -300,6 +310,9 @@ export interface GroupTransactionItem {
   categoryId?: string | null;
   /** Личная карта плательщика; баланс учитывался при создании */
   cardId?: number | null;
+  /** Расход или доход; по умолчанию expense для старых записей. */
+  type?: 'expense' | 'revenue';
+  affectsCardBalance?: boolean;
   amount: number;
   currencyCode: string;
   title: string;

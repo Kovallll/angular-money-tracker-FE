@@ -30,18 +30,30 @@
           <span class="total-label">Avg</span>
           <span class="total-value">{{ averageExpense() | appCurrency }}</span>
         </div>
-        } @if (compareDelta().value !== 0) {
+        } @if (compareDelta().comparable && compareDelta().value !== 0) {
         <div class="total-item">
           <span class="total-label">vs last month</span>
           <span
-            class="total-value"
+            class="total-value total-value--trend"
             [class.negative]="!compareDelta().negative"
             [class.positive]="compareDelta().negative"
           >
             {{ compareDelta().value }}% @if (!compareDelta().negative) {
-            <app-icon prime="arrow-down" [sizePx]="20" iconClass="trend-arrow" />
+            <app-icon
+              material="arrow_downward"
+              [sizePx]="16"
+              [glyphScale]="1"
+              iconClass="trend-arrow"
+              ariaLabel="Spending up vs last month"
+            />
             } @else {
-            <app-icon prime="arrow-up" [sizePx]="20" iconClass="trend-arrow" />
+            <app-icon
+              material="arrow_upward"
+              [sizePx]="16"
+              [glyphScale]="1"
+              iconClass="trend-arrow"
+              ariaLabel="Spending down vs last month"
+            />
             }
           </span>
         </div>

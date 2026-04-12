@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { AnalyticsSnapshotsHttpService, ListSnapshotsParams } from '@/shared';
+import { SavedReportsRefreshService } from './saved-reports-refresh.service';
 import type { AnalyticsSnapshotItem, AnalyticsSnapshotsListResponse } from '@/shared/types';
 import { DialogService } from 'primeng/dynamicdialog';
 import { DynamicDialogModule } from 'primeng/dynamicdialog';
@@ -24,6 +26,7 @@ function formatPeriodLabel(periodEnd: string): string {
 export class SavedReportsComponent {
   private snapshotsHttp = inject(AnalyticsSnapshotsHttpService);
   private dialogService = inject(DialogService);
+  private refreshBus = inject(SavedReportsRefreshService);
 
   loading = signal(false);
   listResponse = signal<AnalyticsSnapshotsListResponse | null>(null);
@@ -45,6 +48,7 @@ export class SavedReportsComponent {
 
   constructor() {
     this.load();
+    this.refreshBus.trigger$.pipe(takeUntilDestroyed()).subscribe(() => this.load());
   }
 
   load(): void {

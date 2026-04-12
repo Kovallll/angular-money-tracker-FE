@@ -1,7 +1,6 @@
 <article
   class="card"
   (click)="handleOpenDetails()"
-  (contextmenu)="openContextMenu($event)"
   (keydown.enter)="handleOpenDetails()"
   (keydown.space)="$event.preventDefault(); handleOpenDetails()"
   role="button"
@@ -23,28 +22,50 @@
         </div>
       </div>
     </div>
-    <div
-      class="card__trend"
-      [class.card__trend--down]="compareDelta().comparable && !compareDelta().negative"
-      [class.card__trend--up]="compareDelta().comparable && compareDelta().negative"
-    >
-      <div class="card__trend-main">
-        <span class="card__trend-value">
-          @if (compareDelta().comparable) {
-            {{ compareDelta().value }}%
-          } @else {
-            N/A
+    <div class="card__header-aside">
+      <div
+        class="card__trend"
+        [class.card__trend--down]="compareDelta().comparable && !compareDelta().negative"
+        [class.card__trend--up]="compareDelta().comparable && compareDelta().negative"
+      >
+        <div class="card__trend-main">
+          <span class="card__trend-value">
+            @if (compareDelta().comparable) {
+              {{ compareDelta().value }}%
+            } @else {
+              N/A
+            }
+          </span>
+          @if (compareDelta().comparable && compareDelta().value !== 0) {
+            @if (!compareDelta().negative) {
+              <app-icon
+                material="arrow_downward"
+                [sizePx]="16"
+                [glyphScale]="1"
+                iconClass="card__trend-arrow"
+                ariaLabel="Spending up vs last month"
+              />
+            } @else {
+              <app-icon
+                material="arrow_upward"
+                [sizePx]="16"
+                [glyphScale]="1"
+                iconClass="card__trend-arrow"
+                ariaLabel="Spending down vs last month"
+              />
+            }
           }
-        </span>
-        @if (compareDelta().comparable && compareDelta().value !== 0) {
-          @if (!compareDelta().negative) {
-            <app-icon prime="arrow-down" [sizePx]="20" ariaLabel="" />
-          } @else {
-            <app-icon prime="arrow-up" [sizePx]="20" ariaLabel="" />
-          }
-        }
+        </div>
+        <span class="card__trend-label">vs last month</span>
       </div>
-      <span class="card__trend-label">vs last month</span>
+      @if (!groupRoomContext()) {
+        <context-menu-component
+          showTrigger
+          triggerAriaLabel="Действия с категорией"
+          (onDelete)="handleDelete()"
+          (onEdit)="handleEdit()"
+        />
+      }
     </div>
   </div>
   <div class="card__body">
@@ -85,5 +106,4 @@
       </div>
     </div>
   </div>
-  <context-menu-component #ctxMenu (onDelete)="handleDelete()" (onEdit)="handleEdit()" />
 </article>

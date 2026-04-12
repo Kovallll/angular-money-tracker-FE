@@ -1,4 +1,11 @@
 @use 'theme' as *;
+@use 'shared/styles/breakpoints' as bp;
+
+:host {
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+}
 
 /* Скрыть logout в настройках, когда виден сайдбар (в нём своя кнопка) */
 .logout-fallback {
@@ -11,8 +18,20 @@
 
 .container {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  padding: 0px 32px;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  padding: 0 16px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+
+  @include bp.tablet-and-up {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 160px);
+    gap: 24px 28px;
+    padding: 0 32px;
+    align-items: start;
+  }
 }
 
 .content {
@@ -26,6 +45,8 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .title {
@@ -41,6 +62,8 @@
   color: $white;
   font-size: 18px;
   font-weight: 500;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .avatar-upload {
@@ -48,21 +71,30 @@
   flex-direction: column;
   align-items: center;
   gap: 12px;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 
   .title {
     font-size: 14px;
     font-weight: 500;
     color: $gray;
+    text-align: center;
+    padding: 0 4px;
   }
 
   .upload-frame {
-    width: 140px;
-    border: 2px dashed #ccc;
+    width: min(140px, 100%);
+    max-width: 100%;
+    margin-inline: auto;
+    border: 2px dashed $surface-35;
     border-radius: 12px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     transition: border-color 0.3s;
+    box-sizing: border-box;
 
     &:hover {
       border-color: $accent;
@@ -73,9 +105,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-wrap: wrap;
     gap: 6px;
-    padding: 8px;
+    padding: 8px 6px;
     cursor: pointer;
+    text-align: center;
+    box-sizing: border-box;
     background: rgba(255, 255, 255, 0.05);
     font-size: 12px;
     color: $gray;
@@ -99,7 +134,10 @@
   .avatar-box {
     position: relative;
     width: 100%;
-    height: 140px;
+    max-width: 100%;
+    aspect-ratio: 1;
+    min-height: 120px;
+    max-height: 180px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -156,6 +194,13 @@
 
 .action-btn {
   display: flex;
+  min-width: 0;
+  max-width: 100%;
+  width: 100%;
 
-  min-width: 200px;
+  @include bp.tablet-and-up {
+    width: auto;
+    min-width: 200px;
+    max-width: none;
+  }
 }

@@ -88,6 +88,7 @@ export class RoomMemberContributionsComponent {
   private mergeFromTransactions(txs: GroupTransactionItem[], primary: string) {
     const map = new Map<string, { name: string; amount: number }>();
     for (const t of txs) {
+      if (t.type === 'revenue') continue;
       const payerId = (t.paidBy || t.createdBy || '').trim();
       if (!payerId) continue;
       const from = safeCurrency(t.currencyCode);

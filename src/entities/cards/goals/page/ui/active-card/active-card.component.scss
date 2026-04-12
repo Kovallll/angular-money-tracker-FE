@@ -18,7 +18,7 @@ $bp-goal-card: 480px;
 .card {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   width: 100%;
   min-width: 0;
   box-sizing: border-box;
@@ -44,7 +44,8 @@ $bp-goal-card: 480px;
   font-size: 17px;
   font-weight: 700;
   margin: 0 0 6px 0;
-  word-break: break-word;
+  overflow-wrap: break-word;
+  word-break: normal;
   letter-spacing: -0.3px;
 
   @include bp.tablet-and-up {

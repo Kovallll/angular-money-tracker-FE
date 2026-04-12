@@ -347,6 +347,51 @@ app-currency-selector .currency-selector.p-inputwrapper.p-inputwrapper-focus {
   margin-top: 2px;
 }
 
+/* Тонкий ненавязчивый скролл в выпадающих PrimeNG Select (в т.ч. Period на аналитике) */
+.p-select-overlay .p-select-list-container {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
+}
+
+.p-select-overlay .p-select-list-container::-webkit-scrollbar {
+  width: 5px;
+}
+
+.p-select-overlay .p-select-list-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.p-select-overlay .p-select-list-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 100px;
+}
+
+.p-select-overlay .p-select-list-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.32);
+}
+
+.p-select-overlay .p-scroller {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
+}
+
+.p-select-overlay .p-scroller::-webkit-scrollbar {
+  width: 5px;
+}
+
+.p-select-overlay .p-scroller::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.p-select-overlay .p-scroller::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 100px;
+}
+
+.p-select-overlay .p-scroller::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.32);
+}
+
 /* Dropdown панель выбора валюты */
 .currency-selector-panel.p-select-overlay {
   background: $secondary;
@@ -371,6 +416,34 @@ app-currency-selector .currency-selector.p-inputwrapper.p-inputwrapper-focus {
 .currency-selector-panel .p-select-option.p-select-option-selected.p-focus {
   font-weight: 700;
   color: $accent;
+}
+
+/* Период на графике Categories share (analytics) — тёмная панель как у селектора валюты */
+.analytics-pie-period-panel.p-select-overlay {
+  background: $secondary;
+  border: 1px solid $tertiary;
+  border-radius: 12px;
+  box-shadow:
+    0 8px 32px $shadow-50,
+    0 0 0 1px $surface-06;
+  padding: 8px;
+}
+
+.analytics-pie-period-panel .p-select-option {
+  color: $white;
+  border-radius: 8px;
+  transition: background 0.15s ease;
+}
+
+.analytics-pie-period-panel .p-select-option:hover {
+  background: $surface-10;
+}
+
+.analytics-pie-period-panel .p-select-option.p-select-option-selected,
+.analytics-pie-period-panel .p-select-option.p-select-option-selected.p-focus {
+  font-weight: 600;
+  color: $accent;
+  background: rgba($accent, 0.14);
 }
 
 /* MatSelect: общий дропдаун в цветах приложения */
@@ -434,26 +507,56 @@ app-currency-selector .currency-selector.p-inputwrapper.p-inputwrapper-focus {
   color: $white;
 }
 
-/* Toast на мобилке — фикс смещения влево */
+/* Toast на мобилке — в пределах экрана, без вылезания за края */
 @media (max-width: 779px) {
   body .p-toast.p-toast-top-right,
   body .p-toast.p-toast-top-left,
   body .p-toast.p-toast-bottom-right,
   body .p-toast.p-toast-bottom-left {
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
-    margin-left: 0;
+    left: calc(12px + env(safe-area-inset-left, 0px)) !important;
+    right: calc(12px + env(safe-area-inset-right, 0px)) !important;
+    width: auto !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    transform: none !important;
+    box-sizing: border-box;
   }
 
   body .p-toast.p-toast-top-right,
   body .p-toast.p-toast-top-left {
-    top: 12px;
+    top: calc(12px + env(safe-area-inset-top, 0px)) !important;
   }
 
   body .p-toast.p-toast-bottom-right,
   body .p-toast.p-toast-bottom-left {
-    bottom: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px)) !important;
   }
+
+  body .p-toast .p-toast-message {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  body .p-toast .p-toast-message-content {
+    min-width: 0;
+    flex: 1;
+  }
+
+  body .p-toast .p-toast-message-text,
+  body .p-toast .p-toast-summary,
+  body .p-toast .p-toast-detail {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+}
+
+/* Длинные описания транзакций в MatTooltip */
+.transaction-description-tooltip .mdc-tooltip__surface {
+  max-width: min(320px, 92vw);
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 

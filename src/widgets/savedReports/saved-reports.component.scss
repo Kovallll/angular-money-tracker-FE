@@ -105,6 +105,10 @@
 .saved-reports__empty-hint {
   margin-top: 0.5rem;
   font-size: 0.85rem;
+
+  a {
+    color: var(--primary, #5b7cff);
+  }
 }
 
 .saved-reports__table-wrap {

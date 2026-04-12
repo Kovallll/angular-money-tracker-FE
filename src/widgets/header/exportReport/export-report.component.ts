@@ -1,6 +1,7 @@
 import { Component, inject, signal, computed, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import html2canvas from 'html2canvas';
+import { firstValueFrom } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TieredMenu, TieredMenuModule } from 'primeng/tieredmenu';
@@ -9,8 +10,11 @@ import {
   ExportReportService,
   type ExportData,
 } from '@/shared/services/export/export-report.service';
+import { AnalyticsSnapshotsHttpService } from '@/shared/services/models/analytics-snapshots.service';
+import { StatisticsTabCoordinatorService } from '@/shared';
 import { MessageService } from 'primeng/api';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
+import { SavedReportsRefreshService } from '@/widgets/savedReports/saved-reports-refresh.service';
 
 const CHART_IDS = ['budget', 'expenses', 'goals', 'category'] as const;
 const CHART_RENDER_DELAY_MS = 1200;
@@ -36,6 +40,9 @@ export class ExportReportComponent {
   private router = inject(Router);
   private exportService = inject(ExportReportService);
   private messageService = inject(MessageService);
+  private snapshotsHttp = inject(AnalyticsSnapshotsHttpService);
+  private savedReportsRefresh = inject(SavedReportsRefreshService);
+  private statisticsTabCoordinator = inject(StatisticsTabCoordinatorService);
 
   readonly isLoading = signal(false);
   private readonly exportFormatWithCharts = signal<ExportFormat | null>(null);
@@ -111,12 +118,24 @@ export class ExportReportComponent {
         await yieldToMain();
         this.exportService.exportJSON(data);
       }
+
+      let snapshotSaved = false;
+      try {
+        await firstValueFrom(this.snapshotsHttp.saveFromExport());
+        snapshotSaved = true;
+        this.savedReportsRefresh.requestRefresh();
+      } catch {
+        // export already succeeded; snapshot is optional enhancement
+      }
+
       this.messageService.add({
         key: 'toast',
         severity: 'success',
         summary: 'Export ready',
-        detail: 'File saved',
-        life: 2000,
+        detail: snapshotSaved
+          ? 'File saved. A copy was added under Statistics → Saved reports.'
+          : 'File saved. Could not add a copy to Saved reports — try again later.',
+        life: 4000,
       });
     } catch (err) {
       console.error(err);
@@ -132,31 +151,43 @@ export class ExportReportComponent {
 
   private async captureCharts(): Promise<string[]> {
     const isOnStatistics = this.router.url.includes('statistics');
-    if (!isOnStatistics) {
-      await this.router.navigate(['/statistics']);
-      await this.waitForChartsReady();
-    } else {
-      await this.waitForChartsReady();
-    }
-    await yieldToMain();
+    const restoreReportsTab =
+      isOnStatistics && this.statisticsTabCoordinator.getCurrentView() === 'reports';
 
     const urls: string[] = [];
-    for (const id of CHART_IDS) {
+    try {
+      if (!isOnStatistics) {
+        await this.router.navigate(['/statistics']);
+      } else if (restoreReportsTab) {
+        this.statisticsTabCoordinator.requestChartsTab();
+        await this.delay(0);
+      }
+      await this.waitForChartsReady();
       await yieldToMain();
-      const el = document.getElementById(id);
-      if (!el) continue;
-      try {
-        const dataUrl = this.getChartImageFromCanvas(el);
-        if (dataUrl) {
-          urls.push(dataUrl);
-          continue;
+
+      for (const id of CHART_IDS) {
+        await yieldToMain();
+        const el = document.getElementById(id);
+        if (!el) continue;
+        try {
+          const dataUrl = this.getChartImageFromCanvas(el);
+          if (dataUrl) {
+            urls.push(dataUrl);
+            continue;
+          }
+          const canvas = await html2canvas(el, { scale: 1, useCORS: true, logging: false });
+          urls.push(canvas.toDataURL('image/png'));
+        } catch {
+          // skip
         }
-        const canvas = await html2canvas(el, { scale: 1, useCORS: true, logging: false });
-        urls.push(canvas.toDataURL('image/png'));
-      } catch {
-        // skip
+      }
+    } finally {
+      if (restoreReportsTab) {
+        this.statisticsTabCoordinator.requestReportsTab();
+        await this.delay(0);
       }
     }
+
     return urls;
   }
 

@@ -49,68 +49,48 @@
       </div>
     </div>
 
-    @if (!getGroupRoomId()) {
-      <div class="form-row">
-        <div class="form-field">
-          <label for="title">Title</label>
-          <input
-            class="input"
-            pInputText
-            type="text"
-            id="title"
-            name="title"
-            placeholder="e.g. Shopping"
-            [(ngModel)]="form.title"
-            (ngModelChange)="onTitleChange($event)"
-            #titleField="ngModel"
-          />
-          <div class="form-field-error"></div>
+    <div class="form-row">
+      <div class="form-field">
+        <label for="title">Title</label>
+        <input
+          class="input"
+          pInputText
+          type="text"
+          id="title"
+          name="title"
+          placeholder="e.g. Shopping"
+          [(ngModel)]="form.title"
+          (ngModelChange)="onTitleChange($event)"
+          #titleField="ngModel"
+          [required]="!!getGroupRoomId()"
+        />
+        <div class="form-field-error">
+          @if (titleField.invalid && (titleField.touched || cardForm.submitted)) {
+            <p-message severity="error" size="small" variant="simple">Title is required</p-message>
+          }
         </div>
+      </div>
 
-        <div class="form-field">
-          <label for="type">Type</label>
-          <p-select
-            inputId="type"
-            name="type"
-            [options]="typeOptions"
-            optionLabel="label"
-            optionValue="value"
-            [(ngModel)]="form.type"
-            appendTo="body"
-            #typeField="ngModel"
-            required
-          />
-          <div class="form-field-error">
-            @if (typeField.invalid && (typeField.touched || cardForm.submitted)) {
-              <p-message severity="error" size="small" variant="simple">Select type</p-message>
-            }
-          </div>
+      <div class="form-field">
+        <label for="type">Type</label>
+        <p-select
+          inputId="type"
+          name="type"
+          [options]="typeOptions"
+          optionLabel="label"
+          optionValue="value"
+          [(ngModel)]="form.type"
+          appendTo="body"
+          #typeField="ngModel"
+          required
+        />
+        <div class="form-field-error">
+          @if (typeField.invalid && (typeField.touched || cardForm.submitted)) {
+            <p-message severity="error" size="small" variant="simple">Select type</p-message>
+          }
         </div>
       </div>
-    } @else {
-      <div class="form-row">
-        <div class="form-field form-field--full">
-          <label for="title">Title</label>
-          <input
-            class="input"
-            pInputText
-            type="text"
-            id="title"
-            name="title"
-            placeholder="e.g. Shopping"
-            [(ngModel)]="form.title"
-            (ngModelChange)="onTitleChange($event)"
-            #titleFieldRoom="ngModel"
-            required
-          />
-          <div class="form-field-error">
-            @if (titleFieldRoom.invalid && (titleFieldRoom.touched || cardForm.submitted)) {
-              <p-message severity="error" size="small" variant="simple">Title is required</p-message>
-            }
-          </div>
-        </div>
-      </div>
-    }
+    </div>
 
     <div class="form-row">
       <div class="form-field">
@@ -189,6 +169,14 @@
             >
           </ng-template>
         </p-select>
+        <label class="card-balance-checkbox">
+          <input
+            type="checkbox"
+            name="affectsCardBalance"
+            [(ngModel)]="form.affectsCardBalance"
+          />
+          <span>Deduct from card balance</span>
+        </label>
         <div class="form-field-error">
           @if (cardField.invalid && (cardField.touched || cardForm.submitted)) {
             <p-message severity="error" size="small" variant="simple">Select card</p-message>

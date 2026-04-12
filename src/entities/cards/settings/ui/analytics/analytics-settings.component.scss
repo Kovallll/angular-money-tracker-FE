@@ -1,15 +1,45 @@
+@use 'theme' as *;
+
 .container {
   padding: 0.5rem 0;
 }
 
 .section-desc {
   margin-bottom: 1rem;
-  color: var(--text-secondary, #666);
-  font-size: 0.9rem;
+  color: $gray;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  max-width: 36rem;
 }
 
 .field {
   margin-bottom: 1rem;
+
+  &:has(mat-form-field) {
+    ::ng-deep .mat-mdc-text-field-wrapper {
+      background-color: $surface-08;
+      border-radius: 10px;
+    }
+
+    ::ng-deep .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__leading,
+    ::ng-deep .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__notch,
+    ::ng-deep .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__trailing {
+      border-color: $surface-25;
+    }
+
+    ::ng-deep .mat-mdc-floating-label,
+    ::ng-deep .mdc-floating-label {
+      color: $gray !important;
+    }
+
+    ::ng-deep .mat-mdc-select-value-text {
+      color: $white;
+    }
+
+    ::ng-deep .mat-mdc-select-arrow {
+      color: $surface-75;
+    }
+  }
 }
 
 .full-width {
@@ -25,4 +55,6 @@
 
 .toggle-label {
   font-size: 0.95rem;
+  color: $surface-90;
+  font-weight: 500;
 }

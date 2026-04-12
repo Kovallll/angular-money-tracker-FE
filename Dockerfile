@@ -4,7 +4,11 @@ FROM node:22-slim AS builder
 WORKDIR /app
 
 COPY frontend/package*.json ./
-RUN yarn install
+COPY frontend/yarn.lock ./
+COPY frontend/.yarnrc.yml ./
+
+RUN corepack enable
+RUN yarn install --frozen-lockfile
 
 COPY frontend/ .
 

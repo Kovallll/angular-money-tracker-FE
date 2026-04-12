@@ -1,0 +1,61 @@
+@use 'theme' as *;
+
+:host {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+
+.row-menu-button__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  min-height: 36px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 10px;
+  background: transparent !important;
+  box-shadow: none;
+  color: rgba(255, 255, 255, 0.82);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+
+  &:hover:not(:disabled) {
+    color: $white;
+    background: transparent !important;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $accent;
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+}
+
+.row-menu-button__icon {
+  display: block;
+  flex-shrink: 0;
+}
+
+/* Вариант с лёгкой подложкой (карточки подписок и т.п.) */
+:host(.row-menu-button--subtle) .row-menu-button__btn {
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06) !important;
+
+  &:hover:not(:disabled) {
+    background: rgba($accent, 0.2) !important;
+    color: $white;
+  }
+}
