@@ -18,3 +18,14 @@
     display: inline;
   }
 }
+
+.icon-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+:host ::ng-deep .goal-category-panel .p-select-option {
+  padding-block: 10px;
+}

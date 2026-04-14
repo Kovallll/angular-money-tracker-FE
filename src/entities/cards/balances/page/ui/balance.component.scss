@@ -66,8 +66,16 @@
 
 .container .empty-state {
   grid-column: 1 / -1;
+  width: 100%;
+  max-width: none;
 }
 
 .empty-state--no-cta .empty-state__text {
   margin-bottom: 0;
+}
+
+/* In empty state, bypass card-sized grid columns. */
+.container:has(> .empty-state) {
+  display: flex;
+  justify-content: center;
 }

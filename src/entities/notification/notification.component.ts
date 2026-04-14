@@ -135,6 +135,7 @@ export class NotificationComponent implements OnInit {
         life: 4000,
       });
     } finally {
+      await this.updatePushState();
       this.loading.set(false);
     }
   }
@@ -145,8 +146,14 @@ export class NotificationComponent implements OnInit {
 
     this.loading.set(true);
     try {
-      await firstValueFrom(this.pushService.removeSubscription(uid));
-      await this.pushService.unsubscribe();
+      const unsubscribeResults = await Promise.allSettled([
+        firstValueFrom(this.pushService.removeSubscription(uid)),
+        this.pushService.unsubscribe(),
+      ]);
+      const hasFailure = unsubscribeResults.some((r) => r.status === 'rejected');
+      if (hasFailure) {
+        throw new Error('Failed to fully disable notifications');
+      }
       this.pushEnabled.set(false);
       this.messageService.add({
         key: 'toast',
@@ -165,6 +172,7 @@ export class NotificationComponent implements OnInit {
         life: 4000,
       });
     } finally {
+      await this.updatePushState();
       this.loading.set(false);
     }
   }

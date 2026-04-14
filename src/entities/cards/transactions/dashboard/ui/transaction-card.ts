@@ -7,6 +7,7 @@ import {
 } from '../../../card';
 import {
   CategoriesHttpService,
+  Tabs,
   RoutePaths,
   tabs,
   Transaction,
@@ -16,11 +17,11 @@ import { GroupRoomsHttpService } from '@/shared/services/models';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
 import { TransactionCardItemComponent } from './card-item/transaction-card-item.component';
-import { DashboardTransactionsService } from '../../services/transactions.service';
 import { ProgressSpinner } from 'primeng/progressspinner';
 import { injectQuery } from '@tanstack/angular-query-experimental';
 import { mapGroupTxToTransaction } from './group-tx-map';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
+import { AuthService } from '@/shared/services/auth/auth.service';
 
 @Component({
   selector: 'dash-transaction-card',
@@ -38,12 +39,12 @@ import { AppIconComponent } from '@/shared/components/app-icon/app-icon.componen
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardTransactionCardComponent {
-  private transactionsService = inject(DashboardTransactionsService);
   private transactionsHttpService = inject(TransactionsHttpService);
   private categoriesHttpService = inject(CategoriesHttpService);
   private groupRoomsHttp = inject(GroupRoomsHttpService);
   private currencyService = inject(CurrencyService);
   private exchangeRates = inject(ExchangeRatesService);
+  private auth = inject(AuthService);
 
   groupRoomId = input<string | undefined>(undefined);
 
@@ -61,7 +62,15 @@ export class DashboardTransactionCardComponent {
   readonly tabs = tabs;
   readonly seeAllPath = RoutePaths.TRANSACTIONS;
 
-  private readonly personalRaw = this.transactionsService.dashboardTransactions(this.tabFilter);
+  personalTxQuery = injectQuery(() => ({
+    queryKey: ['transactions', this.auth.getCurrentUserId() ?? ''],
+    queryFn: () => {
+      const userId = this.auth.getCurrentUserId();
+      if (!userId) return Promise.resolve([] as Transaction[]);
+      return this.transactionsHttpService.getTransactions(userId);
+    },
+    enabled: !this.groupRoomId()?.trim(),
+  }));
 
   groupTxQuery = injectQuery(() => {
     const rid = this.groupRoomId()?.trim() ?? '';
@@ -86,7 +95,27 @@ export class DashboardTransactionCardComponent {
     if (this.groupRoomId()?.trim()) {
       return this.groupTxQuery.isPending() || this.roomCategoriesQuery.isPending();
     }
-    return this.transactionsHttpService.isLoading();
+    return this.personalTxQuery.isPending();
+  });
+
+  private readonly personalFiltered = computed((): Transaction[] => {
+    const raw = this.personalTxQuery.data() ?? [];
+    const tab = this.tabFilter();
+    const apiType = tab === Tabs.All ? null : tab === Tabs.Expenses ? 'expense' : 'revenue';
+    const filtered = apiType == null ? raw : raw.filter((t) => t.type === apiType);
+    return [...filtered].sort((a, b) => {
+      const timeA = a.createdAt
+        ? new Date(a.createdAt).getTime()
+        : a.date
+          ? new Date(a.date).getTime()
+          : 0;
+      const timeB = b.createdAt
+        ? new Date(b.createdAt).getTime()
+        : b.date
+          ? new Date(b.date).getTime()
+          : 0;
+      return timeB - timeA;
+    });
   });
 
   private readonly groupMapped = computed((): (Transaction & { categoryIcon?: string })[] => {
@@ -105,12 +134,28 @@ export class DashboardTransactionCardComponent {
     const tab = this.tabFilter();
     const filtered =
       tab === 'All' || tab === 'Expenses' ? mapped : mapped.filter((t) => t.type === 'revenue');
-    return filtered.slice(0, 6);
+    return [...filtered]
+      .sort((a, b) => {
+        const timeA = a.createdAt
+          ? new Date(a.createdAt).getTime()
+          : a.date
+            ? new Date(a.date).getTime()
+            : 0;
+        const timeB = b.createdAt
+          ? new Date(b.createdAt).getTime()
+          : b.date
+            ? new Date(b.date).getTime()
+            : 0;
+        return timeB - timeA;
+      })
+      .slice(0, 6);
   });
 
   readonly currentItems = computed(() => {
     const primary = this.currencyService.primaryCode();
-    const list = this.groupRoomId()?.trim() ? this.groupMapped() : this.personalRaw();
+    const list = this.groupRoomId()?.trim()
+      ? this.groupMapped()
+      : this.personalFiltered().slice(0, 6);
     return list.map((t) => ({
       ...t,
       amount: this.exchangeRates.convert(t.amount, t.currencyCode ?? 'BYN', primary),

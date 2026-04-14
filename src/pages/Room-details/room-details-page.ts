@@ -28,6 +28,7 @@ import { TransactionWidgetComponent } from '@/widgets/transactionWidget/transact
 import { CategoriesCardsComponent } from '@/widgets/categoriesCards/ui/categoriesCards.component';
 import { GoalsCardsComponent } from '@/widgets/goalsCards/goalsCards.component';
 import { SubscribeTableComponent } from '@/entities/cards/subscribtions/ui/page/ui/subscribe-table.component';
+import { MessageService } from 'primeng/api';
 
 export type RoomTabId =
   | 'overview'
@@ -78,6 +79,7 @@ export class RoomDetailsPageComponent implements OnInit, OnDestroy {
   private readonly sseEvents = inject(SseEventsService);
   private readonly auth = inject(AuthService);
   private readonly queryClient = inject(QueryClient);
+  private readonly messageService = inject(MessageService);
 
   readonly routePaths = RoutePaths;
 
@@ -223,9 +225,23 @@ export class RoomDetailsPageComponent implements OnInit, OnDestroy {
       });
       this.createdInviteToken.set(invite.token);
       this.inviteDialogVisible.set(false);
+      this.messageService.add({
+        key: 'toast',
+        severity: 'success',
+        summary: 'Invite created',
+        detail: 'Token generated successfully.',
+        life: 3000,
+      });
     } catch (err) {
       console.error(err);
       this.error.set('Failed to create invite');
+      this.messageService.add({
+        key: 'toast',
+        severity: 'error',
+        summary: 'Could not create invite',
+        detail: 'Please try again.',
+        life: 5000,
+      });
     } finally {
       this.isCreatingInvite.set(false);
     }
@@ -238,9 +254,23 @@ export class RoomDetailsPageComponent implements OnInit, OnDestroy {
     try {
       await this.groupRoomsHttp.updateMemberRole(roomId, userId, role);
       await this.loadRoom();
+      this.messageService.add({
+        key: 'toast',
+        severity: 'success',
+        summary: 'Role updated',
+        detail: role === 'admin' ? 'Member promoted to admin.' : 'Admin changed to member.',
+        life: 3000,
+      });
     } catch (err) {
       console.error(err);
       this.error.set('Failed to update role');
+      this.messageService.add({
+        key: 'toast',
+        severity: 'error',
+        summary: 'Could not update role',
+        detail: 'Please try again.',
+        life: 5000,
+      });
     }
   }
 
@@ -251,9 +281,23 @@ export class RoomDetailsPageComponent implements OnInit, OnDestroy {
     try {
       await this.groupRoomsHttp.removeMember(roomId, userId);
       await this.loadRoom();
+      this.messageService.add({
+        key: 'toast',
+        severity: 'success',
+        summary: 'Member removed',
+        detail: 'The user has been removed from this room.',
+        life: 3000,
+      });
     } catch (err) {
       console.error(err);
       this.error.set('Failed to remove member');
+      this.messageService.add({
+        key: 'toast',
+        severity: 'error',
+        summary: 'Could not remove member',
+        detail: 'Please try again.',
+        life: 5000,
+      });
     }
   }
 }

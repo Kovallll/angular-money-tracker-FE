@@ -33,23 +33,41 @@
   >
     <form #f="ngForm" (ngSubmit)="onSubmit(f)" class="app-modal-form">
       <div class="form-fields">
-        <div class="field form-field--full">
-          <label for="title">Title&#42;</label>
-          <input
-            id="title"
-            pInputText
-            type="text"
-            [(ngModel)]="newGoal.title"
-            name="title"
-            #titleRef="ngModel"
-            required
-            maxlength="255"
-            placeholder="Enter goal title"
-          />
-          <div class="error-slot">
-            @if (titleRef.invalid && (titleRef.touched || f.submitted)) {
-              <small class="error">Title is required.</small>
-            }
+        <div class="form-row">
+          <div class="field">
+            <label for="title">Title&#42;</label>
+            <input
+              id="title"
+              pInputText
+              type="text"
+              [(ngModel)]="newGoal.title"
+              name="title"
+              #titleRef="ngModel"
+              required
+              maxlength="255"
+              placeholder="Enter goal title"
+            />
+            <div class="error-slot">
+              @if (titleRef.invalid && (titleRef.touched || f.submitted)) {
+                <small class="error">Title is required.</small>
+              }
+            </div>
+          </div>
+
+          <div class="field">
+            <app-price-currency-field
+              label="Goal Budget"
+              amountName="goalBudget"
+              [(amount)]="goalBudget"
+              [(currencyCode)]="currencyCode"
+              [showCurrency]="true"
+              [required]="true"
+            />
+            <div class="error-slot">
+              @if (f.submitted && +(newGoal.goalBudget ?? 0) <= 0) {
+                <small class="error">Must be &gt; 0.</small>
+              }
+            </div>
           </div>
         </div>
 
@@ -78,40 +96,33 @@
           </div>
 
           <div class="field">
-            <app-price-currency-field
-              label="Goal Budget"
-              amountName="goalBudget"
-              [(amount)]="goalBudget"
-              [showCurrency]="false"
-              [required]="true"
-            />
+            <label for="categoryId">Category&#42;</label>
+            <p-select
+              inputId="categoryId"
+              name="categoryId"
+              [options]="categories.data() ?? []"
+              optionLabel="title"
+              optionValue="id"
+              [(ngModel)]="newGoal.categoryId"
+              placeholder="Select category"
+              appendTo="body"
+              panelStyleClass="goal-category-panel"
+              #categoryRef="ngModel"
+              required
+            >
+              <ng-template let-item pTemplate="item">
+                <div class="icon-row">
+                  <app-icon [icon]="item.icon" />
+                  <span>{{ item.title }}</span>
+                </div>
+              </ng-template>
+            </p-select>
             <div class="error-slot">
-              @if (f.submitted && +(newGoal.goalBudget ?? 0) <= 0) {
-                <small class="error">Must be &gt; 0.</small>
+              @if (categoryRef.invalid && (categoryRef.touched || f.submitted)) {
+                <small class="error">Category is required.</small>
               }
             </div>
           </div>
-        </div>
-
-        <div class="field form-field--full">
-          <label for="categoryId">Category</label>
-          <p-select
-            inputId="categoryId"
-            name="categoryId"
-            [options]="categories.data() ?? []"
-            optionLabel="title"
-            optionValue="id"
-            [(ngModel)]="newGoal.categoryId"
-            placeholder="Select category"
-            appendTo="body"
-          >
-            <ng-template let-item pTemplate="item">
-              <div class="icon-row">
-                <app-icon [icon]="item.icon" />
-                <span>{{ item.title }}</span>
-              </div>
-            </ng-template>
-          </p-select>
         </div>
 
         <div class="form-row">

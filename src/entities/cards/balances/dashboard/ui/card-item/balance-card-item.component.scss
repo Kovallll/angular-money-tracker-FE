@@ -1,53 +1,128 @@
 @use 'theme' as *;
 
 :host {
+  display: block;
   width: 100%;
 }
 
-.card {
+.mini-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  min-height: 112px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background:
+    radial-gradient(120% 90% at 100% 0%, rgba(#6cb6ff, 0.16) 0%, transparent 55%),
+    linear-gradient(165deg, rgba(#0f2f66, 0.98) 0%, rgba(#123f86, 0.94) 52%, rgba(#0d2f63, 0.98) 100%);
+  border: 1px solid rgba(#8cc7ff, 0.2);
+  box-shadow:
+    0 12px 28px rgba(6, 18, 42, 0.35),
+    inset 0 1px 0 rgba(#b9dcff, 0.14);
+  box-sizing: border-box;
+}
+
+.mini-card__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: $balance-card-color;
-  border-radius: 12px;
-  padding: 16px 14px;
-  height: 120px;
+  gap: 10px;
 }
 
-.left-side {
+.mini-card__title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: $white;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mini-card__badge {
+  flex-shrink: 0;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba($white, 0.95);
+  background: rgba(#6cb6ff, 0.2);
+  border: 1px solid rgba(#8cc7ff, 0.45);
+}
+
+.mini-card__meta {
   display: flex;
-  flex-direction: column;
+  align-items: center;
   justify-content: space-between;
-  gap: 20px;
+  gap: 10px;
 }
 
-.right-side {
+.mini-card__number {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.8px;
+  color: rgba($white, 0.9);
+}
+
+.mini-card__brand {
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 4px;
+  align-items: center;
+  justify-content: center;
+  min-width: 42px;
+  min-height: 28px;
+  border-radius: 10px;
+  background: rgba(#0a2450, 0.45);
+  border: 1px solid rgba(#9fd1ff, 0.2);
 
   .card-logo {
     flex-shrink: 0;
   }
 
   img.card-logo {
-    max-width: 48px;
-    max-height: 32px;
+    max-width: 36px;
+    max-height: 20px;
     width: auto;
     height: auto;
     object-fit: contain;
   }
 
   .card-logo--visa {
-    width: 20px;
-    height: 20px;
-    transform: scale(5);
-    color: #1a1f71;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 12px;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 0.4px;
+    line-height: 1;
+    font-family: Arial Black, Arial, sans-serif;
+    color: $white;
   }
+}
 
-  .secondary {
-    font-size: 13px;
-    opacity: 0.8;
-  }
+.mini-card__balance {
+  margin-top: auto;
+}
+
+.mini-card__amount {
+  margin: 0;
+  text-align: right;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.15;
+  color: $white;
+  font-variant-numeric: tabular-nums;
+}
+
+.mini-card__secondary {
+  margin: 2px 0 0 0;
+  text-align: right;
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(#c7e3ff, 0.82);
+  font-variant-numeric: tabular-nums;
 }

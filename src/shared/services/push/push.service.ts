@@ -46,8 +46,7 @@ export class PushService {
   // Создание новой подписки
   async createSubscription(): Promise<PushSubscription | null> {
     if (!this.swPush.isEnabled) {
-      console.log('🔕 Push не поддерживается браузером');
-      return null;
+      throw new Error('Push notifications are not supported in this browser');
     }
 
     // Загружаем ключ если нет
@@ -59,10 +58,20 @@ export class PushService {
       throw new Error('VAPID ключ не загружен');
     }
 
+    // Если подписка уже есть в браузере — переиспользуем ее.
+    const existingSubscription = await this.getCurrentSubscription();
+    if (existingSubscription) {
+      return existingSubscription;
+    }
+
     // Запрашиваем разрешение
     const permission = await Notification.requestPermission();
     if (permission !== 'granted') {
-      console.log('❌ Пользователь отказал в разрешении');
+      if (permission === 'denied') {
+        throw new Error(
+          'Browser notifications are blocked for this site. Allow them in site settings and try again.',
+        );
+      }
       return null;
     }
 
@@ -72,9 +81,12 @@ export class PushService {
       });
 
       return subscription;
-    } catch (err) {
+    } catch (err: unknown) {
       console.error('Ошибка создания подписки:', err);
-      return null;
+      if (err instanceof Error && err.message) {
+        throw new Error(`Failed to create push subscription: ${err.message}`);
+      }
+      throw new Error('Failed to create push subscription');
     }
   }
 

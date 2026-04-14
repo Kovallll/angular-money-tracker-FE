@@ -1,28 +1,16 @@
-<div class="card">
-  <div class="left-side">
-    <p>{{ card().cardName }}{{ card().isPrimary ? ' · Default' : '' }}</p>
-    <p>{{ card().cardNumber }}</p>
+<article class="mini-card">
+  <div class="mini-card__header">
+    <p class="mini-card__title">{{ card().cardName }}</p>
+    @if (card().isPrimary) {
+      <span class="mini-card__badge">Default</span>
+    }
   </div>
-  <div class="right-side">
+
+  <div class="mini-card__meta">
+    <p class="mini-card__number">{{ card().cardNumber }}</p>
+    <div class="mini-card__brand">
     @if (card().cardName === 'Visa') {
-      <svg
-        class="card-logo card-logo--visa"
-        viewBox="0 0 60 20"
-        xmlns="http://www.w3.org/2000/svg"
-        aria-label="Visa"
-        role="img"
-      >
-        <text
-          x="0"
-          y="15"
-          font-family="Arial Black, Arial, sans-serif"
-          font-size="14"
-          font-weight="900"
-          fill="currentColor"
-        >
-          VISA
-        </text>
-      </svg>
+      <span class="card-logo card-logo--visa" aria-label="Visa" role="img">VISA</span>
     } @else {
       <img
         [src]="'mastercard-logo.png' | assetPath"
@@ -31,7 +19,13 @@
         class="card-logo"
       />
     }
-    <p>{{ balancePrimary() | appCurrency: currencyService.primaryCode() }}</p>
-    <p class="secondary">{{ balanceSecondary() | appCurrency: currencyService.secondaryCode() }}</p>
+    </div>
   </div>
-</div>
+
+  <div class="mini-card__balance">
+    <p class="mini-card__amount">{{ balancePrimary() | appCurrency: currencyService.primaryCode() }}</p>
+    <p class="mini-card__secondary">
+      {{ balanceSecondary() | appCurrency: currencyService.secondaryCode() }}
+    </p>
+  </div>
+</article>

@@ -168,6 +168,13 @@ export class RoomsPageComponent implements OnInit, OnDestroy {
       });
       this.closeEditRoomDialog();
       await this.loadRooms();
+      this.messageService.add({
+        key: 'toast',
+        severity: 'success',
+        summary: 'Room updated',
+        detail: 'Changes saved successfully.',
+        life: 3000,
+      });
     } catch (err) {
       console.error(err);
       this.messageService.add({
@@ -202,6 +209,13 @@ export class RoomsPageComponent implements OnInit, OnDestroy {
     try {
       await this.groupRoomsHttp.deleteRoom(roomId);
       await this.loadRooms();
+      this.messageService.add({
+        key: 'toast',
+        severity: 'success',
+        summary: 'Room deleted',
+        detail: 'The room was removed successfully.',
+        life: 3000,
+      });
       if (this.router.url.includes(roomId)) {
         await this.router.navigate(['/', RoutePaths.ROOMS]);
       }
@@ -260,6 +274,13 @@ export class RoomsPageComponent implements OnInit, OnDestroy {
       });
       this.closeCreateRoomDialog();
       await this.loadRooms();
+      this.messageService.add({
+        key: 'toast',
+        severity: 'success',
+        summary: 'Room created',
+        detail: `Room "${created.name}" is ready.`,
+        life: 3000,
+      });
       await this.router.navigate(['/', RoutePaths.ROOM_DETAILS, created.id], {
         queryParams: { tab: 'overview' },
         replaceUrl: false,
@@ -267,6 +288,13 @@ export class RoomsPageComponent implements OnInit, OnDestroy {
     } catch (err) {
       console.error(err);
       this.error.set('Failed to create room');
+      this.messageService.add({
+        key: 'toast',
+        severity: 'error',
+        summary: 'Could not create room',
+        detail: 'Check your connection and try again.',
+        life: 5000,
+      });
     } finally {
       this.isSubmitting.set(false);
     }
@@ -281,9 +309,23 @@ export class RoomsPageComponent implements OnInit, OnDestroy {
       await this.groupRoomsHttp.acceptInvite(token);
       this.closeInviteDialog();
       await this.loadRooms();
+      this.messageService.add({
+        key: 'toast',
+        severity: 'success',
+        summary: 'Invite accepted',
+        detail: 'You have joined the room.',
+        life: 3000,
+      });
     } catch (err) {
       console.error(err);
       this.error.set('Failed to accept invite');
+      this.messageService.add({
+        key: 'toast',
+        severity: 'error',
+        summary: 'Could not accept invite',
+        detail: 'Token may be invalid or expired.',
+        life: 5000,
+      });
     } finally {
       this.isSubmitting.set(false);
     }
@@ -297,9 +339,23 @@ export class RoomsPageComponent implements OnInit, OnDestroy {
     try {
       await this.groupRoomsHttp.rejectInvite(token);
       this.closeInviteDialog();
+      this.messageService.add({
+        key: 'toast',
+        severity: 'success',
+        summary: 'Invite rejected',
+        detail: 'The invite has been declined.',
+        life: 3000,
+      });
     } catch (err) {
       console.error(err);
       this.error.set('Failed to reject invite');
+      this.messageService.add({
+        key: 'toast',
+        severity: 'error',
+        summary: 'Could not reject invite',
+        detail: 'Please try again.',
+        life: 5000,
+      });
     } finally {
       this.isSubmitting.set(false);
     }
