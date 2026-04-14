@@ -105,22 +105,35 @@ export class NotificationComponent implements OnInit {
         await firstValueFrom(this.pushService.saveSubscription(uid, subscription));
         this.pushEnabled.set(true);
         this.messageService.add({
+          key: 'toast',
           severity: 'success',
-          summary: 'Done',
-          detail: 'Notifications enabled',
-          life: 2000,
+          summary: 'Уведомления включены',
+          detail: 'Теперь вы будете получать push-уведомления.',
+          life: 3000,
         });
       } else {
+        const permission = Notification.permission;
+        const detail =
+          permission === 'denied'
+            ? 'Браузер заблокировал уведомления для сайта. Разрешите Notifications в настройках сайта (иконка у адресной строки), затем попробуйте снова.'
+            : 'Не удалось включить уведомления. Проверьте разрешение браузера и попробуйте ещё раз.';
         this.messageService.add({
+          key: 'toast',
           severity: 'warn',
-          summary: 'Failed',
-          detail: 'Check browser permissions',
-          life: 4000,
+          summary: 'Уведомления не включены',
+          detail,
+          life: 7000,
         });
       }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Error enabling notifications';
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: msg, life: 4000 });
+      this.messageService.add({
+        key: 'toast',
+        severity: 'error',
+        summary: 'Ошибка',
+        detail: msg,
+        life: 4000,
+      });
     } finally {
       this.loading.set(false);
     }
@@ -136,14 +149,21 @@ export class NotificationComponent implements OnInit {
       await this.pushService.unsubscribe();
       this.pushEnabled.set(false);
       this.messageService.add({
+        key: 'toast',
         severity: 'success',
-        summary: 'Done',
-        detail: 'Notifications disabled',
-        life: 2000,
+        summary: 'Уведомления выключены',
+        detail: 'Push-уведомления отключены для этого устройства.',
+        life: 3000,
       });
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Error disabling notifications';
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: msg, life: 4000 });
+      this.messageService.add({
+        key: 'toast',
+        severity: 'error',
+        summary: 'Ошибка',
+        detail: msg,
+        life: 4000,
+      });
     } finally {
       this.loading.set(false);
     }
