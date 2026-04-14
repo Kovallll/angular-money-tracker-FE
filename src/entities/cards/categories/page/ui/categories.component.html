@@ -13,7 +13,21 @@
         <app-icon [icon]="category().icon" [sizePx]="20" />
       </div>
       <div class="card__meta">
-        <h3 class="card__title">{{ category().title }}</h3>
+        <h3
+          #titleEl
+          class="card__title"
+          [matTooltip]="category().title"
+          [matTooltipDisabled]="!isTitleOverflowing()"
+          matTooltipShowDelay="200"
+          matTooltipPosition="above"
+          matTooltipClass="transaction-description-tooltip"
+          matTooltipTouchGestures="auto"
+          (mouseenter)="checkTitleOverflow(titleEl)"
+          (focus)="checkTitleOverflow(titleEl)"
+          (touchstart)="checkTitleOverflow(titleEl)"
+        >
+          {{ category().title }}
+        </h3>
         <div class="card__meta-row">
           <span class="card__amount">{{ displayTotalExpenses() | appCurrency }}</span>
           @if (transactionCount() > 0) {

@@ -4,39 +4,51 @@
   [showCancel]="true"
   [showSave]="true"
   saveLabel="Apply"
+  [saveDisabled]="!sorter().field"
   (closeRequest)="closeModal()"
   (cancelRequest)="closeModal()"
   (saveRequest)="applySorter()"
 >
-  <div class="content">
-    <div class="selectors">
+  <div class="sorter-modal">
+    <p class="sorter-modal__intro">Choose a field and direction to order the list.</p>
+
+    <div class="sorter-modal__section">
+      <label class="sorter-modal__label">Field</label>
       <select-component
         [options]="data.categoryOptions()"
         [value]="sorter().field"
         (valueChange)="onCategoryChange($event)"
       />
-      <div class="sort-buttons">
+    </div>
+
+    <div class="sorter-modal__section">
+      <label class="sorter-modal__label">Direction</label>
+      <div class="sorter-modal__direction" role="group" aria-label="Sort direction">
         <button
-          mat-button
-          class="sort-button"
-          [class.active]="isAscending()"
+          type="button"
+          class="sorter-modal__direction-btn"
+          [class.sorter-modal__direction-btn--active]="isAscending()"
           (click)="onChangeOrder(true)"
         >
-          <app-icon material="keyboard_arrow_down" [sizePx]="20" />
+          <app-icon material="north" [sizePx]="18" />
+          Ascending
         </button>
         <button
-          mat-button
-          class="sort-button"
-          [class.active]="!isAscending()"
+          type="button"
+          class="sorter-modal__direction-btn"
+          [class.sorter-modal__direction-btn--active]="!isAscending()"
           (click)="onChangeOrder(false)"
         >
-          <app-icon material="keyboard_arrow_up" [sizePx]="20" />
+          <app-icon material="south" [sizePx]="18" />
+          Descending
         </button>
       </div>
     </div>
-    <div class="bottom-block">
-      <button mat-button class="clear-sorters" (click)="clearSorter()">
-        <app-icon material="close" [sizePx]="20" />Clear Sorters
+
+    <div class="sorter-modal__toolbar">
+      <button type="button" class="sorter-modal__clear-btn" (click)="clearSorter()">
+        <app-icon material="clear_all" [sizePx]="18" />
+        Clear sorting
       </button>
     </div>
   </div>

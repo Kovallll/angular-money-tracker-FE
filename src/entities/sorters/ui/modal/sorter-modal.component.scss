@@ -1,54 +1,124 @@
 @use 'theme' as *;
+@use 'shared/styles/breakpoints' as bp;
 
-:host ::ng-deep .app-modal-shell__content {
-  .content {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    align-items: end;
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.sorter-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+  min-width: 0;
+  padding: 0 8px 4px;
+  box-sizing: border-box;
+
+  @include bp.tablet-and-up {
+    padding: 0 12px 8px;
+  }
+}
+
+.sorter-modal__intro {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: rgba($gray, 0.95);
+}
+
+.sorter-modal__section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.sorter-modal__label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: $surface-85;
+}
+
+.sorter-modal__direction {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.sorter-modal__direction-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  width: 100%;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: 1px solid rgba($white, 0.2);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba($white, 0.88);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    color 0.15s ease;
+
+  &:hover {
+    border-color: rgba($accent, 0.5);
+    background: rgba($accent, 0.12);
   }
 
-  .selectors {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  &:focus-visible {
+    outline: 2px solid $accent;
+    outline-offset: 2px;
   }
+}
 
-  .sort-buttons {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
+.sorter-modal__direction-btn--active {
+  border-color: rgba($accent, 0.55);
+  background: rgba($accent, 0.2);
+  color: $white;
+}
 
-  .clear-sorters {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    color: $accent;
-    cursor: pointer;
-    background: transparent;
-    border: 1px solid $accent;
-    padding: 4px 12px;
-    border-radius: 16px;
-    font-size: 16px;
-  }
+.sorter-modal__toolbar {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
 
-  .sort-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    border: 1px solid $accent;
-    color: $accent;
-    height: 32px;
-    width: 32px;
-    border-radius: 50%;
-    cursor: pointer;
-  }
+.sorter-modal__clear-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: 1px solid rgba($accent, 0.55);
+  background: rgba($accent, 0.08);
+  color: $accent;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
 
-  .active {
+  &:hover {
+    background: rgba($accent, 0.15);
+    border-color: rgba($accent, 0.75);
     color: $white;
-    background: $accent;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $accent;
+    outline-offset: 2px;
   }
 }

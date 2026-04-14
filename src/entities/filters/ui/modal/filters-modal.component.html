@@ -8,38 +8,61 @@
   (cancelRequest)="closeModal()"
   (saveRequest)="applyChanges()"
 >
-  <div class="modal-content">
-    @for (filter of filters(); track filter.id) {
-      <div class="selectors">
-        <button mat-icon-button class="remove-filter" (click)="removeFilter(filter.id)">
-          <app-icon material="close" [sizePx]="20" />
-        </button>
-        <div class="content">
-          <p class="text">Category</p>
-          <select-component
-            [options]="data.categoryOptions()"
-            [value]="filter.category"
-            (valueChange)="onCategoryChange($event, filter.id)"
-          />
-        </div>
-        <div class="content">
-          <p class="text">Value</p>
-          <select-component
-            [options]="filter.valueOptions"
-            [value]="filter.value"
-            (valueChange)="onValueChange($event, filter.id)"
-            [disabled]="!filter.category"
-          />
-        </div>
-      </div>
-    }
-    <div class="bottom-buttons">
-      <button mat-button class="bottom-filter" (click)="addFilter()">
-        <app-icon material="add" [sizePx]="20" />Add Filter
-      </button>
-      <button mat-button class="bottom-filter" (click)="clearFilters()">
-        <app-icon material="close" [sizePx]="20" />Clear Filters
-      </button>
+  <div class="filters-modal">
+    <p class="filters-modal__intro">
+      Add rules to narrow the list. All rules apply together (AND).
+    </p>
+
+    <ul class="filters-modal__list" role="list">
+      @for (filter of filters(); track filter.id; let i = $index) {
+        <li class="filters-modal__row" role="listitem">
+          <div class="filters-modal__row-top">
+            <span class="filters-modal__row-badge" aria-hidden="true">{{ i + 1 }}</span>
+            <span class="filters-modal__row-title">Filter rule</span>
+            <button
+              type="button"
+              class="filters-modal__remove"
+              (click)="removeFilter(i)"
+              [attr.aria-label]="'Remove filter ' + (i + 1)"
+            >
+              <app-icon material="close" [sizePx]="18" />
+            </button>
+          </div>
+
+          <div class="filters-modal__fields">
+            <div class="filters-modal__field">
+              <label class="filters-modal__label" [attr.for]="'filter-cat-' + i">Category</label>
+              <select-component
+                [attr.id]="'filter-cat-' + i"
+                [options]="data.categoryOptions()"
+                [value]="filter.category"
+                (valueChange)="onCategoryChange($event, i)"
+              />
+            </div>
+            <div class="filters-modal__field">
+              <label class="filters-modal__label" [attr.for]="'filter-val-' + i">Value</label>
+              <select-component
+                [attr.id]="'filter-val-' + i"
+                [options]="filter.valueOptions"
+                [value]="filter.value"
+                (valueChange)="onValueChange($event, i)"
+                [disabled]="!filter.category"
+              />
+            </div>
+          </div>
+        </li>
+      }
+    </ul>
+
+    <div class="filters-modal__toolbar" role="group" aria-label="Filter actions">
+      <app-button appearance="outline" size="sm" type="button" (buttonClick)="addFilter()">
+        <app-icon material="add" [sizePx]="18" />
+        Add filter
+      </app-button>
+      <app-button appearance="ghost" size="sm" type="button" (buttonClick)="clearFilters()">
+        <app-icon material="clear_all" [sizePx]="18" />
+        Clear all
+      </app-button>
     </div>
   </div>
 </app-modal-shell>

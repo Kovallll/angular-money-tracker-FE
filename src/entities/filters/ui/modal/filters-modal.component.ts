@@ -1,4 +1,5 @@
 import { AppModalShellComponent } from '@/shared/components/app-modal-shell/app-modal-shell.component';
+import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
 import { SelectComponent } from '@/entities/select/ui/select.component';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -11,7 +12,7 @@ import { AppIconComponent } from '@/shared/components/app-icon/app-icon.componen
   selector: 'filters-modal',
   templateUrl: './filters-modal.component.html',
   styleUrls: ['./filters-modal.component.scss'],
-  imports: [SelectComponent, AppModalShellComponent, AppIconComponent],
+  imports: [SelectComponent, AppModalShellComponent, AppIconComponent, AppButtonComponent],
   standalone: true,
 })
 export class FiltersModalComponent implements OnInit {

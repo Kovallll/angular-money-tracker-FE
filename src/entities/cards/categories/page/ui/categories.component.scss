@@ -10,6 +10,7 @@
 }
 
 .card {
+  position: relative;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -43,6 +44,7 @@
 }
 
 .card__header {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -53,14 +55,23 @@
 
 .card__header-aside {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  flex-direction: column;
   align-items: flex-start;
   justify-content: flex-end;
-  gap: 8px;
+  gap: 0;
   flex-shrink: 0;
   margin-left: auto;
-  /* кнопка «⋯» последняя в ряду — визуально ближе к краю карточки */
-  padding-right: 4px;
+  width: auto;
+  padding-right: 22px;
+}
+
+.card__header-aside context-menu-component {
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  z-index: 2;
+  margin: 0;
 }
 
 .card__main {
@@ -330,3 +341,4 @@
   background: rgba(255, 255, 255, 0.08);
   flex-shrink: 0;
 }
+

@@ -1,9 +1,6 @@
 @use 'theme' as *;
 @use 'shared/styles/breakpoints' as bp;
 
-/* Совпадает с $bp-dashboard-wide (1550px): уже или равно — только столбик, шире — сетка/ряд */
-$analytics-multi-col-min: bp.$bp-dashboard-wide + 1px;
-
 .analytics {
   width: 100%;
   min-width: 0;
@@ -49,36 +46,7 @@ $analytics-multi-col-min: bp.$bp-dashboard-wide + 1px;
   }
 }
 
-/*
- * Комната (есть Paid by member): только при ширине > 1550px — 2×2;
- * при 1550px и уже — столбик (без узких колонок).
- */
-.analytics:has(.analytics__member-share) {
-  @media (min-width: $analytics-multi-col-min) {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: 24px;
-    row-gap: 24px;
-    align-items: stretch;
-
-    .analytics__title,
-    .analytics__desc {
-      grid-column: 1 / -1;
-    }
-
-    .analytics__desc {
-      margin-bottom: 0;
-    }
-
-    .analytics__member-share {
-      margin-bottom: 0;
-    }
-
-    .analytics__charts {
-      display: contents;
-    }
-  }
-}
+/* Keep room analytics in a stable single-column flow across breakpoints. */
 
 .analytics__charts {
   display: flex;
@@ -89,13 +57,6 @@ $analytics-multi-col-min: bp.$bp-dashboard-wide + 1px;
 
   @include bp.tablet-and-up {
     gap: 24px;
-  }
-
-  /* Три графика в ряд только если > 1550px (иначе при 1440–1550 получались слишком узкие колонки) */
-  @include bp.desktop {
-    @media (min-width: $analytics-multi-col-min) {
-      flex-direction: row;
-    }
   }
 
   &--row {

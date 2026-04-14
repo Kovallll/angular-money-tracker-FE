@@ -1,4 +1,4 @@
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, ElementRef, computed, inject, input, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppCurrencyPipe } from '@/shared/pipes/app-currency.pipe';
 import { ChartConfiguration } from 'chart.js';
@@ -19,12 +19,13 @@ import { QueryClient } from '@tanstack/angular-query-experimental';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'category-card',
   templateUrl: './categories.component.html',
   styleUrls: ['./categories.component.scss'],
-  imports: [AppCurrencyPipe, BaseChartDirective, ContextMenuComponent, AppIconComponent],
+  imports: [AppCurrencyPipe, BaseChartDirective, ContextMenuComponent, AppIconComponent, MatTooltipModule],
   providers: [DialogService],
   standalone: true,
 })
@@ -45,6 +46,7 @@ export class CategoryCardComponent {
   /** В комнате категории фиксированы (Goals / Subscriptions) — без контекстного меню. */
   groupRoomContext = input(false);
   ref: DynamicDialogRef | undefined | null;
+  readonly isTitleOverflowing = signal(false);
 
   compareDelta = computed(() => this.categoriesHttpService.getChartDeltaCompare(this.chart()));
 
@@ -96,6 +98,12 @@ export class CategoryCardComponent {
     return this.exchangeRates.convert(cat.totalRevenues ?? 0, 'BYN', primary);
   });
   constructor(public dialogService: DialogService) {}
+
+  checkTitleOverflow(el: ElementRef<HTMLElement> | HTMLElement) {
+    const node = el instanceof ElementRef ? el.nativeElement : el;
+    this.isTitleOverflowing.set(node.scrollWidth > node.clientWidth + 1);
+  }
+
   readonly options: ChartConfiguration['options'] = {
     responsive: true,
     maintainAspectRatio: false,
