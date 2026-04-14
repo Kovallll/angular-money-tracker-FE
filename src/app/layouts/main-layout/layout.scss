@@ -4,16 +4,30 @@
 .main-container {
   display: flex;
   flex-wrap: wrap;
-  height: 100%;
+  align-items: stretch;
+  min-height: 100%;
+  min-height: 100vh;
   width: 100%;
+  box-sizing: border-box;
   padding-bottom: env(safe-area-inset-bottom, 0);
+
+  @include bp.sidebar-visible {
+    padding: 12px;
+    gap: 12px;
+  }
 }
 
 .sidebar-wrap {
   display: flex;
   width: 280px;
+  flex-shrink: 0;
   height: auto;
-  box-shadow: inset -1px 0 0 $tertiary;
+  align-self: stretch;
+  min-height: 0;
+
+  @include bp.sidebar-visible {
+    box-shadow: none;
+  }
 }
 
 .content {
@@ -24,6 +38,16 @@
   overflow-y: visible;
   display: flex;
   flex-direction: column;
+  isolation: isolate;
+  align-self: stretch;
+  min-height: 0;
+
+  app-header {
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
 }
 
 .router {
@@ -51,6 +75,12 @@
 
 /* < 1200px: сайдбар скрыт, нижние табы видны */
 @include bp.sidebar-to-tabs {
+  .main-container {
+    padding: 0;
+    gap: 0;
+    min-height: 100%;
+  }
+
   .sidebar-wrap {
     display: none;
   }

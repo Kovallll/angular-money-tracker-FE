@@ -6,10 +6,11 @@ import { User } from '@/shared';
 import { UserService } from '@/shared/services/user/user.service';
 import { environment } from '@/environments/environment';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
+import { LogoutButtonComponent } from '@/entities/logout-button/logout-button';
 
 @Component({
   selector: 'account',
-  imports: [MatButtonModule, RouterModule, AppIconComponent],
+  imports: [MatButtonModule, RouterModule, AppIconComponent, LogoutButtonComponent],
   templateUrl: './account.html',
   styleUrls: ['./account.scss'],
 })

@@ -39,6 +39,8 @@ export class SseEventsService implements OnDestroy {
     this.source.addEventListener('member_joined', handleEvent as EventListener);
     this.source.addEventListener('member_removed', handleEvent as EventListener);
     this.source.addEventListener('member_role_changed', handleEvent as EventListener);
+    this.source.addEventListener('room_updated', handleEvent as EventListener);
+    this.source.addEventListener('room_deleted', handleEvent as EventListener);
     this.source.addEventListener('group_transaction_created', handleEvent as EventListener);
     this.source.addEventListener('group_transaction_updated', handleEvent as EventListener);
     this.source.addEventListener('group_transaction_deleted', handleEvent as EventListener);

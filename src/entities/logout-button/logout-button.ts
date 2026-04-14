@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '@/shared/services/auth/auth.service';
@@ -11,8 +11,14 @@ import { AppIconComponent } from '@/shared/components/app-icon/app-icon.componen
   imports: [AppButtonComponent, RouterModule, AppIconComponent],
   templateUrl: './logout-button.html',
   styleUrls: ['./logout-button.scss'],
+  host: {
+    '[class.logout-icon-only]': 'iconOnly()',
+  },
 })
 export class LogoutButtonComponent {
+  /** Только иконка (например, в сайдбаре в строке профиля). */
+  iconOnly = input(false);
+
   private router = inject(Router);
   private authService = inject(AuthService);
   private confirmationService = inject(ConfirmationService);

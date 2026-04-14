@@ -110,7 +110,12 @@ export class RoomDetailsPageComponent implements OnInit, OnDestroy {
     effect(() => {
       const event = this.sseEvents.lastGroupEvent();
       const rid = this.roomId();
-      if (!event || event.roomId !== rid || !rid) return;
+      if (!event || !rid) return;
+      if (event.type === 'room_deleted' && event.roomId === rid) {
+        void this.router.navigate(['/', RoutePaths.ROOMS]);
+        return;
+      }
+      if (event.roomId !== rid) return;
       void this.loadRoom();
       void this.queryClient.invalidateQueries({
         predicate: (q) => {

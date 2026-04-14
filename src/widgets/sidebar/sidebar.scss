@@ -1,43 +1,65 @@
 @use 'theme' as *;
 @use '@angular/material' as mat;
+@use 'shared/styles/breakpoints' as bp;
 
 :host {
   display: flex;
   height: auto;
-  box-shadow: inset -1px 0 0 $tertiary;
+  min-height: 0;
+  flex: 1;
 }
 
 .sidebar {
   display: flex;
   flex-direction: column;
   width: 280px;
+  min-height: 0;
   height: 100vh;
-  background: $primary;
-  box-shadow: inset -1px 0 0 $tertiary;
+  background: linear-gradient(165deg, rgba($white, 0.04) 0%, transparent 45%), $primary;
+  border: 1px solid $surface-08;
+  box-shadow:
+    inset 0 1px 0 $surface-06,
+    0 8px 32px -8px rgba(0, 0, 0, 0.45);
+
+  @include bp.sidebar-visible {
+    height: 100%;
+    border-radius: 18px;
+    overflow: hidden;
+  }
 }
 
 .content {
   height: 100%;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   width: 100%;
 }
 
 .sidebar-content {
-  padding: 24px 24px 0;
+  padding: 12px 10px 0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 100%;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+
+  @include bp.desktop-and-up {
+    padding: 14px 12px 0;
+  }
 }
 
 .logo-wrapper {
-  border-bottom: 1px solid $tertiary;
-  min-height: 80px;
-  padding: 20px 24px;
+  height: 90px;
+  min-height: 90px;
+  padding: 0 20px;
   width: 100%;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
+  border-bottom: 1px solid $surface-08;
+  box-shadow: inset 0 1px 0 $surface-10;
 }
 
 .footer {
@@ -49,10 +71,11 @@
 
 .account {
   margin-top: auto;
-  border-top: 1px solid $tertiary;
+  padding: 12px 10px 16px;
   width: 100%;
-}
+  border-top: 1px solid $surface-08;
 
-.account-logout {
-  padding: 16px 24px 24px;
+  @include bp.desktop-and-up {
+    padding: 14px 12px 18px;
+  }
 }

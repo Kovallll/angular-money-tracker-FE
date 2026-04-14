@@ -285,6 +285,20 @@ auth-layout {
   overflow-x: hidden;
 }
 
+/* Export report: ширина задаётся из компонента под кнопку; список не раздувает панель */
+.p-tieredmenu.export-report-menu {
+  box-sizing: border-box;
+
+  .p-tieredmenu-root-list {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .p-tieredmenu-item-link {
+    justify-content: flex-start;
+  }
+}
+
 /* Export report dropdown — не вылазит за экран на мобилке */
 @media (max-width: 779px) {
   .p-tieredmenu.export-report-menu.p-tieredmenu-overlay {

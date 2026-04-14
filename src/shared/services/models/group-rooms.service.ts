@@ -18,6 +18,12 @@ type CreateRoomPayload = {
   avatar?: string;
 };
 
+type UpdateRoomPayload = {
+  name?: string;
+  description?: string;
+  avatar?: string;
+};
+
 type CreateInvitePayload = {
   expiresInHours?: number;
 };
@@ -52,6 +58,25 @@ export class GroupRoomsHttpService {
 
   createRoom(payload: CreateRoomPayload) {
     return lastValueFrom(this.http.post<GroupRoomItem>(groupRoomsUrl, payload));
+  }
+
+  updateRoom(roomId: string, payload: UpdateRoomPayload) {
+    return lastValueFrom(
+      this.http.patch<{
+        id: string;
+        name: string;
+        description?: string | null;
+        avatar?: string | null;
+        currencyCode: string;
+        createdBy: string;
+        createdAt: string;
+        updatedAt: string;
+      }>(`${groupRoomsUrl}/${roomId}`, payload),
+    );
+  }
+
+  deleteRoom(roomId: string) {
+    return lastValueFrom(this.http.delete<{ success: boolean }>(`${groupRoomsUrl}/${roomId}`));
   }
 
   createInvite(roomId: string, payload: CreateInvitePayload = {}) {

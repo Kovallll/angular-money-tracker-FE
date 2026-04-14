@@ -1,4 +1,5 @@
-import { Component, inject, signal, computed, ViewChild } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, ElementRef, inject, signal, computed, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import html2canvas from 'html2canvas';
 import { firstValueFrom } from 'rxjs';
@@ -36,6 +37,8 @@ type ExportFormat = 'csv' | 'pdf' | 'excel' | 'json' | 'html';
 })
 export class ExportReportComponent {
   @ViewChild(TieredMenu) menu!: TieredMenu;
+  @ViewChild('exportTriggerBtn', { read: ElementRef })
+  private exportTriggerBtn?: ElementRef<HTMLElement>;
 
   private router = inject(Router);
   private exportService = inject(ExportReportService);
@@ -65,6 +68,30 @@ export class ExportReportComponent {
 
   openMenu(event: Event) {
     this.menu.toggle(event);
+  }
+
+  /**
+   * PrimeNG задаёт minWidth только если кнопка шире панели; иначе меню остаётся шире — выравниваем под триггер.
+   */
+  onExportMenuShown(): void {
+    const btn = this.exportTriggerBtn?.nativeElement;
+    if (!btn) return;
+    const w = Math.round(btn.getBoundingClientRect().width);
+    if (w < 1) return;
+
+    const applyWidth = (): void => {
+      const panel = document.querySelector(
+        '.p-tieredmenu.export-report-menu',
+      ) as HTMLElement | null;
+      if (!panel) return;
+      panel.style.width = `${w}px`;
+      panel.style.minWidth = `${w}px`;
+      panel.style.maxWidth = `${w}px`;
+    };
+
+    applyWidth();
+    requestAnimationFrame(applyWidth);
+    setTimeout(applyWidth, 0);
   }
 
   runExport(format: ExportFormat) {
@@ -124,8 +151,14 @@ export class ExportReportComponent {
         await firstValueFrom(this.snapshotsHttp.saveFromExport());
         snapshotSaved = true;
         this.savedReportsRefresh.requestRefresh();
-      } catch {
-        // export already succeeded; snapshot is optional enhancement
+      } catch (e) {
+        // Файл уже скачан; снимок для «Saved reports» — отдельный POST, смотри Network / логи бэкенда.
+        console.error(
+          '[Export] analytics-snapshots/from-export failed (export file still OK)',
+          e instanceof HttpErrorResponse
+            ? { status: e.status, statusText: e.statusText, url: e.url, body: e.error }
+            : e,
+        );
       }
 
       this.messageService.add({

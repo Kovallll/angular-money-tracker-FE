@@ -1,4 +1,4 @@
-import { booleanAttribute, Component, input, output, signal, ViewChild } from '@angular/core';
+import { booleanAttribute, Component, computed, input, output, ViewChild } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { Menu, MenuModule } from 'primeng/menu';
 import { RowMenuButtonComponent } from '@/shared/components/row-menu-button/row-menu-button.component';
@@ -16,23 +16,33 @@ export class ContextMenuComponent {
   /** Показать кнопку «⋯» рядом с контентом; иначе меню только через `toggle(event)` снаружи. */
   showTrigger = input(false, { transform: booleanAttribute });
 
+  /** Показывать пункт «Delete» (например, только для владельца комнаты). */
+  showDelete = input(true, { transform: booleanAttribute });
+
   triggerAriaLabel = input('Дополнительные действия');
 
   onEdit = output<void>();
   onDelete = output<void>();
 
-  items = signal<MenuItem[]>([
-    {
-      label: 'Edit',
-      icon: 'pi pi-pencil',
-      command: () => this.onEdit.emit(),
-    },
-    {
-      label: 'Delete',
-      icon: 'pi pi-trash',
-      command: () => this.onDelete.emit(),
-    },
-  ]);
+  readonly items = computed<MenuItem[]>(() => {
+    const del = this.showDelete();
+    return [
+      {
+        label: 'Edit',
+        icon: 'pi pi-pencil',
+        command: () => this.onEdit.emit(),
+      },
+      ...(del
+        ? [
+            {
+              label: 'Delete',
+              icon: 'pi pi-trash',
+              command: () => this.onDelete.emit(),
+            },
+          ]
+        : []),
+    ];
+  });
 
   onTriggerClick(event: Event) {
     event.stopPropagation();

@@ -1,4 +1,5 @@
 <button
+  #exportTriggerBtn
   pButton
   type="button"
   (click)="openMenu($event)"
@@ -16,6 +17,7 @@
   [popup]="true"
   appendTo="body"
   styleClass="export-report-menu"
+  (onShow)="onExportMenuShown()"
 ></p-tieredMenu>
 
 @if (showOverlay()) {

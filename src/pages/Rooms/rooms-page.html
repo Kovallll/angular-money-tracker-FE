@@ -39,20 +39,27 @@
     <p class="rooms-list__hint" *ngIf="isLoading()">Loading…</p>
     <p class="rooms-list__hint" *ngIf="!isLoading() && rooms().length === 0">No rooms yet.</p>
 
-    <a
-      class="room-card"
-      *ngFor="let room of rooms()"
-      [routerLink]="['/', routePaths.ROOM_DETAILS, room.id]"
-    >
-      <div class="room-card__main">
-        <h3 class="room-card__title">{{ room.name }}</h3>
-        <p class="room-card__desc" *ngIf="room.description?.trim()">{{ room.description }}</p>
+    <div class="room-card" *ngFor="let room of rooms()">
+      <a class="room-card__link" [routerLink]="['/', routePaths.ROOM_DETAILS, room.id]">
+        <div class="room-card__main">
+          <h3 class="room-card__title">{{ room.name }}</h3>
+          <p class="room-card__desc" *ngIf="room.description?.trim()">{{ room.description }}</p>
+        </div>
+        <div class="room-card__meta">
+          <span class="room-card__role">{{ room.role }}</span>
+          <span class="room-card__members">{{ room.membersCount }} members</span>
+        </div>
+      </a>
+      <div class="room-card__actions" *ngIf="canManageRoom(room)" (click)="$event.stopPropagation()">
+        <context-menu-component
+          [showTrigger]="true"
+          [showDelete]="room.role === 'owner'"
+          triggerAriaLabel="Room actions"
+          (onEdit)="openEditRoom(room)"
+          (onDelete)="confirmDeleteRoom(room)"
+        />
       </div>
-      <div class="room-card__meta">
-        <span class="room-card__role">{{ room.role }}</span>
-        <span class="room-card__members">{{ room.membersCount }} members</span>
-      </div>
-    </a>
+    </div>
   </section>
 </section>
 
@@ -104,6 +111,59 @@
             placeholder="What is this room for?"
             [ngModel]="roomDescription()"
             (ngModelChange)="roomDescription.set($event)"
+          ></textarea>
+        </div>
+      </div>
+    </form>
+  </app-modal-shell>
+</p-dialog>
+
+<p-dialog
+  header="Edit room"
+  [visible]="editRoomDialogVisible()"
+  (visibleChange)="onEditDialogVisibleChange($event)"
+  [modal]="true"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [dismissableMask]="true"
+  styleClass="rooms-dialog"
+>
+  <app-modal-shell
+    [embedded]="true"
+    [showCloseButton]="false"
+    [showCancel]="true"
+    [showSave]="true"
+    saveLabel="Save"
+    [saveDisabled]="!editRoomName().trim() || isSubmitting()"
+    [saveLoading]="isSubmitting()"
+    (cancelRequest)="closeEditRoomDialog()"
+    (saveRequest)="submitEditRoom(editForm)"
+  >
+    <form #editForm="ngForm" (ngSubmit)="submitEditRoom(editForm)" class="app-modal-form">
+      <div class="form-fields">
+        <div class="field form-field--full">
+          <label for="editRoomNameInput">Room name</label>
+          <input
+            pInputText
+            type="text"
+            id="editRoomNameInput"
+            name="editRoomName"
+            required
+            maxlength="255"
+            [ngModel]="editRoomName()"
+            (ngModelChange)="editRoomName.set($event)"
+          />
+        </div>
+        <div class="field form-field--full">
+          <label for="editRoomDescInput">Description <span class="optional">(optional)</span></label>
+          <textarea
+            id="editRoomDescInput"
+            name="editRoomDescription"
+            class="rooms-modal-textarea"
+            rows="3"
+            [ngModel]="editRoomDescription()"
+            (ngModelChange)="editRoomDescription.set($event)"
           ></textarea>
         </div>
       </div>

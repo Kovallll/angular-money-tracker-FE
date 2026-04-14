@@ -12,6 +12,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { AppModalShellComponent } from '@/shared/components/app-modal-shell/app-modal-shell.component';
 import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
+import { ContextMenuComponent } from '@/entities/context-menu/cm.component';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 const ROOM_CURRENCIES = ['BYN', 'USD', 'EUR', 'RUB'] as const;
 
@@ -26,6 +28,7 @@ const ROOM_CURRENCIES = ['BYN', 'USD', 'EUR', 'RUB'] as const;
     AppModalShellComponent,
     AppButtonComponent,
     AppIconComponent,
+    ContextMenuComponent,
   ],
   templateUrl: './rooms-page.html',
   styleUrl: './rooms-page.scss',
@@ -36,6 +39,8 @@ export class RoomsPageComponent implements OnInit, OnDestroy {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
   private readonly currencyService = inject(CurrencyService);
+  private readonly confirmationService = inject(ConfirmationService);
+  private readonly messageService = inject(MessageService);
 
   readonly routePaths = RoutePaths;
   readonly rooms = signal<GroupRoomItem[]>([]);
@@ -49,6 +54,10 @@ export class RoomsPageComponent implements OnInit, OnDestroy {
 
   readonly createRoomDialogVisible = signal(false);
   readonly inviteDialogVisible = signal(false);
+  readonly editRoomDialogVisible = signal(false);
+  readonly editingRoomId = signal<string | null>(null);
+  readonly editRoomName = signal<string>('');
+  readonly editRoomDescription = signal<string>('');
 
   readonly roomStats = computed(() => {
     const all = this.rooms();
@@ -69,7 +78,9 @@ export class RoomsPageComponent implements OnInit, OnDestroy {
         event.type === 'room_created' ||
         event.type === 'member_joined' ||
         event.type === 'member_removed' ||
-        event.type === 'invite_created'
+        event.type === 'invite_created' ||
+        event.type === 'room_updated' ||
+        event.type === 'room_deleted'
       ) {
         this.loadRooms().catch(() => undefined);
       }
@@ -113,6 +124,99 @@ export class RoomsPageComponent implements OnInit, OnDestroy {
 
   onInviteDialogVisibleChange(visible: boolean): void {
     if (!visible) this.closeInviteDialog();
+  }
+
+  canManageRoom(room: GroupRoomItem): boolean {
+    return room.role === 'owner' || room.role === 'admin';
+  }
+
+  openEditRoom(room: GroupRoomItem): void {
+    this.editingRoomId.set(room.id);
+    this.editRoomName.set(room.name);
+    this.editRoomDescription.set(room.description?.trim() ? room.description : '');
+    this.editRoomDialogVisible.set(true);
+  }
+
+  closeEditRoomDialog(): void {
+    this.editRoomDialogVisible.set(false);
+    this.editingRoomId.set(null);
+    this.editRoomName.set('');
+    this.editRoomDescription.set('');
+  }
+
+  onEditDialogVisibleChange(visible: boolean): void {
+    if (!visible) this.closeEditRoomDialog();
+  }
+
+  submitEditRoom(form: NgForm): void {
+    form.form.markAllAsTouched();
+    if (!this.editRoomName().trim()) return;
+    void this.saveRoomEdit();
+  }
+
+  async saveRoomEdit() {
+    const id = this.editingRoomId();
+    if (!id) return;
+    const name = this.editRoomName().trim();
+    if (!name) return;
+    this.isSubmitting.set(true);
+    this.error.set('');
+    try {
+      await this.groupRoomsHttp.updateRoom(id, {
+        name,
+        description: this.editRoomDescription().trim() || undefined,
+      });
+      this.closeEditRoomDialog();
+      await this.loadRooms();
+    } catch (err) {
+      console.error(err);
+      this.messageService.add({
+        key: 'toast',
+        severity: 'error',
+        summary: 'Could not update room',
+        detail: 'Check your connection and try again.',
+        life: 5000,
+      });
+    } finally {
+      this.isSubmitting.set(false);
+    }
+  }
+
+  confirmDeleteRoom(room: GroupRoomItem): void {
+    this.confirmationService.confirm({
+      message: `Delete room «${room.name}»? This cannot be undone.`,
+      header: 'Delete room',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Delete',
+      rejectLabel: 'Cancel',
+      acceptButtonStyleClass: 'p-button-danger',
+      accept: () => {
+        void this.deleteRoom(room.id);
+      },
+    });
+  }
+
+  async deleteRoom(roomId: string) {
+    this.isSubmitting.set(true);
+    this.error.set('');
+    try {
+      await this.groupRoomsHttp.deleteRoom(roomId);
+      await this.loadRooms();
+      if (this.router.url.includes(roomId)) {
+        await this.router.navigate(['/', RoutePaths.ROOMS]);
+      }
+    } catch (err) {
+      console.error(err);
+      this.messageService.add({
+        key: 'toast',
+        severity: 'error',
+        summary: 'Could not delete room',
+        detail: 'Check your connection and try again.',
+        life: 5000,
+      });
+    } finally {
+      this.isSubmitting.set(false);
+    }
   }
 
   submitCreateRoom(form: NgForm): void {

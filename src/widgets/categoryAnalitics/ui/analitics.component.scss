@@ -1,6 +1,9 @@
 @use 'theme' as *;
 @use 'shared/styles/breakpoints' as bp;
 
+/* Совпадает с $bp-dashboard-wide (1550px): уже или равно — только столбик, шире — сетка/ряд */
+$analytics-multi-col-min: bp.$bp-dashboard-wide + 1px;
+
 .analytics {
   width: 100%;
   min-width: 0;
@@ -46,6 +49,37 @@
   }
 }
 
+/*
+ * Комната (есть Paid by member): только при ширине > 1550px — 2×2;
+ * при 1550px и уже — столбик (без узких колонок).
+ */
+.analytics:has(.analytics__member-share) {
+  @media (min-width: $analytics-multi-col-min) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 24px;
+    row-gap: 24px;
+    align-items: stretch;
+
+    .analytics__title,
+    .analytics__desc {
+      grid-column: 1 / -1;
+    }
+
+    .analytics__desc {
+      margin-bottom: 0;
+    }
+
+    .analytics__member-share {
+      margin-bottom: 0;
+    }
+
+    .analytics__charts {
+      display: contents;
+    }
+  }
+}
+
 .analytics__charts {
   display: flex;
   flex-direction: column;
@@ -57,8 +91,11 @@
     gap: 24px;
   }
 
+  /* Три графика в ряд только если > 1550px (иначе при 1440–1550 получались слишком узкие колонки) */
   @include bp.desktop {
-    flex-direction: row;
+    @media (min-width: $analytics-multi-col-min) {
+      flex-direction: row;
+    }
   }
 
   &--row {
@@ -82,6 +119,11 @@
   border-radius: 16px;
   overflow: hidden;
   padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  /* Единая минимальная высота карточек аналитики (заголовок + область графика) */
+  min-height: 400px;
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease;
@@ -96,6 +138,23 @@
 
   @include bp.tablet-and-up {
     padding: 24px;
+    min-height: 420px;
+  }
+
+  @include bp.desktop-and-up {
+    min-height: 440px;
+  }
+
+  .analytics__charts--row & {
+    min-height: 440px;
+
+    @include bp.tablet-and-up {
+      min-height: 460px;
+    }
+
+    @include bp.desktop-and-up {
+      min-height: 480px;
+    }
   }
 }
 
@@ -301,7 +360,8 @@
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  height: 260px;
+  flex: 1 1 auto;
+  min-height: 248px;
   position: relative;
   box-sizing: border-box;
   display: flex;
@@ -310,21 +370,23 @@
   overflow: hidden;
 
   @include bp.tablet-and-up {
-    height: 280px;
+    min-height: 268px;
   }
 
   @include bp.desktop-and-up {
-    height: 300px;
+    min-height: 288px;
   }
 
   .analytics__charts--row & {
-    height: 320px;
+    min-height: 288px;
+
+    @include bp.tablet-and-up {
+      min-height: 308px;
+    }
   }
 
-  /* Третий график (линейный) — увеличенная высота, canvas на всю высоту */
   .chart-card--line & {
     justify-content: flex-end;
-    height: 320px;
   }
 
   /* График занимает оставшееся место и не выходит за границы */

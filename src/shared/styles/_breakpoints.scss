@@ -81,3 +81,10 @@ $bp-mobile: 480px;
     @content;
   }
 }
+
+/** Десктоп с боковым сайдбаром (≥ 1200px). */
+@mixin sidebar-visible {
+  @media (min-width: $bp-sidebar-to-tabs) {
+    @content;
+  }
+}

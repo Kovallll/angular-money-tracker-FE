@@ -1,7 +1,23 @@
 :host {
+  display: block;
   width: 100%;
+
+  &.logout-icon-only {
+    width: auto;
+    flex-shrink: 0;
+  }
 }
 
 .icon {
   margin-right: 8px;
+}
+
+/* Квадратная иконка у края блока профиля */
+:host ::ng-deep .logout-btn--icon-only {
+  min-width: 40px;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 10px;
+  justify-content: center;
 }
