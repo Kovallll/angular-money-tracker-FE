@@ -298,6 +298,14 @@ export class EditTransactionModalComponent implements OnInit {
     }
   }
 
+  dateValue(): string {
+    return this.formatDateLocal(this.card().date);
+  }
+
+  setDateField(value: string): void {
+    this.setCardField('date', this.formatDateLocal(value));
+  }
+
   updateCardField(value: any) {
     this.card.update((state: any) => ({
       ...state,

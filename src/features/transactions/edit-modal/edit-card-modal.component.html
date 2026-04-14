@@ -76,6 +76,7 @@
               [ngModel]="card()[input.field]"
               (ngModelChange)="setCardField('category', $event)"
               [loading]="categorizerLoading"
+              appendTo="body"
               #model="ngModel"
               [invalid]="model.invalid && (model.touched || cardForm.submitted)"
               required
@@ -111,6 +112,27 @@
                 }
               </div>
             }
+            <div class="error-slot">
+              @if (model.invalid && (model.touched || cardForm.submitted)) {
+                <small class="error">{{ input.placeholder }} is required.</small>
+              }
+            </div>
+          </div>
+        } @else if (input.field === 'date') {
+          <div class="field">
+            <label [for]="input.name" class="label">{{ input.placeholder }}</label>
+            <input
+              class="input"
+              pInputText
+              type="date"
+              [id]="input.name"
+              [name]="input.name"
+              [ngModel]="dateValue()"
+              (ngModelChange)="setDateField($event)"
+              #model="ngModel"
+              [invalid]="model.invalid && (model.touched || cardForm.submitted)"
+              required
+            />
             <div class="error-slot">
               @if (model.invalid && (model.touched || cardForm.submitted)) {
                 <small class="error">{{ input.placeholder }} is required.</small>

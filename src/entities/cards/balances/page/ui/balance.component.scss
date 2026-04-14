@@ -9,19 +9,19 @@
 
 .container {
   display: grid;
-  grid-template-columns: 1fr;
+  /* Карточки имеют комфортный максимум и не растягиваются на весь экран */
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 440px));
+  justify-content: start;
   width: 100%;
   min-width: 0;
   gap: 16px;
   box-sizing: border-box;
 
   @include bp.tablet-and-up {
-    grid-template-columns: repeat(2, 1fr);
     gap: 20px;
   }
 
   @include bp.desktop-and-up {
-    grid-template-columns: repeat(3, 1fr);
     gap: 24px;
   }
 }

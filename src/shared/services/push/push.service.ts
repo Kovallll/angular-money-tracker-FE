@@ -80,9 +80,11 @@ export class PushService {
 
   // Сохранение подписки на сервере
   saveSubscription(userId: string, subscription: PushSubscription): Observable<any> {
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
     return this.http.post(`push/${userId}/subscribe-push`, {
       subscription: subscription.toJSON(),
       userAgent: navigator.userAgent,
+      timezone,
     });
   }
 

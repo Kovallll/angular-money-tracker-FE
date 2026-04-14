@@ -273,19 +273,17 @@ auth-layout {
   overflow: visible;
 }
 
-/* Bottom sheet «Ещё» (мобильные табы) — тёмная тема приложения */
 .cdk-overlay-pane.more-sheet-panel .mat-bottom-sheet-container,
 .mat-bottom-sheet-container.more-sheet-panel.mat-bottom-sheet-container {
-  background: $secondary;
   color: $white;
-  border-top: 1px solid $tertiary;
+  background: transparent;
+  border: none;
   border-radius: 16px 16px 0 0;
   max-width: 100vw;
   width: 100%;
   overflow-x: hidden;
 }
 
-/* Export report: ширина задаётся из компонента под кнопку; список не раздувает панель */
 .p-tieredmenu.export-report-menu {
   box-sizing: border-box;
 

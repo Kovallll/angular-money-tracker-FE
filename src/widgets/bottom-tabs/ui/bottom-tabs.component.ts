@@ -29,6 +29,7 @@ export class BottomTabsComponent {
     this.bottomSheet.open(MoreSheetComponent, {
       data: moreMenuItems,
       panelClass: 'more-sheet-panel',
+      backdropClass: 'more-sheet-backdrop',
     });
   }
 }

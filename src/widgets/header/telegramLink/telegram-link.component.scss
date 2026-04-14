@@ -7,16 +7,17 @@
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  border: 1px solid $tertiary;
-  background: transparent;
-  color: $tertiary;
+  border: 1px solid $surface-20;
+  background: $surface-06;
+  color: rgba($white, 0.78);
+  box-shadow: inset 0 1px 0 $surface-08;
   cursor: pointer;
   transition: all 0.2s ease;
 
   &:hover {
     color: $telegram;
     border-color: $telegram;
-    background: rgba($telegram, 0.08);
+    background: rgba($telegram, 0.12);
   }
 
   &:disabled {
@@ -27,6 +28,7 @@
   &.linked {
     color: $telegram;
     border-color: $telegram;
+    background: rgba($telegram, 0.12);
 
     &:hover {
       color: $white;
