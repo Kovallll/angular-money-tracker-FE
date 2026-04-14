@@ -3,7 +3,7 @@
   type="button"
   class="notification-icon"
   [matTooltip]="tooltipText()"
-  [disabled]="loading() || (!pushEnabled() && (!pushSupported() || !userId()))"
+  [disabled]="loading()"
   (click)="onClick()"
   aria-label="Notifications"
 >
