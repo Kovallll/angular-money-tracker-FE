@@ -13,7 +13,7 @@
     <div class="data-loading">
       <p-progress-spinner ariaLabel="Loading" />
     </div>
-    } @else if (cards().length) {
+    } @else if (cards().length > 1) {
     <p-carousel
       [value]="cards()"
       [numVisible]="1"
@@ -29,6 +29,10 @@
         </div>
       </ng-template>
     </p-carousel>
+    } @else if (cards().length === 1) {
+    <div class="single-slide">
+      <balance-card-item [card]="cards()[0]" />
+    </div>
     } @else {
     <div class="data-placeholder">
       <div class="dash-empty-icon" aria-hidden="true">

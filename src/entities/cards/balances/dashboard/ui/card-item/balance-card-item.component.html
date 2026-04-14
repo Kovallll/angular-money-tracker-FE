@@ -1,6 +1,6 @@
 <article class="mini-card">
   <div class="mini-card__header">
-    <p class="mini-card__title">{{ card().cardName }}</p>
+    <p class="mini-card__title">{{ card().bankName || card().cardName }}</p>
     @if (card().isPrimary) {
       <span class="mini-card__badge">Default</span>
     }
