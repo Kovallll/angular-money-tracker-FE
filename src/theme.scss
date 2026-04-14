@@ -10,8 +10,7 @@ $success: #22c55e;
 $error: #ef4444;
 $white: #ffffff;
 $light-primary: #1e2535;
-/** Шапка: приглушённый blue-slate между сайдбаром (#0f172a) и канвасом (#1e2535), без «кричащего» синего */
-$header-surface: #283347;
+$header-surface: #0d2245;
 $balance-card-color: #178075;
 
 // Текст и бренд
@@ -323,4 +322,3 @@ $my-theme: mat.m2-define-light-theme(
   )
 );
 @include mat.all-component-themes($my-theme);
-

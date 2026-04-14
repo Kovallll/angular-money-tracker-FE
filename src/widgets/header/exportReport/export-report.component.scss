@@ -9,14 +9,18 @@
   border-radius: 10px;
   font-weight: 500;
   padding: 8px 16px;
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  background: rgba(56, 189, 248, 0.16);
   border: none;
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.35);
+  color: #38bdf8;
+  box-shadow:
+    0 0 0 1px rgba(56, 189, 248, 0.45) inset,
+    0 0 16px rgba(56, 189, 248, 0.22);
 
   &:hover:not(:disabled) {
-    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.45);
+    background: rgba(56, 189, 248, 0.24);
+    box-shadow:
+      0 0 0 1px rgba(56, 189, 248, 0.65) inset,
+      0 0 18px rgba(56, 189, 248, 0.28);
     color: #fff;
   }
 

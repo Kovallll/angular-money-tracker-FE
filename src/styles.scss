@@ -308,19 +308,25 @@ auth-layout {
 
 /* Currency selector в хедере */
 app-currency-selector .currency-selector.p-inputwrapper {
-  background: $secondary;
+  background: rgba(56, 189, 248, 0.16);
+  border: none;
+  box-shadow:
+    0 0 0 1px rgba(56, 189, 248, 0.45) inset,
+    0 0 16px rgba(56, 189, 248, 0.22);
 }
 
 app-currency-selector .currency-selector .p-select-label {
-  color: $white;
+  color: rgba($white, 0.98);
   font-weight: 500;
   font-size: 14px;
 }
 
 app-currency-selector .currency-selector.p-inputwrapper.p-focus,
 app-currency-selector .currency-selector.p-inputwrapper.p-inputwrapper-focus {
-  border-color: $accent;
-  box-shadow: 0 0 0 2px rgba($accent, 0.3);
+  border: none;
+  box-shadow:
+    0 0 0 1px rgba(56, 189, 248, 0.65) inset,
+    0 0 0 2px rgba(56, 189, 248, 0.3);
 }
 
 @media (max-width: 779px) {
@@ -406,28 +412,32 @@ app-currency-selector .currency-selector.p-inputwrapper.p-inputwrapper-focus {
 
 /* Dropdown панель выбора валюты */
 .currency-selector-panel.p-select-overlay {
-  background: $secondary;
-  border: 1px solid $tertiary;
+  background: #152744;
+  border: 1px solid rgba(56, 189, 248, 0.36);
   border-radius: 12px;
   box-shadow:
-    0 8px 32px $shadow-50,
-    0 0 0 1px $surface-06;
+    0 8px 32px rgba(0, 0, 0, 0.42),
+    0 0 0 1px rgba(56, 189, 248, 0.2);
   padding: 8px;
 }
 
 .currency-selector-panel .p-select-option {
-  color: $white;
+  color: rgba($white, 0.96);
   border-radius: 8px;
-  transition: background 0.15s ease;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
 }
 
 .currency-selector-panel .p-select-option:hover {
-  background: $surface-10;
+  background: rgba(56, 189, 248, 0.14);
 }
 
+.currency-selector-panel .p-select-option.p-select-option-selected,
 .currency-selector-panel .p-select-option.p-select-option-selected.p-focus {
   font-weight: 700;
-  color: $accent;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.2);
 }
 
 /* Период на графике Categories share (analytics) — тёмная панель как у селектора валюты */

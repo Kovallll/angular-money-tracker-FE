@@ -14,6 +14,8 @@
   @include bp.sidebar-visible {
     padding: 12px;
     gap: 12px;
+    height: 100vh;
+    overflow: hidden;
   }
 }
 
@@ -27,6 +29,10 @@
 
   @include bp.sidebar-visible {
     box-shadow: none;
+    height: calc(100vh - 24px);
+    position: sticky;
+    top: 12px;
+    align-self: flex-start;
   }
 }
 
@@ -48,6 +54,11 @@
     top: 0;
     z-index: 20;
   }
+
+  @include bp.sidebar-visible {
+    height: calc(100vh - 24px);
+    overflow: hidden;
+  }
 }
 
 .router {
@@ -66,6 +77,11 @@
   @include bp.desktop-and-up {
     padding-inline: 24px;
     padding-block: 24px;
+  }
+
+  @include bp.sidebar-visible {
+    overflow-y: auto;
+    overscroll-behavior: contain;
   }
 }
 
