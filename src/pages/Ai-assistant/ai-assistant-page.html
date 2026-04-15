@@ -1,0 +1,86 @@
+<section class="ai-page">
+  <header class="page-header">
+    <div>
+      <h1>{{ 'ai.title' | translate }}</h1>
+      <p>{{ 'ai.subtitle' | translate }}</p>
+    </div>
+  </header>
+
+  <div class="layout-grid">
+    <section class="panel chat-panel">
+      <header class="panel-header">
+        <h2>{{ 'ai.chat.title' | translate }}</h2>
+        <span class="panel-subtitle">{{ 'ai.chat.subtitle' | translate }}</span>
+      </header>
+
+      <div class="quick-questions">
+        @for (item of quickQuestions; track item) {
+          <button type="button" class="quick-chip" (click)="useQuickQuestion(item)" [disabled]="chatLoading()">
+            {{ item | translate }}
+          </button>
+        }
+      </div>
+
+      <div class="chat-history">
+        @for (msg of chatHistory(); track msg.id) {
+          <article class="chat-message chat-message--{{ msg.role }}">
+            <div class="chat-bubble">{{ msg.text }}</div>
+            <time class="chat-time">{{ formatTime(msg.createdAt) }}</time>
+          </article>
+        }
+      </div>
+
+      <form class="chat-input" (submit)="$event.preventDefault(); ask()">
+        <textarea
+          [ngModel]="question()"
+          (ngModelChange)="question.set($event)"
+          [ngModelOptions]="{ standalone: true }"
+          rows="3"
+          [placeholder]="'ai.chat.placeholder' | translate"
+        ></textarea>
+        <button type="submit" [disabled]="chatLoading() || !question().trim()">
+          {{ chatLoading() ? ('ai.chat.sending' | translate) : ('ai.chat.ask' | translate) }}
+        </button>
+      </form>
+    </section>
+
+    <section class="panel insights-panel">
+      <header class="panel-header panel-header--row">
+        <div>
+          <h2>{{ 'ai.insights.title' | translate }}</h2>
+          <span class="panel-subtitle">{{ 'ai.insights.subtitle' | translate }}</span>
+        </div>
+        <button type="button" class="ghost-btn" (click)="recompute()" [disabled]="recomputing()">
+          {{ recomputing() ? ('ai.insights.updating' | translate) : ('ai.insights.refresh' | translate) }}
+        </button>
+      </header>
+
+      @if (loading()) {
+        <div class="state">{{ 'ai.insights.loading' | translate }}</div>
+      } @else if (!insights().length) {
+        <div class="state">{{ 'ai.insights.empty' | translate }}</div>
+      } @else {
+        <div class="insights-list">
+          @for (item of insights(); track item.id) {
+            <article class="insight-card">
+              <div class="insight-meta">
+                <span class="badge">{{ ('ai.insightType.' + item.type) | translate }}</span>
+                <span class="badge severity-{{ item.severity }}">
+                  {{ ('ai.severity.' + item.severity) | translate }}
+                </span>
+                <span class="confidence">{{ item.confidence | number: '1.2-2' }}</span>
+              </div>
+              <h3>{{ item.title }}</h3>
+              <p>{{ item.message }}</p>
+              <div class="actions">
+                <button type="button" class="ok-btn" (click)="ack(item.id)">{{ 'common.gotIt' | translate }}</button>
+                <button type="button" class="muted-btn" (click)="dismiss(item.id)">{{ 'common.hide' | translate }}</button>
+              </div>
+            </article>
+          }
+        </div>
+      }
+    </section>
+  </div>
+</section>
+

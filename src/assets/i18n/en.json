@@ -1,0 +1,623 @@
+{
+  "common": {
+    "error": "Error",
+    "success": "Success",
+    "add": "Add",
+    "save": "Save",
+    "create": "Create",
+    "select": "Select",
+    "optional": "optional",
+    "title": "Title",
+    "currency": "Currency",
+    "loading": "Loading",
+    "overview": "Overview",
+    "seeAll": "See all",
+    "more": "More",
+    "menu": "Menu",
+    "gotIt": "Got it",
+    "hide": "Hide",
+    "edit": "Edit",
+    "delete": "Delete",
+    "na": "N/A"
+  },
+  "search": {
+    "byName": "Search by name",
+    "byTitle": "Search by title",
+    "byNameBankNumber": "Search by name, bank, number"
+  },
+  "header": {
+    "hello": "Hello",
+    "language": "Language"
+  },
+  "menu": {
+    "dashboard": "Dashboard",
+    "transactions": "Transactions",
+    "balances": "Balances",
+    "categories": "Categories",
+    "expenses": "Expenses",
+    "goals": "Goals",
+    "statistics": "Statistics",
+    "subscriptions": "Subscriptions",
+    "bankingTools": "Banking tools",
+    "aiAssistant": "AI Assistant",
+    "rooms": "Rooms",
+    "settings": "Settings"
+  },
+  "currency": {
+    "names": {
+      "byn": "Belarusian ruble",
+      "usd": "US dollar",
+      "eur": "Euro",
+      "rub": "Russian ruble"
+    }
+  },
+  "ai": {
+    "title": "AI Assistant",
+    "subtitle": "Financial assistant: dialogue, analytics and personalized insights",
+    "quick": {
+      "q1": "Which category consumes the most of my budget this month?",
+      "q2": "Show top 3 largest expenses for the quarter",
+      "q3": "How do subscriptions impact my budget?",
+      "q4": "How can I reduce spending without lowering quality of life?"
+    },
+    "chat": {
+      "title": "Chat",
+      "subtitle": "Question and answer history",
+      "placeholder": "Ask about spending, budget, debt, investments, rates, etc.",
+      "sending": "Sending...",
+      "ask": "Ask",
+      "welcome": "Hi! I can help with personal and global finance topics: budget, expenses, debt, investments, currencies, risks and planning.",
+      "retryHint": "Couldn't get a response. Please try again in a few seconds."
+    },
+    "insights": {
+      "title": "Active insights",
+      "subtitle": "Proactive signals for your finances",
+      "refresh": "Refresh",
+      "updating": "Updating...",
+      "loading": "Loading insights...",
+      "empty": "No active insights yet. Click Refresh or add new transactions."
+    },
+    "insightType": {
+      "anomaly": "Anomaly",
+      "overspend": "Overspending",
+      "budget_tip": "Budget tip",
+      "fx_signal": "FX signal",
+      "investment_signal": "Investment signal",
+      "system": "System"
+    },
+    "severity": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High"
+    },
+    "toast": {
+      "loadInsightsError": "Failed to load AI insights",
+      "askError": "Failed to get AI answer",
+      "ackError": "Failed to acknowledge insight",
+      "dismissError": "Failed to dismiss insight"
+    }
+  },
+  "txModal": {
+    "date": "Date",
+    "amount": "Amount",
+    "title": "Title",
+    "titlePlaceholder": "e.g. Shopping",
+    "type": "Type",
+    "category": "Category",
+    "predicted": "predicted",
+    "selectCategory": "Select category",
+    "detectingCategory": "Detecting category...",
+    "card": "Card",
+    "default": "Default",
+    "selectCard": "Select card",
+    "freezeBalance": "Do not change card balance",
+    "toCard": "To card",
+    "toCardPlaceholder": "Card to credit",
+    "description": "Description",
+    "descriptionPlaceholder": "Transaction comment",
+    "paymentMethod": "Payment method",
+    "paymentMethods": {
+      "cash": "Cash",
+      "card": "Card"
+    },
+    "types": {
+      "expense": "Expense",
+      "revenue": "Revenue",
+      "transfer": "Transfer"
+    },
+    "errors": {
+      "dateRequired": "Date is required",
+      "amountPositive": "Amount must be greater than 0",
+      "titleRequired": "Title is required",
+      "typeRequired": "Select type",
+      "categoryRequired": "Select category",
+      "cardRequired": "Select card",
+      "destinationCardRequired": "Select destination card"
+    },
+    "toast": {
+      "addSuccess": "Transaction added",
+      "addError": "Failed to add transaction",
+      "updateSuccess": "Transaction updated",
+      "updateError": "Failed to update transaction"
+    }
+  },
+  "goals": {
+    "add": "Add Goal",
+    "createTitle": "Create New Goal",
+    "enterTitle": "Enter goal title",
+    "goalBudget": "Goal Budget",
+    "targetBudget": "Target Budget",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "errors": {
+      "titleRequired": "Title is required.",
+      "mustBeGreaterThanZero": "Must be > 0.",
+      "mustBeGreaterOrEqualZero": "Must be >= 0.",
+      "targetNotExceedGoal": "Target must not exceed goal.",
+      "startDateRequired": "Start date is required.",
+      "endDateAfterStart": "End date must be after start date."
+    },
+    "activeGoal": "Active goal",
+    "reached": "reached",
+    "addFunds": "Add funds",
+    "adjustGoal": "Adjust Goal",
+    "addFundsToGoal": "Add funds to goal",
+    "selectGoalToViewDetails": "Select a goal above to view details",
+    "time": {
+      "noDeadline": "No deadline",
+      "ended": "Ended",
+      "daysPassed": "{{count}} days passed",
+      "weeksPassed": "{{count}} weeks passed",
+      "daysLeft": "{{count}} days left",
+      "weeksLeft": "{{count}} weeks left"
+    },
+    "toast": {
+      "created": "Goal created",
+      "createError": "Failed to create goal"
+    }
+  },
+  "categories": {
+    "addCategory": "Add Category",
+    "editCategory": "Edit Category",
+    "categoryName": "Category name",
+    "categoryNamePlaceholder": "e.g. Groceries, Rent, Subscriptions",
+    "icon": "Icon",
+    "loading": "Loading categories...",
+    "emptyTitle": "No categories yet",
+    "emptyDescription": "Create your first category to start tracking expenses",
+    "totalExpenses": "Total expenses",
+    "topCategoryTransactions": "Transactions in most active category",
+    "vsLastMonth": "vs last month",
+    "yourCategories": "Your categories",
+    "backToCategories": "Back to categories",
+    "last": "Last",
+    "avg": "Avg",
+    "expensesTrend": "Expenses trend",
+    "notFound": "Category not found",
+    "spendingUpVsLastMonth": "Spending up vs last month",
+    "spendingDownVsLastMonth": "Spending down vs last month",
+    "errors": {
+      "nameRequired": "Category name is required."
+    },
+    "toast": {
+      "created": "Category created",
+      "createError": "Failed to create category",
+      "updated": "Category updated",
+      "updateError": "Failed to update category",
+      "deleted": "Category deleted",
+      "deleteError": "Failed to delete category"
+    },
+    "iconPicker": {
+      "selected": "Selected icon",
+      "search": "Search icons",
+      "filterAria": "Filter icons by name",
+      "listAria": "Category icons",
+      "empty": "No icons match your search.",
+      "icons": "icons"
+    }
+  },
+  "subscriptions": {
+    "addSubscription": "Add Subscription",
+    "startDate": "Start date",
+    "lastPaid": "Last paid",
+    "selectDate": "Select date",
+    "markPaid": "Mark paid",
+    "errors": {
+      "titleRequired": "Title is required",
+      "startDateRequired": "Start date is required",
+      "typeRequired": "Type is required",
+      "lastPaidRequired": "Last paid is required",
+      "lastPaidBeforeStart": "Last paid cannot be earlier than start date",
+      "amountRequired": "Amount is required",
+      "amountNonNegative": "Amount must be >= 0",
+      "amountGreaterThanZero": "Amount must be greater than 0"
+    },
+    "toast": {
+      "created": "Subscription created",
+      "createError": "Failed to create subscription"
+    },
+    "type": {
+      "daily": "Daily",
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "onetime": "One-time"
+    }
+  },
+  "page": {
+    "balances": {
+      "title": "Balances",
+      "subtitle": "Manage your accounts and track current balances"
+    },
+    "expenses": {
+      "title": "Expenses",
+      "subtitle": "Track spending by category and see your top expenses",
+      "loading": "Loading expenses...",
+      "totalExpenses": "Total expenses",
+      "categoriesWithExpenses": "Categories with expenses",
+      "totalTransactions": "Total transactions",
+      "top5": "Top 5 expenses",
+      "byCategory": "By category",
+      "emptyTitle": "No expenses yet",
+      "emptyText": "Add a transaction to start tracking your spending",
+      "topExpensesCount": "Top {{count}} expenses",
+      "vsLastMonth": "vs last month",
+      "spendingUpVsLastMonth": "Spending up vs last month",
+      "spendingDownVsLastMonth": "Spending down vs last month",
+      "noExpensesInCategory": "No expenses in this category",
+      "viewCategoryExpenses": "View category expenses"
+    },
+    "goals": {
+      "title": "Goals",
+      "subtitle": "Track your savings targets and monitor progress",
+      "loading": "Loading goals...",
+      "active": "Active",
+      "completed": "Completed",
+      "filter": "Filter goals",
+      "activeList": "Active goals",
+      "completedList": "Completed goals",
+      "emptyActive": "No active goals",
+      "emptyCompleted": "No completed goals yet",
+      "emptyTitle": "No goals yet",
+      "emptyText": "Create your first goal to start tracking savings"
+    },
+    "transactions": {
+      "title": "Transactions",
+      "subtitle": "View and manage your income and expenses in one place."
+    },
+    "categories": {
+      "title": "Categories",
+      "subtitle": "Track spending by category and view detailed analytics"
+    },
+    "rooms": {
+      "title": "Rooms",
+      "subtitle": "Manage shared spaces for collaborative finances."
+    },
+    "subscriptions": {
+      "title": "Subscriptions",
+      "subtitle": "Manage your recurring payments"
+    },
+    "statistics": {
+      "title": "Statistics overview",
+      "subtitle": "Track your budget, expenses, goals and category analytics in a single place."
+    },
+    "rates": {
+      "title": "Banking tools"
+    },
+    "expensesDetails": {
+      "subtitle": "Expenses in this category"
+    }
+  },
+  "rates": {
+    "exchangeRatesNBRB": "Exchange rates (NBRB to BYN)",
+    "refreshRates": "Refresh rates",
+    "rateToByn": "Rate (1 unit = BYN)",
+    "noDataForPeriod": "No data for the period (90 days)",
+    "loanAmount": "Loan amount (BYN)",
+    "termMonths": "Term (months)",
+    "annualRate": "Annual rate (%)",
+    "monthlyPayment": "Monthly payment:",
+    "totalRepayment": "Total repayment:",
+    "totalInterest": "Total interest:",
+    "chartLabel": "1 {{code}} = X BYN",
+    "dayExplorer": {
+      "title": "Rate for selected day",
+      "aria": "Choose day to view rate"
+    },
+    "toast": {
+      "updated": "Rates updated",
+      "refreshed": "Exchange rates have been refreshed."
+    }
+  },
+  "rooms": {
+    "totalRooms": "Total rooms",
+    "owned": "Owned",
+    "joined": "Joined",
+    "createRoom": "Create room",
+    "joinByInvite": "Join by invite",
+    "myRooms": "My rooms",
+    "members": "members",
+    "roomActions": "Room actions",
+    "roomName": "Room name",
+    "roomNamePlaceholder": "e.g. Family budget",
+    "description": "Description",
+    "descriptionPlaceholder": "What is this room for?",
+    "editRoom": "Edit room",
+    "accept": "Accept",
+    "inviteToken": "Invite token",
+    "inviteTokenPlaceholder": "Paste invite token",
+    "rejectInvite": "Reject invite",
+    "deleteRoom": "Delete room",
+    "deleteConfirmMessage": "Delete room \"{{name}}\"? This cannot be undone.",
+    "noRoomsYet": "No rooms yet.",
+    "role": {
+      "owner": "Owner",
+      "admin": "Admin",
+      "member": "Member"
+    },
+    "errors": {
+      "loadRooms": "Failed to load rooms",
+      "createRoom": "Failed to create room",
+      "acceptInvite": "Failed to accept invite",
+      "rejectInvite": "Failed to reject invite"
+    },
+    "toast": {
+      "roomUpdated": "Room updated",
+      "changesSaved": "Changes saved successfully.",
+      "couldNotUpdateRoom": "Could not update room",
+      "checkConnection": "Check your connection and try again.",
+      "roomDeleted": "Room deleted",
+      "roomRemoved": "The room was removed successfully.",
+      "couldNotDeleteRoom": "Could not delete room",
+      "roomCreated": "Room created",
+      "roomReady": "Room \"{{name}}\" is ready.",
+      "couldNotCreateRoom": "Could not create room",
+      "inviteAccepted": "Invite accepted",
+      "joinedRoom": "You have joined the room.",
+      "couldNotAcceptInvite": "Could not accept invite",
+      "tokenInvalidOrExpired": "Token may be invalid or expired.",
+      "inviteRejected": "Invite rejected",
+      "inviteDeclined": "The invite has been declined.",
+      "couldNotRejectInvite": "Could not reject invite",
+      "pleaseTryAgain": "Please try again."
+    },
+    "details": {
+      "backToRooms": "Back to rooms",
+      "createInvite": "Create invite",
+      "generateToken": "Generate token",
+      "expiresInHours": "Expires in (hours)",
+      "expiresHint": "Between 1 and 8760 hours (1 year).",
+      "makeAdmin": "Make admin",
+      "makeMember": "Make member",
+      "remove": "Remove",
+      "loadingRoom": "Loading room...",
+      "errors": {
+        "failedToLoadRoom": "Failed to load room",
+        "failedToCreateInvite": "Failed to create invite",
+        "failedToUpdateRole": "Failed to update role",
+        "failedToRemoveMember": "Failed to remove member"
+      },
+      "toast": {
+        "inviteCreated": "Invite created",
+        "tokenGenerated": "Token generated successfully.",
+        "couldNotCreateInvite": "Could not create invite",
+        "roleUpdated": "Role updated",
+        "memberPromoted": "Member promoted to admin.",
+        "adminDemoted": "Admin changed to member.",
+        "couldNotUpdateRole": "Could not update role",
+        "memberRemoved": "Member removed",
+        "memberRemovedDetail": "The user has been removed from this room.",
+        "couldNotRemoveMember": "Could not remove member"
+      }
+    },
+    "contributions": {
+      "aria": "Contributions by payer",
+      "title": "Paid by member",
+      "hint": "Share of total room spending by payer"
+    }
+  },
+  "settings": {
+    "name": "Name",
+    "lastname": "Lastname",
+    "email": "Email",
+    "phone": "Phone",
+    "yourProfilePicture": "Your Profile Picture",
+    "changePhoto": "Change photo",
+    "uploadYourPhoto": "Upload your photo",
+    "avatar": "Avatar",
+    "uploading": "Uploading...",
+    "updateProfile": "Update Profile",
+    "logout": "Logout",
+    "signOut": "Sign out",
+    "signOutConfirm": "Are you sure you want to sign out?",
+    "invalidFile": "Invalid file",
+    "selectImageFile": "Please select an image file.",
+    "profilePictureUpdated": "Profile picture updated.",
+    "failedToUploadPhoto": "Failed to upload photo.",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "confirmNewPassword": "Confirm new password",
+    "atLeast6Chars": "At least 6 characters",
+    "currentPasswordRequired": "Current password is required.",
+    "newPasswordRequired": "New password is required.",
+    "confirmNewPasswordRequired": "Please confirm your new password.",
+    "passwordsDoNotMatch": "Passwords do not match.",
+    "passwordMinLength": "New password must be at least 6 characters.",
+    "changePassword": "Change password",
+    "passwordChanged": "Password changed.",
+    "failedToChangePassword": "Failed to change password.",
+    "validation": "Validation",
+    "analyticsDescription": "Configure how often analytics reports are automatically saved. Saved reports appear on the Statistics page.",
+    "saveFrequency": "Save frequency",
+    "autoSaveAnalyticsReports": "Automatically save analytics reports",
+    "saved": "Saved",
+    "analyticsFrequencyUpdated": "Analytics save frequency updated.",
+    "analyticsSnapshotsEnabled": "Analytics snapshots enabled.",
+    "analyticsSnapshotsDisabled": "Analytics snapshots disabled.",
+    "failedToSave": "Failed to save.",
+    "period": {
+      "week": "Week",
+      "month": "Month",
+      "quarter": "Quarter"
+    }
+  },
+  "tabs": {
+    "all": "All",
+    "expenses": "Expenses",
+    "revenue": "Revenue",
+    "transfers": "Transfers",
+    "charts": "Charts",
+    "reports": "Reports",
+    "statisticsView": "Statistics view",
+    "rateChart": "Rate chart",
+    "loanCalculator": "Loan calculator",
+    "settingsSections": "Settings sections",
+    "settings": {
+      "account": "Account",
+      "security": "Security",
+      "analytics": "Analytics"
+    },
+    "roomSections": "Room sections",
+    "room": {
+      "overview": "Overview",
+      "transactions": "Transactions",
+      "categories": "Categories",
+      "goals": "Goals",
+      "subscriptions": "Subscriptions",
+      "members": "Members"
+    }
+  },
+  "dashboard": {
+    "totalBalance": "Total Balance",
+    "allAccounts": "All accounts",
+    "default": "Default",
+    "noCards": "No cards added",
+    "addCardToSeeBalance": "Add a card to see balance",
+    "weekStatistic": "Week statistic",
+    "goals": "Goals",
+    "expenses": "Expenses",
+    "upcomingSubscriptions": "Upcoming subscriptions",
+    "recentTransactions": "Recent transactions",
+    "transactionType": "Transaction type",
+    "noTransactions": "No transactions",
+    "noRoomTransactions": "No transactions in this room yet",
+    "noExpenses": "No expenses",
+    "noGoals": "No goals",
+    "addGoalInTab": "Add a goal in the Goals tab",
+    "createGoalOnPage": "Create a goal on the Goals page",
+    "noUpcomingSubscriptions": "No upcoming subscriptions",
+    "addSubscriptionInTab": "Add a subscription in the Subscriptions tab",
+    "addSubscriptionInSection": "Add a subscription in the Subscriptions section"
+  },
+  "balances": {
+    "addCard": "Add Card",
+    "loading": "Loading balances...",
+    "noCardsMatch": "No cards match your search or filters",
+    "tryChangingSearch": "Try changing the search or filter criteria",
+    "noBalancesYet": "No balances yet",
+    "addFirstCard": "Add your first card to track account balances",
+    "name": "Name",
+    "bank": "Bank",
+    "cardDetails": "Card Details",
+    "balance": "Balance",
+    "bankName": "Bank name",
+    "accountType": "Account type",
+    "expiry": "Expiry",
+    "accountNumber": "Account number",
+    "availableBalance": "Available balance",
+    "viewDetails": "View details",
+    "setAsDefault": "Set as default",
+    "setting": "Setting...",
+    "usedForAutoTransactions": "Used for automatic transactions",
+    "useThisCardForAutoTransactions": "Use this card for subscriptions and automatic transactions",
+    "edit": "Edit",
+    "editCard": "Edit Card",
+    "delete": "Delete",
+    "deleteCard": "Delete Card",
+    "cancel": "Cancel",
+    "cardDeleted": "Card deleted",
+    "deleteCardError": "Failed to delete card",
+    "confirmDeleteTitle": "Confirm deletion",
+    "confirmDeleteMessage": "Delete this card? Related data will not be deleted.",
+    "cardType": {
+      "credit": "Credit",
+      "debit": "Debit"
+    },
+    "toast": {
+      "primaryCard": "Primary card",
+      "primaryCardDetail": "This card is now used for automatic transactions.",
+      "setPrimaryError": "Could not set primary card."
+    }
+  },
+  "transactions": {
+    "addTransaction": "Add Transaction",
+    "addedBy": "Added by",
+    "historyTitle": "Transactions History",
+    "noTransactionsYet": "No transactions yet",
+    "description": "Description"
+  },
+  "filters": {
+    "title": "Filters",
+    "apply": "Apply",
+    "intro": "Add rules to narrow the list. All rules apply together (AND).",
+    "rule": "Filter rule",
+    "removeFilter": "Remove filter",
+    "value": "Value",
+    "actions": "Filter actions",
+    "addFilter": "Add filter",
+    "clearAll": "Clear all"
+  },
+  "sorters": {
+    "title": "Sort by",
+    "apply": "Apply",
+    "intro": "Choose a field and direction to order the list.",
+    "field": "Field",
+    "direction": "Direction",
+    "ascending": "Ascending",
+    "descending": "Descending",
+    "clearSorting": "Clear sorting"
+  },
+  "export": {
+    "exportReport": "Export report",
+    "exporting": "Export...",
+    "preparingHint": "Preparation of data and charts. Do not close the page and wait for completion.",
+    "signInToExport": "Sign in to export",
+    "ready": "Export ready",
+    "savedWithCopy": "File saved. A copy was added under Statistics -> Saved reports.",
+    "savedWithoutCopy": "File saved. Could not add a copy to Saved reports - try again later.",
+    "failedToGenerate": "Failed to generate report"
+  },
+  "charts": {
+    "analytics": "Analytics",
+    "categoryAnalytics": "Category analytics",
+    "spendingBreakdownAndTrends": "Spending breakdown and trends",
+    "categoriesShare": "Categories Share",
+    "clickCategoryToToggle": "Click category names to show or hide",
+    "clickCategoryAboveToToggle": "Click category names above to show or hide",
+    "spendingByMonth": "Spending by Month",
+    "spendingOverTime": "Spending Over Time",
+    "noData": "No data",
+    "period": {
+      "label": "Period",
+      "currentMonth": "Current month",
+      "last3Months": "Last 3 months",
+      "last6Months": "Last 6 months",
+      "last12Months": "Last 12 months",
+      "allTime": "All time"
+    },
+    "view": {
+      "week": "Week",
+      "month": "Month",
+      "year": "Year"
+    },
+    "budget": "Budget",
+    "previousPeriod": "Previous period",
+    "nextPeriod": "Next period",
+    "budgetStatisticsChart": "Budget statistics chart",
+    "expenses": "Expenses",
+    "expensesStatisticsChart": "Expenses statistics chart",
+    "goalsStatistics": "Goals statistics",
+    "budgetLeft": "Budget left",
+    "daysLeft": "days left"
+  }
+}
+

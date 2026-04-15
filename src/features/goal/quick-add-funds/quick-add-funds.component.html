@@ -4,11 +4,11 @@
     class="quick-add__trigger"
     [class.quick-add__trigger--open]="expanded()"
     (click)="toggle()"
-    aria-label="Add funds to goal"
+    [attr.aria-label]="'goals.addFundsToGoal' | translate"
     [attr.aria-expanded]="expanded()"
   >
     <app-icon material="add_circle_outline" [sizePx]="20" />
-    <span>Add funds</span>
+    <span>{{ 'goals.addFunds' | translate }}</span>
   </button>
   @if (expanded()) {
     <div class="quick-add__popover" (click)="$event.stopPropagation()">
@@ -35,7 +35,7 @@
             [disabled]="amountInvalid || isSubmitting()"
             (click)="add()"
           >
-            {{ isSubmitting() ? '…' : 'Add' }}
+            {{ isSubmitting() ? '…' : ('common.add' | translate) }}
           </button>
           <button
             type="button"
@@ -43,7 +43,7 @@
             [disabled]="isSubmitting()"
             (click)="cancel()"
           >
-            Cancel
+            {{ 'balances.cancel' | translate }}
           </button>
         </div>
       </div>

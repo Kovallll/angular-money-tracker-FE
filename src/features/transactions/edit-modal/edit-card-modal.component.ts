@@ -18,6 +18,7 @@ import {
   CategoriesHttpService,
   CreateTransaction,
   GroupRoomsHttpService,
+  type UpdateGroupTxPayload,
   StatisticsHttpService,
   StatisticsRefreshService,
   Transaction,
@@ -29,6 +30,8 @@ import { injectQuery, QueryClient } from '@tanstack/angular-query-experimental';
 import { Select } from 'primeng/select';
 import { PriceCurrencyFieldComponent } from '@/shared/components/price-currency-field/price-currency-field.component';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
+import { I18nService } from '@/shared/services';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import { asyncScheduler } from 'rxjs';
 import {
@@ -54,6 +57,7 @@ import {
     Select,
     PriceCurrencyFieldComponent,
     AppIconComponent,
+    TranslatePipe,
   ],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -86,21 +90,18 @@ export class EditTransactionModalComponent implements OnInit {
   private cdr = inject(ChangeDetectorRef);
   private destroyRef = inject(DestroyRef);
   protected currencyService = inject(CurrencyService);
+  protected i18n = inject(I18nService);
   readonly transaction = this.dialogCtx.transaction;
 
   protected getGroupRoomId(): string | undefined {
     return this.dialogCtx.groupRoomId;
   }
 
-  /** В комнате API PATCH не меняет тип/способ оплаты/флаг карты — поля скрываем. */
   protected get editFormInputs() {
     const isTransfer = String(this.card().type ?? '') === 'transfer';
     let base = this.inputs;
-    if (this.dialogCtx.groupRoomId) {
-      base = base.filter((i) => !['type', 'paymentMethod'].includes(i.field));
-    }
     if (isTransfer) {
-      base = base.filter((i) => i.field !== 'category');
+      base = base.filter((i) => i.field !== 'category' && i.field !== 'paymentMethod');
     }
     return base;
   }
@@ -135,17 +136,42 @@ export class EditTransactionModalComponent implements OnInit {
     const rid = this.getGroupRoomId();
     const gtxId = this.transaction.groupTransactionId;
     if (rid && gtxId) {
+      const c = this.card();
+      const txType =
+        String(c.type ?? 'expense').toLowerCase() === 'revenue'
+          ? 'revenue'
+          : String(c.type ?? '').toLowerCase() === 'transfer'
+            ? 'transfer'
+            : 'expense';
+      const paymentRaw = String(c.paymentMethod ?? 'card').toLowerCase();
+      const paymentMethod: 'cash' | 'card' =
+        txType === 'transfer' ? 'card' : paymentRaw === 'cash' ? 'cash' : 'card';
+      const useCard = txType === 'transfer' || paymentMethod === 'card';
+      const fromId = Number(c.cardId);
+      const toId = Number(c.transferToCardId);
+      const patch: UpdateGroupTxPayload = {
+        amount: Number(payload.amount),
+        currencyCode: payload.currencyCode || this.currencyService.primaryCode(),
+        title: String(payload.title ?? '').trim(),
+        date: this.formatDateLocal(payload.date as string),
+        type: txType,
+        affectsCardBalance: c.affectsCardBalance !== false,
+        paymentMethod,
+        ...(payload.description != null && String(payload.description).trim() !== ''
+          ? { description: String(payload.description).trim() }
+          : {}),
+        ...(payload.categoryId ? { categoryId: String(payload.categoryId) } : {}),
+      };
+      if (txType === 'transfer') {
+        if (Number.isFinite(fromId) && fromId > 0) patch.cardId = Math.trunc(fromId);
+        if (Number.isFinite(toId) && toId > 0) patch.transferToCardId = Math.trunc(toId);
+      } else if (useCard && Number.isFinite(fromId) && fromId > 0) {
+        patch.cardId = Math.trunc(fromId);
+      } else {
+        patch.cardId = null;
+      }
       this.groupRoomsHttp
-        .updateRoomTransaction(rid, gtxId, {
-          amount: Number(payload.amount),
-          currencyCode: payload.currencyCode || this.currencyService.primaryCode(),
-          title: String(payload.title ?? '').trim(),
-          date: this.formatDateLocal(payload.date as string),
-          ...(payload.description != null && String(payload.description).trim() !== ''
-            ? { description: String(payload.description).trim() }
-            : {}),
-          ...(payload.categoryId ? { categoryId: String(payload.categoryId) } : {}),
-        })
+        .updateRoomTransaction(rid, gtxId, patch)
         .pipe(
           tap(() => {
             this.balancesHttpService.refresh();
@@ -156,8 +182,8 @@ export class EditTransactionModalComponent implements OnInit {
             this.messageService.add({
               key: 'toast',
               severity: 'success',
-              summary: 'Success',
-              detail: 'Transaction updated',
+              summary: this.i18n.t('common.success'),
+              detail: this.i18n.t('txModal.toast.updateSuccess'),
               life: 3000,
             });
             this.ref.close();
@@ -166,8 +192,8 @@ export class EditTransactionModalComponent implements OnInit {
             this.messageService.add({
               key: 'toast',
               severity: 'error',
-              summary: 'Error',
-              detail: 'Failed to update transaction',
+              summary: this.i18n.t('common.error'),
+              detail: this.i18n.t('txModal.toast.updateError'),
               life: 4000,
             });
             return of(null);
@@ -187,8 +213,8 @@ export class EditTransactionModalComponent implements OnInit {
           this.messageService.add({
             key: 'toast',
             severity: 'success',
-            summary: 'Success',
-            detail: 'Transaction updated',
+            summary: this.i18n.t('common.success'),
+            detail: this.i18n.t('txModal.toast.updateSuccess'),
             life: 3000,
           });
           this.ref.close();
@@ -197,8 +223,8 @@ export class EditTransactionModalComponent implements OnInit {
           this.messageService.add({
             key: 'toast',
             severity: 'error',
-            summary: 'Error',
-            detail: 'Failed to update transaction',
+            summary: this.i18n.t('common.error'),
+            detail: this.i18n.t('txModal.toast.updateError'),
             life: 4000,
           });
           return of(null);
@@ -218,10 +244,21 @@ export class EditTransactionModalComponent implements OnInit {
 
   onSubmit(form: NgForm) {
     if (form.valid) {
+      const c = this.card();
       const value = { ...form.value, date: this.formatDateLocal(form.value?.date) } as Record<
         string,
         unknown
       >;
+      value['type'] = c.type;
+      value['paymentMethod'] = c.paymentMethod;
+      value['affectsCardBalance'] = c.affectsCardBalance !== false;
+      value['title'] = c.title ?? value['title'];
+      value['amount'] = c.amount ?? value['amount'];
+      value['currencyCode'] = c.currencyCode ?? value['currencyCode'];
+      value['description'] =
+        c.description != null && String(c.description).trim() !== ''
+          ? String(c.description).trim()
+          : '';
       if (String(value['type'] ?? '') !== 'transfer') {
         const categoryTitle = value['category'];
         const list = this.categories.data() ?? [];
@@ -245,33 +282,42 @@ export class EditTransactionModalComponent implements OnInit {
   }
 
   inputs = [
-    { name: 'date', placeholder: 'Date', field: 'date' },
-    { name: 'title', placeholder: 'Title', field: 'title' },
-    { name: 'category', placeholder: 'Category', field: 'category' },
-    { name: 'type', placeholder: 'Type', field: 'type' },
-    { name: 'currencyCode', placeholder: 'Currency', field: 'currencyCode' },
-    { name: 'paymentMethod', placeholder: 'Payment method (optional)', field: 'paymentMethod' },
-    { name: 'amount', placeholder: 'Amount', field: 'amount' },
+    { name: 'date', placeholder: 'txModal.date', field: 'date' },
+    { name: 'title', placeholder: 'txModal.title', field: 'title' },
+    { name: 'description', placeholder: 'txModal.description', field: 'description' },
+    { name: 'category', placeholder: 'txModal.category', field: 'category' },
+    { name: 'type', placeholder: 'txModal.type', field: 'type' },
+    { name: 'currencyCode', placeholder: 'common.currency', field: 'currencyCode' },
+    { name: 'paymentMethod', placeholder: 'txModal.paymentMethod', field: 'paymentMethod' },
+    { name: 'amount', placeholder: 'txModal.amount', field: 'amount' },
   ];
 
-  readonly paymentMethodOptions = [
-    { label: 'Cash', value: 'cash' },
-    { label: 'Card', value: 'card' },
-  ];
+  get paymentMethodOptions() {
+    this.i18n.currentLang();
+    return [
+      { label: this.i18n.t('txModal.paymentMethods.cash'), value: 'cash' },
+      { label: this.i18n.t('txModal.paymentMethods.card'), value: 'card' },
+    ];
+  }
 
-  readonly typeOptions = [
-    { label: 'Expense', value: 'expense' },
-    { label: 'Revenue', value: 'revenue' },
-    { label: 'Transfer', value: 'transfer' },
-  ];
+  get typeOptions() {
+    this.i18n.currentLang();
+    return [
+      { label: this.i18n.t('txModal.types.expense'), value: 'expense' },
+      { label: this.i18n.t('txModal.types.revenue'), value: 'revenue' },
+      { label: this.i18n.t('txModal.types.transfer'), value: 'transfer' },
+    ];
+  }
 
   card = signal<any>([]);
 
   ngOnInit() {
     const card = this.inputs.reduce((acc, cur) => {
-      let v =
-        this.transaction[cur.field as keyof CreateTransaction] ??
-        (cur.field === 'currencyCode' ? this.currencyService.primaryCode() : undefined);
+      const raw = this.transaction as unknown as Record<string, unknown>;
+      let v = raw[cur.field];
+      if (v === undefined && cur.field === 'currencyCode') {
+        v = this.currencyService.primaryCode();
+      }
       if (cur.field === 'type') {
         if (v == null || v === '') {
           v = 'expense';
@@ -287,7 +333,16 @@ export class EditTransactionModalComponent implements OnInit {
     if (this.transaction.transferToCardId != null && this.transaction.transferToCardId !== '') {
       card['transferToCardId'] = Number(this.transaction.transferToCardId);
     }
+    if (this.transaction.groupTransactionId) {
+      const cid = Number(this.transaction.cardId);
+      card['cardId'] = Number.isFinite(cid) && cid > 0 ? cid : '';
+      const pm = String(
+        card['paymentMethod'] ?? this.transaction.paymentMethod ?? 'card',
+      ).toLowerCase();
+      card['paymentMethod'] = pm === 'cash' ? 'cash' : 'card';
+    }
     this.card.set(card);
+    this.balancesHttpService.refresh();
 
     this.titleInput$
       .pipe(
@@ -373,7 +428,10 @@ export class EditTransactionModalComponent implements OnInit {
   }
 
   get categoryFieldLabel(): string {
-    return this.isCategorySuggested ? 'Category (предугадано)' : 'Category';
+    const base = this.isCategorySuggested
+      ? `${this.i18n.t('txModal.category')} (${this.i18n.t('txModal.predicted')})`
+      : this.i18n.t('txModal.category');
+    return this.getGroupRoomId() ? `${base} (${this.i18n.t('common.optional')})` : base;
   }
 
   selectSuggestedCategoryTitle(title: string, id?: string | number): void {
@@ -415,7 +473,26 @@ export class EditTransactionModalComponent implements OnInit {
     if (field === 'category') {
       this.userChangedCategoryManually = true;
     }
-    this.card.update((state: any) => ({ ...state, [field]: value }));
+    this.card.update((state: any) => {
+      const next: Record<string, unknown> = { ...state, [field]: value };
+      if (field === 'type' && value === 'transfer') {
+        next['paymentMethod'] = 'card';
+      }
+      if (field === 'paymentMethod' && value === 'cash' && String(state.type) !== 'transfer') {
+        next['cardId'] = '';
+      }
+      if (
+        field === 'type' &&
+        value !== 'transfer' &&
+        String(next['paymentMethod'] || 'card') === 'card' &&
+        (next['cardId'] === '' || next['cardId'] == null)
+      ) {
+        const list = this.cards();
+        const primary = list.find((c) => c.isPrimary) ?? list[0];
+        if (primary) next['cardId'] = primary.id;
+      }
+      return next;
+    });
   }
 
   private resetPredictionState(): void {
@@ -438,6 +515,25 @@ export class EditTransactionModalComponent implements OnInit {
   }
   set currencyCode(v: string) {
     this.setCardField('currencyCode', v);
+  }
+
+  protected isSaveDisabled(form: NgForm | null | undefined): boolean {
+    if (!form) return true;
+    const c = this.card();
+    const amt = Number(c.amount) || 0;
+    if (amt <= 0) return true;
+    if (this.getGroupRoomId()) {
+      if (c.type === 'transfer') {
+        const from = Number(c.cardId);
+        const to = Number(c.transferToCardId);
+        if (!Number.isFinite(from) || from < 1) return true;
+        if (!Number.isFinite(to) || to < 1 || to === from) return true;
+      } else if ((c.paymentMethod || 'card') === 'card') {
+        const from = Number(c.cardId);
+        if (!Number.isFinite(from) || from < 1) return true;
+      }
+    }
+    return !!form.invalid;
   }
 
   close(): void {

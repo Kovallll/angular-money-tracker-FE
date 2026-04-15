@@ -2,7 +2,7 @@
   @for (item of primaryItems; track item.id) {
     <a [routerLink]="['/', item.path]" routerLinkActive="active" class="tab">
       <app-icon [material]="item.icon" [sizePx]="20" iconClass="tab__icon" />
-      <span class="tab__label">{{ item.title }}</span>
+      <span class="tab__label">{{ item.title | translate }}</span>
     </a>
   }
   @if (hasMore) {
@@ -13,7 +13,7 @@
       (click)="openMore()"
     >
       <app-icon material="more_horiz" [sizePx]="20" iconClass="tab__icon" />
-      <span class="tab__label">More</span>
+      <span class="tab__label">{{ 'common.more' | translate }}</span>
     </button>
   }
 </nav>

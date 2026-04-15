@@ -17,6 +17,7 @@ import { AppIconComponent } from '@/shared/components/app-icon/app-icon.componen
 import dayjs from 'dayjs';
 import { injectQuery } from '@tanstack/angular-query-experimental';
 import { lastValueFrom } from 'rxjs';
+import { TranslatePipe } from '@ngx-translate/core';
 
 function getNextChargeDate(sub: SubscribeItem): dayjs.Dayjs {
   const d = dayjs(sub.lastCharge || sub.subscribeDate);
@@ -49,6 +50,7 @@ function toPairsItems(list: SubscribeItem[]): SubscribeItem[][] {
     SubscribeCardItemComponent,
     ProgressSpinner,
     AppIconComponent,
+    TranslatePipe,
   ],
   templateUrl: './subscribe-card.html',
   styleUrls: ['./subscribe-card.scss'],

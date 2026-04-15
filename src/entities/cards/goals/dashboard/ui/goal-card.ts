@@ -17,6 +17,7 @@ import { Carousel } from 'primeng/carousel';
 import { DASHBOARD_CAROUSEL_RESPONSIVE } from '../../../slider/lib/carousel-options';
 import { injectQuery } from '@tanstack/angular-query-experimental';
 import { lastValueFrom } from 'rxjs';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'dash-goal-card',
@@ -28,6 +29,7 @@ import { lastValueFrom } from 'rxjs';
     Carousel,
     GoalCardItemComponent,
     ProgressSpinnerModule,
+    TranslatePipe,
   ],
   templateUrl: './goal-card.html',
   styleUrl: `./goal-card.scss`,

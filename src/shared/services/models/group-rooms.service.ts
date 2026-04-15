@@ -28,7 +28,7 @@ type CreateInvitePayload = {
   expiresInHours?: number;
 };
 
-type UpdateGroupTxPayload = {
+export type UpdateGroupTxPayload = {
   paidBy?: string;
   categoryId?: string;
   amount?: number;
@@ -36,6 +36,11 @@ type UpdateGroupTxPayload = {
   title?: string;
   description?: string;
   date?: string;
+  type?: 'expense' | 'revenue' | 'transfer';
+  cardId?: number | null;
+  transferToCardId?: number | null;
+  affectsCardBalance?: boolean;
+  paymentMethod?: 'cash' | 'card';
 };
 
 type CreateGroupTxPayload = {
@@ -46,6 +51,7 @@ type CreateGroupTxPayload = {
   type?: 'expense' | 'revenue' | 'transfer';
   transferToCardId?: number;
   affectsCardBalance?: boolean;
+  paymentMethod?: 'cash' | 'card';
   amount: number;
   currencyCode?: string;
   title: string;

@@ -2,6 +2,7 @@ import { GroupRoomsHttpService, GroupTransactionItem, RoomContributionMember } f
 import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
 import { Component, computed, inject, input } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { ChartConfiguration } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { injectQuery } from '@tanstack/angular-query-experimental';
@@ -26,7 +27,7 @@ function safeCurrency(code: string | null | undefined): string {
 @Component({
   selector: 'room-member-contributions',
   standalone: true,
-  imports: [BaseChartDirective, ProgressSpinner],
+  imports: [BaseChartDirective, ProgressSpinner, TranslateModule],
   templateUrl: './room-member-contributions.component.html',
   styleUrl: './room-member-contributions.component.scss',
 })

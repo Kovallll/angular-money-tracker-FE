@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { AppCurrencyPrimaryPipe } from '@/shared/pipes/app-currency-primary.pipe';
 import { BaseChartDirective } from 'ng2-charts';
@@ -8,6 +8,8 @@ import { GoalAdjustCardButtonComponent } from '@/features/goal/adjust-goal-card/
 import { GoalQuickAddFundsComponent } from '@/features/goal/quick-add-funds/quick-add-funds.component';
 import { ChartData, ChartOptions } from 'chart.js';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
+import { TranslateModule } from '@ngx-translate/core';
+import { I18nService } from '@/shared/services';
 
 @Component({
   selector: 'goal-active-card',
@@ -23,6 +25,7 @@ import { AppIconComponent } from '@/shared/components/app-icon/app-icon.componen
     GoalAdjustCardButtonComponent,
     GoalQuickAddFundsComponent,
     AppIconComponent,
+    TranslateModule,
   ],
   templateUrl: './active-card.component.html',
   styleUrls: ['./active-card.component.scss'],
@@ -30,6 +33,7 @@ import { AppIconComponent } from '@/shared/components/app-icon/app-icon.componen
 })
 export class GoalActiveCardComponent {
   goal = input<any>();
+  private i18n = inject(I18nService);
 
   private static readonly doughnutLabels = ['Target', 'Remaining'] as const;
 
@@ -81,27 +85,27 @@ export class GoalActiveCardComponent {
     const end = this.parseDate(item.endDate);
     if (!start) return '';
     const today = this.todayStart();
-    if (today < start) return '0 days passed';
+    if (today < start) return this.i18n.t('goals.time.daysPassed', { count: 0 });
     const to = end && today > end ? end : today;
     const days = Math.floor((to.getTime() - start.getTime()) / 86400000);
     if (days >= 7) {
       const w = Math.floor(days / 7);
-      return `${w} ${w === 1 ? 'week' : 'weeks'} passed`;
+      return this.i18n.t('goals.time.weeksPassed', { count: w });
     }
-    return `${days} ${days === 1 ? 'day' : 'days'} passed`;
+    return this.i18n.t('goals.time.daysPassed', { count: days });
   }
 
   getTimeRemaining(item: { startDate?: string; endDate?: string }): string {
     const end = this.parseDate(item.endDate);
-    if (!end) return 'No deadline';
+    if (!end) return this.i18n.t('goals.time.noDeadline');
     const today = this.todayStart();
-    if (today >= end) return 'Ended';
+    if (today >= end) return this.i18n.t('goals.time.ended');
     const days = Math.ceil((end.getTime() - today.getTime()) / 86400000);
     if (days >= 7) {
       const w = Math.floor(days / 7);
-      return `${w} ${w === 1 ? 'week' : 'weeks'} left`;
+      return this.i18n.t('goals.time.weeksLeft', { count: w });
     }
-    return `${days} ${days === 1 ? 'day' : 'days'} left`;
+    return this.i18n.t('goals.time.daysLeft', { count: days });
   }
 
   private parseDate(value: string | undefined): Date | null {

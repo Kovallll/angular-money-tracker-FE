@@ -21,6 +21,7 @@ import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.
 import { GOALS_CATEGORY_NAME } from '@/shared/constants';
 import { MessageService } from 'primeng/api';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   standalone: true,
@@ -28,7 +29,7 @@ import { AppIconComponent } from '@/shared/components/app-icon/app-icon.componen
   templateUrl: './quick-add-funds.component.html',
   styleUrls: ['./quick-add-funds.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, AppIconComponent],
+  imports: [FormsModule, AppIconComponent, TranslateModule],
 })
 export class GoalQuickAddFundsComponent {
   private goalsService = inject(GoalsService);

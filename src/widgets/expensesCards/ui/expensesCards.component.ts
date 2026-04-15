@@ -7,6 +7,7 @@ import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.
 import { ExpensesStatisticCardComponent } from '@/entities/cards/statistics/ui/expenses/expenses-stats.component';
 import { ProgressSpinner } from 'primeng/progressspinner';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   standalone: true,
@@ -19,6 +20,7 @@ import { AppIconComponent } from '@/shared/components/app-icon/app-icon.componen
     AppCurrencyPipe,
     ProgressSpinner,
     AppIconComponent,
+    TranslatePipe,
   ],
 })
 export class ExpensesCardsComponent {

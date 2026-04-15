@@ -5,7 +5,7 @@
         <div class="dash-empty-icon" aria-hidden="true">
           <app-icon prime="list" [sizePx]="26" />
         </div>
-        <p>No transactions yet</p>
+        <p>{{ 'transactions.noTransactionsYet' | translate }}</p>
       </div>
     } @else {
       @for (row of dataSource(); track row.id) {
@@ -62,7 +62,7 @@
               matTooltipPosition="above"
               matTooltipClass="transaction-description-tooltip"
               #mDescTip="matTooltip"
-              aria-label="Description"
+              [attr.aria-label]="'transactions.description' | translate"
               (click)="showDescriptionOnTap($event, mDescTip)"
             >
               <app-icon material="info_outline" [sizePx]="22" />
@@ -72,7 +72,7 @@
             <button
               type="button"
               class="mobile-card__delete"
-              aria-label="Delete"
+              [attr.aria-label]="'balances.delete' | translate"
               (click)="onDelete.emit(row); $event.stopPropagation()"
             >
               <app-icon material="delete_outline" [sizePx]="20" />

@@ -1,7 +1,7 @@
 <div class="container">
   <form #f="ngForm" (ngSubmit)="onSubmit(f)" class="form">
     <mat-form-field appearance="outline" class="field" floatLabel="auto">
-      <mat-label>Current password&#42;</mat-label>
+      <mat-label>{{ 'settings.currentPassword' | translate }}&#42;</mat-label>
       <input
         matInput
         type="password"
@@ -12,11 +12,11 @@
         autocomplete="current-password"
       />
       @if (old.invalid && (old.touched || f.submitted)) {
-        <mat-error>Current password is required.</mat-error>
+        <mat-error>{{ 'settings.currentPasswordRequired' | translate }}</mat-error>
       }
     </mat-form-field>
     <mat-form-field appearance="outline" class="field" floatLabel="auto">
-      <mat-label>New password&#42;</mat-label>
+      <mat-label>{{ 'settings.newPassword' | translate }}&#42;</mat-label>
       <input
         matInput
         type="password"
@@ -27,19 +27,19 @@
         minlength="6"
         autocomplete="new-password"
       />
-      <mat-hint>At least 6 characters</mat-hint>
+      <mat-hint>{{ 'settings.atLeast6Chars' | translate }}</mat-hint>
       @if (newPw.invalid && (newPw.touched || f.submitted)) {
         <mat-error>
           @if (newPw.hasError('required')) {
-            New password is required.
+            {{ 'settings.newPasswordRequired' | translate }}
           } @else if (newPw.hasError('minlength')) {
-            At least 6 characters.
+            {{ 'settings.atLeast6Chars' | translate }}.
           }
         </mat-error>
       }
     </mat-form-field>
     <mat-form-field appearance="outline" class="field" floatLabel="auto">
-      <mat-label>Confirm new password&#42;</mat-label>
+      <mat-label>{{ 'settings.confirmNewPassword' | translate }}&#42;</mat-label>
       <input
         matInput
         type="password"
@@ -50,10 +50,10 @@
         autocomplete="new-password"
       />
       @if (confirm.invalid && (confirm.touched || f.submitted)) {
-        <mat-error>Please confirm your new password.</mat-error>
+        <mat-error>{{ 'settings.confirmNewPasswordRequired' | translate }}</mat-error>
       }
       @if ((confirm.touched || f.submitted) && confirmPassword && newPassword !== confirmPassword) {
-        <mat-error>Passwords do not match.</mat-error>
+        <mat-error>{{ 'settings.passwordsDoNotMatch' | translate }}</mat-error>
       }
     </mat-form-field>
     <div class="actions">
@@ -64,7 +64,7 @@
         [disabled]="loading()"
         [loading]="loading()"
       >
-        Change password
+        {{ 'settings.changePassword' | translate }}
       </app-button>
     </div>
   </form>

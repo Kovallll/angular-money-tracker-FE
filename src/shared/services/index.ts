@@ -4,4 +4,5 @@ export { AuthService } from './auth/auth.service';
 export { PushService } from './push/push.service';
 export { ExportReportService } from './export/export-report.service';
 export { StatisticsTabCoordinatorService } from './statistics-tab-coordinator.service';
+export { I18nService } from './i18n.service';
 export * from './models';

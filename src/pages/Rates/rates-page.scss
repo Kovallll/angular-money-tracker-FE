@@ -292,3 +292,65 @@
 .spinner {
   display: inline-block;
 }
+
+.mobile-day-explorer {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.mobile-day-explorer__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.mobile-day-explorer__label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.mobile-day-explorer__value {
+  font-size: 16px;
+  font-weight: 700;
+  color: #5ad6e4;
+}
+
+.mobile-day-explorer__date {
+  margin-top: 4px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.mobile-day-explorer__slider {
+  margin-top: 10px;
+  width: 100%;
+  accent-color: #5ad6e4;
+}
+
+/* Currency dropdown: make selected option clearly visible */
+::ng-deep .currency-dropdown-panel.mat-mdc-select-panel {
+  background: #0f2144;
+}
+
+::ng-deep .currency-dropdown-panel .mat-mdc-option {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+::ng-deep .currency-dropdown-panel .mat-mdc-option:hover:not(.mdc-list-item--disabled),
+::ng-deep
+  .currency-dropdown-panel
+  .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled),
+::ng-deep
+  .currency-dropdown-panel
+  .mat-mdc-option.mdc-list-item--selected.mdc-list-item--highlighted:not(.mdc-list-item--disabled) {
+  background: rgba(91, 124, 255, 0.3);
+}
+
+::ng-deep .currency-dropdown-panel .mat-mdc-option.mdc-list-item--selected .mdc-list-item__primary-text {
+  color: #ffffff;
+  font-weight: 700;
+}

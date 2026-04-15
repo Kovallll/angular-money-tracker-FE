@@ -6,7 +6,7 @@
   [disabled]="isLoading()"
   class="export-btn"
   severity="primary"
-  aria-label="Export report"
+  [attr.aria-label]="'export.exportReport' | translate"
 >
   <app-icon prime="download" [sizePx]="18" />
   <span class="p-button-label">{{ buttonLabel() }}</span>
@@ -21,13 +21,17 @@
 ></p-tieredMenu>
 
 @if (showOverlay()) {
-  <div class="export-overlay" aria-busy="true" aria-label="Export report">
+  <div class="export-overlay" aria-busy="true" [attr.aria-label]="'export.exportReport' | translate">
     <div class="export-overlay__backdrop"></div>
     <div class="export-overlay__content">
-      <p-progressSpinner styleClass="export-overlay__spinner" strokeWidth="4" ariaLabel="Loading" />
-      <p class="export-overlay__title">Export report</p>
+      <p-progressSpinner
+        styleClass="export-overlay__spinner"
+        strokeWidth="4"
+        [ariaLabel]="'common.loading' | translate"
+      />
+      <p class="export-overlay__title">{{ 'export.exportReport' | translate }}</p>
       <p class="export-overlay__hint">
-        Preparation of data and charts. Do not close the page and wait for completion.
+        {{ 'export.preparingHint' | translate }}
       </p>
     </div>
   </div>

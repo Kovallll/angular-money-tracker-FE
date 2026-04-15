@@ -1,18 +1,18 @@
 @if (goal()) {
-  <dashboard-card title="Active goal">
+  <dashboard-card [title]="'goals.activeGoal' | translate">
     <card-body class="body">
       <div class="card">
         <div class="header">
           <div class="left-header">
             <p class="goal-title">{{ goal()!.title }}</p>
             <p class="progress-badge" [class.complete]="getProgress(goal()!) >= 100">
-              {{ getProgress(goal()!) | number: '1.0-1' }}% reached
+              {{ getProgress(goal()!) | number: '1.0-1' }}% {{ 'goals.reached' | translate }}
             </p>
           </div>
           <div class="right-header">
             <p class="date">
               {{ goal()!.startDate | date: 'MMM d, y' }} –
-              {{ goal()!.endDate ? (goal()!.endDate | date: 'MMM d, y') : 'No deadline' }}
+              {{ goal()!.endDate ? (goal()!.endDate | date: 'MMM d, y') : ('goals.time.noDeadline' | translate) }}
             </p>
             <div class="time-badges">
               @if (getTimeElapsed(goal()!)) {
@@ -21,7 +21,7 @@
               @if (getTimeRemaining(goal()!)) {
                 <span
                   class="time-badge time-badge--remaining"
-                  [class.time-badge--ended]="getTimeRemaining(goal()!) === 'Ended'"
+                  [class.time-badge--ended]="getTimeRemaining(goal()!) === ('goals.time.ended' | translate)"
                   >{{ getTimeRemaining(goal()!) }}</span
                 >
               }
@@ -35,7 +35,7 @@
               <div class="stat-row stat-row--target">
                 <span class="stat-icon"><app-icon prime="wallet" [sizePx]="20" /></span>
                 <div class="text-block">
-                  <p class="text">Target Budget</p>
+                  <p class="text">{{ 'goals.targetBudget' | translate }}</p>
                   <p class="price">
                     {{ goal()!.targetBudget | appCurrencyPrimary: goal()!.currencyCode }}
                   </p>
@@ -47,7 +47,7 @@
               <div class="stat-row">
                 <span class="stat-icon"><app-icon prime="flag" [sizePx]="20" /></span>
                 <div class="text-block">
-                  <p class="text">Goal Budget</p>
+                  <p class="text">{{ 'goals.goalBudget' | translate }}</p>
                   <p class="price">
                     {{ goal()!.goalBudget | appCurrencyPrimary: goal()!.currencyCode }}
                   </p>
@@ -77,6 +77,6 @@
 } @else {
   <div class="empty-active">
     <span class="empty-icon" aria-hidden="true"><app-icon prime="flag" [sizePx]="20" /></span>
-    <p class="empty-text">Select a goal above to view details</p>
+    <p class="empty-text">{{ 'goals.selectGoalToViewDetails' | translate }}</p>
   </div>
 }

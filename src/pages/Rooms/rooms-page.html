@@ -1,22 +1,22 @@
 <section class="rooms-page">
   <header class="app-page-head app-page-head--tight">
     <div class="app-page-head__text">
-      <h1 class="app-page-head__title">Rooms</h1>
-      <p class="app-page-head__subtitle">Manage shared spaces for collaborative finances.</p>
+      <h1 class="app-page-head__title">{{ 'page.rooms.title' | translate }}</h1>
+      <p class="app-page-head__subtitle">{{ 'page.rooms.subtitle' | translate }}</p>
     </div>
   </header>
 
   <div class="rooms-stats">
     <div class="stat-card">
-      <span class="stat-card__label">Total rooms</span>
+      <span class="stat-card__label">{{ 'rooms.totalRooms' | translate }}</span>
       <strong class="stat-card__value">{{ roomStats().total }}</strong>
     </div>
     <div class="stat-card">
-      <span class="stat-card__label">Owned</span>
+      <span class="stat-card__label">{{ 'rooms.owned' | translate }}</span>
       <strong class="stat-card__value">{{ roomStats().owned }}</strong>
     </div>
     <div class="stat-card">
-      <span class="stat-card__label">Joined</span>
+      <span class="stat-card__label">{{ 'rooms.joined' | translate }}</span>
       <strong class="stat-card__value">{{ roomStats().joined }}</strong>
     </div>
   </div>
@@ -24,20 +24,20 @@
   <div class="rooms-toolbar">
     <app-button appearance="primary" size="md" (buttonClick)="openCreateRoomDialog()">
       <app-icon prime="plus" [sizePx]="20" />
-      Create room
+      {{ 'rooms.createRoom' | translate }}
     </app-button>
     <app-button appearance="secondary" size="md" (buttonClick)="openInviteDialog()">
       <app-icon prime="link" [sizePx]="20" />
-      Join by invite
+      {{ 'rooms.joinByInvite' | translate }}
     </app-button>
   </div>
 
   <p class="rooms-error" *ngIf="error()">{{ error() }}</p>
 
   <section class="rooms-list">
-    <h2 class="rooms-list__title">My rooms</h2>
-    <p class="rooms-list__hint" *ngIf="isLoading()">Loading…</p>
-    <p class="rooms-list__hint" *ngIf="!isLoading() && rooms().length === 0">No rooms yet.</p>
+    <h2 class="rooms-list__title">{{ 'rooms.myRooms' | translate }}</h2>
+    <p class="rooms-list__hint" *ngIf="isLoading()">{{ 'common.loading' | translate }}…</p>
+    <p class="rooms-list__hint" *ngIf="!isLoading() && rooms().length === 0">{{ 'rooms.noRoomsYet' | translate }}</p>
 
     <div class="room-card" *ngFor="let room of rooms()">
       <a class="room-card__link" [routerLink]="['/', routePaths.ROOM_DETAILS, room.id]">
@@ -46,15 +46,15 @@
           <p class="room-card__desc" *ngIf="room.description?.trim()">{{ room.description }}</p>
         </div>
         <div class="room-card__meta">
-          <span class="room-card__role">{{ room.role }}</span>
-          <span class="room-card__members">{{ room.membersCount }} members</span>
+          <span class="room-card__role">{{ ('rooms.role.' + room.role) | translate }}</span>
+          <span class="room-card__members">{{ room.membersCount }} {{ 'rooms.members' | translate }}</span>
         </div>
       </a>
       <div class="room-card__actions" *ngIf="canManageRoom(room)" (click)="$event.stopPropagation()">
         <context-menu-component
           [showTrigger]="true"
           [showDelete]="room.role === 'owner'"
-          triggerAriaLabel="Room actions"
+          [triggerAriaLabel]="'rooms.roomActions' | translate"
           (onEdit)="openEditRoom(room)"
           (onDelete)="confirmDeleteRoom(room)"
         />
@@ -64,7 +64,7 @@
 </section>
 
 <p-dialog
-  header="Create room"
+  [header]="'rooms.createRoom' | translate"
   [visible]="createRoomDialogVisible()"
   (visibleChange)="onCreateDialogVisibleChange($event)"
   [modal]="true"
@@ -79,7 +79,7 @@
     [showCloseButton]="false"
     [showCancel]="true"
     [showSave]="true"
-    saveLabel="Create"
+    [saveLabel]="'common.create' | translate"
     [saveDisabled]="!roomName().trim() || isSubmitting()"
     [saveLoading]="isSubmitting()"
     (cancelRequest)="closeCreateRoomDialog()"
@@ -88,7 +88,7 @@
     <form #createForm="ngForm" (ngSubmit)="submitCreateRoom(createForm)" class="app-modal-form">
       <div class="form-fields">
         <div class="field form-field--full">
-          <label for="roomNameInput">Room name</label>
+          <label for="roomNameInput">{{ 'rooms.roomName' | translate }}</label>
           <input
             pInputText
             type="text"
@@ -96,19 +96,21 @@
             name="roomName"
             required
             maxlength="255"
-            placeholder="e.g. Family budget"
+            [placeholder]="'rooms.roomNamePlaceholder' | translate"
             [ngModel]="roomName()"
             (ngModelChange)="roomName.set($event)"
           />
         </div>
         <div class="field form-field--full">
-          <label for="roomDescInput">Description <span class="optional">(optional)</span></label>
+          <label for="roomDescInput"
+            >{{ 'rooms.description' | translate }} <span class="optional">({{ 'common.optional' | translate }})</span></label
+          >
           <textarea
             id="roomDescInput"
             name="roomDescription"
             class="rooms-modal-textarea"
             rows="3"
-            placeholder="What is this room for?"
+            [placeholder]="'rooms.descriptionPlaceholder' | translate"
             [ngModel]="roomDescription()"
             (ngModelChange)="roomDescription.set($event)"
           ></textarea>
@@ -119,7 +121,7 @@
 </p-dialog>
 
 <p-dialog
-  header="Edit room"
+  [header]="'rooms.editRoom' | translate"
   [visible]="editRoomDialogVisible()"
   (visibleChange)="onEditDialogVisibleChange($event)"
   [modal]="true"
@@ -134,7 +136,7 @@
     [showCloseButton]="false"
     [showCancel]="true"
     [showSave]="true"
-    saveLabel="Save"
+    [saveLabel]="'common.save' | translate"
     [saveDisabled]="!editRoomName().trim() || isSubmitting()"
     [saveLoading]="isSubmitting()"
     (cancelRequest)="closeEditRoomDialog()"
@@ -143,7 +145,7 @@
     <form #editForm="ngForm" (ngSubmit)="submitEditRoom(editForm)" class="app-modal-form">
       <div class="form-fields">
         <div class="field form-field--full">
-          <label for="editRoomNameInput">Room name</label>
+          <label for="editRoomNameInput">{{ 'rooms.roomName' | translate }}</label>
           <input
             pInputText
             type="text"
@@ -156,7 +158,9 @@
           />
         </div>
         <div class="field form-field--full">
-          <label for="editRoomDescInput">Description <span class="optional">(optional)</span></label>
+          <label for="editRoomDescInput"
+            >{{ 'rooms.description' | translate }} <span class="optional">({{ 'common.optional' | translate }})</span></label
+          >
           <textarea
             id="editRoomDescInput"
             name="editRoomDescription"
@@ -172,7 +176,7 @@
 </p-dialog>
 
 <p-dialog
-  header="Join by invite"
+  [header]="'rooms.joinByInvite' | translate"
   [visible]="inviteDialogVisible()"
   (visibleChange)="onInviteDialogVisibleChange($event)"
   [modal]="true"
@@ -187,7 +191,7 @@
     [showCloseButton]="false"
     [showCancel]="true"
     [showSave]="true"
-    saveLabel="Accept"
+    [saveLabel]="'rooms.accept' | translate"
     [saveDisabled]="!canSubmitInvite() || isSubmitting()"
     [saveLoading]="isSubmitting()"
     (cancelRequest)="closeInviteDialog()"
@@ -196,14 +200,14 @@
     <form class="app-modal-form" (ngSubmit)="$event.preventDefault()">
       <div class="form-fields">
         <div class="field form-field--full">
-          <label for="inviteTokenInput">Invite token</label>
+          <label for="inviteTokenInput">{{ 'rooms.inviteToken' | translate }}</label>
           <input
             pInputText
             type="text"
             id="inviteTokenInput"
             name="inviteToken"
             autocomplete="off"
-            placeholder="Paste invite token"
+            [placeholder]="'rooms.inviteTokenPlaceholder' | translate"
             [ngModel]="inviteToken()"
             (ngModelChange)="inviteToken.set($event)"
           />
@@ -217,7 +221,7 @@
             (buttonClick)="rejectInvite()"
           >
             <app-icon prime="times" [sizePx]="20" />
-            Reject invite
+            {{ 'rooms.rejectInvite' | translate }}
           </app-button>
         </div>
       </div>

@@ -10,18 +10,23 @@ import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/
 import { authInterceptor, baseApiUrlInterceptor, errorToastInterceptor } from './shared';
 import { provideTanStackQuery, QueryClient } from '@tanstack/angular-query-experimental';
 import { APP_INITIALIZER, isDevMode } from '@angular/core';
+import { importProvidersFrom } from '@angular/core';
 import { provideServiceWorker } from '@angular/service-worker';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { AuthService } from './shared/services/auth/auth.service';
 import { ExchangeRatesService } from './shared/services/currency/exchange-rates.service';
 import { firstValueFrom } from 'rxjs';
+import { TranslateModule } from '@ngx-translate/core';
+import { I18nService } from './shared/services';
 
 /** Сначала проверка/обновление сессии (auth), затем загрузка курсов валют. */
 function appInitializer(
   auth: AuthService,
   exchangeRates: ExchangeRatesService,
+  i18n: I18nService,
 ): () => Promise<void> {
   return async () => {
+    await i18n.init();
     const refreshToken = localStorage.getItem('refreshToken');
     if (refreshToken?.trim()) {
       await firstValueFrom(auth.refreshToken()).catch(() => undefined);
@@ -36,9 +41,14 @@ const providers = [
   {
     provide: APP_INITIALIZER,
     useFactory: appInitializer,
-    deps: [AuthService, ExchangeRatesService],
+    deps: [AuthService, ExchangeRatesService, I18nService],
     multi: true,
   },
+  importProvidersFrom(
+    TranslateModule.forRoot({
+      defaultLanguage: 'ru',
+    }),
+  ),
   provideTanStackQuery(new QueryClient()),
   provideProtractorTestingSupport(),
   provideRouter(routeConfig, withHashLocation()),

@@ -1,8 +1,8 @@
-<dashboard-card title="Card Details">
+<dashboard-card [title]="'balances.cardDetails' | translate">
   <card-body class="details-body">
     <div class="details">
-      <section class="details__balance" aria-label="Balance">
-        <span class="details__label">Balance</span>
+      <section class="details__balance" [attr.aria-label]="'balances.balance' | translate">
+        <span class="details__label">{{ 'balances.balance' | translate }}</span>
         <p class="details__balance-primary">
           {{ balancePrimary() | appCurrency: currencyService.primaryCode() }}
         </p>
@@ -12,19 +12,19 @@
       </section>
       <div class="details__grid">
         <div class="details__field">
-          <span class="details__label">Bank name</span>
+          <span class="details__label">{{ 'balances.bankName' | translate }}</span>
           <p class="details__value">{{ card()?.bankName }}</p>
         </div>
         <div class="details__field">
-          <span class="details__label">Account type</span>
+          <span class="details__label">{{ 'balances.accountType' | translate }}</span>
           <p class="details__value">{{ card()?.cardType }}</p>
         </div>
         <div class="details__field">
-          <span class="details__label">Expiry</span>
+          <span class="details__label">{{ 'balances.expiry' | translate }}</span>
           <p class="details__value">{{ card()?.expiry || '—' }}</p>
         </div>
         <div class="details__field details__field--full">
-          <span class="details__label">Account number</span>
+          <span class="details__label">{{ 'balances.accountNumber' | translate }}</span>
           <p class="details__value details__value--number">{{ card()?.cardNumber }}</p>
         </div>
       </div>

@@ -18,6 +18,7 @@ import { BalanceAddCardButtonComponent } from '@/features/balance/add-card-butto
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 import { SortersField } from '@/entities/sorters/lib';
 import { FiltersField } from '@/entities/filters/lib';
+import { TranslateModule } from '@ngx-translate/core';
 
 const CARDS_PAGE_SIZE = 6;
 const CARD_CONTROLS_THRESHOLD = 6;
@@ -25,20 +26,20 @@ const CARD_CONTROLS_THRESHOLD = 6;
 type CardWithSearch = BalanceCard & { searchText: string };
 
 const balanceSortersFields: SortersField[] = [
-  { field: 'cardName', name: 'Name' },
-  { field: 'bankName', name: 'Bank' },
-  { field: 'cardBalance', name: 'Balance' },
-  { field: 'cardType', name: 'Type' },
+  { field: 'cardName', name: 'balances.name' },
+  { field: 'bankName', name: 'balances.bank' },
+  { field: 'cardBalance', name: 'balances.balance' },
+  { field: 'cardType', name: 'balances.accountType' },
 ];
 
 const balanceFilterFields: FiltersField[] = [
-  { field: 'cardType', name: 'Type' },
-  { field: 'currencyCode', name: 'Currency' },
+  { field: 'cardType', name: 'balances.accountType' },
+  { field: 'currencyCode', name: 'common.currency' },
 ];
 
 const balanceSearchProps = {
   searchField: 'searchText',
-  placeholder: 'Search by name, bank, number',
+  placeholder: 'search.byNameBankNumber',
 };
 
 @Component({
@@ -53,6 +54,7 @@ const balanceSearchProps = {
     PaginationComponent,
     BalanceAddCardButtonComponent,
     AppIconComponent,
+    TranslateModule,
   ],
   templateUrl: './balance.component.html',
   styleUrl: './balance.component.scss',

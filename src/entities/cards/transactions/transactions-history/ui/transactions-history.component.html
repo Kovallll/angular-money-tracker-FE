@@ -1,5 +1,5 @@
 <div class="container">
-  <dashboard-card title="Transactions History">
+  <dashboard-card [title]="'transactions.historyTitle' | translate">
     <card-body class="body">
       <transactions-list-view
         [dataSource]="listRows()"

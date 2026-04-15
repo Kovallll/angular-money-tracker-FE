@@ -1,8 +1,10 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AddTransactionModalComponent } from './modal/add-card-modal.component';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
+import { TranslateModule } from '@ngx-translate/core';
+import { I18nService } from '@/shared/services';
 
 @Component({
   standalone: true,
@@ -10,11 +12,12 @@ import { AppIconComponent } from '@/shared/components/app-icon/app-icon.componen
   templateUrl: './add-card.component.html',
   styleUrls: ['./add-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [AppButtonComponent, AppIconComponent],
+  imports: [AppButtonComponent, AppIconComponent, TranslateModule],
   providers: [DialogService],
 })
 export class TransactionAddButtonComponent {
   ref: DynamicDialogRef | undefined | null;
+  private i18n = inject(I18nService);
 
   groupRoomId = input<string | undefined>(undefined);
 
@@ -23,7 +26,7 @@ export class TransactionAddButtonComponent {
   show() {
     const rid = this.groupRoomId()?.trim();
     this.ref = this.dialogService.open(AddTransactionModalComponent, {
-      header: 'Add Transaction',
+      header: this.i18n.t('transactions.addTransaction'),
       closable: true,
       dismissableMask: true,
       styleClass: 'modal',

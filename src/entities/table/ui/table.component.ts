@@ -7,6 +7,7 @@ import { ContextMenuComponent } from '@/entities/context-menu/cm.component';
 import { AppCurrencyPipe } from '@/shared/pipes/app-currency.pipe';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 import { RowMenuButtonComponent } from '@/shared/components/row-menu-button/row-menu-button.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'table-component',
@@ -20,6 +21,7 @@ import { RowMenuButtonComponent } from '@/shared/components/row-menu-button/row-
     AppCurrencyPipe,
     AppIconComponent,
     RowMenuButtonComponent,
+    TranslateModule,
   ],
   standalone: true,
 })

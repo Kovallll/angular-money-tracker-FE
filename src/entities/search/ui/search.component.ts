@@ -4,13 +4,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SearchService } from '../services/search.service';
 import { ActivatedRoute } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'search-input',
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss'],
   standalone: true,
-  imports: [MatInput, MatFormFieldModule, ReactiveFormsModule],
+  imports: [MatInput, MatFormFieldModule, ReactiveFormsModule, TranslateModule],
   encapsulation: ViewEncapsulation.None,
 })
 export class SearchComponent implements OnInit {

@@ -1,19 +1,19 @@
 <div class="container">
   <div class="info">
     <div class="content">
-      <p class="title">Name</p>
+      <p class="title">{{ 'settings.name' | translate }}</p>
       <p class="name">{{ user()?.name ?? '—' }}</p>
     </div>
     <div class="content">
-      <p class="title">Lastname</p>
+      <p class="title">{{ 'settings.lastname' | translate }}</p>
       <p class="lastname">{{ user()?.lastname ?? '—' }}</p>
     </div>
     <div class="content">
-      <p class="title">Email</p>
+      <p class="title">{{ 'settings.email' | translate }}</p>
       <p class="email">{{ user()?.email ?? '—' }}</p>
     </div>
     <div class="content">
-      <p class="title">Phone</p>
+      <p class="title">{{ 'settings.phone' | translate }}</p>
       <p class="phone">{{ user()?.phone ?? '—' }}</p>
     </div>
     <div class="actions">
@@ -26,11 +26,11 @@
     </div>
   </div>
   <div class="avatar-upload">
-    <p class="title">Your Profile Picture</p>
+    <p class="title">{{ 'settings.yourProfilePicture' | translate }}</p>
     <div class="upload-frame">
       <label for="avatarInput" class="upload-label" [class.loading]="avatarLoading()">
         <span class="upload-label-text">{{
-          user()?.avatar ? 'Change photo' : 'Upload your photo'
+          user()?.avatar ? ('settings.changePhoto' | translate) : ('settings.uploadYourPhoto' | translate)
         }}</span>
         <span class="upload-icon">📷 +</span>
       </label>
@@ -44,13 +44,13 @@
         @if (user()?.avatar && !avatarLoadError()) {
           <img
             [src]="avatarUrl(user()!.avatar!)"
-            alt="Avatar"
+            [alt]="'settings.avatar' | translate"
             class="avatar-img"
             (error)="avatarLoadError.set(true)"
           />
           @if (avatarLoading()) {
             <div class="avatar-overlay">
-              <span class="avatar-loading-text">Uploading...</span>
+              <span class="avatar-loading-text">{{ 'settings.uploading' | translate }}</span>
             </div>
           }
         } @else {

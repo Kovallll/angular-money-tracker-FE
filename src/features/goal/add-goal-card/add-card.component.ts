@@ -25,6 +25,8 @@ import { Select } from 'primeng/select';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 import { MessageService } from 'primeng/api';
 import { lastValueFrom } from 'rxjs';
+import { TranslatePipe } from '@ngx-translate/core';
+import { I18nService } from '@/shared/services';
 
 @Component({
   standalone: true,
@@ -43,6 +45,7 @@ import { lastValueFrom } from 'rxjs';
     PriceCurrencyFieldComponent,
     Select,
     AppIconComponent,
+    TranslatePipe,
   ],
 })
 export class GoalAddCardButtonComponent {
@@ -51,6 +54,7 @@ export class GoalAddCardButtonComponent {
   private currencyService = inject(CurrencyService);
   private categoriesHttpService = inject(CategoriesHttpService);
   private messageService = inject(MessageService);
+  protected i18n = inject(I18nService);
   visible = signal(false);
 
   /** Задан — цель создаётся в групповой комнате. */
@@ -188,8 +192,8 @@ export class GoalAddCardButtonComponent {
           this.messageService.add({
             key: 'toast',
             severity: 'success',
-            summary: 'Success',
-            detail: 'Goal created',
+            summary: this.i18n.t('common.success'),
+            detail: this.i18n.t('goals.toast.created'),
             life: 3000,
           });
           this.roomGoalCreated.emit();
@@ -200,8 +204,8 @@ export class GoalAddCardButtonComponent {
           this.messageService.add({
             key: 'toast',
             severity: 'error',
-            summary: 'Error',
-            detail: 'Failed to create goal',
+            summary: this.i18n.t('common.error'),
+            detail: this.i18n.t('goals.toast.createError'),
             life: 4000,
           });
         });

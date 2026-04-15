@@ -1,23 +1,23 @@
 <div class="container">
   <p class="section-desc">
-    Configure how often analytics reports are automatically saved. Saved reports appear on the Statistics page.
+    {{ 'settings.analyticsDescription' | translate }}
   </p>
   <div class="field">
     <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Save frequency</mat-label>
+      <mat-label>{{ 'settings.saveFrequency' | translate }}</mat-label>
       <mat-select
         [value]="currentPeriodicity"
         (selectionChange)="onPeriodicityChange($event.value)"
         [disabled]="loading()"
       >
         @for (opt of periodicityOptions; track opt.value) {
-          <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+          <mat-option [value]="opt.value">{{ opt.label | translate }}</mat-option>
         }
       </mat-select>
     </mat-form-field>
   </div>
   <div class="field toggle-row">
-    <span class="toggle-label">Automatically save analytics reports</span>
+    <span class="toggle-label">{{ 'settings.autoSaveAnalyticsReports' | translate }}</span>
     <mat-slide-toggle
       [checked]="currentEnabled"
       (change)="onEnabledChange($event.checked)"

@@ -13,6 +13,8 @@ import { CategoriesHttpService } from '@/shared/services/models/categories.servi
 import { injectQuery } from '@tanstack/angular-query-experimental';
 import { Select } from 'primeng/select';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
+import { TranslateModule } from '@ngx-translate/core';
+import { I18nService } from '@/shared/services';
 
 @Component({
   standalone: true,
@@ -26,6 +28,7 @@ import { AppIconComponent } from '@/shared/components/app-icon/app-icon.componen
     PriceCurrencyFieldComponent,
     Select,
     AppIconComponent,
+    TranslateModule,
   ],
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.scss'],
@@ -44,6 +47,7 @@ export class GoalAdjustDialogComponent {
   private confirmationService = inject(ConfirmationService);
   private currencyService = inject(CurrencyService);
   private categoriesHttpService = inject(CategoriesHttpService);
+  private i18n = inject(I18nService);
 
   categories = injectQuery(() => ({
     queryKey: ['categories'] as const,
@@ -111,10 +115,10 @@ export class GoalAdjustDialogComponent {
   onDelete() {
     this.confirmationService.confirm({
       message: `Delete goal «${this.data?.title ?? ''}»?`,
-      header: 'Confirm deletion',
+      header: this.i18n.t('balances.confirmDeleteTitle'),
       icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Delete',
-      rejectLabel: 'Cancel',
+      acceptLabel: this.i18n.t('common.delete'),
+      rejectLabel: this.i18n.t('balances.cancel'),
       accept: () => this.dialogRef.close({ delete: true }),
     });
   }

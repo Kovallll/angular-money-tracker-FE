@@ -10,6 +10,7 @@ import { expensesOptions, formatAmountWithCurrency } from '../../lib';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
 import { ProgressSpinner } from 'primeng/progressspinner';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'expenses-statistic-card',
@@ -21,6 +22,7 @@ import { ProgressSpinner } from 'primeng/progressspinner';
     MatSelectModule,
     MatIconModule,
     ProgressSpinner,
+    TranslateModule,
   ],
   templateUrl: './expenses-stats.component.html',
   styleUrl: `./expenses-stats.component.scss`,
@@ -33,7 +35,7 @@ export class ExpensesStatisticCardComponent {
   private exchangeRates = inject(ExchangeRatesService);
 
   maxDisplay = input<number>();
-  title = input<string>('Expenses');
+  title = input<string>('charts.expenses');
   /** Когда true, показывается спиннер (например, на странице Expenses — пока грузятся транзакции). */
   loadingOverride = input<boolean | undefined>(undefined);
 

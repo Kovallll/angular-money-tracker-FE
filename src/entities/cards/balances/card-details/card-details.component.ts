@@ -6,6 +6,7 @@ import { BalanceEditCardButtonComponent } from '@/features/balance/edit-card/edi
 import { AppCurrencyPipe } from '@/shared/pipes/app-currency.pipe';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'card-details',
@@ -18,6 +19,7 @@ import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.
     BalanceRemoveCardButtonComponent,
     BalanceEditCardButtonComponent,
     AppCurrencyPipe,
+    TranslateModule,
   ],
 })
 export class CardDetailsComponent {

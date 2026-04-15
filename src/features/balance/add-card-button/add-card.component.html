@@ -1,7 +1,7 @@
 <ng-container>
   <app-button appearance="primary" size="md" (buttonClick)="show()" class="add-card-btn">
     <app-icon material="add" [sizePx]="20" iconClass="icon" />
-    <span class="add-card-btn__label add-card-btn__label--short">Add</span>
-    <span class="add-card-btn__label add-card-btn__label--full">Add Card</span>
+    <span class="add-card-btn__label add-card-btn__label--short">{{ 'common.add' | translate }}</span>
+    <span class="add-card-btn__label add-card-btn__label--full">{{ 'balances.addCard' | translate }}</span>
   </app-button>
 </ng-container>

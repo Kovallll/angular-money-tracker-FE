@@ -1,5 +1,5 @@
 <dashboard-card
-  title="Goals"
+  [title]="'dashboard.goals' | translate"
   [isWithSeeAll]="true"
   [seeAllPath]="seeAllPath"
   [seeAllNavigation]="seeAllNavigation()"
@@ -7,7 +7,7 @@
   <card-body class="body">
     @if (isLoading()) {
     <div class="data-loading">
-      <p-progress-spinner ariaLabel="Loading" />
+      <p-progress-spinner [ariaLabel]="'common.loading' | translate" />
     </div>
     } @else if (goals().length) {
     <p-carousel
@@ -30,12 +30,12 @@
       <div class="dash-empty-icon" aria-hidden="true">
         <app-icon prime="flag" [sizePx]="26" />
       </div>
-      <p>No goals</p>
+      <p>{{ 'dashboard.noGoals' | translate }}</p>
       <p>
         @if (groupRoomId()) {
-          Add a goal in the Goals tab
+          {{ 'dashboard.addGoalInTab' | translate }}
         } @else {
-          Create a goal on the Goals page
+          {{ 'dashboard.createGoalOnPage' | translate }}
         }
       </p>
     </div>

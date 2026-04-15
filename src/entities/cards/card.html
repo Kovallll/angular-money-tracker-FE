@@ -3,7 +3,7 @@
     <h3 class="title">{{ title() }}</h3>
     @if(isWithSeeAll()) {
     <button type="button" class="see-all" (click)="onSeeAllClick()">
-      See All
+      {{ 'common.seeAll' | translate }}
       <app-icon material="keyboard_arrow_right" [sizePx]="20" />
     </button>
     }

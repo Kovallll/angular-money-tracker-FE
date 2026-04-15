@@ -3,7 +3,7 @@
   [showCloseButton]="false"
   [showCancel]="true"
   [showSave]="true"
-  saveLabel="Add"
+  [saveLabel]="'common.add' | translate"
   [saveDisabled]="!!cardForm.invalid"
   (cancelRequest)="close()"
   (saveRequest)="onSubmit(cardForm)"
@@ -11,13 +11,13 @@
   <form #cardForm="ngForm" (ngSubmit)="onSubmit(cardForm)" class="app-modal-form category-modal">
     <div class="form-fields form-fields--stack">
       <div class="field">
-        <label for="categoryName">Category name&#42;</label>
+        <label for="categoryName">{{ 'categories.categoryName' | translate }}&#42;</label>
         <input
           class="input"
           pInputText
           type="text"
           id="categoryName"
-          placeholder="e.g. Groceries, Rent, Subscriptions"
+          [placeholder]="'categories.categoryNamePlaceholder' | translate"
           name="categoryName"
           [(ngModel)]="card.title"
           #categoryName="ngModel"
@@ -26,12 +26,12 @@
         />
         <div class="error-slot">
           @if (categoryName.invalid && (categoryName.touched || cardForm.submitted)) {
-            <small class="error">Category name is required.</small>
+            <small class="error">{{ 'categories.errors.nameRequired' | translate }}</small>
           }
         </div>
       </div>
       <div class="field field--icon">
-        <span class="field-label-main">Icon</span>
+        <span class="field-label-main">{{ 'categories.icon' | translate }}</span>
         <category-icon-picker [(selectedIcon)]="card.icon" />
       </div>
     </div>

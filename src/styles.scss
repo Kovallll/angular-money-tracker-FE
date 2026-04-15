@@ -529,6 +529,56 @@ app-currency-selector .currency-selector.p-inputwrapper.p-inputwrapper-focus {
   color: $white;
 }
 
+/* Rates currency dropdown: stronger selected-state contrast */
+.cdk-overlay-pane .currency-dropdown-panel.mat-mdc-select-panel {
+  background: #0f2144;
+}
+
+.cdk-overlay-pane .currency-dropdown-panel .mat-mdc-option.mat-mdc-option {
+  color: rgba(255, 255, 255, 0.96);
+}
+
+.cdk-overlay-pane .currency-dropdown-panel .mat-mdc-option .mdc-list-item__primary-text {
+  color: inherit;
+}
+
+.cdk-overlay-pane .currency-dropdown-panel .mat-mdc-option.mdc-list-item--selected,
+.cdk-overlay-pane .currency-dropdown-panel .mat-mdc-option.mdc-list-item--activated,
+.cdk-overlay-pane
+  .currency-dropdown-panel
+  .mat-mdc-option.mdc-list-item--selected.mdc-list-item--highlighted {
+  background: #2e5fe0 !important;
+  color: #ffffff !important;
+}
+
+.cdk-overlay-pane
+  .currency-dropdown-panel
+  .mat-mdc-option.mdc-list-item--selected
+  .mdc-list-item__primary-text,
+.cdk-overlay-pane
+  .currency-dropdown-panel
+  .mat-mdc-option.mdc-list-item--activated
+  .mdc-list-item__primary-text {
+  color: #ffffff !important;
+  font-weight: 700;
+}
+
+.cdk-overlay-pane .currency-dropdown-panel .mat-mdc-option.mdc-list-item--selected .mdc-list-item__end,
+.cdk-overlay-pane
+  .currency-dropdown-panel
+  .mat-mdc-option.mdc-list-item--selected
+  .mdc-list-item__end
+  svg,
+.cdk-overlay-pane .currency-dropdown-panel .mat-mdc-option.mdc-list-item--activated .mdc-list-item__end,
+.cdk-overlay-pane
+  .currency-dropdown-panel
+  .mat-mdc-option.mdc-list-item--activated
+  .mdc-list-item__end
+  svg {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+}
+
 /* Toast на мобилке — в пределах экрана, без вылезания за края */
 @media (max-width: 779px) {
   body .p-toast.p-toast-top-right,

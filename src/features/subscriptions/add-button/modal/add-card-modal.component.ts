@@ -18,6 +18,8 @@ import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { PriceCurrencyFieldComponent } from '@/shared/components/price-currency-field/price-currency-field.component';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 import { catchError, of, tap } from 'rxjs';
+import { TranslateModule } from '@ngx-translate/core';
+import { I18nService } from '@/shared/services';
 
 type SubscriptionFormField =
   | 'subscribeDate'
@@ -52,6 +54,7 @@ interface SubscriptionFormData {
     DatePickerModule,
     PriceCurrencyFieldComponent,
     AppIconComponent,
+    TranslateModule,
   ],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -64,6 +67,7 @@ export class AddSubscriptionModalComponent implements OnInit {
   private queryClient = inject(QueryClient);
   private currencyService = inject(CurrencyService);
   private categoriesHttpService = inject(CategoriesHttpService);
+  private i18n = inject(I18nService);
 
   protected getGroupRoomId(): string | undefined {
     const d = this.config.data as { groupRoomId?: unknown } | null | undefined;
@@ -100,25 +104,30 @@ export class AddSubscriptionModalComponent implements OnInit {
     field: SubscriptionFormField;
     required?: boolean;
   }> = [
-    { name: 'subscribeName', placeholder: 'Title', field: 'subscribeName', required: true },
+    { name: 'subscribeName', placeholder: 'common.title', field: 'subscribeName', required: true },
     {
       name: 'subscribeDate',
-      placeholder: 'Start date',
+      placeholder: 'subscriptions.startDate',
       field: 'subscribeDate',
       required: true,
     },
-    { name: 'description', placeholder: 'Description', field: 'description' },
-    { name: 'type', placeholder: 'Type', field: 'type', required: true },
-    { name: 'categoryId', placeholder: 'Category', field: 'categoryId' },
-    { name: 'lastCharge', placeholder: 'Last paid', field: 'lastCharge', required: true },
-    { name: 'amount', placeholder: 'Amount', field: 'amount', required: true },
+    { name: 'description', placeholder: 'transactions.description', field: 'description' },
+    { name: 'type', placeholder: 'txModal.type', field: 'type', required: true },
+    { name: 'categoryId', placeholder: 'txModal.category', field: 'categoryId' },
+    {
+      name: 'lastCharge',
+      placeholder: 'subscriptions.lastPaid',
+      field: 'lastCharge',
+      required: true,
+    },
+    { name: 'amount', placeholder: 'txModal.amount', field: 'amount', required: true },
   ];
 
   typeOptions = [
-    { label: 'Daily', value: 'daily' },
-    { label: 'Monthly', value: 'monthly' },
-    { label: 'Yearly', value: 'yearly' },
-    { label: 'One-time', value: 'one-time' },
+    { label: this.i18n.t('subscriptions.type.daily'), value: 'daily' },
+    { label: this.i18n.t('subscriptions.type.monthly'), value: 'monthly' },
+    { label: this.i18n.t('subscriptions.type.yearly'), value: 'yearly' },
+    { label: this.i18n.t('subscriptions.type.onetime'), value: 'one-time' },
   ];
 
   isTouchUI = signal(false);
@@ -180,24 +189,28 @@ export class AddSubscriptionModalComponent implements OnInit {
     switch (field) {
       case 'subscribeName': {
         const v = String(this.cardData.subscribeName ?? '').trim();
-        return !v ? 'Title is required' : null;
+        return !v ? this.i18n.t('subscriptions.errors.titleRequired') : null;
       }
       case 'subscribeDate':
-        return !this.formatDate(this.cardData.subscribeDate) ? 'Start date is required' : null;
+        return !this.formatDate(this.cardData.subscribeDate)
+          ? this.i18n.t('subscriptions.errors.startDateRequired')
+          : null;
       case 'type':
-        return !String(this.cardData.type ?? '').trim() ? 'Type is required' : null;
+        return !String(this.cardData.type ?? '').trim()
+          ? this.i18n.t('subscriptions.errors.typeRequired')
+          : null;
       case 'lastCharge': {
         const lc = this.formatDate(this.cardData.lastCharge);
         const sd = this.formatDate(this.cardData.subscribeDate);
-        if (!lc) return 'Last paid is required';
-        if (sd && lc < sd) return 'Last paid cannot be earlier than start date';
+        if (!lc) return this.i18n.t('subscriptions.errors.lastPaidRequired');
+        if (sd && lc < sd) return this.i18n.t('subscriptions.errors.lastPaidBeforeStart');
         return null;
       }
       case 'amount': {
         const a = Number(this.cardData.amount);
-        if (a == null || Number.isNaN(a)) return 'Amount is required';
-        if (a < 0) return 'Amount must be ≥ 0';
-        if (a === 0) return 'Amount must be greater than 0';
+        if (a == null || Number.isNaN(a)) return this.i18n.t('subscriptions.errors.amountRequired');
+        if (a < 0) return this.i18n.t('subscriptions.errors.amountNonNegative');
+        if (a === 0) return this.i18n.t('subscriptions.errors.amountGreaterThanZero');
         return null;
       }
       default:
@@ -225,8 +238,8 @@ export class AddSubscriptionModalComponent implements OnInit {
           this.messageService.add({
             key: 'toast',
             severity: 'success',
-            summary: 'Success',
-            detail: 'Subscription created',
+            summary: this.i18n.t('common.success'),
+            detail: this.i18n.t('subscriptions.toast.created'),
             life: 3000,
           });
           this.ref.close(true);
@@ -241,8 +254,8 @@ export class AddSubscriptionModalComponent implements OnInit {
           this.messageService.add({
             key: 'toast',
             severity: 'error',
-            summary: 'Error',
-            detail: 'Failed to create subscription',
+            summary: this.i18n.t('common.error'),
+            detail: this.i18n.t('subscriptions.toast.createError'),
             life: 4000,
           });
           return of(null);

@@ -5,11 +5,12 @@ import { AssetPathPipe } from '@/shared/pipes/asset-path.pipe';
 import { AppCurrencyPipe } from '@/shared/pipes/app-currency.pipe';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'balance-card-item',
   standalone: true,
-  imports: [CommonModule, AssetPathPipe, AppCurrencyPipe],
+  imports: [CommonModule, AssetPathPipe, AppCurrencyPipe, TranslateModule],
   templateUrl: './balance-card-item.component.html',
   styleUrls: ['./balance-card-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

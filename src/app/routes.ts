@@ -105,6 +105,12 @@ const routes: Routes = [
         title: 'Banking tools',
       },
       {
+        path: RoutePaths.AI_ASSISTANT,
+        loadComponent: () =>
+          import('../pages/Ai-assistant/ai-assistant-page').then((m) => m.AiAssistantPageComponent),
+        title: 'AI Assistant',
+      },
+      {
         path: RoutePaths.ROOMS,
         loadComponent: () => import('../pages/Rooms/rooms-page').then((m) => m.RoomsPageComponent),
         title: 'Rooms',

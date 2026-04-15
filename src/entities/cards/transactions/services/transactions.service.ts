@@ -34,12 +34,12 @@ export class DashboardTransactionsService {
 
   displayedCells() {
     return [
-      { field: 'date', name: 'Date' },
-      { field: 'title', name: 'Title' },
-      { field: 'category', name: 'Category' },
-      { field: 'type', name: 'Type' },
-      { field: 'paymentMethod', name: 'Payment method' },
-      { field: 'amount', name: 'Amount' },
+      { field: 'date', name: 'txModal.date' },
+      { field: 'title', name: 'common.title' },
+      { field: 'category', name: 'txModal.category' },
+      { field: 'type', name: 'txModal.type' },
+      { field: 'paymentMethod', name: 'txModal.paymentMethod' },
+      { field: 'amount', name: 'txModal.amount' },
     ];
   }
 }

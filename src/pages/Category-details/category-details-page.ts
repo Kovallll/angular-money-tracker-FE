@@ -29,6 +29,7 @@ import { injectQuery } from '@tanstack/angular-query-experimental';
 import { AuthService } from '@/shared/services/auth/auth.service';
 import { ControlsComponent } from '@/widgets/controls/ui/controls.component';
 import { ProgressSpinner } from 'primeng/progressspinner';
+import { TranslateModule } from '@ngx-translate/core';
 
 /** Транзакция с amount в primary валюте для отображения */
 interface TransactionDisplay extends Transaction {
@@ -48,6 +49,7 @@ interface TransactionDisplay extends Transaction {
     AppCurrencyPipe,
     ControlsComponent,
     ProgressSpinner,
+    TranslateModule,
   ],
   templateUrl: './category-details-page.html',
   styleUrl: './category-details-page.scss',
@@ -171,14 +173,14 @@ export class CategoryDetailsPageComponent
     sortersProps: {
       sortersFields: this.displayedCells(),
     },
-    searchProps: { searchField: 'title', placeholder: 'Search by title' },
+    searchProps: { searchField: 'title', placeholder: 'search.byTitle' },
   }));
 
   displayedCells = signal<TableCell[]>([
-    { field: 'date', name: 'Date' },
-    { field: 'title', name: 'Title' },
-    { field: 'type', name: 'Type' },
-    { field: 'amount', name: 'Amount' },
+    { field: 'date', name: 'txModal.date' },
+    { field: 'title', name: 'common.title' },
+    { field: 'type', name: 'txModal.type' },
+    { field: 'amount', name: 'txModal.amount' },
   ]);
 
   /** Данные для списка (таблица/карточки): совместимы с TransactionListRow. */

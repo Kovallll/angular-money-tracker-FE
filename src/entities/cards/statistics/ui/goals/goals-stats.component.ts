@@ -10,6 +10,8 @@ import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
 import { ProgressSpinner } from 'primeng/progressspinner';
 import { ChartConfiguration, TooltipItem } from 'chart.js';
+import { TranslateModule } from '@ngx-translate/core';
+import { I18nService } from '@/shared/services';
 
 @Component({
   selector: 'goals-statistic-card',
@@ -21,6 +23,7 @@ import { ChartConfiguration, TooltipItem } from 'chart.js';
     MatSelectModule,
     MatIconModule,
     ProgressSpinner,
+    TranslateModule,
   ],
   templateUrl: './goals-stats.component.html',
   styleUrl: `./goals-stats.component.scss`,
@@ -31,11 +34,12 @@ export class GoalsStatisticCardComponent {
   private goalsHttpService = inject(GoalsHttpService);
   private currencyService = inject(CurrencyService);
   private exchangeRates = inject(ExchangeRatesService);
+  private i18n = inject(I18nService);
 
   isLoading = this.goalsHttpService.isLoading;
 
   maxDisplay = input<number>();
-  title = input<string>('Goals statistics');
+  title = input<string>('charts.goalsStatistics');
 
   chartData = computed(() => this.goalsStatisticsService.getGoalsChartData());
 
@@ -65,6 +69,7 @@ export class GoalsStatisticCardComponent {
 
   /** Options with tooltip and axis title in primary currency. */
   options = computed<ChartConfiguration<'scatter'>['options']>(() => {
+    this.i18n.currentLang();
     const code = this.currencyService.primaryCode();
     return {
       ...goalsOptions,
@@ -74,7 +79,7 @@ export class GoalsStatisticCardComponent {
           ...goalsOptions.scales?.y,
           title: {
             display: true,
-            text: `Budget left (${code})`,
+            text: `${this.i18n.t('charts.budgetLeft')} (${code})`,
           },
         },
       },
@@ -84,7 +89,7 @@ export class GoalsStatisticCardComponent {
           ...goalsOptions.plugins?.tooltip,
           callbacks: {
             label: (ctx: TooltipItem<'scatter'>) =>
-              `${ctx.dataset.label}: ${formatAmountWithCurrency(ctx.parsed.y ?? 0, code)} (${ctx.parsed.x} days left)`,
+              `${ctx.dataset.label}: ${formatAmountWithCurrency(ctx.parsed.y ?? 0, code)} (${ctx.parsed.x} ${this.i18n.t('charts.daysLeft')})`,
           },
         },
       },

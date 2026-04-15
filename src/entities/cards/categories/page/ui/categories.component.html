@@ -47,7 +47,7 @@
             @if (compareDelta().comparable) {
               {{ compareDelta().value }}%
             } @else {
-              N/A
+              {{ 'common.na' | translate }}
             }
           </span>
           @if (compareDelta().comparable && compareDelta().value !== 0) {
@@ -57,7 +57,7 @@
                 [sizePx]="16"
                 [glyphScale]="1"
                 iconClass="card__trend-arrow"
-                ariaLabel="Spending up vs last month"
+                [ariaLabel]="'categories.spendingUpVsLastMonth' | translate"
               />
             } @else {
               <app-icon
@@ -65,12 +65,12 @@
                 [sizePx]="16"
                 [glyphScale]="1"
                 iconClass="card__trend-arrow"
-                ariaLabel="Spending down vs last month"
+                [ariaLabel]="'categories.spendingDownVsLastMonth' | translate"
               />
             }
           }
         </div>
-        <span class="card__trend-label">vs last month</span>
+        <span class="card__trend-label">{{ 'categories.vsLastMonth' | translate }}</span>
       </div>
       @if (!groupRoomContext()) {
         <context-menu-component

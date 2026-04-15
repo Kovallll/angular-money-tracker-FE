@@ -101,6 +101,43 @@
   }
 }
 
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  border-radius: 999px;
+  border: 1px solid rgba(155, 210, 255, 0.22);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.lang-btn {
+  min-width: 32px;
+  height: 28px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba($white, 0.7);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+
+  &:hover {
+    color: $white;
+    background: rgba($white, 0.08);
+  }
+
+  &.active {
+    color: $white;
+    background: rgba($accent, 0.65);
+    box-shadow: 0 4px 10px rgba($accent, 0.3);
+  }
+}
+
 /* Когда сайдбар скрыт: имя не должно раздувать строку — уступает место действиям справа */
 @include bp.sidebar-to-tabs {
   .header-user {

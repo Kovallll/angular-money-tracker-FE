@@ -6,6 +6,8 @@ import { MessageService } from 'primeng/api';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { TranslateModule } from '@ngx-translate/core';
+import { I18nService } from '@/shared/services';
 
 export type PeriodicityOption = 'week' | 'month' | 'quarter';
 
@@ -13,18 +15,25 @@ export type PeriodicityOption = 'week' | 'month' | 'quarter';
   selector: 'settings-analytics',
   templateUrl: './analytics-settings.component.html',
   styleUrls: ['./analytics-settings.component.scss'],
-  imports: [FormsModule, MatFormFieldModule, MatSelectModule, MatSlideToggleModule],
+  imports: [
+    FormsModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatSlideToggleModule,
+    TranslateModule,
+  ],
 })
 export class AnalyticsSettingsComponent {
   user = input<User | null>(null);
   private userService = inject(UserService);
   private messageService = inject(MessageService);
+  private i18n = inject(I18nService);
   loading = signal(false);
 
   periodicityOptions: { value: PeriodicityOption; label: string }[] = [
-    { value: 'week', label: 'Week' },
-    { value: 'month', label: 'Month' },
-    { value: 'quarter', label: 'Quarter' },
+    { value: 'week', label: 'settings.period.week' },
+    { value: 'month', label: 'settings.period.month' },
+    { value: 'quarter', label: 'settings.period.quarter' },
   ];
 
   get currentPeriodicity(): PeriodicityOption {
@@ -44,16 +53,18 @@ export class AnalyticsSettingsComponent {
       this.messageService.add({
         key: 'toast',
         severity: 'success',
-        summary: 'Saved',
-        detail: 'Analytics save frequency updated.',
+        summary: this.i18n.t('settings.saved'),
+        detail: this.i18n.t('settings.analyticsFrequencyUpdated'),
         life: 3000,
       });
     } catch (err: unknown) {
       this.messageService.add({
         key: 'toast',
         severity: 'error',
-        summary: 'Error',
-        detail: (err as { error?: { message?: string } })?.error?.message ?? 'Failed to save.',
+        summary: this.i18n.t('common.error'),
+        detail:
+          (err as { error?: { message?: string } })?.error?.message ??
+          this.i18n.t('settings.failedToSave'),
         life: 4000,
       });
     } finally {
@@ -70,16 +81,20 @@ export class AnalyticsSettingsComponent {
       this.messageService.add({
         key: 'toast',
         severity: 'success',
-        summary: 'Saved',
-        detail: checked ? 'Analytics snapshots enabled.' : 'Analytics snapshots disabled.',
+        summary: this.i18n.t('settings.saved'),
+        detail: checked
+          ? this.i18n.t('settings.analyticsSnapshotsEnabled')
+          : this.i18n.t('settings.analyticsSnapshotsDisabled'),
         life: 3000,
       });
     } catch (err: unknown) {
       this.messageService.add({
         key: 'toast',
         severity: 'error',
-        summary: 'Error',
-        detail: (err as { error?: { message?: string } })?.error?.message ?? 'Failed to save.',
+        summary: this.i18n.t('common.error'),
+        detail:
+          (err as { error?: { message?: string } })?.error?.message ??
+          this.i18n.t('settings.failedToSave'),
         life: 4000,
       });
     } finally {

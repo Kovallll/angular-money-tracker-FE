@@ -6,8 +6,8 @@
         @for (cell of displayedCells(); track cell.field) {
           @if (cell.field === 'amount') {
             <ng-container [matColumnDef]="cell.field">
-              <th mat-header-cell *matHeaderCellDef>{{ cell.name }}</th>
-              <td mat-cell *matCellDef="let card" [attr.data-label]="cell.name">
+              <th mat-header-cell *matHeaderCellDef>{{ cell.name | translate }}</th>
+              <td mat-cell *matCellDef="let card" [attr.data-label]="cell.name | translate">
                 @if (cellValue(card, cell.field) !== null && cellValue(card, cell.field) !== '') {
                   {{ card[cell.field] | appCurrency }}
                 } @else {
@@ -17,8 +17,8 @@
             </ng-container>
           } @else if (cell.field === 'date') {
             <ng-container [matColumnDef]="cell.field">
-              <th mat-header-cell *matHeaderCellDef>{{ cell.name }}</th>
-              <td mat-cell *matCellDef="let card" [attr.data-label]="cell.name">
+              <th mat-header-cell *matHeaderCellDef>{{ cell.name | translate }}</th>
+              <td mat-cell *matCellDef="let card" [attr.data-label]="cell.name | translate">
                 @if (cellValue(card, cell.field) !== null && cellValue(card, cell.field) !== '') {
                   {{ card[cell.field] | date }}
                 } @else {
@@ -28,8 +28,8 @@
             </ng-container>
           } @else {
             <ng-container [matColumnDef]="cell.field">
-              <th mat-header-cell *matHeaderCellDef>{{ cell.name }}</th>
-              <td mat-cell *matCellDef="let card" [attr.data-label]="cell.name">
+              <th mat-header-cell *matHeaderCellDef>{{ cell.name | translate }}</th>
+              <td mat-cell *matCellDef="let card" [attr.data-label]="cell.name | translate">
                 @if (cellValue(card, cell.field) !== null && cellValue(card, cell.field) !== '') {
                   {{ cellDisplayValue(card, cell.field) }}
                 } @else {
@@ -86,7 +86,7 @@
       <div class="dash-empty-icon" aria-hidden="true">
         <app-icon prime="list" [sizePx]="26" />
       </div>
-      <p>No transactions yet</p>
+      <p>{{ 'transactions.noTransactionsYet' | translate }}</p>
     </div>
   }
 </ng-container>

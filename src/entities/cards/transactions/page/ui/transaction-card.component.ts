@@ -26,6 +26,7 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { EditTransactionModalComponent } from '@/features/transactions/edit-modal/edit-card-modal.component';
 import { ProgressSpinner } from 'primeng/progressspinner';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'transactions',
@@ -39,6 +40,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     PaginationComponent,
     TransactionAddButtonComponent,
     ProgressSpinner,
+    TranslateModule,
   ],
   templateUrl: './transaction-card.component.html',
   styleUrls: ['./transaction-card.component.scss'],
@@ -186,7 +188,7 @@ export class TransactionsComponent extends UrlSyncedComponent<Transaction> {
     const insertAt = idx >= 0 ? idx + 1 : 2;
     return [
       ...base.slice(0, insertAt),
-      { field: 'groupCreatedByName', name: 'Added by' },
+      { field: 'groupCreatedByName', name: 'transactions.addedBy' },
       ...base.slice(insertAt),
     ];
   });
@@ -199,7 +201,7 @@ export class TransactionsComponent extends UrlSyncedComponent<Transaction> {
     sortersProps: {
       sortersFields: this.displayedCells(),
     },
-    searchProps: { searchField: 'title', placeholder: 'Search by title' },
+    searchProps: { searchField: 'title', placeholder: 'search.byTitle' },
   }));
 
   onSelectedIndexChange(index: number) {

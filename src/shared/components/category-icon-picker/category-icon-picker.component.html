@@ -1,6 +1,6 @@
 <div class="icon-picker">
   <div class="icon-picker__toolbar">
-    <div class="icon-picker__preview" [attr.aria-label]="'Selected: ' + selectedLabel()">
+    <div class="icon-picker__preview" [attr.aria-label]="'categories.iconPicker.selected' | translate">
       <app-icon [icon]="selectedIcon()" [sizePx]="20" />
     </div>
     <div class="icon-picker__search-wrap">
@@ -8,18 +8,18 @@
         pInputText
         type="search"
         class="icon-picker__search"
-        [placeholder]="'Search icons'"
+        [placeholder]="'categories.iconPicker.search' | translate"
         [ngModel]="searchQuery()"
         (ngModelChange)="searchQuery.set($event)"
         autocomplete="off"
-        [attr.aria-label]="'Filter icons by name'"
+        [attr.aria-label]="'categories.iconPicker.filterAria' | translate"
       />
     </div>
   </div>
 
-  <div class="icon-picker__scroll" role="listbox" [attr.aria-label]="'Category icons'">
+  <div class="icon-picker__scroll" role="listbox" [attr.aria-label]="'categories.iconPicker.listAria' | translate">
     @if (filteredOptions().length === 0) {
-      <p class="icon-picker__empty">No icons match your search.</p>
+      <p class="icon-picker__empty">{{ 'categories.iconPicker.empty' | translate }}</p>
     } @else {
       <div class="icon-picker__grid">
         @for (opt of filteredOptions(); track opt.value) {
@@ -46,7 +46,7 @@
       @if (searchQuery().trim()) {
         {{ filteredOptions().length }} / {{ totalCount() }}
       } @else {
-        {{ totalCount() }} icons
+        {{ totalCount() }} {{ 'categories.iconPicker.icons' | translate }}
       }
     </span>
   </div>

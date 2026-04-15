@@ -6,6 +6,7 @@ import { GoalsStatisticCardComponent } from '@/entities/cards/statistics/ui/goal
 import { CategoryAnaliticsComponent } from '@/widgets/categoryAnalitics/ui/analitics.component';
 import { SavedReportsComponent } from '@/widgets/savedReports/saved-reports.component';
 import { StatisticsTabCoordinatorService } from '@/shared';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-statistics-page',
@@ -15,6 +16,7 @@ import { StatisticsTabCoordinatorService } from '@/shared';
     GoalsStatisticCardComponent,
     CategoryAnaliticsComponent,
     SavedReportsComponent,
+    TranslateModule,
   ],
   templateUrl: './statistics-page.html',
   styleUrl: `./statistics-page.scss`,

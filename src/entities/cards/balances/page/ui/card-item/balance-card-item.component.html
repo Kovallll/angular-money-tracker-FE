@@ -1,10 +1,12 @@
 <article class="card" (click)="handleCheckDetails()">
   <div class="card__header">
     <div class="card__badges">
-      <span class="card__badge">{{ card().cardType }}</span>
+      <span class="card__badge">{{ ('balances.cardType.' + card().cardType.toLowerCase()) | translate }}</span>
       @if (card().isPrimary) {
-        <span class="card__badge card__badge--primary" title="Used for automatic transactions"
-          >Default</span
+        <span
+          class="card__badge card__badge--primary"
+          [attr.title]="'balances.usedForAutoTransactions' | translate"
+          >{{ 'dashboard.default' | translate }}</span
         >
       }
     </div>
@@ -41,12 +43,12 @@
       <span class="card__name">{{ card().cardName }}</span>
     </div>
   </div>
-  <div class="card__number" aria-label="Account number">
+  <div class="card__number" [attr.aria-label]="'balances.accountNumber' | translate">
     <span class="card__number-value">{{ card().cardNumber }}</span>
-    <span class="card__number-label">Account number</span>
+    <span class="card__number-label">{{ 'balances.accountNumber' | translate }}</span>
   </div>
   <div class="card__balance">
-    <span class="card__balance-label">Available balance</span>
+    <span class="card__balance-label">{{ 'balances.availableBalance' | translate }}</span>
     <span class="card__balance-primary">{{
       balancePrimary() | appCurrency: currencyService.primaryCode()
     }}</span>
@@ -61,9 +63,9 @@
         class="card__action card__action--secondary"
         (click)="setAsPrimary($event)"
         [disabled]="settingPrimary()"
-        title="Use this card for subscriptions and automatic transactions"
+        [attr.title]="'balances.useThisCardForAutoTransactions' | translate"
       >
-        {{ settingPrimary() ? 'Setting…' : 'Set as default' }}
+        {{ settingPrimary() ? ('balances.setting' | translate) : ('balances.setAsDefault' | translate) }}
       </button>
     }
     <button
@@ -71,7 +73,7 @@
       class="card__action"
       (click)="handleCheckDetails(); $event.stopPropagation()"
     >
-      View details
+      {{ 'balances.viewDetails' | translate }}
     </button>
   </footer>
 </article>

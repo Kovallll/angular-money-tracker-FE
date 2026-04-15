@@ -2,16 +2,16 @@
   appearance="primary"
   size="md"
   (buttonClick)="openDialog()"
-  ariaLabel="Add Goal"
+  [ariaLabel]="'goals.add' | translate"
   class="add-goal-btn"
 >
   <app-icon prime="plus" [sizePx]="20" />
-  <span class="add-goal-btn__label add-goal-btn__label--short">Add</span>
-  <span class="add-goal-btn__label add-goal-btn__label--full">Add Goal</span>
+  <span class="add-goal-btn__label add-goal-btn__label--short">{{ 'common.add' | translate }}</span>
+  <span class="add-goal-btn__label add-goal-btn__label--full">{{ 'goals.add' | translate }}</span>
 </app-button>
 
 <p-dialog
-  header="Create New Goal"
+  [header]="'goals.createTitle' | translate"
   [visible]="visible()"
   (visibleChange)="onVisibleChange($event)"
   (onHide)="closeDialog()"
@@ -26,7 +26,7 @@
     [showCloseButton]="false"
     [showCancel]="true"
     [showSave]="true"
-    saveLabel="Create"
+    [saveLabel]="'common.create' | translate"
     [saveDisabled]="!!f.invalid || hasDateError() || hasBudgetError()"
     (cancelRequest)="closeDialog()"
     (saveRequest)="onSubmit(f)"
@@ -35,7 +35,7 @@
       <div class="form-fields">
         <div class="form-row">
           <div class="field">
-            <label for="title">Title&#42;</label>
+            <label for="title">{{ 'common.title' | translate }}&#42;</label>
             <input
               id="title"
               pInputText
@@ -45,18 +45,18 @@
               #titleRef="ngModel"
               required
               maxlength="255"
-              placeholder="Enter goal title"
+              [placeholder]="'goals.enterTitle' | translate"
             />
             <div class="error-slot">
               @if (titleRef.invalid && (titleRef.touched || f.submitted)) {
-                <small class="error">Title is required.</small>
+                <small class="error">{{ 'goals.errors.titleRequired' | translate }}</small>
               }
             </div>
           </div>
 
           <div class="field">
             <app-price-currency-field
-              label="Goal Budget"
+              [label]="'goals.goalBudget' | translate"
               amountName="goalBudget"
               [(amount)]="goalBudget"
               [(currencyCode)]="currencyCode"
@@ -65,7 +65,7 @@
             />
             <div class="error-slot">
               @if (f.submitted && +(newGoal.goalBudget ?? 0) <= 0) {
-                <small class="error">Must be &gt; 0.</small>
+                <small class="error">{{ 'goals.errors.mustBeGreaterThanZero' | translate }}</small>
               }
             </div>
           </div>
@@ -74,7 +74,7 @@
         <div class="form-row">
           <div class="field">
             <app-price-currency-field
-              label="Target Budget"
+              [label]="'goals.targetBudget' | translate"
               amountName="targetBudget"
               [(amount)]="targetBudget"
               [(currencyCode)]="currencyCode"
@@ -83,20 +83,20 @@
             />
             <div class="error-slot">
               @if (f.submitted && +(newGoal.targetBudget ?? 0) < 0) {
-                <small class="error">Must be &ge; 0.</small>
+                <small class="error">{{ 'goals.errors.mustBeGreaterOrEqualZero' | translate }}</small>
               }
               @if (
                 hasBudgetError() &&
                 +(newGoal.goalBudget ?? 0) > 0 &&
                 +(newGoal.targetBudget ?? 0) > +(newGoal.goalBudget ?? 0)
               ) {
-                <small class="error">Target must not exceed goal.</small>
+                <small class="error">{{ 'goals.errors.targetNotExceedGoal' | translate }}</small>
               }
             </div>
           </div>
 
           <div class="field">
-            <label for="categoryId">Category&#42;</label>
+            <label for="categoryId">{{ 'txModal.category' | translate }}&#42;</label>
             <p-select
               inputId="categoryId"
               name="categoryId"
@@ -104,7 +104,7 @@
               optionLabel="title"
               optionValue="id"
               [(ngModel)]="newGoal.categoryId"
-              placeholder="Select category"
+              [placeholder]="'txModal.selectCategory' | translate"
               appendTo="body"
               panelStyleClass="goal-category-panel"
               #categoryRef="ngModel"
@@ -119,7 +119,7 @@
             </p-select>
             <div class="error-slot">
               @if (categoryRef.invalid && (categoryRef.touched || f.submitted)) {
-                <small class="error">Category is required.</small>
+                <small class="error">{{ 'txModal.errors.categoryRequired' | translate }}</small>
               }
             </div>
           </div>
@@ -127,7 +127,7 @@
 
         <div class="form-row">
           <div class="field">
-            <label for="startDate">Start Date&#42;</label>
+            <label for="startDate">{{ 'goals.startDate' | translate }}&#42;</label>
             <p-datepicker
               [(ngModel)]="newGoal.startDate"
               name="startDate"
@@ -140,13 +140,15 @@
             ></p-datepicker>
             <div class="error-slot">
               @if (startRef.invalid && (startRef.touched || f.submitted)) {
-                <small class="error">Start date is required.</small>
+                <small class="error">{{ 'goals.errors.startDateRequired' | translate }}</small>
               }
             </div>
           </div>
 
           <div class="field">
-            <label for="endDate">End Date <span class="optional">(optional)</span></label>
+            <label for="endDate"
+              >{{ 'goals.endDate' | translate }} <span class="optional">({{ 'common.optional' | translate }})</span></label
+            >
             <p-datepicker
               [(ngModel)]="newGoal.endDate"
               name="endDate"
@@ -158,7 +160,7 @@
             ></p-datepicker>
             <div class="error-slot">
               @if (hasDateError()) {
-                <small class="error">End date must be after start date.</small>
+                <small class="error">{{ 'goals.errors.endDateAfterStart' | translate }}</small>
               }
             </div>
           </div>

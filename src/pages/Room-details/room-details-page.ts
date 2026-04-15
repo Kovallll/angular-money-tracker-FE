@@ -29,6 +29,8 @@ import { CategoriesCardsComponent } from '@/widgets/categoriesCards/ui/categorie
 import { GoalsCardsComponent } from '@/widgets/goalsCards/goalsCards.component';
 import { SubscribeTableComponent } from '@/entities/cards/subscribtions/ui/page/ui/subscribe-table.component';
 import { MessageService } from 'primeng/api';
+import { TranslateModule } from '@ngx-translate/core';
+import { I18nService } from '@/shared/services';
 
 export type RoomTabId =
   | 'overview'
@@ -67,6 +69,7 @@ function isRoomTabId(v: string): v is RoomTabId {
     CategoriesCardsComponent,
     GoalsCardsComponent,
     SubscribeTableComponent,
+    TranslateModule,
   ],
   templateUrl: './room-details-page.html',
   styleUrl: './room-details-page.scss',
@@ -80,6 +83,7 @@ export class RoomDetailsPageComponent implements OnInit, OnDestroy {
   private readonly auth = inject(AuthService);
   private readonly queryClient = inject(QueryClient);
   private readonly messageService = inject(MessageService);
+  private readonly i18n = inject(I18nService);
 
   readonly routePaths = RoutePaths;
 
@@ -164,7 +168,7 @@ export class RoomDetailsPageComponent implements OnInit, OnDestroy {
     this.sseEvents.disconnect();
   }
 
-  setTab(tab: RoomTabId): void {
+  setTab(tab: RoomTabId, options?: { focusTab?: boolean }): void {
     this.activeTab.set(tab);
     if (shouldSyncTabToUrl()) {
       void this.router.navigate([], {
@@ -173,6 +177,32 @@ export class RoomDetailsPageComponent implements OnInit, OnDestroy {
         queryParamsHandling: 'merge',
         replaceUrl: true,
       });
+    }
+    if (options?.focusTab) {
+      queueMicrotask(() => document.getElementById(`room-tab-${tab}`)?.focus());
+    }
+  }
+
+  onRoomTabsKeydown(ev: KeyboardEvent): void {
+    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(ev.key)) return;
+    ev.preventDefault();
+    const order = [...ROOM_TAB_IDS];
+    const i = order.indexOf(this.activeTab());
+    const idx = i < 0 ? 0 : i;
+    if (ev.key === 'Home') {
+      this.setTab(order[0], { focusTab: true });
+      return;
+    }
+    if (ev.key === 'End') {
+      this.setTab(order[order.length - 1], { focusTab: true });
+      return;
+    }
+    if (ev.key === 'ArrowLeft') {
+      this.setTab(order[idx === 0 ? order.length - 1 : idx - 1], { focusTab: true });
+      return;
+    }
+    if (ev.key === 'ArrowRight') {
+      this.setTab(order[idx === order.length - 1 ? 0 : idx + 1], { focusTab: true });
     }
   }
 
@@ -185,7 +215,7 @@ export class RoomDetailsPageComponent implements OnInit, OnDestroy {
       this.room.set(r);
     } catch (err) {
       console.error(err);
-      this.error.set('Failed to load room');
+      this.error.set(this.i18n.t('rooms.details.errors.failedToLoadRoom'));
     }
   }
 
@@ -228,18 +258,18 @@ export class RoomDetailsPageComponent implements OnInit, OnDestroy {
       this.messageService.add({
         key: 'toast',
         severity: 'success',
-        summary: 'Invite created',
-        detail: 'Token generated successfully.',
+        summary: this.i18n.t('rooms.details.toast.inviteCreated'),
+        detail: this.i18n.t('rooms.details.toast.tokenGenerated'),
         life: 3000,
       });
     } catch (err) {
       console.error(err);
-      this.error.set('Failed to create invite');
+      this.error.set(this.i18n.t('rooms.details.errors.failedToCreateInvite'));
       this.messageService.add({
         key: 'toast',
         severity: 'error',
-        summary: 'Could not create invite',
-        detail: 'Please try again.',
+        summary: this.i18n.t('rooms.details.toast.couldNotCreateInvite'),
+        detail: this.i18n.t('rooms.toast.pleaseTryAgain'),
         life: 5000,
       });
     } finally {
@@ -257,18 +287,21 @@ export class RoomDetailsPageComponent implements OnInit, OnDestroy {
       this.messageService.add({
         key: 'toast',
         severity: 'success',
-        summary: 'Role updated',
-        detail: role === 'admin' ? 'Member promoted to admin.' : 'Admin changed to member.',
+        summary: this.i18n.t('rooms.details.toast.roleUpdated'),
+        detail:
+          role === 'admin'
+            ? this.i18n.t('rooms.details.toast.memberPromoted')
+            : this.i18n.t('rooms.details.toast.adminDemoted'),
         life: 3000,
       });
     } catch (err) {
       console.error(err);
-      this.error.set('Failed to update role');
+      this.error.set(this.i18n.t('rooms.details.errors.failedToUpdateRole'));
       this.messageService.add({
         key: 'toast',
         severity: 'error',
-        summary: 'Could not update role',
-        detail: 'Please try again.',
+        summary: this.i18n.t('rooms.details.toast.couldNotUpdateRole'),
+        detail: this.i18n.t('rooms.toast.pleaseTryAgain'),
         life: 5000,
       });
     }
@@ -284,18 +317,18 @@ export class RoomDetailsPageComponent implements OnInit, OnDestroy {
       this.messageService.add({
         key: 'toast',
         severity: 'success',
-        summary: 'Member removed',
-        detail: 'The user has been removed from this room.',
+        summary: this.i18n.t('rooms.details.toast.memberRemoved'),
+        detail: this.i18n.t('rooms.details.toast.memberRemovedDetail'),
         life: 3000,
       });
     } catch (err) {
       console.error(err);
-      this.error.set('Failed to remove member');
+      this.error.set(this.i18n.t('rooms.details.errors.failedToRemoveMember'));
       this.messageService.add({
         key: 'toast',
         severity: 'error',
-        summary: 'Could not remove member',
-        detail: 'Please try again.',
+        summary: this.i18n.t('rooms.details.toast.couldNotRemoveMember'),
+        detail: this.i18n.t('rooms.toast.pleaseTryAgain'),
         life: 5000,
       });
     }

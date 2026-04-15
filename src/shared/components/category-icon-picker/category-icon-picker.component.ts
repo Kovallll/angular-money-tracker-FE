@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, model, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
+import { TranslateModule } from '@ngx-translate/core';
 import {
   CATEGORY_ICON_OPTIONS,
   CategoryIconOption,
@@ -11,7 +12,7 @@ import { AppIconComponent } from '@/shared/components/app-icon/app-icon.componen
 @Component({
   selector: 'category-icon-picker',
   standalone: true,
-  imports: [FormsModule, InputTextModule, AppIconComponent],
+  imports: [FormsModule, InputTextModule, AppIconComponent, TranslateModule],
   templateUrl: './category-icon-picker.component.html',
   styleUrl: './category-icon-picker.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

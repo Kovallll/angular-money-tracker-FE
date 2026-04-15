@@ -10,6 +10,7 @@ import { ProgressSpinner } from 'primeng/progressspinner';
 import { Carousel } from 'primeng/carousel';
 import { DASHBOARD_CAROUSEL_RESPONSIVE } from '../../../slider/lib/carousel-options';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'dash-balance-card',
@@ -24,6 +25,7 @@ import { AppIconComponent } from '@/shared/components/app-icon/app-icon.componen
     AppCurrencyPipe,
     ProgressSpinner,
     AppIconComponent,
+    TranslatePipe,
   ],
   templateUrl: './balance-card.html',
   styleUrl: `./balance-card.scss`,
@@ -34,7 +36,7 @@ export class DashboardBalanceCardComponent {
   readonly currencyService = inject(CurrencyService);
   private exchangeRates = inject(ExchangeRatesService);
 
-  title = 'Total Balance';
+  title = 'dashboard.totalBalance';
   cards = this.balancesHttpService.cards;
   isLoading = this.balancesHttpService.isLoading;
   seeAllPath = RoutePaths.BAlANCES;

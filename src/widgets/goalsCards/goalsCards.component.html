@@ -2,8 +2,8 @@
   @if (!embedded()) {
     <header class="app-page-head app-page-head--single-row">
       <div class="app-page-head__text">
-        <h1 class="app-page-head__title">Goals</h1>
-        <p class="app-page-head__subtitle">Track your savings targets and monitor progress</p>
+        <h1 class="app-page-head__title">{{ 'page.goals.title' | translate }}</h1>
+        <p class="app-page-head__subtitle">{{ 'page.goals.subtitle' | translate }}</p>
       </div>
       <div class="app-page-head__actions">
         <goal-add-card-button
@@ -26,17 +26,17 @@
   <div class="content">
     @if (isLoading()) {
       <div class="cards-loading">
-        <p-progress-spinner ariaLabel="Loading" strokeWidth="3" />
-        <p class="cards-loading__text">Loading goals…</p>
+        <p-progress-spinner [ariaLabel]="'common.loading' | translate" strokeWidth="3" />
+        <p class="cards-loading__text">{{ 'page.goals.loading' | translate }}</p>
       </div>
     } @else if (activeGoals().length || completedGoals().length) {
-      <section class="summary-cards" aria-label="Overview">
+      <section class="summary-cards" [attr.aria-label]="'common.overview' | translate">
         <div class="summary-card summary-card--primary">
           <span class="summary-card__icon" aria-hidden="true">
             <app-icon prime="flag" [sizePx]="20" />
           </span>
           <div class="summary-card__content">
-            <span class="summary-card__label">Active goals</span>
+            <span class="summary-card__label">{{ 'page.goals.active' | translate }}</span>
             <span class="summary-card__value">{{ activeGoals().length }}</span>
           </div>
         </div>
@@ -45,7 +45,7 @@
             <app-icon prime="check-circle" [sizePx]="20" />
           </span>
           <div class="summary-card__content">
-            <span class="summary-card__label">Completed</span>
+            <span class="summary-card__label">{{ 'page.goals.completed' | translate }}</span>
             <span class="summary-card__value">{{ completedGoals().length }}</span>
           </div>
         </div>
@@ -54,8 +54,8 @@
             <app-icon prime="wallet" [sizePx]="20" />
           </span>
           <div class="summary-card__content summary-card__content--grid">
-            <span class="summary-card__budget-label">Target</span>
-            <span class="summary-card__budget-label">Goal</span>
+            <span class="summary-card__budget-label">{{ 'goals.targetBudget' | translate }}</span>
+            <span class="summary-card__budget-label">{{ 'goals.goalBudget' | translate }}</span>
             <span class="summary-card__budget-value">{{ totalTargetBudget() | appCurrency }}</span>
             <span class="summary-card__budget-value">{{ totalGoalBudget() | appCurrency }}</span>
           </div>
@@ -75,11 +75,11 @@
 
       <section
         class="goals-section"
-        [attr.aria-label]="showCompleted() ? 'Completed goals' : 'Active goals'"
+        [attr.aria-label]="showCompleted() ? ('page.goals.completedList' | translate) : ('page.goals.activeList' | translate)"
       >
         <div class="section-header">
-          <h2 class="app-page-section-title">Goals</h2>
-          <div class="switcher" role="tablist" aria-label="Filter goals">
+          <h2 class="app-page-section-title">{{ 'page.goals.title' | translate }}</h2>
+          <div class="switcher" role="tablist" [attr.aria-label]="'page.goals.filter' | translate">
             <button
               type="button"
               class="switcher__btn"
@@ -88,7 +88,7 @@
               [attr.aria-selected]="!showCompleted()"
               (click)="setShowActive()"
             >
-              Active ({{ activeGoals().length }})
+              {{ 'page.goals.active' | translate }} ({{ activeGoals().length }})
             </button>
             <button
               type="button"
@@ -98,7 +98,7 @@
               [attr.aria-selected]="showCompleted()"
               (click)="setShowCompleted()"
             >
-              Completed ({{ completedGoals().length }})
+              {{ 'page.goals.completed' | translate }} ({{ completedGoals().length }})
             </button>
           </div>
         </div>
@@ -119,7 +119,11 @@
             </div>
           } @else {
             <p class="goals-empty-tab">
-              {{ showCompleted() ? 'No completed goals yet' : 'No active goals' }}
+              {{
+                showCompleted()
+                  ? ('page.goals.emptyCompleted' | translate)
+                  : ('page.goals.emptyActive' | translate)
+              }}
             </p>
           }
         </div>
@@ -129,8 +133,8 @@
         <div class="empty-state__icon" aria-hidden="true">
           <app-icon prime="flag" [sizePx]="20" />
         </div>
-        <h3 class="empty-state__title">No goals yet</h3>
-        <p class="empty-state__text">Create your first goal to start tracking savings</p>
+        <h3 class="empty-state__title">{{ 'page.goals.emptyTitle' | translate }}</h3>
+        <p class="empty-state__text">{{ 'page.goals.emptyText' | translate }}</p>
         <div class="empty-state__action">
           <goal-add-card-button
             [groupRoomId]="groupRoomId()"

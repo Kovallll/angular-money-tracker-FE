@@ -7,12 +7,19 @@ import { defaultFilters, DialogData, Filter } from '../../lib';
 import { FiltersService } from '../../services/filters.service';
 import { ActivatedRoute } from '@angular/router';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'filters-modal',
   templateUrl: './filters-modal.component.html',
   styleUrls: ['./filters-modal.component.scss'],
-  imports: [SelectComponent, AppModalShellComponent, AppIconComponent, AppButtonComponent],
+  imports: [
+    SelectComponent,
+    AppModalShellComponent,
+    AppIconComponent,
+    AppButtonComponent,
+    TranslateModule,
+  ],
   standalone: true,
 })
 export class FiltersModalComponent implements OnInit {

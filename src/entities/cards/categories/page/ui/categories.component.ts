@@ -20,6 +20,8 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslateModule } from '@ngx-translate/core';
+import { I18nService } from '@/shared/services';
 
 @Component({
   selector: 'category-card',
@@ -31,6 +33,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     ContextMenuComponent,
     AppIconComponent,
     MatTooltipModule,
+    TranslateModule,
   ],
   providers: [DialogService],
   standalone: true,
@@ -45,6 +48,7 @@ export class CategoryCardComponent {
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
   private router = inject(Router);
+  private i18n = inject(I18nService);
   category = input<CategoryItem>({ title: '', totalExpenses: 0 } as CategoryItem);
   chart = input<CategoryLineChartDto>();
   /** Групповая комната: кто сколько внёс по этой категории (уже в основной валюте). */
@@ -179,16 +183,16 @@ export class CategoryCardComponent {
       this.messageService.add({
         key: 'toast',
         severity: 'success',
-        summary: 'Success',
-        detail: 'Category deleted',
+        summary: this.i18n.t('common.success'),
+        detail: this.i18n.t('categories.toast.deleted'),
         life: 3000,
       });
     } catch {
       this.messageService.add({
         key: 'toast',
         severity: 'error',
-        summary: 'Error',
-        detail: 'Failed to delete category',
+        summary: this.i18n.t('common.error'),
+        detail: this.i18n.t('categories.toast.deleteError'),
         life: 3000,
       });
     }
@@ -196,7 +200,7 @@ export class CategoryCardComponent {
 
   handleEdit() {
     this.ref = this.dialogService.open(EditCategoryModalComponent, {
-      header: 'Edit Category',
+      header: this.i18n.t('categories.editCategory'),
       closable: true,
       dismissableMask: true,
       styleClass: 'modal',

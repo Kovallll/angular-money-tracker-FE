@@ -2,8 +2,8 @@
   @if (!embedded()) {
     <header class="app-page-head app-page-head--single-row">
       <div class="app-page-head__text">
-        <h1 class="app-page-head__title">Subscriptions</h1>
-        <p class="app-page-head__subtitle">Manage your recurring payments</p>
+        <h1 class="app-page-head__title">{{ 'page.subscriptions.title' | translate }}</h1>
+        <p class="app-page-head__subtitle">{{ 'page.subscriptions.subtitle' | translate }}</p>
       </div>
       <div class="app-page-head__actions">
         <subscription-add-button [groupRoomId]="groupRoomId()" />
@@ -44,7 +44,9 @@
                   />
                 </div>
                 <div class="card__meta">
-                  <span class="card__badge">{{ subscribe.type | titlecase }}</span>
+                  <span class="card__badge">{{
+                    ('subscriptions.type.' + formatType(subscribe.type)) | translate
+                  }}</span>
                   @if (subscribe | nextChargeDate; as nextDate) {
                     <span class="card__next-payment"
                       >Next: {{ nextDate | date: 'MMM d, yyyy' }}</span
@@ -57,18 +59,16 @@
                   <p class="card__description">{{ subscribe.description }}</p>
                 }
                 <div class="card__footer">
-                  @if (!groupRoomId()) {
-                    <button
-                      type="button"
-                      class="mark-paid-btn"
-                      (click)="markAsPaid($event, subscribe)"
-                      [attr.aria-label]="'Mark ' + subscribe.subscribeName + ' as paid'"
-                      title="Mark as paid"
-                    >
-                      <app-icon prime="check" [sizePx]="20" />
-                      <span>Mark paid</span>
-                    </button>
-                  }
+                  <button
+                    type="button"
+                    class="mark-paid-btn"
+                    (click)="markAsPaid($event, subscribe)"
+                    [attr.aria-label]="'subscriptions.markPaid' | translate"
+                    [attr.title]="'subscriptions.markPaid' | translate"
+                  >
+                    <app-icon prime="check" [sizePx]="20" />
+                    <span>{{ 'subscriptions.markPaid' | translate }}</span>
+                  </button>
                   <div class="card__amount-row">
                     <span class="card__amount"
                       >{{ subscribe.amount | appCurrencyPrimary: subscribe.currencyCode

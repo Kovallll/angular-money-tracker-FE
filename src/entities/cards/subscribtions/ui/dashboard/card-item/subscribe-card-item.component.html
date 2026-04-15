@@ -8,7 +8,7 @@
     <div class="info">
       <p class="name">{{ subscribe().subscribeName }}</p>
       <div class="info__row">
-        <span class="type-tag">{{ subscribe().type | titlecase }}</span>
+        <span class="type-tag">{{ ('subscriptions.type.' + formatType(subscribe().type)) | translate }}</span>
         @if (subscribe() | nextChargeDate; as nextDate) {
           <span class="info__next">Next: {{ nextDate | date: 'MMM d' }}</span>
         }

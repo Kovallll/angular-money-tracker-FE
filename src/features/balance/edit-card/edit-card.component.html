@@ -1,7 +1,7 @@
 <ng-container>
   <app-button appearance="primary" size="md" (buttonClick)="show()" class="edit-card-btn">
     <app-icon material="edit" [sizePx]="20" iconClass="icon" />
-    <span class="edit-card-btn__label edit-card-btn__label--short">Edit</span>
-    <span class="edit-card-btn__label edit-card-btn__label--full">Edit Card</span>
+    <span class="edit-card-btn__label edit-card-btn__label--short">{{ 'balances.edit' | translate }}</span>
+    <span class="edit-card-btn__label edit-card-btn__label--full">{{ 'balances.editCard' | translate }}</span>
   </app-button>
 </ng-container>

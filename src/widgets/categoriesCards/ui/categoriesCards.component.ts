@@ -18,12 +18,13 @@ import { PaginationComponent } from '@/entities/pagination/ui/pagination.compone
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 import { GroupRoomsHttpService } from '@/shared/services/models/group-rooms.service';
 import { mergeContributorsForPrimary } from '@/widgets/roomMemberContributions/room-member-contributions.util';
+import { TranslateModule } from '@ngx-translate/core';
 
 const CATEGORY_PAGE_SIZE_WIDE = 9;
 const CATEGORY_PAGE_SIZE_TWO_COLUMNS = 8;
 const CATEGORY_DISPLAYED_FIELDS = [
-  { field: 'title', name: 'Title' },
-  { field: 'totalExpenses', name: 'Total expenses' },
+  { field: 'title', name: 'common.title' },
+  { field: 'totalExpenses', name: 'categories.totalExpenses' },
 ];
 
 /** Возвращает метку времени «первой активности»: что было раньше — создание категории или первая транзакция. */
@@ -59,6 +60,7 @@ function sortCategoriesByFirstActivity(list: CategoryItem[]): CategoryItem[] {
     ControlsComponent,
     PaginationComponent,
     AppIconComponent,
+    TranslateModule,
   ],
   standalone: true,
 })
@@ -170,7 +172,7 @@ export class CategoriesCardsComponent extends UrlSyncedComponent<CategoryItem> {
     sortersProps: {
       sortersFields: CATEGORY_DISPLAYED_FIELDS,
     },
-    searchProps: { searchField: 'title', placeholder: 'Search by name' },
+    searchProps: { searchField: 'title', placeholder: 'search.byName' },
   }));
 
   getCurrentChart(id: string | number) {

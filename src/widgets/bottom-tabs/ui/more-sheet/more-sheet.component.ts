@@ -3,11 +3,12 @@ import { MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef } from '@angular/material/bott
 import { Router } from '@angular/router';
 import { MenuItem } from '../types';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-more-sheet',
   standalone: true,
-  imports: [AppIconComponent],
+  imports: [AppIconComponent, TranslatePipe],
   templateUrl: './more-sheet.component.html',
   styleUrls: ['./more-sheet.component.scss'],
 })

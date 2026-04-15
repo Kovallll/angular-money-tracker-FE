@@ -4,6 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
+import { TranslateModule } from '@ngx-translate/core';
+import { I18nService } from '@/shared/services';
 
 @Component({
   standalone: true,
@@ -11,7 +13,7 @@ import { AppIconComponent } from '@/shared/components/app-icon/app-icon.componen
   templateUrl: './remove-card.component.html',
   styleUrls: ['./remove-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [AppButtonComponent, AppIconComponent],
+  imports: [AppButtonComponent, AppIconComponent, TranslateModule],
 })
 export class BalanceRemoveCardButtonComponent {
   private balancesHttpService = inject(BalancesHttpService);
@@ -19,14 +21,15 @@ export class BalanceRemoveCardButtonComponent {
   private router = inject(Router);
   private confirmationService = inject(ConfirmationService);
   private messageService = inject(MessageService);
+  private i18n = inject(I18nService);
 
   handleDelete() {
     this.confirmationService.confirm({
-      message: 'Delete this card? Related data will not be deleted.',
-      header: 'Confirm deletion',
+      message: this.i18n.t('balances.confirmDeleteMessage'),
+      header: this.i18n.t('balances.confirmDeleteTitle'),
       icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Delete',
-      rejectLabel: 'Cancel',
+      acceptLabel: this.i18n.t('balances.delete'),
+      rejectLabel: this.i18n.t('balances.cancel'),
       accept: () => this.doDelete(),
     });
   }
@@ -38,8 +41,8 @@ export class BalanceRemoveCardButtonComponent {
         this.messageService.add({
           key: 'toast',
           severity: 'success',
-          summary: 'Success',
-          detail: 'Card deleted',
+          summary: this.i18n.t('common.success'),
+          detail: this.i18n.t('balances.cardDeleted'),
           life: 3000,
         });
         this.router.navigate(['balances']);
@@ -48,8 +51,8 @@ export class BalanceRemoveCardButtonComponent {
         this.messageService.add({
           key: 'toast',
           severity: 'error',
-          summary: 'Error',
-          detail: 'Failed to delete card',
+          summary: this.i18n.t('common.error'),
+          detail: this.i18n.t('balances.deleteCardError'),
           life: 4000,
         });
       },

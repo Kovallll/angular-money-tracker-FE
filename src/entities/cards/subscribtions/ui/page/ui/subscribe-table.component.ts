@@ -9,7 +9,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { SubscribtionsService } from '../../../services/subscribtions.service';
-import { DatePipe, TitleCasePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { AppCurrencyPrimaryPipe } from '@/shared/pipes/app-currency-primary.pipe';
 import { NextChargeDatePipe } from '@/shared/pipes/next-charge-date.pipe';
 import { SubscriptionYearlyPipe } from '@/shared/pipes/subscription-yearly.pipe';
@@ -27,6 +27,7 @@ import {
   UrlSyncedComponent,
 } from '@/shared';
 import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
+import { GroupRoomsHttpService } from '@/shared/services/models';
 
 import { columns, searchProps } from '../lib';
 import { PaginationComponent } from '@/entities/pagination/ui/pagination.component';
@@ -41,6 +42,8 @@ import { injectQuery, QueryClient } from '@tanstack/angular-query-experimental';
 import dayjs from 'dayjs';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 import { RowMenuButtonComponent } from '@/shared/components/row-menu-button/row-menu-button.component';
+import { TranslateModule } from '@ngx-translate/core';
+import { I18nService } from '@/shared/services';
 
 @Component({
   selector: 'subscribe-table',
@@ -52,13 +55,13 @@ import { RowMenuButtonComponent } from '@/shared/components/row-menu-button/row-
     NextChargeDatePipe,
     SubscriptionYearlyPipe,
     ControlsComponent,
-    TitleCasePipe,
     PaginationComponent,
     ContextMenuComponent,
     SubscriptionAddButtonComponent,
     ProgressSpinner,
     AppIconComponent,
     RowMenuButtonComponent,
+    TranslateModule,
   ],
   standalone: true,
   providers: [DialogService],
@@ -72,9 +75,11 @@ export class SubscribeTableComponent extends UrlSyncedComponent<SubscribeItem> {
   private readonly transactionsHttpService = inject(TransactionsHttpService);
   private readonly balancesHttpService = inject(BalancesHttpService);
   private readonly categoriesHttpService = inject(CategoriesHttpService);
+  private readonly groupRoomsHttp = inject(GroupRoomsHttpService);
   private readonly expensesHttpService = inject(ExpensesHttpService);
   private readonly messageService = inject(MessageService);
   private readonly exchangeRates = inject(ExchangeRatesService);
+  private readonly i18n = inject(I18nService);
 
   groupRoomId = input<string | undefined>(undefined);
   embedded = input(false);
@@ -213,14 +218,14 @@ export class SubscribeTableComponent extends UrlSyncedComponent<SubscribeItem> {
     return this.getNextChargeDate(sub, base);
   }
 
-  private formatType(type: string | undefined): string {
-    const t = (type || '').trim();
+  formatType(type: string | undefined): string {
+    const t = (type || '').trim().toLowerCase();
     if (!t) return '—';
-    return t.charAt(0).toUpperCase() + t.slice(1).toLowerCase();
+    return t === 'one-time' || t === 'onetime' ? 'onetime' : t === 'annually' ? 'yearly' : t;
   }
 
   async markAsPaid(event: MouseEvent, subscribe: SubscribeItem) {
-    if (this.groupRoomId()?.trim()) return;
+    const roomId = this.groupRoomId()?.trim() ?? '';
     event.stopPropagation();
     const today = this.getTodayString();
     const isOneTime = this.isOneTime(subscribe.type);
@@ -233,7 +238,9 @@ export class SubscribeTableComponent extends UrlSyncedComponent<SubscribeItem> {
     const paidDateFormatted =
       paidDateStr === today ? 'today' : dayjs(paidDateStr).format('MMM D, YYYY');
 
-    const categories = await this.categoriesHttpService.getCategories();
+    const categories = roomId
+      ? await this.categoriesHttpService.fetchCategoriesByRoom(roomId)
+      : await this.categoriesHttpService.getCategories();
     const categoryId =
       subscribe.categoryId ||
       categories.find(
@@ -243,7 +250,7 @@ export class SubscribeTableComponent extends UrlSyncedComponent<SubscribeItem> {
       categoryId != null
         ? (categories.find((c) => String(c.id) === String(categoryId))?.title ?? 'Subscriptions')
         : 'Subscriptions';
-    const typeLabel = this.formatType(subscribe.type);
+    const typeLabel = this.i18n.t(`subscriptions.type.${this.formatType(subscribe.type)}`);
 
     const lines: string[] = [
       `Mark «${subscribe.subscribeName}» as paid ${paidDateFormatted}?`,
@@ -265,16 +272,38 @@ export class SubscribeTableComponent extends UrlSyncedComponent<SubscribeItem> {
             this.subscribeHttpService.update(subscribe.id, { lastCharge: paidDateStr }),
           );
 
+          const fromCode = subscribe.currencyCode ?? 'BYN';
+          const normalizedAmount = this.exchangeRates.convert(subscribe.amount, fromCode, 'BYN');
+
+          if (roomId) {
+            await this.groupRoomsHttp.createRoomTransaction(roomId, {
+              type: 'expense',
+              title: subscribe.subscribeName,
+              amount: normalizedAmount,
+              currencyCode: 'BYN',
+              date: paidDateStr,
+              paymentMethod: 'cash',
+              ...(categoryId ? { categoryId: String(categoryId) } : {}),
+            });
+            void this.queryClient.invalidateQueries({
+              queryKey: ['subscriptions', 'room', roomId],
+            });
+            void this.queryClient.invalidateQueries({ queryKey: ['groupTransactions', roomId] });
+            void this.queryClient.invalidateQueries({ queryKey: ['charts', 'room', roomId] });
+            void this.queryClient.invalidateQueries({ queryKey: ['roomContributions', roomId] });
+            this.messageService.add({
+              key: 'toast',
+              severity: 'success',
+              summary: 'Marked as paid',
+              detail: `${subscribe.subscribeName} — transaction created`,
+              life: 3000,
+            });
+            return;
+          }
+
           const cards = this.balancesHttpService.cards();
           const primaryCard = cards.find((c) => c.isPrimary) ?? cards[0];
           const cardId = primaryCard?.id;
-          const categories = await this.categoriesHttpService.getCategories();
-          const categoryId =
-            subscribe.categoryId ||
-            categories.find(
-              (c) =>
-                String(c.title ?? '').toLowerCase() === SUBSCRIPTIONS_CATEGORY_NAME.toLowerCase(),
-            )?.id;
           if (!categoryId || !cardId) {
             this.messageService.add({
               key: 'toast',
@@ -285,8 +314,6 @@ export class SubscribeTableComponent extends UrlSyncedComponent<SubscribeItem> {
             });
             return;
           }
-          const fromCode = subscribe.currencyCode ?? 'BYN';
-          const normalizedAmount = this.exchangeRates.convert(subscribe.amount, fromCode, 'BYN');
 
           await this.transactionsHttpService.createTransaction({
             cardId: String(cardId),

@@ -1,7 +1,7 @@
 <div class="container">
   <a [routerLink]="['/', RoutePaths.CATEGORIES]" class="back-link">
     <app-icon prime="arrow-left" [sizePx]="20" />
-    Back to categories
+    {{ 'categories.backToCategories' | translate }}
   </a>
 
   @if (category()) {
@@ -13,26 +13,26 @@
       <h1 class="app-page-head__title">{{ category()!.title }}</h1>
       <div class="totals-row">
         <div class="total-item">
-          <span class="total-label">Expenses</span>
+          <span class="total-label">{{ 'tabs.expenses' | translate }}</span>
           <span class="total-value">{{ displayTotalExpenses() | appCurrency }}</span>
         </div>
         <div class="total-item">
-          <span class="total-label">Revenue</span>
+          <span class="total-label">{{ 'tabs.revenue' | translate }}</span>
           <span class="total-value">{{ displayTotalRevenues() | appCurrency }}</span>
         </div>
         @if (lastActivityDateFormatted(); as lastFormatted) {
         <div class="total-item">
-          <span class="total-label">Last</span>
+          <span class="total-label">{{ 'categories.last' | translate }}</span>
           <span class="total-value">{{ lastFormatted }}</span>
         </div>
         } @if (averageExpense() !== null) {
         <div class="total-item">
-          <span class="total-label">Avg</span>
+          <span class="total-label">{{ 'categories.avg' | translate }}</span>
           <span class="total-value">{{ averageExpense() | appCurrency }}</span>
         </div>
         } @if (compareDelta().comparable && compareDelta().value !== 0) {
         <div class="total-item">
-          <span class="total-label">vs last month</span>
+          <span class="total-label">{{ 'categories.vsLastMonth' | translate }}</span>
           <span
             class="total-value total-value--trend"
             [class.negative]="!compareDelta().negative"
@@ -44,7 +44,7 @@
               [sizePx]="16"
               [glyphScale]="1"
               iconClass="trend-arrow"
-              ariaLabel="Spending up vs last month"
+              [ariaLabel]="'categories.spendingUpVsLastMonth' | translate"
             />
             } @else {
             <app-icon
@@ -52,7 +52,7 @@
               [sizePx]="16"
               [glyphScale]="1"
               iconClass="trend-arrow"
-              ariaLabel="Spending down vs last month"
+              [ariaLabel]="'categories.spendingDownVsLastMonth' | translate"
             />
             }
           </span>
@@ -63,7 +63,7 @@
   </div>
 
   @if (hasChartData()) {
-  <dashboard-card title="Expenses trend">
+  <dashboard-card [title]="'categories.expensesTrend' | translate">
     <card-body class="chart-body">
       <div class="chart-wrap">
         <canvas
@@ -78,7 +78,7 @@
   }
 
   <controls [controlsProps]="controlsProps()" />
-  <dashboard-card title="Transactions">
+  <dashboard-card [title]="'page.transactions.title' | translate">
     <card-body>
       <transactions-list-view
         [dataSource]="transactionListRows()"
@@ -92,13 +92,13 @@
   </div>
   } @else if (categoriesQuery.isPending() || chartsQuery.isPending()) {
   <div class="data-placeholder data-placeholder--page">
-    <p-progress-spinner ariaLabel="Loading" />
+    <p-progress-spinner [ariaLabel]="'common.loading' | translate" />
   </div>
   } @else {
   <div class="data-placeholder data-placeholder--page">
     <span class="data-placeholder__icon" aria-hidden="true">📁</span>
-    <p>Category not found</p>
-    <a [routerLink]="['/', RoutePaths.CATEGORIES]">Back to categories</a>
+    <p>{{ 'categories.notFound' | translate }}</p>
+    <a [routerLink]="['/', RoutePaths.CATEGORIES]">{{ 'categories.backToCategories' | translate }}</a>
   </div>
   }
 </div>

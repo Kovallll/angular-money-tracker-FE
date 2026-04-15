@@ -1,12 +1,12 @@
 <dashboard-card
-  [title]="title"
+  [title]="title | translate"
   [isWithSeeAll]="true"
   [seeAllPath]="seeAllPath"
   [seeAllNavigation]="seeAllNavigation()"
   [hideHeaderDivider]="true"
 >
   <card-header class="header">
-    <div class="segment-control" role="tablist" aria-label="Transaction type">
+    <div class="segment-control" role="tablist" [attr.aria-label]="'dashboard.transactionType' | translate">
       @for (tab of tabs; track tab) {
       <button
         type="button"
@@ -16,7 +16,7 @@
         role="tab"
         (click)="selectTab(tab)"
       >
-        {{ tab }}
+        {{ ('tabs.' + tab.toLowerCase()) | translate }}
       </button>
       }
     </div>
@@ -24,7 +24,7 @@
   <card-body class="body">
     @if (isLoading()) {
     <div class="data-loading">
-      <p-progress-spinner ariaLabel="Loading" />
+      <p-progress-spinner [ariaLabel]="'common.loading' | translate" />
     </div>
     } @else if (currentItems().length) {
     <div class="transaction-list">
@@ -41,9 +41,9 @@
       </div>
       <p>
         @if (groupRoomId()) {
-          No transactions in this room yet
+          {{ 'dashboard.noRoomTransactions' | translate }}
         } @else {
-          No transactions
+          {{ 'dashboard.noTransactions' | translate }}
         }
       </p>
     </div>

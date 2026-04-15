@@ -1,4 +1,4 @@
-<dashboard-card [title]="title()" [isWithSeeAll]="isWithSeeAll()" [seeAllPath]="seeAllPath()">
+<dashboard-card [title]="title() | translate" [isWithSeeAll]="isWithSeeAll()" [seeAllPath]="seeAllPath()">
   <card-body class="body">
     @if (!fixedView()) {
       <div class="controls">
@@ -7,7 +7,7 @@
             class="toggle"
             type="button"
             (click)="handleClickPrev()"
-            aria-label="Previous period"
+            [attr.aria-label]="'charts.previousPeriod' | translate"
           >
             <app-icon material="keyboard_arrow_left" [sizePx]="20" />
           </button>
@@ -16,7 +16,12 @@
             [value]="currentView().value"
             (valueChange)="onValueChange($event)"
           />
-          <button class="toggle" type="button" (click)="handleClickNext()" aria-label="Next period">
+          <button
+            class="toggle"
+            type="button"
+            (click)="handleClickNext()"
+            [attr.aria-label]="'charts.nextPeriod' | translate"
+          >
             <app-icon material="keyboard_arrow_right" [sizePx]="20" />
           </button>
         </div>
@@ -26,7 +31,7 @@
     <div class="chart-wrap">
       @if (isLoading()) {
         <div class="chart-loading">
-          <p-progress-spinner ariaLabel="Loading" strokeWidth="3" />
+          <p-progress-spinner [ariaLabel]="'common.loading' | translate" strokeWidth="3" />
         </div>
       } @else if (hasChartData()) {
         <canvas
@@ -35,14 +40,14 @@
           [data]="data()"
           [options]="options()"
           [type]="'bar'"
-          aria-label="Budget statistics chart"
+          [attr.aria-label]="'charts.budgetStatisticsChart' | translate"
         ></canvas>
       } @else {
         <div class="chart-placeholder">
           <div class="dash-empty-icon" aria-hidden="true">
             <app-icon prime="chart-bar" [sizePx]="26" />
           </div>
-          <p>No data</p>
+          <p>{{ 'charts.noData' | translate }}</p>
         </div>
       }
     </div>

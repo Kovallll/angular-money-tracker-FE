@@ -22,6 +22,7 @@ import { ControlsProps } from '@/widgets/controls/lib';
 import { PaginationComponent } from '@/entities/pagination/ui/pagination.component';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 import { AppCurrencyPipe } from '@/shared/pipes/app-currency.pipe';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'expenses-details-page',
@@ -34,6 +35,7 @@ import { AppCurrencyPipe } from '@/shared/pipes/app-currency.pipe';
     PaginationComponent,
     AppIconComponent,
     AppCurrencyPipe,
+    TranslateModule,
   ],
   templateUrl: './expenses-details-page.html',
   styleUrl: `./expenses-details-page.scss`,
@@ -132,9 +134,9 @@ export class ExpensesDetailsPageComponent
   }
 
   displayedCells = signal([
-    { field: 'date', name: 'Date' },
-    { field: 'title', name: 'Title' },
-    { field: 'amount', name: 'Amount' },
+    { field: 'date', name: 'txModal.date' },
+    { field: 'title', name: 'common.title' },
+    { field: 'amount', name: 'txModal.amount' },
   ]);
 
   controlsProps = computed<ControlsProps>(() => ({
@@ -145,7 +147,7 @@ export class ExpensesDetailsPageComponent
     sortersProps: {
       sortersFields: this.displayedCells(),
     },
-    searchProps: { searchField: 'title', placeholder: 'Search by title' },
+    searchProps: { searchField: 'title', placeholder: 'search.byTitle' },
   }));
 
   setUpdatedData(updatedData: ExpenseItem[]): void {

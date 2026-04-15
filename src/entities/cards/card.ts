@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 import type { SeeAllNavigation } from './see-all-navigation';
+import { TranslatePipe } from '@ngx-translate/core';
 
 export type { SeeAllNavigation } from './see-all-navigation';
 
@@ -42,7 +43,7 @@ export class CardBodyComponent {}
   templateUrl: './card.html',
   styleUrls: ['./card.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DividerComponent, AppIconComponent],
+  imports: [DividerComponent, AppIconComponent, TranslatePipe],
 })
 export class DashboardCardComponent {
   router = inject(Router);

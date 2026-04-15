@@ -3,7 +3,7 @@
   [showCloseButton]="false"
   [showCancel]="true"
   [showSave]="true"
-  saveLabel="Add"
+  [saveLabel]="'common.add' | translate"
   [saveDisabled]="isSaveDisabled(cardForm)"
   (cancelRequest)="close()"
   (saveRequest)="onSubmit(cardForm)"
@@ -11,7 +11,7 @@
   <form #cardForm="ngForm" (ngSubmit)="onSubmit(cardForm)" class="app-modal-form">
     <div class="form-row">
       <div class="form-field">
-        <label for="date">Date</label>
+        <label for="date">{{ 'txModal.date' | translate }}</label>
         <p-datepicker
           inputId="date"
           name="date"
@@ -25,14 +25,16 @@
         />
         <div class="form-field-error">
           @if (dateField.invalid && (dateField.touched || cardForm.submitted)) {
-            <p-message severity="error" size="small" variant="simple">Date is required</p-message>
+            <p-message severity="error" size="small" variant="simple">{{
+              'txModal.errors.dateRequired' | translate
+            }}</p-message>
           }
         </div>
       </div>
 
       <div class="form-field">
         <app-price-currency-field
-          label="Amount"
+          [label]="'txModal.amount' | translate"
           amountName="amount"
           [(amount)]="form.amount"
           [(currencyCode)]="form.currencyCode"
@@ -42,7 +44,7 @@
         <div class="form-field-error">
           @if (cardForm.submitted && (form.amount === null || form.amount < 0.01)) {
             <p-message severity="error" size="small" variant="simple"
-              >Amount must be greater than 0</p-message
+              >{{ 'txModal.errors.amountPositive' | translate }}</p-message
             >
           }
         </div>
@@ -51,14 +53,14 @@
 
     <div class="form-row">
       <div class="form-field">
-        <label for="title">Title</label>
+        <label for="title">{{ 'txModal.title' | translate }}</label>
         <input
           class="input"
           pInputText
           type="text"
           id="title"
           name="title"
-          placeholder="e.g. Shopping"
+          [placeholder]="'txModal.titlePlaceholder' | translate"
           [(ngModel)]="form.title"
           (ngModelChange)="onTitleChange($event)"
           #titleField="ngModel"
@@ -66,13 +68,15 @@
         />
         <div class="form-field-error">
           @if (titleField.invalid && (titleField.touched || cardForm.submitted)) {
-            <p-message severity="error" size="small" variant="simple">Title is required</p-message>
+            <p-message severity="error" size="small" variant="simple">{{
+              'txModal.errors.titleRequired' | translate
+            }}</p-message>
           }
         </div>
       </div>
 
       <div class="form-field">
-        <label for="type">Type</label>
+        <label for="type">{{ 'txModal.type' | translate }}</label>
         <p-select
           inputId="type"
           name="type"
@@ -80,13 +84,16 @@
           optionLabel="label"
           optionValue="value"
           [(ngModel)]="form.type"
+          (ngModelChange)="onTxTypeChange($event)"
           appendTo="body"
           #typeField="ngModel"
           required
         />
         <div class="form-field-error">
           @if (typeField.invalid && (typeField.touched || cardForm.submitted)) {
-            <p-message severity="error" size="small" variant="simple">Select type</p-message>
+            <p-message severity="error" size="small" variant="simple">{{
+              'txModal.errors.typeRequired' | translate
+            }}</p-message>
           }
         </div>
       </div>
@@ -95,9 +102,9 @@
     <div class="form-row">
       <div class="form-field">
         <label for="categoryId"
-          >Category{{ isCategorySuggested ? ' (предугадано)' : '' }}
+          >{{ 'txModal.category' | translate }}{{ isCategorySuggested ? ' (' + ('txModal.predicted' | translate) + ')' : '' }}
           @if (getGroupRoomId()) {
-            <span class="optional">(optional)</span>
+            <span class="optional">({{ 'common.optional' | translate }})</span>
           }
         </label>
         <p-select
@@ -108,7 +115,11 @@
           optionValue="id"
           [(ngModel)]="form.categoryId"
           (ngModelChange)="onCategoryChange()"
-          [placeholder]="getGroupRoomId() ? 'Optional' : 'Select category'"
+          [placeholder]="
+            getGroupRoomId()
+              ? ('common.optional' | translate)
+              : ('txModal.selectCategory' | translate)
+          "
           appendTo="body"
           [loading]="categorizerLoading"
           [showClear]="!!getGroupRoomId()"
@@ -124,7 +135,7 @@
         </p-select>
         @if (categorizerLoading) {
           <div class="form-field-hint categorizer-loading">
-            <span class="hint-text">Detecting category…</span>
+            <span class="hint-text">{{ 'txModal.detectingCategory' | translate }}</span>
           </div>
         }
         @if (suggestedAlternatives.length && !categorizerLoading) {
@@ -148,51 +159,57 @@
             categoryField.invalid &&
             (categoryField.touched || cardForm.submitted)
           ) {
-            <p-message severity="error" size="small" variant="simple">Select category</p-message>
+            <p-message severity="error" size="small" variant="simple">{{
+              'txModal.errors.categoryRequired' | translate
+            }}</p-message>
           }
         </div>
       </div>
 
-      <div class="form-field">
-        <label for="cardId">Card</label>
-        <p-select
-          inputId="cardId"
-          name="cardId"
-          [options]="cards()"
-          optionLabel="bankName"
-          optionValue="id"
-          [(ngModel)]="form.cardId"
-          placeholder="Select card"
-          appendTo="body"
-          #cardField="ngModel"
-          required
-        >
-          <ng-template let-item pTemplate="item">
-            <span
-              >{{ item.bankName }} — {{ item.cardNumber
-              }}{{ item.isPrimary ? ' (Default)' : '' }}</span
-            >
-          </ng-template>
-        </p-select>
-        <label class="card-balance-checkbox">
-          <input
-            type="checkbox"
-            name="freezeCardBalance"
-            [ngModel]="!form.affectsCardBalance"
-            (ngModelChange)="form.affectsCardBalance = !$event"
-          />
-          <span>Не изменять баланс карты</span>
-        </label>
-        <div class="form-field-error">
-          @if (cardField.invalid && (cardField.touched || cardForm.submitted)) {
-            <p-message severity="error" size="small" variant="simple">Select card</p-message>
-          }
+      @if (!getGroupRoomId() || form.type === 'transfer' || form.paymentMethod === 'card') {
+        <div class="form-field">
+          <label for="cardId">{{ 'txModal.card' | translate }}</label>
+          <p-select
+            inputId="cardId"
+            name="cardId"
+            [options]="cards()"
+            optionLabel="bankName"
+            optionValue="id"
+            [(ngModel)]="form.cardId"
+            [placeholder]="'txModal.selectCard' | translate"
+            appendTo="body"
+            #cardField="ngModel"
+            required
+          >
+            <ng-template let-item pTemplate="item">
+              <span
+                >{{ item.bankName }} — {{ item.cardNumber
+                }}{{ item.isPrimary ? ' (' + ('txModal.default' | translate) + ')' : '' }}</span
+              >
+            </ng-template>
+          </p-select>
+          <label class="card-balance-checkbox">
+            <input
+              type="checkbox"
+              name="freezeCardBalance"
+              [ngModel]="!form.affectsCardBalance"
+              (ngModelChange)="form.affectsCardBalance = !$event"
+            />
+            <span>{{ 'txModal.freezeBalance' | translate }}</span>
+          </label>
+          <div class="form-field-error">
+            @if (cardField.invalid && (cardField.touched || cardForm.submitted)) {
+              <p-message severity="error" size="small" variant="simple">{{
+                'txModal.errors.cardRequired' | translate
+              }}</p-message>
+            }
+          </div>
         </div>
-      </div>
+      }
 
       @if (form.type === 'transfer') {
         <div class="form-field">
-          <label for="transferToCardId">To card</label>
+          <label for="transferToCardId">{{ 'txModal.toCard' | translate }}</label>
           <p-select
             inputId="transferToCardId"
             name="transferToCardId"
@@ -200,18 +217,22 @@
             optionLabel="bankName"
             optionValue="id"
             [(ngModel)]="form.transferToCardId"
-            placeholder="Card to credit"
+            [placeholder]="'txModal.toCardPlaceholder' | translate"
             appendTo="body"
             #toCardField="ngModel"
             required
           >
             <ng-template let-item pTemplate="item">
-              <span>{{ item.bankName }} — {{ item.cardNumber }}{{ item.isPrimary ? ' (Default)' : '' }}</span>
+              <span>{{
+                item.bankName + ' — ' + item.cardNumber + (item.isPrimary ? ' (' + ('txModal.default' | translate) + ')' : '')
+              }}</span>
             </ng-template>
           </p-select>
           <div class="form-field-error">
             @if (toCardField.invalid && (toCardField.touched || cardForm.submitted)) {
-              <p-message severity="error" size="small" variant="simple">Select destination card</p-message>
+              <p-message severity="error" size="small" variant="simple">{{
+                'txModal.errors.destinationCardRequired' | translate
+              }}</p-message>
             }
           </div>
         </div>
@@ -220,22 +241,30 @@
 
     <div class="form-row">
       <div class="form-field" [class.form-field--full]="!!getGroupRoomId()">
-        <label for="description">Description <span class="optional">(optional)</span></label>
+        <label for="description"
+          >{{ 'txModal.description' | translate }}
+          <span class="optional">({{ 'common.optional' | translate }})</span></label
+        >
         <input
           class="input"
           pInputText
           type="text"
           id="description"
           name="description"
-          placeholder="Transaction comment"
+          [placeholder]="'txModal.descriptionPlaceholder' | translate"
           [(ngModel)]="form.description"
         />
         <div class="form-field-error"></div>
       </div>
 
-      @if (!getGroupRoomId()) {
+      @if (form.type !== 'transfer') {
         <div class="form-field">
-          <label for="paymentMethod">Payment method <span class="optional">(optional)</span></label>
+          <label for="paymentMethod"
+            >{{ 'txModal.paymentMethod' | translate }}
+            @if (!getGroupRoomId()) {
+              <span class="optional">({{ 'common.optional' | translate }})</span>
+            }
+          </label>
           <p-select
             inputId="paymentMethod"
             name="paymentMethod"
@@ -243,7 +272,7 @@
             optionLabel="label"
             optionValue="value"
             [(ngModel)]="form.paymentMethod"
-            placeholder="Select"
+            [placeholder]="getGroupRoomId() ? ('txModal.card' | translate) : ('common.select' | translate)"
             appendTo="body"
           />
           <div class="form-field-error"></div>

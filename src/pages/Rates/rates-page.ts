@@ -22,6 +22,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MessageService } from 'primeng/api';
 import { ProgressSpinner } from 'primeng/progressspinner';
+import { TranslateModule } from '@ngx-translate/core';
+import { I18nService } from '@/shared/services';
 
 @Component({
   selector: 'app-rates-page',
@@ -37,6 +39,7 @@ import { ProgressSpinner } from 'primeng/progressspinner';
     MatProgressSpinnerModule,
     MatTabsModule,
     ProgressSpinner,
+    TranslateModule,
   ],
   templateUrl: './rates-page.html',
   styleUrl: './rates-page.scss',
@@ -46,10 +49,18 @@ export class RatesPageComponent implements OnInit {
   private exchangeRates = inject(ExchangeRatesService);
   private messageService = inject(MessageService);
   private breakpointObserver = inject(BreakpointObserver);
+  private i18n = inject(I18nService);
 
   readonly currencies = CURRENCIES;
   /** Currencies for chart: exclude BYN (no rate to itself) */
   readonly chartCurrencies = CURRENCIES.filter((c) => c.code !== 'BYN');
+  readonly chartCurrencyOptions = computed(() => {
+    this.i18n.currentLang();
+    return this.chartCurrencies.map((c) => ({
+      ...c,
+      displayName: this.i18n.t(`currency.names.${c.code.toLowerCase()}`),
+    }));
+  });
   readonly isLoadingRates = this.exchangeRates.isLoading;
 
   /** Current rates table: 1 unit = X BYN (excludes BYN — no rate to itself) */
@@ -105,6 +116,7 @@ export class RatesPageComponent implements OnInit {
   /** Currency chart */
   chartCurrency = signal<string>('USD');
   chartHistory = signal<{ date: string; rate: number }[]>([]);
+  selectedDayIndex = signal(0);
   chartHistoryLoading = signal(false);
   /** На мобилке показываем меньше точек для читаемости */
   isMobileChart = signal(false);
@@ -135,7 +147,7 @@ export class RatesPageComponent implements OnInit {
   chartData = computed<ChartConfiguration<'line'>['data']>(() => {
     const history = this.chartHistory();
     const code = this.chartCurrency();
-    const label = `1 ${code} = X BYN`;
+    const label = this.i18n.t('rates.chartLabel', { code });
     const mobile = this.isMobileChart();
     // На мобилке — ~20 точек вместо 90 для читаемости
     const sampled = mobile && history.length > 25 ? this.sampleForMobile(history, 20) : history;
@@ -156,6 +168,13 @@ export class RatesPageComponent implements OnInit {
         },
       ],
     };
+  });
+
+  readonly selectedDayPoint = computed(() => {
+    const history = this.chartHistory();
+    if (!history.length) return null;
+    const idx = Math.max(0, Math.min(this.selectedDayIndex(), history.length - 1));
+    return history[idx] ?? null;
   });
 
   /** Индексы точек излома (локальные min и max) для отображения на мобилке */
@@ -194,6 +213,14 @@ export class RatesPageComponent implements OnInit {
     effect(() => {
       const code = this.chartCurrency();
       this.loadChartHistory(code);
+    });
+    effect(() => {
+      const history = this.chartHistory();
+      if (!history.length) {
+        this.selectedDayIndex.set(0);
+        return;
+      }
+      this.selectedDayIndex.set(history.length - 1);
     });
   }
 
@@ -252,8 +279,8 @@ export class RatesPageComponent implements OnInit {
     this.messageService.add({
       key: 'toast',
       severity: 'info',
-      summary: 'Rates updated',
-      detail: 'Exchange rates have been refreshed.',
+      summary: this.i18n.t('rates.toast.updated'),
+      detail: this.i18n.t('rates.toast.refreshed'),
       life: 3000,
     });
   }

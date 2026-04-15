@@ -7,11 +7,13 @@ import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
 import { BalancesHttpService } from '@/shared/services/models/balances.service';
 import { MessageService } from 'primeng/api';
+import { TranslateModule } from '@ngx-translate/core';
+import { I18nService } from '@/shared/services';
 
 @Component({
   selector: 'balance-card-item',
   standalone: true,
-  imports: [AssetPathPipe, AppCurrencyPipe],
+  imports: [AssetPathPipe, AppCurrencyPipe, TranslateModule],
   templateUrl: './balance-card-item.component.html',
   styleUrl: `./balance-card-item.component.scss`,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,6 +25,7 @@ export class BalanceCardItemComponent {
   private exchangeRates = inject(ExchangeRatesService);
   private balancesHttp = inject(BalancesHttpService);
   private messageService = inject(MessageService);
+  private i18n = inject(I18nService);
   settingPrimary = signal(false);
 
   /** Card balance in app primary currency (main line). */
@@ -56,8 +59,8 @@ export class BalanceCardItemComponent {
         this.messageService.add({
           key: 'toast',
           severity: 'success',
-          summary: 'Primary card',
-          detail: 'This card is now used for automatic transactions.',
+          summary: this.i18n.t('balances.toast.primaryCard'),
+          detail: this.i18n.t('balances.toast.primaryCardDetail'),
           life: 3000,
         });
       },
@@ -66,8 +69,8 @@ export class BalanceCardItemComponent {
         this.messageService.add({
           key: 'toast',
           severity: 'error',
-          summary: 'Error',
-          detail: 'Could not set primary card.',
+          summary: this.i18n.t('common.error'),
+          detail: this.i18n.t('balances.toast.setPrimaryError'),
           life: 3000,
         });
       },

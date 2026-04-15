@@ -2,7 +2,7 @@
   @for (item of items(); track item.id) {
   <button matButton="filled" [routerLink]="item.path" routerLinkActive="active" class="button">
     <app-icon [material]="item.icon" [sizePx]="20" iconClass="icon" />
-    {{ item.title }}
+    {{ item.title | translate }}
   </button>
   }
 </div>

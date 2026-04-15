@@ -6,6 +6,7 @@ import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
 import { ProgressSpinner } from 'primeng/progressspinner';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'dash-expense-card',
@@ -16,6 +17,7 @@ import { AppIconComponent } from '@/shared/components/app-icon/app-icon.componen
     ExpenseCardItemComponent,
     ProgressSpinner,
     AppIconComponent,
+    TranslatePipe,
   ],
   templateUrl: './expense-card.component.html',
   styleUrls: ['./expense-card.component.scss'],

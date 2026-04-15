@@ -1,10 +1,10 @@
 <div class="more-sheet">
-  <h3 class="more-sheet__title">Menu</h3>
+  <h3 class="more-sheet__title">{{ 'common.menu' | translate }}</h3>
   <div class="more-sheet__list">
     @for (item of items; track item.id) {
       <button type="button" class="more-sheet__item" (click)="select(item)">
         <app-icon [material]="item.icon" [sizePx]="20" iconClass="more-sheet__icon" />
-        <span>{{ item.title }}</span>
+        <span>{{ item.title | translate }}</span>
       </button>
     }
   </div>

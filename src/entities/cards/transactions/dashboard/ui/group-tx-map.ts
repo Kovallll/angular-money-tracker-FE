@@ -18,11 +18,13 @@ export function mapGroupTxToTransaction(
   const cat = g.categoryId ? catById.get(String(g.categoryId)) : undefined;
   const dateStr = (g.date || '').includes('T') ? (g.date as string).split('T')[0] : g.date;
   const byName = (g.createdByName ?? '').trim();
+  const cid = g.cardId != null && Number(g.cardId) > 0 ? Number(g.cardId) : 0;
+  const pm = String(g.paymentMethod || 'card').toLowerCase() === 'cash' ? 'cash' : 'card';
   return {
     id: hashUuidToStableInt(g.id),
     groupTransactionId: g.id,
     userId: 0,
-    cardId: 0,
+    cardId: cid,
     categoryId: 0,
     transferToCardId: g.transferToCardId ?? undefined,
     title: g.title,
@@ -32,7 +34,8 @@ export function mapGroupTxToTransaction(
     currencyCode: g.currencyCode,
     date: dateStr,
     type: g.type === 'revenue' ? 'revenue' : g.type === 'transfer' ? 'transfer' : 'expense',
-    paymentMethod: undefined,
+    paymentMethod: pm,
+    affectsCardBalance: g.affectsCardBalance !== false,
     createdAt: g.createdAt,
     ...(byName && byName !== '—' ? { groupCreatedByName: byName } : {}),
   };

@@ -1,24 +1,24 @@
 <div class="container">
   <header class="app-page-head app-page-head--tight">
     <div class="app-page-head__text">
-      <h1 class="app-page-head__title">Banking tools</h1>
+      <h1 class="app-page-head__title">{{ 'page.rates.title' | translate }}</h1>
     </div>
   </header>
 
   <mat-tab-group class="tabs" animationDuration="200">
-    <mat-tab label="Rate chart">
+    <mat-tab [label]="'tabs.rateChart' | translate">
       <div class="tab-content chart-and-rates-tab">
         <div class="chart-block">
           <div class="chart-controls">
             <mat-form-field appearance="outline" class="currency-select">
-              <mat-label>Currency</mat-label>
+              <mat-label>{{ 'common.currency' | translate }}</mat-label>
               <mat-select
                 panelClass="currency-dropdown-panel"
                 [value]="chartCurrency()"
                 (selectionChange)="chartCurrency.set($event.value)"
               >
-                @for (c of chartCurrencies; track c.code) {
-                <mat-option [value]="c.code">{{ c.label }} — {{ c.name }}</mat-option>
+                @for (c of chartCurrencyOptions(); track c.code) {
+                <mat-option [value]="c.code">{{ c.label }} — {{ c.displayName }}</mat-option>
                 }
               </mat-select>
             </mat-form-field>
@@ -34,32 +34,51 @@
               [type]="'line'"
             ></canvas>
           </div>
+          @if (isMobileChart() && selectedDayPoint(); as dayPoint) {
+          <div class="mobile-day-explorer">
+            <div class="mobile-day-explorer__head">
+              <span class="mobile-day-explorer__label">{{ 'rates.dayExplorer.title' | translate }}</span>
+              <span class="mobile-day-explorer__value">{{ dayPoint.rate | number: '1.2-4' }} BYN</span>
+            </div>
+            <div class="mobile-day-explorer__date">{{ dayPoint.date }}</div>
+            <input
+              class="mobile-day-explorer__slider"
+              type="range"
+              [min]="0"
+              [max]="chartHistory().length - 1"
+              step="1"
+              [ngModel]="selectedDayIndex()"
+              (ngModelChange)="selectedDayIndex.set($event)"
+              [attr.aria-label]="'rates.dayExplorer.aria' | translate"
+            />
+          </div>
+          }
           } @else {
-          <p class="chart-empty">No data for the period (90 days)</p>
+          <p class="chart-empty">{{ 'rates.noDataForPeriod' | translate }}</p>
           }
         </div>
         <div class="rates-block">
-          <h2 class="block-title">Exchange rates (NBRB to BYN)</h2>
+          <h2 class="block-title">{{ 'rates.exchangeRatesNBRB' | translate }}</h2>
           @if (isLoadingRates()) {
           <p-progress-spinner styleClass="spinner" />
           } @else {
           <div class="rates-actions">
             <app-button appearance="primary" size="md" (buttonClick)="refreshRates()">
-              Refresh rates
+              {{ 'rates.refreshRates' | translate }}
             </app-button>
           </div>
           <div class="rates-table-wrap">
             <table class="rates-table">
               <thead>
                 <tr>
-                  <th>Currency</th>
-                  <th>Rate (1 unit = BYN)</th>
+                  <th>{{ 'common.currency' | translate }}</th>
+                  <th>{{ 'rates.rateToByn' | translate }}</th>
                 </tr>
               </thead>
               <tbody>
                 @for (item of ratesList(); track item.currency.code) {
                 <tr>
-                  <td>{{ item.currency.label }} — {{ item.currency.name }}</td>
+                  <td>{{ item.currency.label }} — {{ ('currency.names.' + item.currency.code.toLowerCase()) | translate }}</td>
                   <td>{{ item.rateToByn | number: '1.2-4' }} BYN</td>
                 </tr>
                 }
@@ -70,11 +89,11 @@
         </div>
       </div>
     </mat-tab>
-    <mat-tab label="Loan calculator">
+    <mat-tab [label]="'tabs.loanCalculator' | translate">
       <div class="tab-content calculator-tab">
         <div class="calculator-form">
           <mat-form-field appearance="outline" class="field">
-            <mat-label>Loan amount (BYN)</mat-label>
+            <mat-label>{{ 'rates.loanAmount' | translate }}</mat-label>
             <input
               matInput
               type="number"
@@ -84,7 +103,7 @@
             />
           </mat-form-field>
           <mat-form-field appearance="outline" class="field">
-            <mat-label>Term (months)</mat-label>
+            <mat-label>{{ 'rates.termMonths' | translate }}</mat-label>
             <input
               matInput
               type="number"
@@ -94,7 +113,7 @@
             />
           </mat-form-field>
           <mat-form-field appearance="outline" class="field">
-            <mat-label>Annual rate (%)</mat-label>
+            <mat-label>{{ 'rates.annualRate' | translate }}</mat-label>
             <input
               matInput
               type="number"
@@ -107,13 +126,16 @@
         </div>
         <div class="calculator-result">
           <p class="result-line">
-            <strong>Monthly payment:</strong> {{ monthlyPayment() | number: '1.2-2' }} BYN
+            <strong>{{ 'rates.monthlyPayment' | translate }}</strong>
+            {{ monthlyPayment() | number: '1.2-2' }} BYN
           </p>
           <p class="result-line">
-            <strong>Total repayment:</strong> {{ totalPayment() | number: '1.2-2' }} BYN
+            <strong>{{ 'rates.totalRepayment' | translate }}</strong>
+            {{ totalPayment() | number: '1.2-2' }} BYN
           </p>
           <p class="result-line">
-            <strong>Total interest:</strong> {{ totalInterest() | number: '1.2-2' }} BYN
+            <strong>{{ 'rates.totalInterest' | translate }}</strong>
+            {{ totalInterest() | number: '1.2-2' }} BYN
           </p>
         </div>
       </div>

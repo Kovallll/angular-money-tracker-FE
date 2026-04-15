@@ -8,13 +8,14 @@ import { GoalsService } from '@/entities/cards/goals/services/goals.service';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { GoalItem } from '@/shared';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   standalone: true,
   selector: 'goal-adjust-card-button',
   templateUrl: './adjust-card.component.html',
   styleUrls: ['./adjust-card.component.scss'],
-  imports: [CommonModule, AppButtonComponent, AppIconComponent],
+  imports: [CommonModule, AppButtonComponent, AppIconComponent, TranslateModule],
 })
 export class GoalAdjustCardButtonComponent {
   private dialog = inject(MatDialog);

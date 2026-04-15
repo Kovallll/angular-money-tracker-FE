@@ -1,5 +1,5 @@
 <dashboard-card
-  title="Upcoming Subscribes"
+  [title]="'dashboard.upcomingSubscriptions' | translate"
   [isWithSeeAll]="true"
   [seeAllPath]="seeAllPath"
   [seeAllNavigation]="seeAllNavigation()"
@@ -7,7 +7,7 @@
   <card-body class="body">
     @if (isLoading()) {
     <div class="data-loading">
-      <p-progress-spinner ariaLabel="Loading" />
+      <p-progress-spinner [ariaLabel]="'common.loading' | translate" />
     </div>
     } @else if (pairsItems().length) {
     <p-carousel
@@ -35,12 +35,12 @@
       <div class="dash-empty-icon" aria-hidden="true">
         <app-icon prime="sync" [sizePx]="26" />
       </div>
-      <p>No upcoming subscriptions</p>
+      <p>{{ 'dashboard.noUpcomingSubscriptions' | translate }}</p>
       <p>
         @if (groupRoomId()) {
-          Add a subscription in the Subscriptions tab
+          {{ 'dashboard.addSubscriptionInTab' | translate }}
         } @else {
-          Add a subscription in the Subscriptions section
+          {{ 'dashboard.addSubscriptionInSection' | translate }}
         }
       </p>
     </div>

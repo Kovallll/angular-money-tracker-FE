@@ -17,6 +17,7 @@ import {
 } from '@/entities/transactions-list-view';
 import { PaginationComponent } from '@/entities/pagination/ui/pagination.component';
 import { columns } from '../lib';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'transactions-history',
@@ -29,6 +30,7 @@ import { columns } from '../lib';
     MatTableModule,
     TransactionsListViewComponent,
     PaginationComponent,
+    TranslateModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

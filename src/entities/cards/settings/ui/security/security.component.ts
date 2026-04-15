@@ -5,16 +5,19 @@ import { MessageService } from 'primeng/api';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AppButtonComponent } from '@/shared/components/app-button/app-button.component';
+import { TranslateModule } from '@ngx-translate/core';
+import { I18nService } from '@/shared/services';
 
 @Component({
   selector: 'settings-security',
   templateUrl: './security.component.html',
   styleUrls: ['./security.component.scss'],
-  imports: [FormsModule, MatFormFieldModule, MatInputModule, AppButtonComponent],
+  imports: [FormsModule, MatFormFieldModule, MatInputModule, AppButtonComponent, TranslateModule],
 })
 export class SecurityComponent {
   private userService = inject(UserService);
   private messageService = inject(MessageService);
+  private i18n = inject(I18nService);
   loading = signal(false);
 
   oldPassword = '';
@@ -31,8 +34,8 @@ export class SecurityComponent {
       this.messageService.add({
         key: 'toast',
         severity: 'warn',
-        summary: 'Validation',
-        detail: 'New password must be at least 6 characters.',
+        summary: this.i18n.t('settings.validation'),
+        detail: this.i18n.t('settings.passwordMinLength'),
         life: 4000,
       });
       return;
@@ -42,8 +45,8 @@ export class SecurityComponent {
       this.messageService.add({
         key: 'toast',
         severity: 'warn',
-        summary: 'Validation',
-        detail: 'New password and confirmation do not match.',
+        summary: this.i18n.t('settings.validation'),
+        detail: this.i18n.t('settings.passwordsDoNotMatch'),
         life: 4000,
       });
       return;
@@ -55,8 +58,8 @@ export class SecurityComponent {
       this.messageService.add({
         key: 'toast',
         severity: 'success',
-        summary: 'Success',
-        detail: 'Password changed.',
+        summary: this.i18n.t('common.success'),
+        detail: this.i18n.t('settings.passwordChanged'),
         life: 3000,
       });
       this.oldPassword = '';
@@ -67,8 +70,8 @@ export class SecurityComponent {
       this.messageService.add({
         key: 'toast',
         severity: 'error',
-        summary: 'Error',
-        detail: err?.error?.message ?? 'Failed to change password.',
+        summary: this.i18n.t('common.error'),
+        detail: err?.error?.message ?? this.i18n.t('settings.failedToChangePassword'),
         life: 5000,
       });
     } finally {

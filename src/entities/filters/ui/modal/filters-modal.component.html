@@ -1,16 +1,16 @@
 <app-modal-shell
-  title="Filters"
+  [title]="'filters.title' | translate"
   [showCloseButton]="true"
   [showCancel]="true"
   [showSave]="true"
-  saveLabel="Apply"
+  [saveLabel]="'filters.apply' | translate"
   (closeRequest)="closeModal()"
   (cancelRequest)="closeModal()"
   (saveRequest)="applyChanges()"
 >
   <div class="filters-modal">
     <p class="filters-modal__intro">
-      Add rules to narrow the list. All rules apply together (AND).
+      {{ 'filters.intro' | translate }}
     </p>
 
     <ul class="filters-modal__list" role="list">
@@ -18,12 +18,12 @@
         <li class="filters-modal__row" role="listitem">
           <div class="filters-modal__row-top">
             <span class="filters-modal__row-badge" aria-hidden="true">{{ i + 1 }}</span>
-            <span class="filters-modal__row-title">Filter rule</span>
+            <span class="filters-modal__row-title">{{ 'filters.rule' | translate }}</span>
             <button
               type="button"
               class="filters-modal__remove"
               (click)="removeFilter(i)"
-              [attr.aria-label]="'Remove filter ' + (i + 1)"
+              [attr.aria-label]="('filters.removeFilter' | translate) + ' ' + (i + 1)"
             >
               <app-icon material="close" [sizePx]="18" />
             </button>
@@ -31,7 +31,9 @@
 
           <div class="filters-modal__fields">
             <div class="filters-modal__field">
-              <label class="filters-modal__label" [attr.for]="'filter-cat-' + i">Category</label>
+              <label class="filters-modal__label" [attr.for]="'filter-cat-' + i">{{
+                'txModal.category' | translate
+              }}</label>
               <select-component
                 [attr.id]="'filter-cat-' + i"
                 [options]="data.categoryOptions()"
@@ -40,7 +42,7 @@
               />
             </div>
             <div class="filters-modal__field">
-              <label class="filters-modal__label" [attr.for]="'filter-val-' + i">Value</label>
+              <label class="filters-modal__label" [attr.for]="'filter-val-' + i">{{ 'filters.value' | translate }}</label>
               <select-component
                 [attr.id]="'filter-val-' + i"
                 [options]="filter.valueOptions"
@@ -54,14 +56,14 @@
       }
     </ul>
 
-    <div class="filters-modal__toolbar" role="group" aria-label="Filter actions">
+    <div class="filters-modal__toolbar" role="group" [attr.aria-label]="'filters.actions' | translate">
       <app-button appearance="outline" size="sm" type="button" (buttonClick)="addFilter()">
         <app-icon material="add" [sizePx]="18" />
-        Add filter
+        {{ 'filters.addFilter' | translate }}
       </app-button>
       <app-button appearance="ghost" size="sm" type="button" (buttonClick)="clearFilters()">
         <app-icon material="clear_all" [sizePx]="18" />
-        Clear all
+        {{ 'filters.clearAll' | translate }}
       </app-button>
     </div>
   </div>

@@ -5,7 +5,7 @@
   @if (isLoading()) {
     <div class="cards-loading">
       <p-progress-spinner ariaLabel="Loading" strokeWidth="3" />
-      <p class="cards-loading__text">Loading balances…</p>
+      <p class="cards-loading__text">{{ 'balances.loading' | translate }}</p>
     </div>
   } @else if (cardsToShow().length) {
     @for (card of cardsToShow(); track card.id) {
@@ -20,16 +20,16 @@
       <div class="empty-state__icon" aria-hidden="true">
         <app-icon prime="search" [sizePx]="28" />
       </div>
-      <h3 class="empty-state__title">No cards match your search or filters</h3>
-      <p class="empty-state__text">Try changing the search or filter criteria</p>
+      <h3 class="empty-state__title">{{ 'balances.noCardsMatch' | translate }}</h3>
+      <p class="empty-state__text">{{ 'balances.tryChangingSearch' | translate }}</p>
     </div>
   } @else {
     <div class="empty-state">
       <div class="empty-state__icon" aria-hidden="true">
         <app-icon prime="wallet" [sizePx]="28" />
       </div>
-      <h3 class="empty-state__title">No balances yet</h3>
-      <p class="empty-state__text">Add your first card to track account balances</p>
+      <h3 class="empty-state__title">{{ 'balances.noBalancesYet' | translate }}</h3>
+      <p class="empty-state__text">{{ 'balances.addFirstCard' | translate }}</p>
       <div class="empty-state__action">
         <balance-add-card-button />
       </div>

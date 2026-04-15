@@ -3,7 +3,7 @@
   [showCloseButton]="false"
   [showCancel]="true"
   [showSave]="true"
-  saveLabel="Add"
+  [saveLabel]="'common.add' | translate"
   [saveDisabled]="!isFormValid()"
   (cancelRequest)="close()"
   (saveRequest)="onSubmit(cardForm)"
@@ -19,7 +19,7 @@
             "
           >
             <label [for]="input.name" class="label"
-              >{{ input.placeholder }}{{ input.required ? '&#42;' : '' }}</label
+              >{{ input.placeholder | translate }}{{ input.required ? '&#42;' : '' }}</label
             >
             <p-datepicker
               [inputId]="input.name"
@@ -29,7 +29,7 @@
               dateFormat="yy-mm-dd"
               appendTo="body"
               [required]="input.required === true"
-              placeholder="Select date"
+              [placeholder]="'subscriptions.selectDate' | translate"
               [touchUI]="isTouchUI()"
               panelStyleClass="subscription-datepicker-panel"
             />
@@ -45,7 +45,7 @@
             [class.field--has-error]="shouldShowError('lastCharge') && getFieldError('lastCharge')"
           >
             <label [for]="input.name" class="label"
-              >{{ input.placeholder }}{{ input.required ? '&#42;' : '' }}</label
+              >{{ input.placeholder | translate }}{{ input.required ? '&#42;' : '' }}</label
             >
             <p-datepicker
               [inputId]="input.name"
@@ -55,7 +55,7 @@
               dateFormat="yy-mm-dd"
               appendTo="body"
               [required]="input.required === true"
-              placeholder="Select date"
+              [placeholder]="'subscriptions.selectDate' | translate"
               [touchUI]="isTouchUI()"
               panelStyleClass="subscription-datepicker-panel"
             />
@@ -71,7 +71,7 @@
             [class.field--has-error]="shouldShowError('type') && getFieldError('type')"
           >
             <label [for]="input.name" class="label"
-              >{{ input.placeholder }}{{ input.required ? '&#42;' : '' }}</label
+              >{{ input.placeholder | translate }}{{ input.required ? '&#42;' : '' }}</label
             >
             <p-select
               class="select"
@@ -79,7 +79,7 @@
               optionLabel="label"
               optionValue="value"
               [inputId]="input.name"
-              [placeholder]="input.placeholder"
+              [placeholder]="input.placeholder | translate"
               [name]="input.name"
               [(ngModel)]="cardData[input.field]"
               (onBlur)="markTouched('type')"
@@ -94,7 +94,7 @@
           </div>
         } @else if (input.field === 'categoryId') {
           <div class="field">
-            <label for="categoryId" class="label">Category</label>
+            <label for="categoryId" class="label">{{ 'txModal.category' | translate }}</label>
             <p-select
               class="select"
               inputId="categoryId"
@@ -103,7 +103,7 @@
               optionLabel="title"
               optionValue="id"
               [(ngModel)]="cardData.categoryId"
-              placeholder="Select category"
+              [placeholder]="'txModal.selectCategory' | translate"
               appendTo="body"
             >
               <ng-template let-item pTemplate="item">
@@ -120,7 +120,7 @@
             [class.field--has-error]="shouldShowError('amount') && getFieldError('amount')"
           >
             <app-price-currency-field
-              [label]="input.placeholder"
+              [label]="input.placeholder | translate"
               [amountName]="input.name"
               [(amount)]="cardData.amount"
               [(currencyCode)]="cardData.currencyCode"
@@ -140,14 +140,14 @@
             [class.field--has-error]="shouldShowError(input.field) && getFieldError(input.field)"
           >
             <label [for]="input.name" class="label"
-              >{{ input.placeholder }}{{ input.required ? '&#42;' : '' }}</label
+              >{{ input.placeholder | translate }}{{ input.required ? '&#42;' : '' }}</label
             >
             <input
               class="input"
               pInputText
               type="text"
               [id]="input.name"
-              [placeholder]="input.placeholder"
+              [placeholder]="input.placeholder | translate"
               [name]="input.name"
               [(ngModel)]="cardData[input.field]"
               (blur)="markTouched(input.field)"

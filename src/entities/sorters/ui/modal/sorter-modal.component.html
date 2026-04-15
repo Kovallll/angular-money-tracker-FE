@@ -1,19 +1,19 @@
 <app-modal-shell
-  title="Sort by"
+  [title]="'sorters.title' | translate"
   [showCloseButton]="true"
   [showCancel]="true"
   [showSave]="true"
-  saveLabel="Apply"
+  [saveLabel]="'sorters.apply' | translate"
   [saveDisabled]="!sorter().field"
   (closeRequest)="closeModal()"
   (cancelRequest)="closeModal()"
   (saveRequest)="applySorter()"
 >
   <div class="sorter-modal">
-    <p class="sorter-modal__intro">Choose a field and direction to order the list.</p>
+    <p class="sorter-modal__intro">{{ 'sorters.intro' | translate }}</p>
 
     <div class="sorter-modal__section">
-      <label class="sorter-modal__label">Field</label>
+      <label class="sorter-modal__label">{{ 'sorters.field' | translate }}</label>
       <select-component
         [options]="data.categoryOptions()"
         [value]="sorter().field"
@@ -22,8 +22,8 @@
     </div>
 
     <div class="sorter-modal__section">
-      <label class="sorter-modal__label">Direction</label>
-      <div class="sorter-modal__direction" role="group" aria-label="Sort direction">
+      <label class="sorter-modal__label">{{ 'sorters.direction' | translate }}</label>
+      <div class="sorter-modal__direction" role="group" [attr.aria-label]="'sorters.direction' | translate">
         <button
           type="button"
           class="sorter-modal__direction-btn"
@@ -31,7 +31,7 @@
           (click)="onChangeOrder(true)"
         >
           <app-icon material="north" [sizePx]="18" />
-          Ascending
+          {{ 'sorters.ascending' | translate }}
         </button>
         <button
           type="button"
@@ -40,7 +40,7 @@
           (click)="onChangeOrder(false)"
         >
           <app-icon material="south" [sizePx]="18" />
-          Descending
+          {{ 'sorters.descending' | translate }}
         </button>
       </div>
     </div>
@@ -48,7 +48,7 @@
     <div class="sorter-modal__toolbar">
       <button type="button" class="sorter-modal__clear-btn" (click)="clearSorter()">
         <app-icon material="clear_all" [sizePx]="18" />
-        Clear sorting
+        {{ 'sorters.clearSorting' | translate }}
       </button>
     </div>
   </div>

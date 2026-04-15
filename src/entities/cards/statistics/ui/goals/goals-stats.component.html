@@ -1,9 +1,9 @@
-<dashboard-card [title]="title()">
+<dashboard-card [title]="title() | translate">
   <card-body class="body">
     <div class="chart-wrap">
       @if (isLoading()) {
         <div class="chart-loading">
-          <p-progress-spinner ariaLabel="Loading" strokeWidth="3" />
+          <p-progress-spinner [ariaLabel]="'common.loading' | translate" strokeWidth="3" />
         </div>
       } @else if (hasChartData()) {
         <canvas
@@ -16,7 +16,7 @@
       } @else {
         <div class="chart-placeholder">
           <span class="chart-placeholder__icon" aria-hidden="true">📊</span>
-          <p>No data</p>
+          <p>{{ 'charts.noData' | translate }}</p>
         </div>
       }
     </div>

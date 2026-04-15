@@ -1,7 +1,7 @@
 <div class="header">
   <div class="content header-user">
     <div class="user-hello">
-      <h2 class="hello-text">Hello {{user?.name}}</h2>
+      <h2 class="hello-text">{{ 'header.hello' | translate }} {{ user?.name }}</h2>
       <div class="date">
         <app-icon material="calendar_today" [sizePx]="20" />
         <p class="date-text">{{date}}</p>
@@ -26,6 +26,24 @@
     </div>
   </div>
   <div class="content header-actions">
+    <div class="lang-switch" role="group" [attr.aria-label]="'header.language' | translate">
+      <button
+        type="button"
+        class="lang-btn"
+        [class.active]="i18n.currentLang() === 'ru'"
+        (click)="switchLanguage('ru')"
+      >
+        RU
+      </button>
+      <button
+        type="button"
+        class="lang-btn"
+        [class.active]="i18n.currentLang() === 'en'"
+        (click)="switchLanguage('en')"
+      >
+        EN
+      </button>
+    </div>
     <app-currency-selector />
     <telegram-link />
     <notification />

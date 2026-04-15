@@ -322,6 +322,8 @@ export interface GroupTransactionItem {
   /** Для type = transfer — карта зачисления. */
   transferToCardId?: number | null;
   affectsCardBalance?: boolean;
+  /** Наличные — без списания с карты (не для type = transfer). */
+  paymentMethod?: 'cash' | 'card';
   amount: number;
   currencyCode: string;
   title: string;
@@ -330,4 +332,43 @@ export interface GroupTransactionItem {
   isSplit: boolean;
   createdAt: string;
   updatedAt: string;
+}
+
+export type AiInsightType =
+  | 'anomaly'
+  | 'overspend'
+  | 'budget_tip'
+  | 'fx_signal'
+  | 'investment_signal'
+  | 'system';
+
+export type AiInsightSeverity = 'low' | 'medium' | 'high';
+export type AiInsightStatus = 'active' | 'acknowledged' | 'dismissed' | 'expired';
+
+export interface AiInsightItem {
+  id: string;
+  userId: string;
+  type: AiInsightType;
+  severity: AiInsightSeverity;
+  status: AiInsightStatus;
+  title: string;
+  message: string;
+  confidence: number;
+  riskLevel: 'low' | 'medium' | 'high';
+  source: 'rules' | 'llm' | 'market';
+  payload: Record<string, unknown>;
+  notFinancialAdvice: boolean;
+  createdAt: string;
+  expiresAt?: string | null;
+}
+
+export interface AiChatReference {
+  kind: 'insight' | 'metric' | 'transaction';
+  value: string;
+}
+
+export interface AiChatResponse {
+  answer: string;
+  references: AiChatReference[];
+  usedFallback: boolean;
 }

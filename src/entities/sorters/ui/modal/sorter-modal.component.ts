@@ -6,12 +6,13 @@ import { defaultSorter, DialogData, Sorter } from '../../lib';
 import { SorterService } from '../../services/sorter.service';
 import { ActivatedRoute } from '@angular/router';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'sorters-modal',
   templateUrl: './sorter-modal.component.html',
   styleUrls: ['./sorter-modal.component.scss'],
-  imports: [SelectComponent, AppModalShellComponent, AppIconComponent],
+  imports: [SelectComponent, AppModalShellComponent, AppIconComponent, TranslateModule],
   standalone: true,
 })
 export class SorterModalComponent implements OnInit {

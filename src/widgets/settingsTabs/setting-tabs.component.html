@@ -1,6 +1,6 @@
 <dashboard-card>
   <card-body class="body">
-    <div class="segment-control" role="tablist" aria-label="Settings sections">
+    <div class="segment-control" role="tablist" [attr.aria-label]="'tabs.settingsSections' | translate">
       @for (tab of tabs; track tab) {
         <button
           type="button"
@@ -10,7 +10,7 @@
           role="tab"
           (click)="selectTab(tab)"
         >
-          {{ tab }}
+          {{ ('tabs.settings.' + tab.toLowerCase()) | translate }}
         </button>
       }
     </div>

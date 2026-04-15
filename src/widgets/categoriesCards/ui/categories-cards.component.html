@@ -3,8 +3,8 @@
     @if (!embedded()) {
       <header class="app-page-head">
         <div class="app-page-head__text">
-          <h1 class="app-page-head__title">Categories</h1>
-          <p class="app-page-head__subtitle">Track spending by category and view detailed analytics</p>
+          <h1 class="app-page-head__title">{{ 'page.categories.title' | translate }}</h1>
+          <p class="app-page-head__subtitle">{{ 'page.categories.subtitle' | translate }}</p>
         </div>
         <div class="app-page-head__actions">
           <category-add-button [groupRoomId]="groupRoomId()" />
@@ -21,13 +21,13 @@
     @if (categories.isPending()) {
       <div class="cards-loading">
         <p-progress-spinner ariaLabel="Loading" strokeWidth="3" />
-        <p class="cards-loading__text">Loading categories…</p>
+        <p class="cards-loading__text">{{ 'categories.loading' | translate }}</p>
       </div>
     } @else if (!categories.data()?.length) {
       <div class="data-placeholder data-placeholder--page empty-state">
         <span class="data-placeholder__icon" aria-hidden="true">📁</span>
-        <h2 class="empty-title">No categories yet</h2>
-        <p class="empty-desc">Create your first category to start tracking expenses</p>
+        <h2 class="empty-title">{{ 'categories.emptyTitle' | translate }}</h2>
+        <p class="empty-desc">{{ 'categories.emptyDescription' | translate }}</p>
         <category-add-button [groupRoomId]="groupRoomId()" />
       </div>
     } @else {
@@ -37,7 +37,7 @@
             <app-icon prime="wallet" [sizePx]="20" />
           </span>
           <div class="summary-card__content">
-            <span class="summary-card__label">Total Expenses</span>
+            <span class="summary-card__label">{{ 'categories.totalExpenses' | translate }}</span>
             <span class="summary-card__value">{{ totalExpenses() | appCurrency }}</span>
           </div>
         </div>
@@ -46,7 +46,7 @@
             <app-icon prime="chart-bar" [sizePx]="20" />
           </span>
           <div class="summary-card__content">
-            <span class="summary-card__label">Transactions in most active category</span>
+            <span class="summary-card__label">{{ 'categories.topCategoryTransactions' | translate }}</span>
             <span class="summary-card__value">{{ topCategoryTransactions() }}</span>
           </div>
         </div>
@@ -55,7 +55,7 @@
             <app-icon prime="percentage" [sizePx]="20" />
           </span>
           <div class="summary-card__content">
-            <span class="summary-card__label">vs last month (summary)</span>
+            <span class="summary-card__label">{{ 'categories.vsLastMonth' | translate }}</span>
             <span
               class="summary-card__value"
               [class.negative]="!overageDeltaCompare().negative"
@@ -77,7 +77,7 @@
       <controls [controlsProps]="controlsProps()" />
 
       <section class="categories-section">
-        <h2 class="app-page-section-title">Your categories</h2>
+        <h2 class="app-page-section-title">{{ 'categories.yourCategories' | translate }}</h2>
         <div class="content">
           @for (category of currentCategories(); track category.id) {
             <category-card

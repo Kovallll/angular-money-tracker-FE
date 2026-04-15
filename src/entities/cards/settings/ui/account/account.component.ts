@@ -9,6 +9,8 @@ import { environment } from '@/environments/environment';
 import { DialogService } from 'primeng/dynamicdialog';
 import { DynamicDialogModule } from 'primeng/dynamicdialog';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
+import { TranslateModule } from '@ngx-translate/core';
+import { I18nService } from '@/shared/services';
 
 @Component({
   selector: 'settings-account',
@@ -20,6 +22,7 @@ import { AppIconComponent } from '@/shared/components/app-icon/app-icon.componen
     LogoutButtonComponent,
     DynamicDialogModule,
     AppIconComponent,
+    TranslateModule,
   ],
   providers: [DialogService],
 })
@@ -29,13 +32,14 @@ export class AccountComponent {
   private userService = inject(UserService);
   private messageService = inject(MessageService);
   private dialogService = inject(DialogService);
+  private i18n = inject(I18nService);
   avatarLoading = signal(false);
 
   openEditProfileDialog(): void {
     const u = this.user();
     if (!u) return;
     this.dialogService.open(EditProfileModalComponent, {
-      header: 'Update Profile',
+      header: this.i18n.t('settings.updateProfile'),
       closable: true,
       dismissableMask: true,
       styleClass: 'modal',
@@ -63,8 +67,8 @@ export class AccountComponent {
       this.messageService.add({
         key: 'toast',
         severity: 'warn',
-        summary: 'Invalid file',
-        detail: 'Please select an image file.',
+        summary: this.i18n.t('settings.invalidFile'),
+        detail: this.i18n.t('settings.selectImageFile'),
         life: 3000,
       });
       input.value = '';
@@ -78,16 +82,16 @@ export class AccountComponent {
       this.messageService.add({
         key: 'toast',
         severity: 'success',
-        summary: 'Success',
-        detail: 'Profile picture updated.',
+        summary: this.i18n.t('common.success'),
+        detail: this.i18n.t('settings.profilePictureUpdated'),
         life: 3000,
       });
     } catch {
       this.messageService.add({
         key: 'toast',
         severity: 'error',
-        summary: 'Error',
-        detail: 'Failed to upload photo.',
+        summary: this.i18n.t('common.error'),
+        detail: this.i18n.t('settings.failedToUploadPhoto'),
         life: 4000,
       });
     } finally {

@@ -3,11 +3,11 @@
   [size]="iconOnly() ? 'md' : 'lg'"
   [fullWidth]="!iconOnly()"
   [customClass]="iconOnly() ? 'logout-btn--icon-only' : ''"
-  [ariaLabel]="iconOnly() ? 'Sign out' : ''"
+  [ariaLabel]="iconOnly() ? ('settings.signOut' | translate) : ''"
   (buttonClick)="logout()"
 >
   <app-icon material="logout" [sizePx]="20" [iconClass]="iconOnly() ? '' : 'icon'" />
   @if (!iconOnly()) {
-  <span>Logout</span>
+  <span>{{ 'settings.logout' | translate }}</span>
   }
 </app-button>

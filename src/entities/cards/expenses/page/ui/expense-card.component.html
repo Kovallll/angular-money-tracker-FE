@@ -5,7 +5,7 @@
   (keydown.space)="$event.preventDefault(); handleCardClick()"
   role="button"
   tabindex="0"
-  [attr.aria-label]="'View ' + (category?.title ?? '') + ' expenses'"
+  [attr.aria-label]="'page.expenses.viewCategoryExpenses' | translate"
 >
   <div class="card__header">
     <div class="card__main">
@@ -17,7 +17,7 @@
         <p class="card__amount">{{ displayTotalExpenses() | appCurrency }}</p>
         @if (expenses().length > 0) {
           <span class="card__badge"
-            >Top {{ expenses().length }} expense{{ expenses().length > 1 ? 's' : '' }}</span
+            >{{ 'page.expenses.topExpensesCount' | translate: { count: expenses().length } }}</span
           >
         }
       </div>
@@ -34,7 +34,7 @@
           @if (compareToLastMonth().comparable) {
             {{ compareToLastMonth().value }}%
           } @else {
-            N/A
+            {{ 'common.na' | translate }}
           }
         </span>
         @if (compareToLastMonth().comparable && compareToLastMonth().value > 0) {
@@ -42,11 +42,15 @@
             [icon]="!compareToLastMonth().isIncrease ? 'arrow_upward' : 'arrow_downward'"
             [sizePx]="16"
             [glyphScale]="1"
-            [ariaLabel]="compareToLastMonth().isIncrease ? 'Spending up vs last month' : 'Spending down vs last month'"
+            [ariaLabel]="
+              compareToLastMonth().isIncrease
+                ? ('page.expenses.spendingUpVsLastMonth' | translate)
+                : ('page.expenses.spendingDownVsLastMonth' | translate)
+            "
           />
         }
       </div>
-      <span class="card__trend-label">vs last month</span>
+      <span class="card__trend-label">{{ 'page.expenses.vsLastMonth' | translate }}</span>
     </div>
   </div>
   <div class="card__body">
@@ -61,7 +65,7 @@
     } @else {
       <div class="card__empty">
         <span class="card__empty-icon" aria-hidden="true">📊</span>
-        <p>No expenses in this category</p>
+        <p>{{ 'page.expenses.noExpensesInCategory' | translate }}</p>
       </div>
     }
   </div>

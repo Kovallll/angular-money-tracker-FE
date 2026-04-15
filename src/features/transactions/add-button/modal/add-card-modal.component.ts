@@ -31,6 +31,8 @@ import { PriceCurrencyFieldComponent } from '@/shared/components/price-currency-
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 import { Subject } from 'rxjs';
 import { asyncScheduler } from 'rxjs';
+import { TranslatePipe } from '@ngx-translate/core';
+import { I18nService } from '@/shared/services';
 import {
   catchError,
   debounceTime,
@@ -54,6 +56,7 @@ import {
     Select,
     PriceCurrencyFieldComponent,
     AppIconComponent,
+    TranslatePipe,
   ],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -76,6 +79,7 @@ export class AddTransactionModalComponent implements OnInit {
   private cdr = inject(ChangeDetectorRef);
   private destroyRef = inject(DestroyRef);
   protected currencyService = inject(CurrencyService);
+  protected i18n = inject(I18nService);
 
   /** Стрим введённого названия для debounce + predict */
   private titleInput$ = new Subject<string>();
@@ -120,12 +124,15 @@ export class AddTransactionModalComponent implements OnInit {
       const list = this.cards();
       if (list.length === 0) return;
       const primary = list.find((c) => c.isPrimary) ?? list[0];
-      if (primary) {
-        const current = this.form.cardId;
-        const needSet = current === '' || current === null || current === undefined;
-        if (needSet) {
-          this.form.cardId = primary.id;
-        }
+      if (!primary) return;
+      const room = this.getGroupRoomId();
+      const useCard =
+        !room || this.form.type === 'transfer' || (this.form.paymentMethod ?? 'card') === 'card';
+      if (!useCard) return;
+      const current = this.form.cardId;
+      const needSet = current === '' || current === null || current === undefined;
+      if (needSet) {
+        this.form.cardId = primary.id;
       }
     });
 
@@ -246,8 +253,8 @@ export class AddTransactionModalComponent implements OnInit {
       this.messageService.add({
         key: 'toast',
         severity: 'success',
-        summary: 'Success',
-        detail: 'Transaction added',
+        summary: this.i18n.t('common.success'),
+        detail: this.i18n.t('txModal.toast.addSuccess'),
         life: 3000,
       });
       this.ref.close(true);
@@ -256,8 +263,8 @@ export class AddTransactionModalComponent implements OnInit {
       this.messageService.add({
         key: 'toast',
         severity: 'error',
-        summary: 'Error',
-        detail: 'Failed to add transaction',
+        summary: this.i18n.t('common.error'),
+        detail: this.i18n.t('txModal.toast.addError'),
         life: 3000,
       });
     },
@@ -292,16 +299,22 @@ export class AddTransactionModalComponent implements OnInit {
     affectsCardBalance: true,
   };
 
-  protected readonly paymentMethodOptions = [
-    { label: 'Cash', value: 'cash' },
-    { label: 'Card', value: 'card' },
-  ];
+  protected get paymentMethodOptions() {
+    this.i18n.currentLang();
+    return [
+      { label: this.i18n.t('txModal.paymentMethods.cash'), value: 'cash' },
+      { label: this.i18n.t('txModal.paymentMethods.card'), value: 'card' },
+    ];
+  }
 
-  protected readonly typeOptions = [
-    { label: 'Expense', value: 'expense' },
-    { label: 'Revenue', value: 'revenue' },
-    { label: 'Transfer', value: 'transfer' },
-  ];
+  protected get typeOptions() {
+    this.i18n.currentLang();
+    return [
+      { label: this.i18n.t('txModal.types.expense'), value: 'expense' },
+      { label: this.i18n.t('txModal.types.revenue'), value: 'revenue' },
+      { label: this.i18n.t('txModal.types.transfer'), value: 'transfer' },
+    ];
+  }
 
   /** YYYY-MM-DD in local timezone (avoids Mar 1 → Feb 28 shift) */
   private formatDateLocal(v: string | Date): string {
@@ -351,12 +364,27 @@ export class AddTransactionModalComponent implements OnInit {
     if (!this.form.currencyCode) {
       this.form.currencyCode = this.currencyService.primaryCode();
     }
+    if (this.getGroupRoomId()) {
+      this.form.paymentMethod = 'card';
+    }
     this.balancesHttpService.refresh();
     const cards = this.cards();
     const primaryCard = cards.find((c) => c.isPrimary) ?? cards[0];
     if (primaryCard && (this.form.cardId === '' || this.form.cardId == null)) {
-      this.form.cardId = primaryCard.id;
+      const room = this.getGroupRoomId();
+      const useCard =
+        !room || this.form.type === 'transfer' || (this.form.paymentMethod ?? 'card') === 'card';
+      if (useCard) {
+        this.form.cardId = primaryCard.id;
+      }
     }
+  }
+
+  protected onTxTypeChange(value: 'expense' | 'revenue' | 'transfer'): void {
+    if (value === 'transfer') {
+      this.form.paymentMethod = 'card';
+    }
+    this.cdr.markForCheck();
   }
 
   protected isSaveDisabled(form: NgForm | null | undefined): boolean {
@@ -364,12 +392,18 @@ export class AddTransactionModalComponent implements OnInit {
     const amount = Number(this.form.amount) || 0;
     if (amount <= 0) return true;
     if (this.getGroupRoomId()) {
-      if (!this.form.cardId) return true;
+      if (!(this.form.title ?? '').trim()) return true;
       if (this.form.type === 'transfer') {
         const to = Number(this.form.transferToCardId);
         const from = Number(this.form.cardId);
+        if (!Number.isFinite(from) || from < 1) return true;
         if (!Number.isFinite(to) || to < 1 || to === from) return true;
+        return !!form.invalid;
       }
+      if (this.form.paymentMethod === 'cash') {
+        return !!form.invalid;
+      }
+      if (!this.form.cardId) return true;
       return !!form.invalid;
     }
     if (this.form.type === 'transfer') {
@@ -388,8 +422,10 @@ export class AddTransactionModalComponent implements OnInit {
       if (form.invalid || this.form.amount <= 0) return;
       const title = (this.form.title ?? '').trim();
       const dateStr = this.formatDateLocal(this.form.date);
+      const useCard = this.form.type === 'transfer' || this.form.paymentMethod !== 'cash';
       const cardNum = Number(this.form.cardId);
-      if (!title || !dateStr || !Number.isFinite(cardNum) || cardNum < 1) return;
+      if (!title || !dateStr) return;
+      if (useCard && (!Number.isFinite(cardNum) || cardNum < 1)) return;
       try {
         await this.groupRoomsHttp.createRoomTransaction(roomId, {
           title,
@@ -398,7 +434,12 @@ export class AddTransactionModalComponent implements OnInit {
           amount: Number(this.form.amount) || 0,
           date: dateStr,
           currencyCode: this.form.currencyCode || this.currencyService.primaryCode(),
-          cardId: Math.trunc(cardNum),
+          ...(this.form.type !== 'transfer' && this.form.paymentMethod === 'cash'
+            ? { paymentMethod: 'cash' as const }
+            : {
+                paymentMethod: 'card' as const,
+                cardId: Math.trunc(cardNum),
+              }),
           ...(this.form.type === 'transfer' &&
           this.form.transferToCardId !== '' &&
           this.form.transferToCardId != null
@@ -413,8 +454,8 @@ export class AddTransactionModalComponent implements OnInit {
         this.messageService.add({
           key: 'toast',
           severity: 'success',
-          summary: 'Success',
-          detail: 'Transaction added',
+          summary: this.i18n.t('common.success'),
+          detail: this.i18n.t('txModal.toast.addSuccess'),
           life: 3000,
         });
         void this.queryClient.invalidateQueries({ queryKey: ['groupTransactions', roomId] });
@@ -425,8 +466,8 @@ export class AddTransactionModalComponent implements OnInit {
         this.messageService.add({
           key: 'toast',
           severity: 'error',
-          summary: 'Error',
-          detail: 'Failed to add transaction',
+          summary: this.i18n.t('common.error'),
+          detail: this.i18n.t('txModal.toast.addError'),
           life: 3000,
         });
       }

@@ -2,10 +2,10 @@
   appearance="primary"
   size="md"
   (buttonClick)="show()"
-  ariaLabel="Add Subscription"
+  [ariaLabel]="'subscriptions.addSubscription' | translate"
   customClass="add-subscription-btn"
 >
   <app-icon prime="plus" [sizePx]="20" iconClass="add-subscription-btn__icon" />
-  <span class="add-subscription-btn__label">Add Subscription</span>
-  <span class="add-subscription-btn__label-mobile">Add</span>
+  <span class="add-subscription-btn__label">{{ 'subscriptions.addSubscription' | translate }}</span>
+  <span class="add-subscription-btn__label-mobile">{{ 'common.add' | translate }}</span>
 </app-button>

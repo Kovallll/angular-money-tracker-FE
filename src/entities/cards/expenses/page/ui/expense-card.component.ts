@@ -6,11 +6,12 @@ import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 import { Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'expense-card',
   standalone: true,
-  imports: [AppCurrencyPipe, ExpenseCardItemComponent, AppIconComponent],
+  imports: [AppCurrencyPipe, ExpenseCardItemComponent, AppIconComponent, TranslateModule],
   templateUrl: './expense-card.component.html',
   styleUrls: ['./expense-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

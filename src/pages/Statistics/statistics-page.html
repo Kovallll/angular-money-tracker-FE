@@ -1,14 +1,14 @@
 <div class="container">
   <header class="app-page-head">
     <div class="app-page-head__text">
-      <h1 class="app-page-head__title">Statistics overview</h1>
+      <h1 class="app-page-head__title">{{ 'page.statistics.title' | translate }}</h1>
       <p class="app-page-head__subtitle">
-        Track your budget, expenses, goals and category analytics in a single place.
+        {{ 'page.statistics.subtitle' | translate }}
       </p>
     </div>
   </header>
 
-  <div class="segment-control" role="tablist" aria-label="Statistics view">
+  <div class="segment-control" role="tablist" [attr.aria-label]="'tabs.statisticsView' | translate">
     <button
       type="button"
       class="segment-control__item"
@@ -17,7 +17,7 @@
       role="tab"
       (click)="setStatsView('charts')"
     >
-      Charts
+      {{ 'tabs.charts' | translate }}
     </button>
     <button
       type="button"
@@ -27,7 +27,7 @@
       role="tab"
       (click)="setStatsView('reports')"
     >
-      Reports
+      {{ 'tabs.reports' | translate }}
     </button>
   </div>
 

@@ -26,6 +26,8 @@ import { Select } from 'primeng/select';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
 import { RoomMemberContributionsComponent } from '@/widgets/roomMemberContributions/room-member-contributions.component';
+import { TranslateModule } from '@ngx-translate/core';
+import { I18nService } from '@/shared/services';
 
 const EMPTY_BAR: ChartConfiguration<'bar'>['data'] = { labels: [], datasets: [] };
 const EMPTY_LINE: ChartConfiguration<'line'>['data'] = { labels: [], datasets: [] };
@@ -140,11 +142,11 @@ const htmlLegendTagsPlugin: Plugin<'bar' | 'doughnut'> = {
 const DOUGHNUT_WRAP_CLASS = 'chart-card__doughnut-wrap';
 
 const PIE_PERIOD_OPTIONS: { value: StatisticsPiePeriod; label: string }[] = [
-  { value: 'current_month', label: 'Current month' },
-  { value: 'last_3', label: 'Last 3 months' },
-  { value: 'last_6', label: 'Last 6 months' },
-  { value: 'last_12', label: 'Last 12 months' },
-  { value: 'all', label: 'All time' },
+  { value: 'current_month', label: 'charts.period.currentMonth' },
+  { value: 'last_3', label: 'charts.period.last3Months' },
+  { value: 'last_6', label: 'charts.period.last6Months' },
+  { value: 'last_12', label: 'charts.period.last12Months' },
+  { value: 'all', label: 'charts.period.allTime' },
 ];
 
 function getOrCreateLegendContainer(chart: { canvas: HTMLCanvasElement }): HTMLElement {
@@ -178,6 +180,7 @@ function getOrCreateLegendContainer(chart: { canvas: HTMLCanvasElement }): HTMLE
     RoomMemberContributionsComponent,
     FormsModule,
     Select,
+    TranslateModule,
   ],
 })
 export class CategoryAnaliticsComponent implements OnInit {
@@ -186,6 +189,7 @@ export class CategoryAnaliticsComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
   private currencyService = inject(CurrencyService);
   private exchangeRates = inject(ExchangeRatesService);
+  private i18n = inject(I18nService);
 
   view = input<'row' | 'column'>('column');
 
@@ -204,7 +208,13 @@ export class CategoryAnaliticsComponent implements OnInit {
   /** Период агрегации для круговой диаграммы Categories share (по умолчанию — текущий календарный месяц). */
   piePeriod = signal<StatisticsPiePeriod>('current_month');
 
-  readonly piePeriodOptions = PIE_PERIOD_OPTIONS;
+  readonly piePeriodOptions = computed(() => {
+    this.i18n.currentLang();
+    return PIE_PERIOD_OPTIONS.map((option) => ({
+      value: option.value,
+      label: this.i18n.t(option.label),
+    }));
+  });
 
   /** true пока запрос overview в процессе (показываем спиннер на всех трёх графиках). */
   overviewLoading = signal(true);
@@ -433,7 +443,7 @@ export class CategoryAnaliticsComponent implements OnInit {
     this.statisticsHttpService
       .getExpensesOverview({
         monthsBar: 6,
-        locale: 'en',
+        locale: this.i18n.currentLang() === 'ru' ? 'ru' : 'en',
         piePeriod: this.piePeriod(),
         ...(rid ? { roomId: rid } : {}),
       })

@@ -9,6 +9,7 @@ import { CategoryAnaliticsComponent } from '@/widgets/categoryAnalitics/ui/anali
 import { RoutePaths } from '@/shared';
 import { SelectOption } from '@/entities/select/lib';
 import { ChartViews } from '@/entities/cards/statistics/lib';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   standalone: true,
@@ -23,6 +24,7 @@ import { ChartViews } from '@/entities/cards/statistics/lib';
     DashboardExpenseCardComponent,
     BudgetStatisticCardComponent,
     CategoryAnaliticsComponent,
+    TranslatePipe,
   ],
 })
 export class DashboardCardsComponent {

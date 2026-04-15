@@ -8,6 +8,7 @@ import { AppCurrencyPipe } from '@/shared/pipes/app-currency.pipe';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 import { DatePipe } from '@angular/common';
 import { MatTooltipModule, MatTooltip } from '@angular/material/tooltip';
+import { TranslateModule } from '@ngx-translate/core';
 
 /** Строка для отображения в списке: таблица или карточки. Минимум: id, date, title, amount. */
 export interface TransactionListRow {
@@ -27,7 +28,14 @@ export interface TransactionListRow {
 @Component({
   selector: 'transactions-list-view',
   standalone: true,
-  imports: [TableComponent, AppCurrencyPipe, AppIconComponent, DatePipe, MatTooltipModule],
+  imports: [
+    TableComponent,
+    AppCurrencyPipe,
+    AppIconComponent,
+    DatePipe,
+    MatTooltipModule,
+    TranslateModule,
+  ],
   templateUrl: './transactions-list-view.component.html',
   styleUrl: './transactions-list-view.component.scss',
 })

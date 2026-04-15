@@ -17,6 +17,7 @@ import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 import { injectQuery, QueryClient } from '@tanstack/angular-query-experimental';
+import { TranslateModule } from '@ngx-translate/core';
 
 const GOAL_PAGE_SIZE_WIDE = 9;
 const GOAL_PAGE_SIZE_TWO_COLUMNS = 8;
@@ -35,6 +36,7 @@ const GOAL_PAGE_SIZE_TWO_COLUMNS = 8;
     ProgressSpinnerModule,
     AppCurrencyPipe,
     AppIconComponent,
+    TranslateModule,
   ],
 })
 export class GoalsCardsComponent extends UrlSyncedComponent<GoalItem> {

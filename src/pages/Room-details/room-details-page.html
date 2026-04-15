@@ -1,59 +1,107 @@
 <section class="room-details" *ngIf="room() as roomData; else loadingTpl">
-  <a [routerLink]="['/', routePaths.ROOMS]" class="room-back">
-    <app-icon prime="arrow-left" [sizePx]="20" />
-    <span>Rooms</span>
-  </a>
+  <p class="room-error" *ngIf="error()">{{ error() }}</p>
 
-  <header class="app-page-head app-page-head--tight">
-    <div class="app-page-head__text">
-      <h1 class="app-page-head__title">{{ roomData.name }}</h1>
-      <p class="app-page-head__subtitle" *ngIf="roomData.description?.trim()">{{ roomData.description }}</p>
+  <div class="room-tabs-bar">
+    <nav
+      class="room-tabs"
+      role="tablist"
+      [attr.aria-label]="'tabs.roomSections' | translate"
+      (keydown)="onRoomTabsKeydown($event)"
+    >
+      <button
+        type="button"
+        *ngFor="let t of tabDefs"
+        class="room-tab"
+        role="tab"
+        [id]="'room-tab-' + t.id"
+        [class.room-tab--active]="activeTab() === t.id"
+        [attr.aria-selected]="activeTab() === t.id"
+        [attr.tabindex]="activeTab() === t.id ? 0 : -1"
+        [attr.aria-controls]="'room-panel-' + t.id"
+        (click)="setTab(t.id)"
+      >
+        <span class="room-tab__label">{{ ('tabs.room.' + t.id) | translate }}</span>
+      </button>
+    </nav>
+  </div>
+
+  <header class="room-head">
+    <a
+      [routerLink]="['/', routePaths.ROOMS]"
+      class="room-back"
+      [attr.aria-label]="'rooms.details.backToRooms' | translate"
+    >
+      <app-icon prime="arrow-left" />
+    </a>
+    <div class="room-head__text">
+      <h1 class="room-head__title">{{ roomData.name }}</h1>
+      <p class="room-head__subtitle" *ngIf="roomData.description?.trim()">{{ roomData.description }}</p>
     </div>
   </header>
 
-  <p class="room-error" *ngIf="error()">{{ error() }}</p>
-
-  <nav class="room-tabs" role="tablist" aria-label="Room sections">
-    <button
-      type="button"
-      *ngFor="let t of tabDefs"
-      class="room-tab"
-      [class.room-tab--active]="activeTab() === t.id"
-      [attr.aria-selected]="activeTab() === t.id"
-      (click)="setTab(t.id)"
-    >
-      {{ t.label }}
-    </button>
-  </nav>
-
   <div class="room-panels" [ngSwitch]="activeTab()">
-    <div class="room-embed" *ngSwitchCase="'overview'">
+    <div
+      class="room-embed"
+      *ngSwitchCase="'overview'"
+      role="tabpanel"
+      id="room-panel-overview"
+      [attr.aria-labelledby]="'room-tab-overview'"
+    >
       <dashboard-cards [groupRoomId]="roomId()" />
     </div>
 
-    <div class="room-embed" *ngSwitchCase="'transactions'">
+    <div
+      class="room-embed"
+      *ngSwitchCase="'transactions'"
+      role="tabpanel"
+      id="room-panel-transactions"
+      [attr.aria-labelledby]="'room-tab-transactions'"
+    >
       <transaction-widget [groupRoomId]="roomId()" [embedded]="true" />
     </div>
 
-    <div class="room-embed" *ngSwitchCase="'categories'">
+    <div
+      class="room-embed"
+      *ngSwitchCase="'categories'"
+      role="tabpanel"
+      id="room-panel-categories"
+      [attr.aria-labelledby]="'room-tab-categories'"
+    >
       <categories-cards [groupRoomId]="roomId()" [embedded]="true" />
     </div>
 
-    <div class="room-embed" *ngSwitchCase="'goals'">
+    <div
+      class="room-embed"
+      *ngSwitchCase="'goals'"
+      role="tabpanel"
+      id="room-panel-goals"
+      [attr.aria-labelledby]="'room-tab-goals'"
+    >
       <goals-cards [groupRoomId]="roomId()" [embedded]="true" />
     </div>
 
-    <div class="room-embed" *ngSwitchCase="'subscriptions'">
+    <div
+      class="room-embed"
+      *ngSwitchCase="'subscriptions'"
+      role="tabpanel"
+      id="room-panel-subscriptions"
+      [attr.aria-labelledby]="'room-tab-subscriptions'"
+    >
       <subscribe-table [groupRoomId]="roomId()" [embedded]="true" />
     </div>
 
     <ng-container *ngSwitchCase="'members'">
-      <section class="room-card">
+      <section
+        class="room-card"
+        role="tabpanel"
+        id="room-panel-members"
+        aria-labelledby="room-tab-members"
+      >
         <div class="room-card__head">
-          <h2 class="room-card__title room-card__title--inline">Members</h2>
+          <h2 class="room-card__title room-card__title--inline">{{ 'tabs.room.members' | translate }}</h2>
           <app-button appearance="primary" size="sm" type="button" (buttonClick)="openInviteDialog()">
             <app-icon prime="link" [sizePx]="18" />
-            Create invite
+            {{ 'rooms.details.createInvite' | translate }}
           </app-button>
         </div>
         <div class="room-list">
@@ -63,7 +111,7 @@
               <p class="room-muted">{{ member.email }}</p>
             </div>
             <div class="room-member-actions">
-              <span class="room-role">{{ member.role }}</span>
+              <span class="room-role">{{ ('rooms.role.' + member.role) | translate }}</span>
               <app-button
                 *ngIf="member.role === 'member'"
                 appearance="secondary"
@@ -71,7 +119,7 @@
                 type="button"
                 (buttonClick)="updateRole(member.userId, 'admin')"
               >
-                Make admin
+                {{ 'rooms.details.makeAdmin' | translate }}
               </app-button>
               <app-button
                 *ngIf="member.role === 'admin'"
@@ -80,7 +128,7 @@
                 type="button"
                 (buttonClick)="updateRole(member.userId, 'member')"
               >
-                Make member
+                {{ 'rooms.details.makeMember' | translate }}
               </app-button>
               <app-button
                 *ngIf="member.role !== 'owner'"
@@ -89,13 +137,13 @@
                 type="button"
                 (buttonClick)="removeMember(member.userId)"
               >
-                Remove
+                {{ 'rooms.details.remove' | translate }}
               </app-button>
             </div>
           </div>
         </div>
         <div class="room-token" *ngIf="createdInviteToken()">
-          <span class="room-token__label">Invite token</span>
+          <span class="room-token__label">{{ 'rooms.inviteToken' | translate }}</span>
           <code class="room-token__value">{{ createdInviteToken() }}</code>
         </div>
       </section>
@@ -104,7 +152,7 @@
 </section>
 
 <p-dialog
-  header="Create invite"
+  [header]="'rooms.details.createInvite' | translate"
   [visible]="inviteDialogVisible()"
   (visibleChange)="onInviteDialogVisibleChange($event)"
   [modal]="true"
@@ -119,7 +167,7 @@
     [showCloseButton]="false"
     [showCancel]="true"
     [showSave]="true"
-    saveLabel="Generate token"
+    [saveLabel]="'rooms.details.generateToken' | translate"
     [saveDisabled]="!inviteHoursValid() || isCreatingInvite()"
     [saveLoading]="isCreatingInvite()"
     (cancelRequest)="closeInviteDialog()"
@@ -128,7 +176,7 @@
     <form class="app-modal-form" (ngSubmit)="$event.preventDefault()">
       <div class="form-fields form-fields--stack">
         <div class="field form-field--full">
-          <label for="roomInviteHours">Expires in (hours)</label>
+          <label for="roomInviteHours">{{ 'rooms.details.expiresInHours' | translate }}</label>
           <input
             pInputText
             type="number"
@@ -140,7 +188,7 @@
             [ngModel]="inviteHours()"
             (ngModelChange)="onInviteHoursInput($event)"
           />
-          <p class="room-invite-hint">Between 1 and 8760 hours (1 year).</p>
+          <p class="room-invite-hint">{{ 'rooms.details.expiresHint' | translate }}</p>
         </div>
       </div>
     </form>
@@ -149,6 +197,6 @@
 
 <ng-template #loadingTpl>
   <div class="room-loading">
-    <p>Loading room…</p>
+    <p>{{ 'rooms.details.loadingRoom' | translate }}</p>
   </div>
 </ng-template>

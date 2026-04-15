@@ -5,7 +5,7 @@
         type="text"
         matInput
         formControlName="search"
-        [placeholder]="placeholder()"
+        [placeholder]="placeholder() | translate"
         class="input"
         [value]="search()"
         (change)="onChange($event)"

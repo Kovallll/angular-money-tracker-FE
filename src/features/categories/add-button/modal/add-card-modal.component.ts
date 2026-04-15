@@ -8,6 +8,8 @@ import { CategoriesHttpService, CreateCategoryItem, DEFAULT_CATEGORY_ICON } from
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { injectMutation, QueryClient } from '@tanstack/angular-query-experimental';
 import { CategoryIconPickerComponent } from '@/shared/components/category-icon-picker/category-icon-picker.component';
+import { TranslateModule } from '@ngx-translate/core';
+import { I18nService } from '@/shared/services';
 
 @Component({
   selector: 'add-card-modal',
@@ -19,6 +21,7 @@ import { CategoryIconPickerComponent } from '@/shared/components/category-icon-p
     AppModalShellComponent,
     MessageModule,
     CategoryIconPickerComponent,
+    TranslateModule,
   ],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,6 +32,7 @@ export class AddCategoryModalComponent {
   private ref = inject(DynamicDialogRef);
   private dialogConfig = inject(DynamicDialogConfig, { optional: true });
   queryClient = inject(QueryClient);
+  private i18n = inject(I18nService);
 
   /** Если задан — категория создаётся в комнате, а не в личном списке. */
   protected getGroupRoomId(): string | undefined {
@@ -60,8 +64,8 @@ export class AddCategoryModalComponent {
       this.messageService.add({
         key: 'toast',
         severity: 'success',
-        summary: 'Success',
-        detail: 'Card created successfully',
+        summary: this.i18n.t('common.success'),
+        detail: this.i18n.t('categories.toast.created'),
         life: 3000,
       });
       this.ref.close(true);
@@ -70,8 +74,8 @@ export class AddCategoryModalComponent {
       this.messageService.add({
         key: 'toast',
         severity: 'error',
-        summary: 'Error',
-        detail: 'Failed to create category',
+        summary: this.i18n.t('common.error'),
+        detail: this.i18n.t('categories.toast.createError'),
         life: 3000,
       });
     },

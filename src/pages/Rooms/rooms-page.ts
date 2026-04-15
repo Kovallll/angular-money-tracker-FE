@@ -14,6 +14,8 @@ import { AppButtonComponent } from '@/shared/components/app-button/app-button.co
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 import { ContextMenuComponent } from '@/entities/context-menu/cm.component';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { TranslateModule } from '@ngx-translate/core';
+import { I18nService } from '@/shared/services';
 
 const ROOM_CURRENCIES = ['BYN', 'USD', 'EUR', 'RUB'] as const;
 
@@ -29,6 +31,7 @@ const ROOM_CURRENCIES = ['BYN', 'USD', 'EUR', 'RUB'] as const;
     AppButtonComponent,
     AppIconComponent,
     ContextMenuComponent,
+    TranslateModule,
   ],
   templateUrl: './rooms-page.html',
   styleUrl: './rooms-page.scss',
@@ -41,6 +44,7 @@ export class RoomsPageComponent implements OnInit, OnDestroy {
   private readonly currencyService = inject(CurrencyService);
   private readonly confirmationService = inject(ConfirmationService);
   private readonly messageService = inject(MessageService);
+  private readonly i18n = inject(I18nService);
 
   readonly routePaths = RoutePaths;
   readonly rooms = signal<GroupRoomItem[]>([]);
@@ -171,8 +175,8 @@ export class RoomsPageComponent implements OnInit, OnDestroy {
       this.messageService.add({
         key: 'toast',
         severity: 'success',
-        summary: 'Room updated',
-        detail: 'Changes saved successfully.',
+        summary: this.i18n.t('rooms.toast.roomUpdated'),
+        detail: this.i18n.t('rooms.toast.changesSaved'),
         life: 3000,
       });
     } catch (err) {
@@ -180,8 +184,8 @@ export class RoomsPageComponent implements OnInit, OnDestroy {
       this.messageService.add({
         key: 'toast',
         severity: 'error',
-        summary: 'Could not update room',
-        detail: 'Check your connection and try again.',
+        summary: this.i18n.t('rooms.toast.couldNotUpdateRoom'),
+        detail: this.i18n.t('rooms.toast.checkConnection'),
         life: 5000,
       });
     } finally {
@@ -191,11 +195,11 @@ export class RoomsPageComponent implements OnInit, OnDestroy {
 
   confirmDeleteRoom(room: GroupRoomItem): void {
     this.confirmationService.confirm({
-      message: `Delete room «${room.name}»? This cannot be undone.`,
-      header: 'Delete room',
+      message: this.i18n.t('rooms.deleteConfirmMessage', { name: room.name }),
+      header: this.i18n.t('rooms.deleteRoom'),
       icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Delete',
-      rejectLabel: 'Cancel',
+      acceptLabel: this.i18n.t('common.delete'),
+      rejectLabel: this.i18n.t('balances.cancel'),
       acceptButtonStyleClass: 'p-button-danger',
       accept: () => {
         void this.deleteRoom(room.id);
@@ -212,8 +216,8 @@ export class RoomsPageComponent implements OnInit, OnDestroy {
       this.messageService.add({
         key: 'toast',
         severity: 'success',
-        summary: 'Room deleted',
-        detail: 'The room was removed successfully.',
+        summary: this.i18n.t('rooms.toast.roomDeleted'),
+        detail: this.i18n.t('rooms.toast.roomRemoved'),
         life: 3000,
       });
       if (this.router.url.includes(roomId)) {
@@ -224,8 +228,8 @@ export class RoomsPageComponent implements OnInit, OnDestroy {
       this.messageService.add({
         key: 'toast',
         severity: 'error',
-        summary: 'Could not delete room',
-        detail: 'Check your connection and try again.',
+        summary: this.i18n.t('rooms.toast.couldNotDeleteRoom'),
+        detail: this.i18n.t('rooms.toast.checkConnection'),
         life: 5000,
       });
     } finally {
@@ -251,7 +255,7 @@ export class RoomsPageComponent implements OnInit, OnDestroy {
       this.rooms.set(data);
     } catch (err) {
       console.error(err);
-      this.error.set('Failed to load rooms');
+      this.error.set(this.i18n.t('rooms.errors.loadRooms'));
     } finally {
       this.isLoading.set(false);
     }
@@ -277,8 +281,8 @@ export class RoomsPageComponent implements OnInit, OnDestroy {
       this.messageService.add({
         key: 'toast',
         severity: 'success',
-        summary: 'Room created',
-        detail: `Room "${created.name}" is ready.`,
+        summary: this.i18n.t('rooms.toast.roomCreated'),
+        detail: this.i18n.t('rooms.toast.roomReady', { name: created.name }),
         life: 3000,
       });
       await this.router.navigate(['/', RoutePaths.ROOM_DETAILS, created.id], {
@@ -287,12 +291,12 @@ export class RoomsPageComponent implements OnInit, OnDestroy {
       });
     } catch (err) {
       console.error(err);
-      this.error.set('Failed to create room');
+      this.error.set(this.i18n.t('rooms.errors.createRoom'));
       this.messageService.add({
         key: 'toast',
         severity: 'error',
-        summary: 'Could not create room',
-        detail: 'Check your connection and try again.',
+        summary: this.i18n.t('rooms.toast.couldNotCreateRoom'),
+        detail: this.i18n.t('rooms.toast.checkConnection'),
         life: 5000,
       });
     } finally {
@@ -312,18 +316,18 @@ export class RoomsPageComponent implements OnInit, OnDestroy {
       this.messageService.add({
         key: 'toast',
         severity: 'success',
-        summary: 'Invite accepted',
-        detail: 'You have joined the room.',
+        summary: this.i18n.t('rooms.toast.inviteAccepted'),
+        detail: this.i18n.t('rooms.toast.joinedRoom'),
         life: 3000,
       });
     } catch (err) {
       console.error(err);
-      this.error.set('Failed to accept invite');
+      this.error.set(this.i18n.t('rooms.errors.acceptInvite'));
       this.messageService.add({
         key: 'toast',
         severity: 'error',
-        summary: 'Could not accept invite',
-        detail: 'Token may be invalid or expired.',
+        summary: this.i18n.t('rooms.toast.couldNotAcceptInvite'),
+        detail: this.i18n.t('rooms.toast.tokenInvalidOrExpired'),
         life: 5000,
       });
     } finally {
@@ -342,18 +346,18 @@ export class RoomsPageComponent implements OnInit, OnDestroy {
       this.messageService.add({
         key: 'toast',
         severity: 'success',
-        summary: 'Invite rejected',
-        detail: 'The invite has been declined.',
+        summary: this.i18n.t('rooms.toast.inviteRejected'),
+        detail: this.i18n.t('rooms.toast.inviteDeclined'),
         life: 3000,
       });
     } catch (err) {
       console.error(err);
-      this.error.set('Failed to reject invite');
+      this.error.set(this.i18n.t('rooms.errors.rejectInvite'));
       this.messageService.add({
         key: 'toast',
         severity: 'error',
-        summary: 'Could not reject invite',
-        detail: 'Please try again.',
+        summary: this.i18n.t('rooms.toast.couldNotRejectInvite'),
+        detail: this.i18n.t('rooms.toast.pleaseTryAgain'),
         life: 5000,
       });
     } finally {

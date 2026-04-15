@@ -16,6 +16,8 @@ import { StatisticsTabCoordinatorService } from '@/shared';
 import { MessageService } from 'primeng/api';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 import { SavedReportsRefreshService } from '@/widgets/savedReports/saved-reports-refresh.service';
+import { TranslateModule } from '@ngx-translate/core';
+import { I18nService } from '@/shared/services';
 
 const CHART_IDS = ['budget', 'expenses', 'goals', 'category'] as const;
 const CHART_RENDER_DELAY_MS = 1200;
@@ -33,7 +35,13 @@ type ExportFormat = 'csv' | 'pdf' | 'excel' | 'json' | 'html';
   templateUrl: './export-report.component.html',
   styleUrls: ['./export-report.component.scss'],
   standalone: true,
-  imports: [ButtonModule, ProgressSpinnerModule, TieredMenuModule, AppIconComponent],
+  imports: [
+    ButtonModule,
+    ProgressSpinnerModule,
+    TieredMenuModule,
+    AppIconComponent,
+    TranslateModule,
+  ],
 })
 export class ExportReportComponent {
   @ViewChild(TieredMenu) menu!: TieredMenu;
@@ -46,6 +54,7 @@ export class ExportReportComponent {
   private snapshotsHttp = inject(AnalyticsSnapshotsHttpService);
   private savedReportsRefresh = inject(SavedReportsRefreshService);
   private statisticsTabCoordinator = inject(StatisticsTabCoordinatorService);
+  private i18n = inject(I18nService);
 
   readonly isLoading = signal(false);
   private readonly exportFormatWithCharts = signal<ExportFormat | null>(null);
@@ -64,7 +73,9 @@ export class ExportReportComponent {
     { label: 'HTML', icon: 'pi pi-file-edit', command: () => this.runExport('html') },
   ];
 
-  readonly buttonLabel = computed(() => (this.isLoading() ? 'Export…' : 'Export report'));
+  readonly buttonLabel = computed(() =>
+    this.isLoading() ? this.i18n.t('export.exporting') : this.i18n.t('export.exportReport'),
+  );
 
   openMenu(event: Event) {
     this.menu.toggle(event);
@@ -119,7 +130,7 @@ export class ExportReportComponent {
         key: 'toast',
         severity: 'warn',
         summary: 'Access denied',
-        detail: 'Sign in to export',
+        detail: this.i18n.t('export.signInToExport'),
         life: 3000,
       });
       return;
@@ -164,10 +175,10 @@ export class ExportReportComponent {
       this.messageService.add({
         key: 'toast',
         severity: 'success',
-        summary: 'Export ready',
+        summary: this.i18n.t('export.ready'),
         detail: snapshotSaved
-          ? 'File saved. A copy was added under Statistics → Saved reports.'
-          : 'File saved. Could not add a copy to Saved reports — try again later.',
+          ? this.i18n.t('export.savedWithCopy')
+          : this.i18n.t('export.savedWithoutCopy'),
         life: 4000,
       });
     } catch (err) {
@@ -175,8 +186,8 @@ export class ExportReportComponent {
       this.messageService.add({
         key: 'toast',
         severity: 'error',
-        summary: 'Error',
-        detail: 'Failed to generate report',
+        summary: this.i18n.t('common.error'),
+        detail: this.i18n.t('export.failedToGenerate'),
         life: 4000,
       });
     }

@@ -12,7 +12,7 @@ import { DashboardCardComponent, CardBodyComponent } from '../../../card';
 import { BaseChartDirective } from 'ng2-charts';
 import {
   budgetChartOptions,
-  chartViewChoices,
+  chartViewChoices as chartViewChoicesBase,
   ChartViews,
   formatAmountWithCurrency,
 } from '../../lib';
@@ -25,6 +25,8 @@ import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { ExchangeRatesService } from '@/shared/services/currency/exchange-rates.service';
 import { ProgressSpinner } from 'primeng/progressspinner';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
+import { TranslateModule } from '@ngx-translate/core';
+import { I18nService } from '@/shared/services';
 
 @Component({
   selector: 'budget-statistic-card',
@@ -37,6 +39,7 @@ import { AppIconComponent } from '@/shared/components/app-icon/app-icon.componen
     SelectComponent,
     ProgressSpinner,
     AppIconComponent,
+    TranslateModule,
   ],
   templateUrl: './budget-stats.component.html',
   styleUrl: `./budget-stats.component.scss`,
@@ -47,14 +50,26 @@ export class BudgetStatisticCardComponent {
   private transactionsHttpService = inject(TransactionsHttpService);
   private currencyService = inject(CurrencyService);
   private exchangeRates = inject(ExchangeRatesService);
+  private i18n = inject(I18nService);
 
   isLoading = this.transactionsHttpService.isLoading;
 
   isWithSeeAll = input(false);
   seeAllPath = input<string>('');
   fixedView = input<SelectOption<`${ChartViews}`>>();
-  title = input<string>('Budget');
-  chartViewChoices = signal<SelectOption<`${ChartViews}`>[]>(chartViewChoices);
+  title = input<string>('charts.budget');
+  chartViewChoices = computed<SelectOption<`${ChartViews}`>[]>(() => {
+    this.i18n.currentLang();
+    return chartViewChoicesBase.map((item) => ({
+      ...item,
+      label:
+        item.value === ChartViews.WEEK
+          ? this.i18n.t('charts.view.week')
+          : item.value === ChartViews.MONTH
+            ? this.i18n.t('charts.view.month')
+            : this.i18n.t('charts.view.year'),
+    }));
+  });
 
   offset = signal(0);
 
@@ -67,6 +82,7 @@ export class BudgetStatisticCardComponent {
   /** Chart data with amounts converted to primary currency (reactive to header). */
   data = computed(() => {
     const raw = this.chartData();
+    this.i18n.currentLang();
     const primary = this.currencyService.primaryCode();
     const expenses = raw.expenses.map((v) => this.exchangeRates.convert(v, 'BYN', primary));
     const revenue = raw.revenue.map((v) => this.exchangeRates.convert(v, 'BYN', primary));
@@ -74,13 +90,13 @@ export class BudgetStatisticCardComponent {
       labels: raw.labels,
       datasets: [
         {
-          label: 'Expenses',
+          label: this.i18n.t('tabs.expenses'),
           data: expenses,
           backgroundColor: chartColors.red,
           borderWidth: 1,
         },
         {
-          label: 'Revenue',
+          label: this.i18n.t('tabs.revenue'),
           data: revenue,
           backgroundColor: chartColors.blue,
           borderWidth: 1,

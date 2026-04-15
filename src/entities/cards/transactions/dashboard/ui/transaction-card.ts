@@ -22,6 +22,7 @@ import { injectQuery } from '@tanstack/angular-query-experimental';
 import { mapGroupTxToTransaction } from './group-tx-map';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 import { AuthService } from '@/shared/services/auth/auth.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'dash-transaction-card',
@@ -33,6 +34,7 @@ import { AuthService } from '@/shared/services/auth/auth.service';
     TransactionCardItemComponent,
     ProgressSpinner,
     AppIconComponent,
+    TranslatePipe,
   ],
   templateUrl: './transaction-card.html',
   styleUrls: ['./transaction-card.scss'],
@@ -58,7 +60,7 @@ export class DashboardTransactionCardComponent {
   });
 
   readonly tabFilter = signal('All');
-  readonly title = 'Recent Transaction';
+  readonly title = 'dashboard.recentTransactions';
   readonly tabs = tabs;
   readonly seeAllPath = RoutePaths.TRANSACTIONS;
 

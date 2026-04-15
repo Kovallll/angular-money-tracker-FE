@@ -1,5 +1,5 @@
 <app-modal-shell
-  title="Edit Goal"
+  [title]="'goals.adjustGoal' | translate"
   [showDelete]="true"
   [showCancel]="true"
   [showSave]="true"
@@ -12,20 +12,20 @@
   <form #f="ngForm" class="app-modal-form" (ngSubmit)="onSave()">
     <div class="form-fields">
       <div class="field">
-        <label for="title" class="label">Title</label>
+        <label for="title" class="label">{{ 'common.title' | translate }}</label>
         <input
           pInputText
           id="title"
           name="title"
           type="text"
           [(ngModel)]="data.title"
-          placeholder="Enter goal title"
+          [placeholder]="'goals.enterTitle' | translate"
         />
       </div>
 
       <div class="field">
         <app-price-currency-field
-          label="Target Budget"
+          [label]="'goals.targetBudget' | translate"
           amountName="targetBudget"
           [(amount)]="targetBudget"
           [(currencyCode)]="currencyCode"
@@ -33,27 +33,27 @@
         />
         <div class="error-slot">
           @if (hasBudgetError() && goalBudget > 0 && targetBudget > goalBudget) {
-            <small class="error">Target must not exceed goal.</small>
+            <small class="error">{{ 'goals.errors.targetNotExceedGoal' | translate }}</small>
           }
         </div>
       </div>
 
       <div class="field">
         <app-price-currency-field
-          label="Goal Budget"
+          [label]="'goals.goalBudget' | translate"
           amountName="goalBudget"
           [(amount)]="goalBudget"
           [showCurrency]="false"
         />
         <div class="error-slot">
           @if (hasBudgetError() && goalBudget <= 0) {
-            <small class="error">Must be &gt; 0.</small>
+            <small class="error">{{ 'goals.errors.mustBeGreaterThanZero' | translate }}</small>
           }
         </div>
       </div>
 
       <div class="field">
-        <label for="categoryId" class="label">Category</label>
+        <label for="categoryId" class="label">{{ 'txModal.category' | translate }}</label>
         <p-select
           inputId="categoryId"
           name="categoryId"
@@ -61,7 +61,7 @@
           optionLabel="title"
           optionValue="id"
           [(ngModel)]="selectedCategoryId"
-          placeholder="Select category"
+          [placeholder]="'txModal.selectCategory' | translate"
           appendTo="body"
         >
           <ng-template let-item pTemplate="item">
@@ -74,7 +74,7 @@
       </div>
 
       <div class="field">
-        <label for="startDate" class="label">Start Date</label>
+        <label for="startDate" class="label">{{ 'goals.startDate' | translate }}</label>
         <p-datepicker
           id="startDate"
           inputId="startDate"
@@ -87,7 +87,10 @@
       </div>
 
       <div class="field">
-        <label for="endDate" class="label">End Date <span class="optional">(optional)</span></label>
+        <label for="endDate" class="label"
+          >{{ 'goals.endDate' | translate }}
+          <span class="optional">({{ 'common.optional' | translate }})</span></label
+        >
         <p-datepicker
           id="endDate"
           inputId="endDate"
@@ -99,7 +102,7 @@
         ></p-datepicker>
         <div class="error-slot">
           @if (hasDateError()) {
-            <small class="error">End date must be after start date.</small>
+            <small class="error">{{ 'goals.errors.endDateAfterStart' | translate }}</small>
           }
         </div>
       </div>

@@ -6,6 +6,7 @@ import { AccountComponent } from '@/entities/cards/settings/ui/account/account.c
 import { SecurityComponent } from '@/entities/cards/settings/ui/security/security.component';
 import { AnalyticsSettingsComponent } from '@/entities/cards/settings/ui/analytics/analytics-settings.component';
 import { UserService } from '@/shared';
+import { TranslateModule } from '@ngx-translate/core';
 
 type SettingsTab = 'Account' | 'Security' | 'Analytics';
 
@@ -31,6 +32,7 @@ const QUERY_BY_TAB: Record<SettingsTab, string> = {
     AccountComponent,
     SecurityComponent,
     AnalyticsSettingsComponent,
+    TranslateModule,
   ],
 })
 export class SettingsTabsComponent {

@@ -1,0 +1,623 @@
+{
+  "common": {
+    "error": "Ошибка",
+    "success": "Успешно",
+    "add": "Добавить",
+    "save": "Сохранить",
+    "create": "Создать",
+    "select": "Выбрать",
+    "optional": "необязательно",
+    "title": "Название",
+    "currency": "Валюта",
+    "loading": "Загрузка",
+    "overview": "Обзор",
+    "seeAll": "См. все",
+    "more": "Еще",
+    "menu": "Меню",
+    "gotIt": "Понял",
+    "hide": "Скрыть",
+    "edit": "Изменить",
+    "delete": "Удалить",
+    "na": "Н/Д"
+  },
+  "search": {
+    "byName": "Поиск по названию",
+    "byTitle": "Поиск по названию",
+    "byNameBankNumber": "Поиск по названию, банку, номеру"
+  },
+  "header": {
+    "hello": "Привет",
+    "language": "Язык"
+  },
+  "menu": {
+    "dashboard": "Дашборд",
+    "transactions": "Транзакции",
+    "balances": "Балансы",
+    "categories": "Категории",
+    "expenses": "Расходы",
+    "goals": "Цели",
+    "statistics": "Статистика",
+    "subscriptions": "Подписки",
+    "bankingTools": "Банковская информация",
+    "aiAssistant": "AI Ассистент",
+    "rooms": "Комнаты",
+    "settings": "Настройки"
+  },
+  "currency": {
+    "names": {
+      "byn": "Белорусский рубль",
+      "usd": "Доллар США",
+      "eur": "Евро",
+      "rub": "Российский рубль"
+    }
+  },
+  "ai": {
+    "title": "AI ассистент",
+    "subtitle": "Финансовый помощник: диалог, анализ и персональные инсайты",
+    "quick": {
+      "q1": "Какая категория больше всего расходует моих средств в этом месяце?",
+      "q2": "Покажи топ 3 самых крупных трат за квартал",
+      "q3": "Как подписки влияют на мой бюджет?",
+      "q4": "Как уменьшить расходы без потери качества жизни?"
+    },
+    "chat": {
+      "title": "Чат",
+      "subtitle": "История вопросов и ответов",
+      "placeholder": "Спросите о расходах, бюджете, долгах, инвестициях, курсах и т.д.",
+      "sending": "Отправка...",
+      "ask": "Спросить",
+      "welcome": "Привет! Я могу помочь с личными и мировыми финансовыми вопросами: бюджет, траты, долги, инвестиции, валюты, риски и планирование.",
+      "retryHint": "Не удалось получить ответ. Попробуйте повторить вопрос через пару секунд."
+    },
+    "insights": {
+      "title": "Активные инсайты",
+      "subtitle": "Проактивные сигналы по вашим финансам",
+      "refresh": "Обновить",
+      "updating": "Обновление...",
+      "loading": "Загрузка инсайтов...",
+      "empty": "Пока нет активных инсайтов. Нажмите «Обновить» или добавьте новые транзакции."
+    },
+    "insightType": {
+      "anomaly": "Аномалия",
+      "overspend": "Перерасход",
+      "budget_tip": "Совет по бюджету",
+      "fx_signal": "Валютный сигнал",
+      "investment_signal": "Инвест-сигнал",
+      "system": "Системный"
+    },
+    "severity": {
+      "low": "Низкий",
+      "medium": "Средний",
+      "high": "Высокий"
+    },
+    "toast": {
+      "loadInsightsError": "Не удалось загрузить AI-инсайты",
+      "askError": "Не удалось получить ответ AI",
+      "ackError": "Не удалось подтвердить инсайт",
+      "dismissError": "Не удалось скрыть инсайт"
+    }
+  },
+  "txModal": {
+    "date": "Дата",
+    "amount": "Сумма",
+    "title": "Название",
+    "titlePlaceholder": "например, Покупки",
+    "type": "Тип",
+    "category": "Категория",
+    "predicted": "предугадано",
+    "selectCategory": "Выберите категорию",
+    "detectingCategory": "Определяем категорию...",
+    "card": "Карта",
+    "default": "Основная",
+    "selectCard": "Выберите карту",
+    "freezeBalance": "Не изменять баланс карты",
+    "toCard": "На карту",
+    "toCardPlaceholder": "Карта зачисления",
+    "description": "Описание",
+    "descriptionPlaceholder": "Комментарий к транзакции",
+    "paymentMethod": "Способ оплаты",
+    "paymentMethods": {
+      "cash": "Наличные",
+      "card": "Карта"
+    },
+    "types": {
+      "expense": "Расход",
+      "revenue": "Доход",
+      "transfer": "Перевод"
+    },
+    "errors": {
+      "dateRequired": "Дата обязательна",
+      "amountPositive": "Сумма должна быть больше 0",
+      "titleRequired": "Название обязательно",
+      "typeRequired": "Выберите тип",
+      "categoryRequired": "Выберите категорию",
+      "cardRequired": "Выберите карту",
+      "destinationCardRequired": "Выберите карту назначения"
+    },
+    "toast": {
+      "addSuccess": "Транзакция добавлена",
+      "addError": "Не удалось добавить транзакцию",
+      "updateSuccess": "Транзакция обновлена",
+      "updateError": "Не удалось обновить транзакцию"
+    }
+  },
+  "goals": {
+    "add": "Добавить цель",
+    "createTitle": "Создать новую цель",
+    "enterTitle": "Введите название цели",
+    "goalBudget": "Бюджет цели",
+    "targetBudget": "Накоплено",
+    "startDate": "Дата начала",
+    "endDate": "Дата окончания",
+    "errors": {
+      "titleRequired": "Название обязательно.",
+      "mustBeGreaterThanZero": "Должно быть > 0.",
+      "mustBeGreaterOrEqualZero": "Должно быть >= 0.",
+      "targetNotExceedGoal": "Накоплено не может быть больше цели.",
+      "startDateRequired": "Дата начала обязательна.",
+      "endDateAfterStart": "Дата окончания должна быть позже даты начала."
+    },
+    "activeGoal": "Активная цель",
+    "reached": "достигнуто",
+    "addFunds": "Пополнить",
+    "adjustGoal": "Изменить цель",
+    "addFundsToGoal": "Пополнить цель",
+    "selectGoalToViewDetails": "Выберите цель выше, чтобы посмотреть детали",
+    "time": {
+      "noDeadline": "Без срока",
+      "ended": "Завершено",
+      "daysPassed": "{{count}} дн. прошло",
+      "weeksPassed": "{{count}} нед. прошло",
+      "daysLeft": "{{count}} дн. осталось",
+      "weeksLeft": "{{count}} нед. осталось"
+    },
+    "toast": {
+      "created": "Цель создана",
+      "createError": "Не удалось создать цель"
+    }
+  },
+  "categories": {
+    "addCategory": "Добавить категорию",
+    "editCategory": "Изменить категорию",
+    "categoryName": "Название категории",
+    "categoryNamePlaceholder": "например, Продукты, Аренда, Подписки",
+    "icon": "Иконка",
+    "loading": "Загрузка категорий...",
+    "emptyTitle": "Пока нет категорий",
+    "emptyDescription": "Создайте первую категорию, чтобы начать отслеживать расходы",
+    "totalExpenses": "Суммарные расходы",
+    "topCategoryTransactions": "Транзакций в самой активной категории",
+    "vsLastMonth": "к прошлому месяцу",
+    "yourCategories": "Ваши категории",
+    "backToCategories": "Назад к категориям",
+    "last": "Последняя",
+    "avg": "Среднее",
+    "expensesTrend": "Тренд расходов",
+    "notFound": "Категория не найдена",
+    "spendingUpVsLastMonth": "Расходы выросли к прошлому месяцу",
+    "spendingDownVsLastMonth": "Расходы снизились к прошлому месяцу",
+    "errors": {
+      "nameRequired": "Название категории обязательно."
+    },
+    "toast": {
+      "created": "Категория создана",
+      "createError": "Не удалось создать категорию",
+      "updated": "Категория обновлена",
+      "updateError": "Не удалось обновить категорию",
+      "deleted": "Категория удалена",
+      "deleteError": "Не удалось удалить категорию"
+    },
+    "iconPicker": {
+      "selected": "Выбранная иконка",
+      "search": "Поиск иконок",
+      "filterAria": "Фильтр иконок по названию",
+      "listAria": "Иконки категорий",
+      "empty": "По запросу иконки не найдены.",
+      "icons": "иконок"
+    }
+  },
+  "subscriptions": {
+    "addSubscription": "Добавить подписку",
+    "startDate": "Дата начала",
+    "lastPaid": "Последняя оплата",
+    "selectDate": "Выберите дату",
+    "markPaid": "Отметить оплату",
+    "errors": {
+      "titleRequired": "Название обязательно",
+      "startDateRequired": "Дата начала обязательна",
+      "typeRequired": "Тип обязателен",
+      "lastPaidRequired": "Дата последней оплаты обязательна",
+      "lastPaidBeforeStart": "Последняя оплата не может быть раньше даты начала",
+      "amountRequired": "Сумма обязательна",
+      "amountNonNegative": "Сумма должна быть >= 0",
+      "amountGreaterThanZero": "Сумма должна быть больше 0"
+    },
+    "toast": {
+      "created": "Подписка создана",
+      "createError": "Не удалось создать подписку"
+    },
+    "type": {
+      "daily": "Ежедневно",
+      "monthly": "Ежемесячно",
+      "yearly": "Ежегодно",
+      "onetime": "Разово"
+    }
+  },
+  "page": {
+    "balances": {
+      "title": "Балансы",
+      "subtitle": "Управляйте счетами и отслеживайте текущие балансы"
+    },
+    "expenses": {
+      "title": "Расходы",
+      "subtitle": "Отслеживайте траты по категориям и смотрите топ расходов",
+      "loading": "Загрузка расходов...",
+      "totalExpenses": "Суммарные расходы",
+      "categoriesWithExpenses": "Категорий с расходами",
+      "totalTransactions": "Всего транзакций",
+      "top5": "Топ-5 расходов",
+      "byCategory": "По категориям",
+      "emptyTitle": "Пока нет расходов",
+      "emptyText": "Добавьте транзакцию, чтобы начать отслеживать траты",
+      "topExpensesCount": "Топ {{count}} расходов",
+      "vsLastMonth": "к прошлому месяцу",
+      "spendingUpVsLastMonth": "Расходы выросли к прошлому месяцу",
+      "spendingDownVsLastMonth": "Расходы снизились к прошлому месяцу",
+      "noExpensesInCategory": "В этой категории нет расходов",
+      "viewCategoryExpenses": "Открыть расходы категории"
+    },
+    "goals": {
+      "title": "Цели",
+      "subtitle": "Отслеживайте финансовые цели и прогресс по ним",
+      "loading": "Загрузка целей...",
+      "active": "Активные",
+      "completed": "Завершенные",
+      "filter": "Фильтр целей",
+      "activeList": "Активные цели",
+      "completedList": "Завершенные цели",
+      "emptyActive": "Нет активных целей",
+      "emptyCompleted": "Пока нет завершенных целей",
+      "emptyTitle": "Пока нет целей",
+      "emptyText": "Создайте первую цель, чтобы начать накопления"
+    },
+    "transactions": {
+      "title": "Транзакции",
+      "subtitle": "Просматривайте и управляйте доходами и расходами в одном месте."
+    },
+    "categories": {
+      "title": "Категории",
+      "subtitle": "Отслеживайте траты по категориям и смотрите подробную аналитику"
+    },
+    "rooms": {
+      "title": "Комнаты",
+      "subtitle": "Управляйте общими пространствами для совместных финансов."
+    },
+    "subscriptions": {
+      "title": "Подписки",
+      "subtitle": "Управляйте регулярными платежами"
+    },
+    "statistics": {
+      "title": "Обзор статистики",
+      "subtitle": "Следите за бюджетом, расходами, целями и аналитикой категорий в одном месте."
+    },
+    "rates": {
+      "title": "Банковские инструменты"
+    },
+    "expensesDetails": {
+      "subtitle": "Расходы в этой категории"
+    }
+  },
+  "rates": {
+    "exchangeRatesNBRB": "Курсы валют (НБРБ к BYN)",
+    "refreshRates": "Обновить курсы",
+    "rateToByn": "Курс (1 ед. = BYN)",
+    "noDataForPeriod": "Нет данных за период (90 дней)",
+    "loanAmount": "Сумма кредита (BYN)",
+    "termMonths": "Срок (месяцев)",
+    "annualRate": "Годовая ставка (%)",
+    "monthlyPayment": "Ежемесячный платеж:",
+    "totalRepayment": "Общая выплата:",
+    "totalInterest": "Переплата:",
+    "chartLabel": "1 {{code}} = X BYN",
+    "dayExplorer": {
+      "title": "Курс на выбранный день",
+      "aria": "Выбор дня для просмотра курса"
+    },
+    "toast": {
+      "updated": "Курсы обновлены",
+      "refreshed": "Курсы валют были обновлены."
+    }
+  },
+  "rooms": {
+    "totalRooms": "Всего комнат",
+    "owned": "Владею",
+    "joined": "Участвую",
+    "createRoom": "Создать комнату",
+    "joinByInvite": "Вступить по инвайту",
+    "myRooms": "Мои комнаты",
+    "members": "участников",
+    "roomActions": "Действия с комнатой",
+    "roomName": "Название комнаты",
+    "roomNamePlaceholder": "например, Семейный бюджет",
+    "description": "Описание",
+    "descriptionPlaceholder": "Для чего эта комната?",
+    "editRoom": "Редактировать комнату",
+    "accept": "Принять",
+    "inviteToken": "Токен приглашения",
+    "inviteTokenPlaceholder": "Вставьте токен приглашения",
+    "rejectInvite": "Отклонить приглашение",
+    "deleteRoom": "Удалить комнату",
+    "deleteConfirmMessage": "Удалить комнату \"{{name}}\"? Это действие нельзя отменить.",
+    "noRoomsYet": "Комнат пока нет.",
+    "role": {
+      "owner": "Владелец",
+      "admin": "Админ",
+      "member": "Участник"
+    },
+    "errors": {
+      "loadRooms": "Не удалось загрузить комнаты",
+      "createRoom": "Не удалось создать комнату",
+      "acceptInvite": "Не удалось принять приглашение",
+      "rejectInvite": "Не удалось отклонить приглашение"
+    },
+    "toast": {
+      "roomUpdated": "Комната обновлена",
+      "changesSaved": "Изменения успешно сохранены.",
+      "couldNotUpdateRoom": "Не удалось обновить комнату",
+      "checkConnection": "Проверьте соединение и попробуйте снова.",
+      "roomDeleted": "Комната удалена",
+      "roomRemoved": "Комната успешно удалена.",
+      "couldNotDeleteRoom": "Не удалось удалить комнату",
+      "roomCreated": "Комната создана",
+      "roomReady": "Комната \"{{name}}\" готова.",
+      "couldNotCreateRoom": "Не удалось создать комнату",
+      "inviteAccepted": "Приглашение принято",
+      "joinedRoom": "Вы вступили в комнату.",
+      "couldNotAcceptInvite": "Не удалось принять приглашение",
+      "tokenInvalidOrExpired": "Токен может быть неверным или просроченным.",
+      "inviteRejected": "Приглашение отклонено",
+      "inviteDeclined": "Приглашение было отклонено.",
+      "couldNotRejectInvite": "Не удалось отклонить приглашение",
+      "pleaseTryAgain": "Пожалуйста, попробуйте снова."
+    },
+    "details": {
+      "backToRooms": "Назад к комнатам",
+      "createInvite": "Создать приглашение",
+      "generateToken": "Сгенерировать токен",
+      "expiresInHours": "Истекает через (часов)",
+      "expiresHint": "От 1 до 8760 часов (1 год).",
+      "makeAdmin": "Сделать админом",
+      "makeMember": "Сделать участником",
+      "remove": "Удалить",
+      "loadingRoom": "Загрузка комнаты...",
+      "errors": {
+        "failedToLoadRoom": "Не удалось загрузить комнату",
+        "failedToCreateInvite": "Не удалось создать приглашение",
+        "failedToUpdateRole": "Не удалось обновить роль",
+        "failedToRemoveMember": "Не удалось удалить участника"
+      },
+      "toast": {
+        "inviteCreated": "Приглашение создано",
+        "tokenGenerated": "Токен успешно сгенерирован.",
+        "couldNotCreateInvite": "Не удалось создать приглашение",
+        "roleUpdated": "Роль обновлена",
+        "memberPromoted": "Участник повышен до админа.",
+        "adminDemoted": "Админ переведен в участники.",
+        "couldNotUpdateRole": "Не удалось обновить роль",
+        "memberRemoved": "Участник удален",
+        "memberRemovedDetail": "Пользователь удален из комнаты.",
+        "couldNotRemoveMember": "Не удалось удалить участника"
+      }
+    },
+    "contributions": {
+      "aria": "Взносы участников",
+      "title": "Оплачено участниками",
+      "hint": "Доля общих расходов комнаты по плательщикам"
+    }
+  },
+  "settings": {
+    "name": "Имя",
+    "lastname": "Фамилия",
+    "email": "Email",
+    "phone": "Телефон",
+    "yourProfilePicture": "Фото профиля",
+    "changePhoto": "Изменить фото",
+    "uploadYourPhoto": "Загрузить фото",
+    "avatar": "Аватар",
+    "uploading": "Загрузка...",
+    "updateProfile": "Обновить профиль",
+    "logout": "Выйти",
+    "signOut": "Выход",
+    "signOutConfirm": "Вы уверены, что хотите выйти?",
+    "invalidFile": "Некорректный файл",
+    "selectImageFile": "Пожалуйста, выберите файл изображения.",
+    "profilePictureUpdated": "Фото профиля обновлено.",
+    "failedToUploadPhoto": "Не удалось загрузить фото.",
+    "currentPassword": "Текущий пароль",
+    "newPassword": "Новый пароль",
+    "confirmNewPassword": "Подтвердите новый пароль",
+    "atLeast6Chars": "Минимум 6 символов",
+    "currentPasswordRequired": "Текущий пароль обязателен.",
+    "newPasswordRequired": "Новый пароль обязателен.",
+    "confirmNewPasswordRequired": "Подтвердите новый пароль.",
+    "passwordsDoNotMatch": "Пароли не совпадают.",
+    "passwordMinLength": "Новый пароль должен содержать минимум 6 символов.",
+    "changePassword": "Изменить пароль",
+    "passwordChanged": "Пароль изменен.",
+    "failedToChangePassword": "Не удалось изменить пароль.",
+    "validation": "Проверка",
+    "analyticsDescription": "Настройте, как часто автоматически сохраняются аналитические отчеты. Сохраненные отчеты отображаются на странице Статистики.",
+    "saveFrequency": "Частота сохранения",
+    "autoSaveAnalyticsReports": "Автоматически сохранять аналитические отчеты",
+    "saved": "Сохранено",
+    "analyticsFrequencyUpdated": "Частота сохранения аналитики обновлена.",
+    "analyticsSnapshotsEnabled": "Автосохранение аналитики включено.",
+    "analyticsSnapshotsDisabled": "Автосохранение аналитики выключено.",
+    "failedToSave": "Не удалось сохранить.",
+    "period": {
+      "week": "Неделя",
+      "month": "Месяц",
+      "quarter": "Квартал"
+    }
+  },
+  "tabs": {
+    "all": "Все",
+    "expenses": "Расходы",
+    "revenue": "Доходы",
+    "transfers": "Переводы",
+    "charts": "Графики",
+    "reports": "Отчеты",
+    "statisticsView": "Вид статистики",
+    "rateChart": "График курса",
+    "loanCalculator": "Калькулятор кредита",
+    "settingsSections": "Разделы настроек",
+    "settings": {
+      "account": "Аккаунт",
+      "security": "Безопасность",
+      "analytics": "Аналитика"
+    },
+    "roomSections": "Разделы комнаты",
+    "room": {
+      "overview": "Обзор",
+      "transactions": "Транзакции",
+      "categories": "Категории",
+      "goals": "Цели",
+      "subscriptions": "Подписки",
+      "members": "Участники"
+    }
+  },
+  "dashboard": {
+    "totalBalance": "Общий баланс",
+    "allAccounts": "Все счета",
+    "default": "Основная",
+    "noCards": "Карты не добавлены",
+    "addCardToSeeBalance": "Добавьте карту, чтобы увидеть баланс",
+    "weekStatistic": "Статистика за неделю",
+    "goals": "Цели",
+    "expenses": "Расходы",
+    "upcomingSubscriptions": "Ближайшие подписки",
+    "recentTransactions": "Последние транзакции",
+    "transactionType": "Тип транзакции",
+    "noTransactions": "Нет транзакций",
+    "noRoomTransactions": "В этой комнате пока нет транзакций",
+    "noExpenses": "Нет расходов",
+    "noGoals": "Нет целей",
+    "addGoalInTab": "Добавьте цель во вкладке «Цели»",
+    "createGoalOnPage": "Создайте цель на странице «Цели»",
+    "noUpcomingSubscriptions": "Нет ближайших подписок",
+    "addSubscriptionInTab": "Добавьте подписку во вкладке «Подписки»",
+    "addSubscriptionInSection": "Добавьте подписку в разделе «Подписки»"
+  },
+  "balances": {
+    "addCard": "Добавить карту",
+    "loading": "Загрузка балансов...",
+    "noCardsMatch": "Нет карт по текущему поиску или фильтрам",
+    "tryChangingSearch": "Попробуйте изменить условия поиска или фильтра",
+    "noBalancesYet": "Пока нет балансов",
+    "addFirstCard": "Добавьте первую карту, чтобы отслеживать балансы счетов",
+    "name": "Название",
+    "bank": "Банк",
+    "cardDetails": "Детали карты",
+    "balance": "Баланс",
+    "bankName": "Название банка",
+    "accountType": "Тип счета",
+    "expiry": "Срок действия",
+    "accountNumber": "Номер счета",
+    "availableBalance": "Доступный баланс",
+    "viewDetails": "Подробнее",
+    "setAsDefault": "Сделать основной",
+    "setting": "Устанавливаем...",
+    "usedForAutoTransactions": "Используется для автоматических транзакций",
+    "useThisCardForAutoTransactions": "Использовать эту карту для подписок и автоматических транзакций",
+    "edit": "Изменить",
+    "editCard": "Изменить карту",
+    "delete": "Удалить",
+    "deleteCard": "Удалить карту",
+    "cancel": "Отмена",
+    "cardDeleted": "Карта удалена",
+    "deleteCardError": "Не удалось удалить карту",
+    "confirmDeleteTitle": "Подтвердите удаление",
+    "confirmDeleteMessage": "Удалить эту карту? Связанные данные не будут удалены.",
+    "cardType": {
+      "credit": "Кредитная",
+      "debit": "Дебетовая"
+    },
+    "toast": {
+      "primaryCard": "Основная карта",
+      "primaryCardDetail": "Теперь эта карта используется для автоматических транзакций.",
+      "setPrimaryError": "Не удалось назначить карту основной."
+    }
+  },
+  "transactions": {
+    "addTransaction": "Добавить транзакцию",
+    "addedBy": "Добавил",
+    "historyTitle": "История транзакций",
+    "noTransactionsYet": "Транзакций пока нет",
+    "description": "Описание"
+  },
+  "filters": {
+    "title": "Фильтры",
+    "apply": "Применить",
+    "intro": "Добавьте правила, чтобы сузить список. Все правила применяются вместе (И).",
+    "rule": "Правило фильтра",
+    "removeFilter": "Удалить фильтр",
+    "value": "Значение",
+    "actions": "Действия фильтра",
+    "addFilter": "Добавить фильтр",
+    "clearAll": "Очистить все"
+  },
+  "sorters": {
+    "title": "Сортировка",
+    "apply": "Применить",
+    "intro": "Выберите поле и направление сортировки списка.",
+    "field": "Поле",
+    "direction": "Направление",
+    "ascending": "По возрастанию",
+    "descending": "По убыванию",
+    "clearSorting": "Сбросить сортировку"
+  },
+  "export": {
+    "exportReport": "Экспорт отчета",
+    "exporting": "Экспорт...",
+    "preparingHint": "Подготовка данных и графиков. Не закрывайте страницу и дождитесь завершения.",
+    "signInToExport": "Войдите, чтобы экспортировать",
+    "ready": "Экспорт готов",
+    "savedWithCopy": "Файл сохранен. Копия добавлена в Статистику -> Сохраненные отчеты.",
+    "savedWithoutCopy": "Файл сохранен. Не удалось добавить копию в Сохраненные отчеты — попробуйте позже.",
+    "failedToGenerate": "Не удалось сформировать отчет"
+  },
+  "charts": {
+    "analytics": "Аналитика",
+    "categoryAnalytics": "Аналитика по категориям",
+    "spendingBreakdownAndTrends": "Структура и динамика расходов",
+    "categoriesShare": "Доля категорий",
+    "clickCategoryToToggle": "Нажмите на категорию, чтобы скрыть или показать",
+    "clickCategoryAboveToToggle": "Нажмите на категории выше, чтобы скрыть или показать",
+    "spendingByMonth": "Расходы по месяцам",
+    "spendingOverTime": "Расходы во времени",
+    "noData": "Нет данных",
+    "period": {
+      "label": "Период",
+      "currentMonth": "Текущий месяц",
+      "last3Months": "Последние 3 месяца",
+      "last6Months": "Последние 6 месяцев",
+      "last12Months": "Последние 12 месяцев",
+      "allTime": "За все время"
+    },
+    "view": {
+      "week": "Неделя",
+      "month": "Месяц",
+      "year": "Год"
+    },
+    "budget": "Бюджет",
+    "previousPeriod": "Предыдущий период",
+    "nextPeriod": "Следующий период",
+    "budgetStatisticsChart": "График статистики бюджета",
+    "expenses": "Расходы",
+    "expensesStatisticsChart": "График статистики расходов",
+    "goalsStatistics": "Статистика целей",
+    "budgetLeft": "Остаток бюджета",
+    "daysLeft": "дней осталось"
+  }
+}
+
