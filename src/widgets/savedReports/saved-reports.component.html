@@ -1,38 +1,50 @@
-<section class="saved-reports" aria-label="Saved analytics reports">
-  <h2 class="saved-reports__title">Saved reports</h2>
-  <p class="saved-reports__desc">
-    View previously saved analytics snapshots. Reports are saved automatically according to your
-    <a routerLink="/settings" [queryParams]="{ tab: 'analytics' }">Analytics settings</a>.
-  </p>
+<section class="saved-reports" [attr.aria-label]="'savedReports.aria' | translate">
+  <header class="saved-reports__header">
+    <h2 class="saved-reports__title">{{ 'savedReports.title' | translate }}</h2>
+    <p class="saved-reports__desc">
+      {{ 'savedReports.description.prefix' | translate }}
+      <a routerLink="/settings" [queryParams]="{ tab: 'analytics' }">{{
+        'savedReports.description.analyticsSettings' | translate
+      }}</a
+      >.
+    </p>
+  </header>
 
   <div class="saved-reports__toolbar">
-    <div class="toolbar-row">
-      <input
-        type="text"
-        class="search-input"
-        placeholder="Search by period (e.g. Mar 2025)"
-        [ngModel]="searchQuery()"
-        (ngModelChange)="searchQuery.set($event)"
-        (keyup.enter)="onSearch()"
-      />
-      <button type="button" class="btn btn--primary" (click)="onSearch()">Search</button>
-    </div>
-    <div class="toolbar-row filters">
+    <div class="toolbar-row toolbar-row--single">
+      <div class="search-wrap">
+        <input
+          type="text"
+          class="search-input"
+          [placeholder]="'savedReports.searchPlaceholder' | translate"
+          [ngModel]="searchQuery()"
+          (ngModelChange)="searchQuery.set($event)"
+          (keyup.enter)="onSearch()"
+        />
+      </div>
+      <button type="button" class="btn btn--primary" (click)="onSearch()">
+        {{ 'savedReports.search' | translate }}
+      </button>
+      @if (hasFilters()) {
+        <button type="button" class="btn btn--ghost" (click)="clearFilters()">
+          {{ 'savedReports.clearFilters' | translate }}
+        </button>
+      }
       <label class="filter-label">
-        Period type
+        <span class="filter-label__text">{{ 'savedReports.periodType.label' | translate }}</span>
         <select
           class="filter-select"
           [ngModel]="periodTypeFilter()"
           (ngModelChange)="periodTypeFilter.set($event); onFilterChange()"
         >
-          <option value="">All</option>
-          <option value="week">Week</option>
-          <option value="month">Month</option>
-          <option value="quarter">Quarter</option>
+          <option value="">{{ 'savedReports.all' | translate }}</option>
+          <option value="week">{{ 'savedReports.periodType.week' | translate }}</option>
+          <option value="month">{{ 'savedReports.periodType.month' | translate }}</option>
+          <option value="quarter">{{ 'savedReports.periodType.quarter' | translate }}</option>
         </select>
       </label>
       <label class="filter-label">
-        From
+        <span class="filter-label__text">{{ 'savedReports.from' | translate }}</span>
         <input
           type="date"
           class="filter-input"
@@ -41,7 +53,7 @@
         />
       </label>
       <label class="filter-label">
-        To
+        <span class="filter-label__text">{{ 'savedReports.to' | translate }}</span>
         <input
           type="date"
           class="filter-input"
@@ -50,30 +62,32 @@
         />
       </label>
       <label class="filter-label">
-        Sort
+        <span class="filter-label__text">{{ 'savedReports.sort' | translate }}</span>
         <select
           class="filter-select"
           [ngModel]="sortOrder()"
           (ngModelChange)="onSortChange($event)"
         >
-          <option value="desc">Newest first</option>
-          <option value="asc">Oldest first</option>
+          <option value="desc">{{ 'savedReports.newestFirst' | translate }}</option>
+          <option value="asc">{{ 'savedReports.oldestFirst' | translate }}</option>
         </select>
       </label>
     </div>
   </div>
 
   @if (loading()) {
-    <div class="saved-reports__loading">
-      <p>Loading…</p>
+    <div class="saved-reports__state">
+      <p>{{ 'savedReports.loading' | translate }}</p>
     </div>
   } @else if (items().length === 0) {
-    <div class="saved-reports__empty">
-      <p>No saved reports yet.</p>
+    <div class="saved-reports__state saved-reports__state--empty">
+      <p class="saved-reports__empty-title">{{ 'savedReports.emptyTitle' | translate }}</p>
       <p class="saved-reports__empty-hint">
-        Reports are created automatically. Check
-        <a routerLink="/settings" [queryParams]="{ tab: 'analytics' }">Analytics settings</a>
-        to set the save frequency.
+        {{ 'savedReports.emptyHint.prefix' | translate }}
+        <a routerLink="/settings" [queryParams]="{ tab: 'analytics' }">{{
+          'savedReports.description.analyticsSettings' | translate
+        }}</a>
+        {{ 'savedReports.emptyHint.suffix' | translate }}
       </p>
     </div>
   } @else {
@@ -81,19 +95,25 @@
       <table class="reports-table">
         <thead>
           <tr>
-            <th>Period</th>
-            <th>Type</th>
-            <th>Saved at</th>
-            <th></th>
+            <th>{{ 'savedReports.table.period' | translate }}</th>
+            <th>{{ 'savedReports.table.type' | translate }}</th>
+            <th>{{ 'savedReports.table.savedAt' | translate }}</th>
+            <th class="reports-table__actions-col"></th>
           </tr>
         </thead>
         <tbody>
           @for (item of items(); track item._id) {
-            <tr (click)="openSnapshot(item)" class="reports-table__row">
-              <td>{{ formatPeriod(item) }}</td>
-              <td>{{ item.periodType }}</td>
-              <td>{{ formatDate(item.createdAt) }}</td>
-              <td><span class="view-link">View</span></td>
+            <tr class="reports-table__row">
+              <td class="reports-table__period">{{ formatPeriod(item) }}</td>
+              <td>
+                <span class="period-badge">{{ formatPeriodTypeKey(item.periodType) | translate }}</span>
+              </td>
+              <td class="reports-table__date">{{ formatDate(item.createdAt) }}</td>
+              <td class="reports-table__actions">
+                <button type="button" class="btn btn--small btn--table" (click)="openSnapshot(item)">
+                  {{ 'savedReports.view' | translate }}
+                </button>
+              </td>
             </tr>
           }
         </tbody>
@@ -107,10 +127,11 @@
           [disabled]="page() <= 1"
           (click)="goToPage(page() - 1)"
         >
-          Previous
+          {{ 'savedReports.previous' | translate }}
         </button>
         <span class="pagination-info">
-          Page {{ page() }} of {{ totalPages() }} ({{ total() }} total)
+          {{ 'savedReports.page' | translate }} {{ page() }} {{ 'savedReports.of' | translate }}
+          {{ totalPages() }} ({{ total() }} {{ 'savedReports.total' | translate }})
         </span>
         <button
           type="button"
@@ -118,7 +139,7 @@
           [disabled]="page() >= totalPages()"
           (click)="goToPage(page() + 1)"
         >
-          Next
+          {{ 'savedReports.next' | translate }}
         </button>
       </div>
     }

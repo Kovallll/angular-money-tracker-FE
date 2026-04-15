@@ -8,17 +8,14 @@ import type { AnalyticsSnapshotItem, AnalyticsSnapshotsListResponse } from '@/sh
 import { DialogService } from 'primeng/dynamicdialog';
 import { DynamicDialogModule } from 'primeng/dynamicdialog';
 import { SnapshotViewDialogComponent } from './snapshot-view-dialog.component';
-
-function formatPeriodLabel(periodEnd: string): string {
-  const d = new Date(periodEnd);
-  return d.toLocaleDateString('en', { month: 'short', year: 'numeric' });
-}
+import { TranslateModule } from '@ngx-translate/core';
+import { I18nService } from '@/shared/services';
 
 @Component({
   selector: 'app-saved-reports',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, RouterModule, DynamicDialogModule],
+  imports: [FormsModule, RouterModule, DynamicDialogModule, TranslateModule],
   providers: [DialogService],
   templateUrl: './saved-reports.component.html',
   styleUrl: './saved-reports.component.scss',
@@ -27,6 +24,7 @@ export class SavedReportsComponent {
   private snapshotsHttp = inject(AnalyticsSnapshotsHttpService);
   private dialogService = inject(DialogService);
   private refreshBus = inject(SavedReportsRefreshService);
+  private i18n = inject(I18nService);
 
   loading = signal(false);
   listResponse = signal<AnalyticsSnapshotsListResponse | null>(null);
@@ -91,6 +89,16 @@ export class SavedReportsComponent {
     this.load();
   }
 
+  clearFilters(): void {
+    this.searchQuery.set('');
+    this.periodTypeFilter.set('');
+    this.dateFrom.set('');
+    this.dateTo.set('');
+    this.sortOrder.set('desc');
+    this.page.set(1);
+    this.load();
+  }
+
   goToPage(p: number): void {
     if (p < 1 || p > this.totalPages()) return;
     this.page.set(p);
@@ -98,8 +106,10 @@ export class SavedReportsComponent {
   }
 
   openSnapshot(snapshot: AnalyticsSnapshotItem): void {
+    const period = this.formatPeriod(snapshot);
+    const type = this.i18n.t(this.formatPeriodTypeKey(snapshot.periodType));
     this.dialogService.open(SnapshotViewDialogComponent, {
-      header: `Report: ${formatPeriodLabel(snapshot.periodEnd)} (${snapshot.periodType})`,
+      header: `${this.i18n.t('savedReports.reportPrefix')}: ${period} (${type})`,
       width: '90vw',
       closable: true,
       dismissableMask: true,
@@ -111,10 +121,16 @@ export class SavedReportsComponent {
   }
 
   formatDate(iso: string): string {
-    return new Date(iso).toLocaleString();
+    const locale = this.i18n.currentLang() === 'ru' ? 'ru-RU' : 'en-US';
+    return new Date(iso).toLocaleString(locale);
   }
 
   formatPeriod(item: AnalyticsSnapshotItem): string {
-    return formatPeriodLabel(item.periodEnd);
+    const locale = this.i18n.currentLang() === 'ru' ? 'ru-RU' : 'en-US';
+    return new Date(item.periodEnd).toLocaleDateString(locale, { month: 'short', year: 'numeric' });
+  }
+
+  formatPeriodTypeKey(periodType: 'week' | 'month' | 'quarter'): string {
+    return `savedReports.periodType.${periodType}`;
   }
 }

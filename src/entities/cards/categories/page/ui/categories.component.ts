@@ -91,7 +91,7 @@ export class CategoryCardComponent {
     const ch = this.chart();
     const data = ch?.datasets?.[0]?.data;
     if (!Array.isArray(data)) return false;
-    return data.some((v) => typeof v === 'number' && v > 0);
+    return data.some((v) => typeof v === 'number' && Number.isFinite(v) && v !== 0);
   });
 
   /** Расходы в выбранной валюте */

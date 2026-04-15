@@ -70,7 +70,8 @@ export class ExpensesStatisticCardComponent {
   hasChartData = computed(() => {
     const d = this.data();
     return (
-      (d?.labels?.length ?? 0) > 0 && (d?.datasets?.[0]?.data?.some((v) => Number(v) > 0) ?? false)
+      (d?.labels?.length ?? 0) > 0 &&
+      (d?.datasets?.[0]?.data?.some((v) => Number.isFinite(Number(v)) && Number(v) !== 0) ?? false)
     );
   });
 

@@ -26,27 +26,70 @@
     </div>
   </div>
   <div class="content header-actions">
-    <div class="lang-switch" role="group" [attr.aria-label]="'header.language' | translate">
+    @if (!isUltraCompact()) {
+      <div class="lang-switch" role="group" [attr.aria-label]="'header.language' | translate">
+        <button
+          type="button"
+          class="lang-btn"
+          [class.active]="i18n.currentLang() === 'ru'"
+          (click)="switchLanguage('ru')"
+        >
+          RU
+        </button>
+        <button
+          type="button"
+          class="lang-btn"
+          [class.active]="i18n.currentLang() === 'en'"
+          (click)="switchLanguage('en')"
+        >
+          EN
+        </button>
+      </div>
+      <app-currency-selector />
+      <telegram-link />
+      <notification />
+      <export-report-button />
+    } @else {
       <button
+        #compactMoreButton
         type="button"
-        class="lang-btn"
-        [class.active]="i18n.currentLang() === 'ru'"
-        (click)="switchLanguage('ru')"
+        class="compact-more-btn"
+        (click)="toggleCompactMenu()"
+        aria-label="More actions"
       >
-        RU
+        <app-icon material="more_horiz" [sizePx]="20" />
       </button>
-      <button
-        type="button"
-        class="lang-btn"
-        [class.active]="i18n.currentLang() === 'en'"
-        (click)="switchLanguage('en')"
-      >
-        EN
-      </button>
-    </div>
-    <app-currency-selector />
-    <telegram-link />
-    <notification />
-    <export-report-button />
+
+      @if (compactMenuOpen()) {
+        <div #compactMorePanel class="compact-more-panel">
+          <div class="compact-more-panel__section">
+            <div class="lang-switch" role="group" [attr.aria-label]="'header.language' | translate">
+              <button
+                type="button"
+                class="lang-btn"
+                [class.active]="i18n.currentLang() === 'ru'"
+                (click)="switchLanguage('ru')"
+              >
+                RU
+              </button>
+              <button
+                type="button"
+                class="lang-btn"
+                [class.active]="i18n.currentLang() === 'en'"
+                (click)="switchLanguage('en')"
+              >
+                EN
+              </button>
+            </div>
+          </div>
+          <div class="compact-more-panel__section">
+            <app-currency-selector />
+            <telegram-link />
+            <notification />
+            <export-report-button />
+          </div>
+        </div>
+      }
+    }
   </div>
 </div>

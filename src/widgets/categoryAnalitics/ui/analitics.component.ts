@@ -488,7 +488,7 @@ function hasChartData(
   if (!labels?.length) return false;
   for (const ds of data.datasets) {
     const arr = ds.data as number[];
-    if (arr?.some((v) => typeof v === 'number' && v > 0)) return true;
+    if (arr?.some((v) => typeof v === 'number' && Number.isFinite(v) && v !== 0)) return true;
   }
   return false;
 }

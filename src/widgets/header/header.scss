@@ -162,6 +162,77 @@
   }
 }
 
+/* Mobile: smaller action controls */
+@include bp.mobile {
+  .header-actions {
+    padding: 5px 8px;
+    gap: 6px;
+  }
+
+  .lang-btn {
+    min-width: 28px;
+    height: 24px;
+    font-size: 10px;
+  }
+
+  .header-actions app-currency-selector {
+    transform: scale(0.93);
+    transform-origin: center;
+  }
+
+  .header-actions export-report-button ::ng-deep .export-btn.p-button {
+    min-width: 34px;
+    min-height: 34px;
+    width: 34px;
+    height: 34px;
+    padding: 6px;
+    border-radius: 9px;
+  }
+}
+
+/* Ultra compact: show one 3-dots button with all actions in popup */
+.compact-more-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 10px;
+  background: rgba($white, 0.08);
+  color: rgba($white, 0.92);
+  cursor: pointer;
+}
+
+.compact-more-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: min(94vw, 280px);
+  padding: 10px;
+  border-radius: 12px;
+  background: rgba($secondary, 0.95);
+  border: 1px solid $surface-12;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.38);
+  z-index: 25;
+  display: grid;
+  gap: 8px;
+}
+
+.compact-more-panel__section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+@media (min-width: 400px) {
+  .compact-more-btn,
+  .compact-more-panel {
+    display: none;
+  }
+}
+
 .header .content:first-child {
   flex-direction: row;
   gap: 24px;

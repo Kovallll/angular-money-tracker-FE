@@ -7,6 +7,10 @@ import { inject, Injectable } from '@angular/core';
 export class ExpensesStatisticsService {
   private categoriesHttpService = inject(CategoriesHttpService);
 
+  private getNetExpense(totalExpenses: number, totalRevenues: number): number {
+    return Math.max(0, totalExpenses - totalRevenues);
+  }
+
   private getRandomColor(): string {
     return `hsl(${Math.floor(Math.random() * 360)}, 70%, 50%)`;
   }
@@ -14,14 +18,16 @@ export class ExpensesStatisticsService {
   categories = this.categoriesHttpService.categories;
 
   getCategoriesChartData(max?: number) {
-    const cats = !max
-      ? this.categories()
-      : this.categories()
-          .sort((a, b) => b.totalExpenses - a.totalExpenses)
-          .slice(0, max);
+    const normalized = this.categories().map((c) => ({
+      ...c,
+      netExpense: this.getNetExpense(c.totalExpenses ?? 0, c.totalRevenues ?? 0),
+    }));
+
+    const sorted = normalized.sort((a, b) => b.netExpense - a.netExpense);
+    const cats = !max ? sorted : sorted.slice(0, max);
 
     const labels = cats.map((c) => c.title);
-    const dataset = cats.map((c) => c.totalExpenses ?? Math.floor(Math.random() * 1000));
+    const dataset = cats.map((c) => c.netExpense);
     const bgColors = cats.map(() => this.getRandomColor());
 
     return {

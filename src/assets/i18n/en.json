@@ -586,6 +586,47 @@
     "savedWithoutCopy": "File saved. Could not add a copy to Saved reports - try again later.",
     "failedToGenerate": "Failed to generate report"
   },
+  "savedReports": {
+    "aria": "Saved analytics reports",
+    "title": "Saved reports",
+    "description": {
+      "prefix": "View previously saved analytics snapshots. Reports are saved automatically according to your",
+      "analyticsSettings": "Analytics settings"
+    },
+    "searchPlaceholder": "Search by period (e.g. Mar 2025)",
+    "search": "Search",
+    "clearFilters": "Clear filters",
+    "all": "All",
+    "from": "From",
+    "to": "To",
+    "sort": "Sort",
+    "newestFirst": "Newest first",
+    "oldestFirst": "Oldest first",
+    "loading": "Loading reports...",
+    "emptyTitle": "No saved reports yet",
+    "emptyHint": {
+      "prefix": "Reports are created automatically. Check",
+      "suffix": "to set the save frequency."
+    },
+    "table": {
+      "period": "Period",
+      "type": "Type",
+      "savedAt": "Saved at"
+    },
+    "periodType": {
+      "label": "Period type",
+      "week": "Week",
+      "month": "Month",
+      "quarter": "Quarter"
+    },
+    "view": "View",
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page",
+    "of": "of",
+    "total": "total",
+    "reportPrefix": "Report"
+  },
   "charts": {
     "analytics": "Analytics",
     "categoryAnalytics": "Category analytics",

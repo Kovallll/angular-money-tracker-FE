@@ -27,6 +27,18 @@ import { CurrencyService } from '@/shared/services/currency/currency.service';
       ::ng-deep .currency-selector {
         min-width: 88px;
       }
+
+      @media (max-width: 779px) {
+        ::ng-deep .currency-selector {
+          min-width: 68px;
+        }
+      }
+
+      @media (max-width: 399px) {
+        ::ng-deep .currency-selector {
+          min-width: 60px;
+        }
+      }
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
