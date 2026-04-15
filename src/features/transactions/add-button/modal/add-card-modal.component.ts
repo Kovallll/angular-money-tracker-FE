@@ -270,7 +270,8 @@ export class AddTransactionModalComponent implements OnInit {
     categoryId: string | number;
     /** Card id for Select (number) and API (string via buildPayload). */
     cardId: string | number;
-    type: 'expense' | 'revenue';
+    type: 'expense' | 'revenue' | 'transfer';
+    transferToCardId: string | number;
     amount: number;
     currencyCode: string;
     description: string;
@@ -282,6 +283,7 @@ export class AddTransactionModalComponent implements OnInit {
     title: '',
     categoryId: '',
     cardId: '' as string | number,
+    transferToCardId: '' as string | number,
     type: 'expense',
     amount: 0,
     currencyCode: '',
@@ -298,6 +300,7 @@ export class AddTransactionModalComponent implements OnInit {
   protected readonly typeOptions = [
     { label: 'Expense', value: 'expense' },
     { label: 'Revenue', value: 'revenue' },
+    { label: 'Transfer', value: 'transfer' },
   ];
 
   /** YYYY-MM-DD in local timezone (avoids Mar 1 → Feb 28 shift) */
@@ -313,7 +316,6 @@ export class AddTransactionModalComponent implements OnInit {
     const f = this.form;
     const payload: CreateTransactionPayload = {
       cardId: String(f.cardId),
-      categoryId: String(f.categoryId),
       type: f.type,
       amount: Number(f.amount) || 0,
       currencyCode: f.currencyCode ?? this.currencyService.primaryCode(),
@@ -323,6 +325,14 @@ export class AddTransactionModalComponent implements OnInit {
       paymentMethod: f.paymentMethod || undefined,
       affectsCardBalance: f.affectsCardBalance,
     };
+    if (f.type === 'transfer') {
+      payload.transferToCardId = String(f.transferToCardId);
+      if (f.categoryId !== '' && f.categoryId != null) {
+        payload.categoryId = String(f.categoryId);
+      }
+    } else {
+      payload.categoryId = String(f.categoryId);
+    }
     if (this.currentPredictionKey && this.currentPredictedCategoryId) {
       payload.predictionKey = this.currentPredictionKey;
       payload.predictedCategoryId = this.currentPredictedCategoryId;
@@ -355,7 +365,18 @@ export class AddTransactionModalComponent implements OnInit {
     if (amount <= 0) return true;
     if (this.getGroupRoomId()) {
       if (!this.form.cardId) return true;
+      if (this.form.type === 'transfer') {
+        const to = Number(this.form.transferToCardId);
+        const from = Number(this.form.cardId);
+        if (!Number.isFinite(to) || to < 1 || to === from) return true;
+      }
       return !!form.invalid;
+    }
+    if (this.form.type === 'transfer') {
+      const to = Number(this.form.transferToCardId);
+      const from = Number(this.form.cardId);
+      if (!Number.isFinite(to) || to < 1 || to === from) return true;
+      return form.invalid || !this.form.cardId || this.form.amount <= 0;
     }
     return form.invalid || !this.form.cardId || !this.form.categoryId || this.form.amount <= 0;
   }
@@ -378,6 +399,11 @@ export class AddTransactionModalComponent implements OnInit {
           date: dateStr,
           currencyCode: this.form.currencyCode || this.currencyService.primaryCode(),
           cardId: Math.trunc(cardNum),
+          ...(this.form.type === 'transfer' &&
+          this.form.transferToCardId !== '' &&
+          this.form.transferToCardId != null
+            ? { transferToCardId: Math.trunc(Number(this.form.transferToCardId)) }
+            : {}),
           ...(this.form.categoryId !== '' && this.form.categoryId != null
             ? { categoryId: String(this.form.categoryId) }
             : {}),
@@ -406,7 +432,16 @@ export class AddTransactionModalComponent implements OnInit {
       }
       return;
     }
-    if (form.valid && this.form.cardId && this.form.categoryId && this.form.amount > 0) {
+    const amountOk = Number(this.form.amount) > 0;
+    if (!amountOk || !this.form.cardId) return;
+    if (this.form.type === 'transfer') {
+      const to = Number(this.form.transferToCardId);
+      const from = Number(this.form.cardId);
+      if (!Number.isFinite(to) || to < 1 || to === from) return;
+      if (form.valid) this.mutation.mutate(this.buildPayload());
+      return;
+    }
+    if (form.valid && this.form.categoryId) {
       this.mutation.mutate(this.buildPayload());
     }
   }

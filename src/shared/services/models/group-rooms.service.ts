@@ -8,7 +8,7 @@ import {
 } from '@/shared/types';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { lastValueFrom } from 'rxjs';
+import { lastValueFrom, Observable } from 'rxjs';
 
 type CreateRoomPayload = {
   name: string;
@@ -28,12 +28,23 @@ type CreateInvitePayload = {
   expiresInHours?: number;
 };
 
+type UpdateGroupTxPayload = {
+  paidBy?: string;
+  categoryId?: string;
+  amount?: number;
+  currencyCode?: string;
+  title?: string;
+  description?: string;
+  date?: string;
+};
+
 type CreateGroupTxPayload = {
   paidBy?: string;
   categoryId?: string;
   /** Личная карта пользователя paidBy (по умолчанию — текущий пользователь) */
   cardId?: number;
-  type?: 'expense' | 'revenue';
+  type?: 'expense' | 'revenue' | 'transfer';
+  transferToCardId?: number;
   affectsCardBalance?: boolean;
   amount: number;
   currencyCode?: string;
@@ -119,5 +130,16 @@ export class GroupRoomsHttpService {
     return lastValueFrom(
       this.http.post<GroupTransactionItem>(`${groupRoomsUrl}/${roomId}/transactions`, payload),
     );
+  }
+
+  updateRoomTransaction(roomId: string, transactionId: string, payload: UpdateGroupTxPayload) {
+    return this.http.patch<GroupTransactionItem>(
+      `${groupRoomsUrl}/${roomId}/transactions/${transactionId}`,
+      payload,
+    );
+  }
+
+  deleteRoomTransaction(roomId: string, transactionId: string): Observable<void> {
+    return this.http.delete<void>(`${groupRoomsUrl}/${roomId}/transactions/${transactionId}`);
   }
 }

@@ -37,7 +37,7 @@
             [dataSource]="transactionsForTable()"
             [displayedCells]="displayedCells()"
             [isEmpty]="isEmpty"
-            [showActions]="!groupRoomId()"
+            [showActions]="true"
             (onEdit)="handleEdit($event)"
             (onDelete)="handleDelete($event)"
           />

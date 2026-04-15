@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, signal } f
 import { DashboardCardComponent, CardBodyComponent } from '../../../card';
 import { MatIconModule } from '@angular/material/icon';
 import {
+  BalancesHttpService,
   CategoriesHttpService,
   Tabs,
   tabs,
@@ -20,11 +21,11 @@ import { ControlsComponent } from '@/widgets/controls/ui/controls.component';
 import { ControlsProps } from '@/widgets/controls/lib';
 import { PaginationComponent } from '@/entities/pagination/ui/pagination.component';
 import { TransactionAddButtonComponent } from '@/features/transactions/add-button/add-card.component';
-import { injectQuery } from '@tanstack/angular-query-experimental';
+import { injectQuery, QueryClient } from '@tanstack/angular-query-experimental';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { EditTransactionModalComponent } from '@/features/transactions/edit-modal/edit-card-modal.component';
 import { ProgressSpinner } from 'primeng/progressspinner';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'transactions',
@@ -42,13 +43,16 @@ import { ConfirmationService } from 'primeng/api';
   templateUrl: './transaction-card.component.html',
   styleUrls: ['./transaction-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [DialogService],
+  providers: [DialogService, MessageService],
 })
 export class TransactionsComponent extends UrlSyncedComponent<Transaction> {
   private transactionsService = inject(DashboardTransactionsService);
   private transactionsHttpService = inject(TransactionsHttpService);
   private categoriesHttpService = inject(CategoriesHttpService);
   private groupRoomsHttp = inject(GroupRoomsHttpService);
+  private queryClient = inject(QueryClient);
+  private messageService = inject(MessageService);
+  private balancesHttpService = inject(BalancesHttpService);
   private auth = inject(AuthService);
   private confirmationService = inject(ConfirmationService);
   private currencyService = inject(CurrencyService);
@@ -114,7 +118,14 @@ export class TransactionsComponent extends UrlSyncedComponent<Transaction> {
   readonly allData = computed(() => {
     const base = this.signalTransactions() ?? [];
     const tab = this.tabFilter();
-    const apiType = tab === Tabs.All ? null : tab === Tabs.Expenses ? 'expense' : 'revenue';
+    const apiType =
+      tab === Tabs.All
+        ? null
+        : tab === Tabs.Expenses
+          ? 'expense'
+          : tab === Tabs.Transfers
+            ? 'transfer'
+            : 'revenue';
     const filtered = apiType == null ? [...base] : base.filter((t) => t.type === apiType);
     return [...filtered].sort((a, b) => {
       const timeA = a.createdAt
@@ -208,7 +219,46 @@ export class TransactionsComponent extends UrlSyncedComponent<Transaction> {
   }
 
   handleDelete(transaction: Transaction | { id: number; title?: string }) {
-    if (this.groupRoomId()?.trim()) return;
+    const rid = this.groupRoomId()?.trim();
+    const gtxId = (transaction as Transaction).groupTransactionId;
+    if (rid && gtxId) {
+      this.confirmationService.confirm({
+        message: `Delete transaction «${transaction.title ?? '—'}»?`,
+        header: 'Confirm deletion',
+        icon: 'pi pi-exclamation-triangle',
+        acceptLabel: 'Delete',
+        rejectLabel: 'Cancel',
+        accept: () => {
+          this.groupRoomsHttp.deleteRoomTransaction(rid, gtxId).subscribe({
+            next: () => {
+              void this.queryClient.invalidateQueries({ queryKey: ['groupTransactions', rid] });
+              void this.queryClient.invalidateQueries({ queryKey: ['charts', 'room', rid] });
+              void this.queryClient.invalidateQueries({ queryKey: ['roomContributions', rid] });
+              this.balancesHttpService.refresh();
+              this.messageService.add({
+                key: 'toast',
+                severity: 'success',
+                summary: 'Deleted',
+                detail: 'Transaction removed',
+                life: 3000,
+              });
+            },
+            error: () => {
+              this.messageService.add({
+                key: 'toast',
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Failed to delete transaction',
+                life: 4000,
+              });
+            },
+          });
+        },
+      });
+      return;
+    }
+    if (rid) return;
+
     this.confirmationService.confirm({
       message: `Delete transaction «${transaction.title ?? '—'}»?`,
       header: 'Confirm deletion',
@@ -222,15 +272,18 @@ export class TransactionsComponent extends UrlSyncedComponent<Transaction> {
   }
 
   handleEdit(transaction: Transaction | { id: number }) {
-    if (this.groupRoomId()?.trim()) return;
+    const rid = this.groupRoomId()?.trim();
     const original = this.currentTransactions().find((t) => t.id === transaction.id);
     if (!original) return;
+    if (rid && !original.groupTransactionId) return;
+
+    const data = rid ? { transaction: original, groupRoomId: rid } : original;
     this.ref = this.dialogService.open(EditTransactionModalComponent, {
       header: 'Edit Transaction',
       closable: true,
       dismissableMask: true,
       styleClass: 'modal',
-      data: original,
+      data,
     });
   }
 }

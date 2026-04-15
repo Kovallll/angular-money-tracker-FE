@@ -36,6 +36,12 @@
                     [sizePx]="20"
                     [color]="'rgba(201, 43, 18, 0.95)'"
                   />
+                } @else if (row.type === 'transfer') {
+                  <app-icon
+                    material="swap_horiz"
+                    [sizePx]="20"
+                    [color]="'rgba(56, 189, 248, 0.95)'"
+                  />
                 } @else {
                   <app-icon
                     material="trending_up"

@@ -14,6 +14,7 @@ export class DashboardTransactionsService {
     if (tab === Tabs.All) return null;
     if (tab === Tabs.Expenses) return 'expense';
     if (tab === Tabs.Revenue) return 'revenue';
+    if (tab === Tabs.Transfers) return 'transfer';
     return null;
   }
 

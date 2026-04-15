@@ -10,7 +10,7 @@
 >
   <form #cardForm="ngForm" (ngSubmit)="onSubmit(cardForm)" class="app-modal-form">
     <div class="form-fields">
-      @for (input of inputs; track input.field) {
+      @for (input of editFormInputs; track input.field) {
         @if (input.field === 'currencyCode') {
           <!-- Currency shown with Amount in app-price-currency-field below -->
         } @else if (input.field === 'amount') {
@@ -163,17 +163,41 @@
           </div>
         }
       }
-      <div class="field">
-        <label class="card-balance-checkbox">
-          <input
-            type="checkbox"
-            name="affectsCardBalance"
-            [ngModel]="card()['affectsCardBalance']"
-            (ngModelChange)="setCardField('affectsCardBalance', $event)"
-          />
-          <span>Deduct from card balance</span>
-        </label>
-      </div>
+      @if (!getGroupRoomId() && card().type === 'transfer') {
+        <div class="field">
+          <label for="transferToCardId" class="label">To card</label>
+          <p-select
+            class="select"
+            [options]="cards()"
+            optionLabel="bankName"
+            optionValue="id"
+            inputId="transferToCardId"
+            name="transferToCardId"
+            [ngModel]="card()['transferToCardId']"
+            (ngModelChange)="setCardField('transferToCardId', $event)"
+            appendTo="body"
+            placeholder="Card to credit"
+            required
+          >
+            <ng-template let-item pTemplate="item">
+              <span>{{ item.bankName }} — {{ item.cardNumber }}{{ item.isPrimary ? ' (Default)' : '' }}</span>
+            </ng-template>
+          </p-select>
+        </div>
+      }
+      @if (!getGroupRoomId()) {
+        <div class="field">
+          <label class="card-balance-checkbox">
+            <input
+              type="checkbox"
+              name="freezeCardBalance"
+              [ngModel]="card()['affectsCardBalance'] === false"
+              (ngModelChange)="setCardField('affectsCardBalance', !$event)"
+            />
+            <span>Не изменять баланс карты</span>
+          </label>
+        </div>
+      }
     </div>
   </form>
 </app-modal-shell>

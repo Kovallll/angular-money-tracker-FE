@@ -113,7 +113,7 @@
           [loading]="categorizerLoading"
           [showClear]="!!getGroupRoomId()"
           #categoryField="ngModel"
-          [required]="!getGroupRoomId()"
+          [required]="!getGroupRoomId() && form.type !== 'transfer'"
         >
           <ng-template let-item pTemplate="item">
             <div class="icon-row">
@@ -142,7 +142,12 @@
           </div>
         }
         <div class="form-field-error">
-          @if (!getGroupRoomId() && categoryField.invalid && (categoryField.touched || cardForm.submitted)) {
+          @if (
+            !getGroupRoomId() &&
+            form.type !== 'transfer' &&
+            categoryField.invalid &&
+            (categoryField.touched || cardForm.submitted)
+          ) {
             <p-message severity="error" size="small" variant="simple">Select category</p-message>
           }
         </div>
@@ -172,10 +177,11 @@
         <label class="card-balance-checkbox">
           <input
             type="checkbox"
-            name="affectsCardBalance"
-            [(ngModel)]="form.affectsCardBalance"
+            name="freezeCardBalance"
+            [ngModel]="!form.affectsCardBalance"
+            (ngModelChange)="form.affectsCardBalance = !$event"
           />
-          <span>Deduct from card balance</span>
+          <span>Не изменять баланс карты</span>
         </label>
         <div class="form-field-error">
           @if (cardField.invalid && (cardField.touched || cardForm.submitted)) {
@@ -183,6 +189,33 @@
           }
         </div>
       </div>
+
+      @if (form.type === 'transfer') {
+        <div class="form-field">
+          <label for="transferToCardId">To card</label>
+          <p-select
+            inputId="transferToCardId"
+            name="transferToCardId"
+            [options]="cards()"
+            optionLabel="bankName"
+            optionValue="id"
+            [(ngModel)]="form.transferToCardId"
+            placeholder="Card to credit"
+            appendTo="body"
+            #toCardField="ngModel"
+            required
+          >
+            <ng-template let-item pTemplate="item">
+              <span>{{ item.bankName }} — {{ item.cardNumber }}{{ item.isPrimary ? ' (Default)' : '' }}</span>
+            </ng-template>
+          </p-select>
+          <div class="form-field-error">
+            @if (toCardField.invalid && (toCardField.touched || cardForm.submitted)) {
+              <p-message severity="error" size="small" variant="simple">Select destination card</p-message>
+            }
+          </div>
+        </div>
+      }
     </div>
 
     <div class="form-row">

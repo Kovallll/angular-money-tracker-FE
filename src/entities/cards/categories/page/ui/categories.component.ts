@@ -25,7 +25,13 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   selector: 'category-card',
   templateUrl: './categories.component.html',
   styleUrls: ['./categories.component.scss'],
-  imports: [AppCurrencyPipe, BaseChartDirective, ContextMenuComponent, AppIconComponent, MatTooltipModule],
+  imports: [
+    AppCurrencyPipe,
+    BaseChartDirective,
+    ContextMenuComponent,
+    AppIconComponent,
+    MatTooltipModule,
+  ],
   providers: [DialogService],
   standalone: true,
 })

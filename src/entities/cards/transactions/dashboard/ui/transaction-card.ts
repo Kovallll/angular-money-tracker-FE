@@ -101,7 +101,14 @@ export class DashboardTransactionCardComponent {
   private readonly personalFiltered = computed((): Transaction[] => {
     const raw = this.personalTxQuery.data() ?? [];
     const tab = this.tabFilter();
-    const apiType = tab === Tabs.All ? null : tab === Tabs.Expenses ? 'expense' : 'revenue';
+    const apiType =
+      tab === Tabs.All
+        ? null
+        : tab === Tabs.Expenses
+          ? 'expense'
+          : tab === Tabs.Transfers
+            ? 'transfer'
+            : 'revenue';
     const filtered = apiType == null ? raw : raw.filter((t) => t.type === apiType);
     return [...filtered].sort((a, b) => {
       const timeA = a.createdAt
@@ -133,7 +140,11 @@ export class DashboardTransactionCardComponent {
     });
     const tab = this.tabFilter();
     const filtered =
-      tab === 'All' || tab === 'Expenses' ? mapped : mapped.filter((t) => t.type === 'revenue');
+      tab === Tabs.All || tab === Tabs.Expenses
+        ? mapped.filter((t) => tab !== Tabs.Expenses || t.type === 'expense')
+        : tab === Tabs.Transfers
+          ? mapped.filter((t) => t.type === 'transfer')
+          : mapped.filter((t) => t.type === 'revenue');
     return [...filtered]
       .sort((a, b) => {
         const timeA = a.createdAt

@@ -1,6 +1,6 @@
 export const defaultPageSize = 10;
 export const defaultPage = 0;
-export const tabs = ['All', 'Expenses', 'Revenue'];
+export const tabs = ['All', 'Expenses', 'Revenue', 'Transfers'];
 
 export const expensesUrl = 'expenses';
 export const categoriesUrl = 'categories';

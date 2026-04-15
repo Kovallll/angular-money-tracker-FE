@@ -15,7 +15,11 @@ export type Transaction = {
   id: number;
   userId: number;
   cardId: number;
+  /** Личный перевод: id карты зачисления (строка/число с API). */
+  transferToCardId?: string | number | null;
   categoryId: number;
+  /** UUID групповой транзакции (для PATCH/DELETE в комнате). */
+  groupTransactionId?: string;
   title: string;
   /** Примечание к транзакции (подсказка при наведении / на телефоне по кнопке). */
   description?: string | null;
@@ -34,13 +38,16 @@ export type Transaction = {
   groupCreatedByName?: string;
 };
 
-export type CreateTransaction = Omit<Transaction, 'id' | 'userId' | 'cardId' | 'categoryId'>;
+export type CreateTransaction = Omit<Transaction, 'id' | 'userId' | 'cardId' | 'categoryId'> & {
+  transferToCardId?: string | number | null;
+};
 
 /** Payload для создания транзакции (формат бэкенда) */
 export interface CreateTransactionPayload {
   cardId: string;
-  categoryId: string;
-  type: 'expense' | 'revenue';
+  categoryId?: string;
+  transferToCardId?: string;
+  type: 'expense' | 'revenue' | 'transfer';
   amount: number;
   currencyCode?: string;
   date: string;
@@ -310,8 +317,10 @@ export interface GroupTransactionItem {
   categoryId?: string | null;
   /** Личная карта плательщика; баланс учитывался при создании */
   cardId?: number | null;
-  /** Расход или доход; по умолчанию expense для старых записей. */
-  type?: 'expense' | 'revenue';
+  /** Расход, доход или перевод между картами участника. */
+  type?: 'expense' | 'revenue' | 'transfer';
+  /** Для type = transfer — карта зачисления. */
+  transferToCardId?: number | null;
   affectsCardBalance?: boolean;
   amount: number;
   currencyCode: string;

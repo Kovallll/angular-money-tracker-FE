@@ -74,12 +74,22 @@ export class TableComponent<T> {
     return v;
   }
 
+  private static readonly transactionTypeLabels: Record<string, string> = {
+    expense: 'Expense',
+    revenue: 'Revenue',
+    transfer: 'Transfer',
+  };
+
   /** Значение для отображения (для объекта с title — показываем title). */
   cellDisplayValue(row: Record<string, unknown>, field: string): string {
     const v = row[field];
     if (v == null || v === '') return '';
     if (typeof v === 'object' && v !== null && 'title' in v)
       return String((v as { title?: string }).title ?? '');
+    if (field === 'type' && typeof v === 'string') {
+      const mapped = TableComponent.transactionTypeLabels[v.toLowerCase()];
+      if (mapped) return mapped;
+    }
     return String(v);
   }
 }

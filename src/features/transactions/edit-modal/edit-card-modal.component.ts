@@ -17,6 +17,7 @@ import {
   BalancesHttpService,
   CategoriesHttpService,
   CreateTransaction,
+  GroupRoomsHttpService,
   StatisticsHttpService,
   StatisticsRefreshService,
   Transaction,
@@ -24,7 +25,7 @@ import {
 } from '@/shared';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { injectQuery } from '@tanstack/angular-query-experimental';
+import { injectQuery, QueryClient } from '@tanstack/angular-query-experimental';
 import { Select } from 'primeng/select';
 import { PriceCurrencyFieldComponent } from '@/shared/components/price-currency-field/price-currency-field.component';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
@@ -63,16 +64,46 @@ export class EditTransactionModalComponent implements OnInit {
   private static readonly PREDICT_THROTTLE_MS = 2500;
   messageService = inject(MessageService);
   private transactionsHttpService = inject(TransactionsHttpService);
-  private config = inject(DynamicDialogConfig);
+  private readonly dialogCtx = (() => {
+    const config = inject(DynamicDialogConfig);
+    const d = config.data as { transaction?: Transaction; groupRoomId?: string } | Transaction;
+    const raw = d as { transaction?: Transaction; groupRoomId?: string };
+    const transaction = (raw?.transaction ?? d) as Transaction;
+    const groupRoomId =
+      typeof raw?.groupRoomId === 'string' && raw.groupRoomId.trim()
+        ? raw.groupRoomId.trim()
+        : undefined;
+    return { transaction, groupRoomId };
+  })();
   private categoriesHttpService = inject(CategoriesHttpService);
   private statisticsHttpService = inject(StatisticsHttpService);
   private statisticsRefreshService = inject(StatisticsRefreshService);
   private balancesHttpService = inject(BalancesHttpService);
+  readonly cards = this.balancesHttpService.cards;
+  private groupRoomsHttp = inject(GroupRoomsHttpService);
+  private queryClient = inject(QueryClient);
   private ref = inject(DynamicDialogRef);
   private cdr = inject(ChangeDetectorRef);
   private destroyRef = inject(DestroyRef);
   protected currencyService = inject(CurrencyService);
-  transaction = this.config.data as Transaction;
+  readonly transaction = this.dialogCtx.transaction;
+
+  protected getGroupRoomId(): string | undefined {
+    return this.dialogCtx.groupRoomId;
+  }
+
+  /** В комнате API PATCH не меняет тип/способ оплаты/флаг карты — поля скрываем. */
+  protected get editFormInputs() {
+    const isTransfer = String(this.card().type ?? '') === 'transfer';
+    let base = this.inputs;
+    if (this.dialogCtx.groupRoomId) {
+      base = base.filter((i) => !['type', 'paymentMethod'].includes(i.field));
+    }
+    if (isTransfer) {
+      base = base.filter((i) => i.field !== 'category');
+    }
+    return base;
+  }
 
   private titleInput$ = new Subject<string>();
   categorizerLoading = false;
@@ -83,14 +114,71 @@ export class EditTransactionModalComponent implements OnInit {
   private userChangedCategoryManually = false;
   private lastPredictedTitle = '';
 
-  categories = injectQuery(() => ({
-    queryKey: ['categories'],
-    queryFn: () => this.categoriesHttpService.getCategories(),
-  }));
+  categories = injectQuery(() => {
+    const roomId = this.getGroupRoomId() ?? '';
+    return {
+      queryKey: ['categories', 'scope', roomId] as const,
+      queryFn: () =>
+        roomId
+          ? this.categoriesHttpService.fetchCategoriesByRoom(roomId)
+          : this.categoriesHttpService.getCategories(),
+    };
+  });
 
-  updateTransaction(transaction: CreateTransaction) {
+  updateTransaction(
+    payload: CreateTransaction & {
+      categoryId?: string;
+      predictionKey?: string;
+      predictedCategoryId?: string;
+    },
+  ) {
+    const rid = this.getGroupRoomId();
+    const gtxId = this.transaction.groupTransactionId;
+    if (rid && gtxId) {
+      this.groupRoomsHttp
+        .updateRoomTransaction(rid, gtxId, {
+          amount: Number(payload.amount),
+          currencyCode: payload.currencyCode || this.currencyService.primaryCode(),
+          title: String(payload.title ?? '').trim(),
+          date: this.formatDateLocal(payload.date as string),
+          ...(payload.description != null && String(payload.description).trim() !== ''
+            ? { description: String(payload.description).trim() }
+            : {}),
+          ...(payload.categoryId ? { categoryId: String(payload.categoryId) } : {}),
+        })
+        .pipe(
+          tap(() => {
+            this.balancesHttpService.refresh();
+            void this.queryClient.invalidateQueries({ queryKey: ['groupTransactions', rid] });
+            void this.queryClient.invalidateQueries({ queryKey: ['charts', 'room', rid] });
+            void this.queryClient.invalidateQueries({ queryKey: ['roomContributions', rid] });
+            this.statisticsRefreshService.refresh();
+            this.messageService.add({
+              key: 'toast',
+              severity: 'success',
+              summary: 'Success',
+              detail: 'Transaction updated',
+              life: 3000,
+            });
+            this.ref.close();
+          }),
+          catchError(() => {
+            this.messageService.add({
+              key: 'toast',
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Failed to update transaction',
+              life: 4000,
+            });
+            return of(null);
+          }),
+        )
+        .subscribe();
+      return;
+    }
+
     this.transactionsHttpService
-      .updateTransaction(this.transaction.id, transaction)
+      .updateTransaction(this.transaction.id, payload)
       .pipe(
         tap(() => {
           this.balancesHttpService.refresh();
@@ -134,10 +222,14 @@ export class EditTransactionModalComponent implements OnInit {
         string,
         unknown
       >;
-      const categoryTitle = value['category'];
-      const list = this.categories.data() ?? [];
-      const cat = list.find((c) => c.title === categoryTitle);
-      if (cat) value['categoryId'] = String(cat.id);
+      if (String(value['type'] ?? '') !== 'transfer') {
+        const categoryTitle = value['category'];
+        const list = this.categories.data() ?? [];
+        const cat = list.find((c) => c.title === categoryTitle);
+        if (cat) value['categoryId'] = String(cat.id);
+      } else if (this.card().transferToCardId != null) {
+        value['transferToCardId'] = String(this.card().transferToCardId);
+      }
       if (this.currentPredictionKey && this.currentPredictedCategoryId) {
         value['predictionKey'] = this.currentPredictionKey;
         value['predictedCategoryId'] = this.currentPredictedCategoryId;
@@ -170,6 +262,7 @@ export class EditTransactionModalComponent implements OnInit {
   readonly typeOptions = [
     { label: 'Expense', value: 'expense' },
     { label: 'Revenue', value: 'revenue' },
+    { label: 'Transfer', value: 'transfer' },
   ];
 
   card = signal<any>([]);
@@ -184,13 +277,16 @@ export class EditTransactionModalComponent implements OnInit {
           v = 'expense';
         } else {
           const t = String(v).toLowerCase();
-          v = t === 'revenue' ? 'revenue' : 'expense';
+          v = t === 'revenue' ? 'revenue' : t === 'transfer' ? 'transfer' : 'expense';
         }
       }
       acc[cur.field] = v;
       return acc;
     }, {} as any);
     card['affectsCardBalance'] = this.transaction.affectsCardBalance !== false;
+    if (this.transaction.transferToCardId != null && this.transaction.transferToCardId !== '') {
+      card['transferToCardId'] = Number(this.transaction.transferToCardId);
+    }
     this.card.set(card);
 
     this.titleInput$
@@ -211,13 +307,15 @@ export class EditTransactionModalComponent implements OnInit {
           this.isCategorySuggested = false;
           this.suggestedAlternatives = [];
           this.cdr.markForCheck();
-          return this.statisticsHttpService.predict(text.trim()).pipe(
-            catchError(() => {
-              this.categorizerLoading = false;
-              this.cdr.markForCheck();
-              return of(null);
-            }),
-          );
+          return this.statisticsHttpService
+            .predict(text.trim(), { roomId: this.getGroupRoomId() })
+            .pipe(
+              catchError(() => {
+                this.categorizerLoading = false;
+                this.cdr.markForCheck();
+                return of(null);
+              }),
+            );
         }),
         takeUntilDestroyed(this.destroyRef),
       )
