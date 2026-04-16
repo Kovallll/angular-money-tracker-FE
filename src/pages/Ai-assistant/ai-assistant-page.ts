@@ -3,7 +3,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { AiInsightsHttpService } from '@/shared/services/models';
-import { AiInsightItem } from '@/shared/types';
+import { AiChatSessionItem, AiInsightItem } from '@/shared/types';
 import { MessageService } from 'primeng/api';
 import { TranslatePipe } from '@ngx-translate/core';
 import { I18nService } from '@/shared/services';
@@ -33,18 +33,13 @@ export class AiAssistantPageComponent implements OnInit {
   readonly question = signal('');
   readonly chatHistory = signal<ChatMessage[]>([]);
   readonly chatLoading = signal(false);
+  readonly sessions = signal<AiChatSessionItem[]>([]);
+  readonly selectedSessionId = signal<string | null>(null);
   readonly quickQuestions = ['ai.quick.q1', 'ai.quick.q2', 'ai.quick.q3', 'ai.quick.q4'];
 
   ngOnInit(): void {
     this.loadInsights();
-    this.chatHistory.set([
-      {
-        id: this.nextId(),
-        role: 'assistant',
-        text: this.i18n.t('ai.chat.welcome'),
-        createdAt: new Date(),
-      },
-    ]);
+    this.loadSessionsAndHistory();
   }
 
   async loadInsights(): Promise<void> {
@@ -80,11 +75,13 @@ export class AiAssistantPageComponent implements OnInit {
     ]);
     this.question.set('');
     try {
-      const response = await firstValueFrom(this.ai.ask(q));
+      const sid = this.selectedSessionId() ?? undefined;
+      const response = await firstValueFrom(this.ai.ask(q, sid));
       this.chatHistory.update((prev) => [
         ...prev,
         { id: this.nextId(), role: 'assistant', text: response.answer, createdAt: new Date() },
       ]);
+      await this.refreshSessions();
     } catch (err) {
       console.error(err);
       this.showErrorToast(this.i18n.t('ai.toast.askError'));
@@ -100,6 +97,96 @@ export class AiAssistantPageComponent implements OnInit {
     } finally {
       this.chatLoading.set(false);
     }
+  }
+
+  async loadChatHistory(): Promise<void> {
+    this.chatLoading.set(true);
+    try {
+      const sid = this.selectedSessionId() ?? undefined;
+      const history = await firstValueFrom(this.ai.history(150, sid));
+      if (!history.length) {
+        this.chatHistory.set([
+          {
+            id: this.nextId(),
+            role: 'assistant',
+            text: this.i18n.t('ai.chat.welcome'),
+            createdAt: new Date(),
+          },
+        ]);
+        return;
+      }
+      this.chatHistory.set(
+        history.map((m) => ({
+          id: m.id,
+          role: m.role,
+          text: m.message,
+          createdAt: new Date(m.createdAt),
+        })),
+      );
+    } catch (err) {
+      console.error(err);
+      this.chatHistory.set([
+        {
+          id: this.nextId(),
+          role: 'assistant',
+          text: this.i18n.t('ai.chat.welcome'),
+          createdAt: new Date(),
+        },
+      ]);
+      this.showErrorToast(this.i18n.t('ai.toast.loadInsightsError'));
+    } finally {
+      this.chatLoading.set(false);
+    }
+  }
+
+  async loadSessionsAndHistory(): Promise<void> {
+    await this.refreshSessions();
+    await this.loadChatHistory();
+  }
+
+  async refreshSessions(): Promise<void> {
+    const sessions = await firstValueFrom(this.ai.sessions(30));
+    this.sessions.set(sessions);
+    const selected = this.selectedSessionId();
+    if (!selected || !sessions.some((s) => s.id === selected)) {
+      this.selectedSessionId.set(sessions[0]?.id ?? null);
+    }
+  }
+
+  async createNewSession(): Promise<void> {
+    if (this.chatLoading()) return;
+    const created = await firstValueFrom(this.ai.createSession());
+    this.sessions.update((prev) => [created, ...prev]);
+    this.selectedSessionId.set(created.id);
+    this.chatHistory.set([
+      {
+        id: this.nextId(),
+        role: 'assistant',
+        text: this.i18n.t('ai.chat.welcome'),
+        createdAt: new Date(),
+      },
+    ]);
+  }
+
+  async clearCurrentSession(): Promise<void> {
+    const sid = this.selectedSessionId();
+    if (!sid || this.chatLoading()) return;
+    await firstValueFrom(this.ai.clearSession(sid));
+    this.chatHistory.set([
+      {
+        id: this.nextId(),
+        role: 'assistant',
+        text: this.i18n.t('ai.chat.welcome'),
+        createdAt: new Date(),
+      },
+    ]);
+    await this.refreshSessions();
+  }
+
+  async selectSession(id: string): Promise<void> {
+    if (this.selectedSessionId() === id) return;
+    this.selectedSessionId.set(id);
+    await this.loadChatHistory();
   }
 
   useQuickQuestion(questionKey: string): void {
@@ -142,6 +229,17 @@ export class AiAssistantPageComponent implements OnInit {
       hour: '2-digit',
       minute: '2-digit',
     }).format(value);
+  }
+
+  formatSessionLabel(session: AiChatSessionItem): string {
+    const date = session.lastMessageAt ?? session.updatedAt ?? session.createdAt;
+    const dt = new Date(date);
+    return new Intl.DateTimeFormat(this.i18n.currentLang() === 'ru' ? 'ru-RU' : 'en-US', {
+      day: '2-digit',
+      month: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    }).format(dt);
   }
 
   private nextId(): string {

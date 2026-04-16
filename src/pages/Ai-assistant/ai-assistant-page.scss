@@ -83,6 +83,41 @@
   gap: 8px;
 }
 
+.chat-toolbar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.sessions-list {
+  display: grid;
+  gap: 6px;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.session-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid $surface-12;
+  border-radius: 10px;
+  background: rgba($white, 0.04);
+  color: $surface-90;
+  padding: 7px 10px;
+  font-size: 12px;
+
+  small {
+    color: $gray;
+  }
+}
+
+.session-item--active {
+  border-color: rgba($accent, 0.7);
+  background: rgba($accent, 0.18);
+}
+
 .quick-chip {
   border: 1px solid $surface-12;
   border-radius: 999px;
@@ -103,7 +138,7 @@
 
 .chat-panel {
   min-height: 520px;
-  grid-template-rows: auto auto minmax(240px, 1fr) auto;
+  grid-template-rows: auto auto auto auto minmax(240px, 1fr) auto;
 }
 
 .chat-history {

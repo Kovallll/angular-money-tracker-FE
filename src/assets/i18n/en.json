@@ -63,6 +63,9 @@
     "chat": {
       "title": "Chat",
       "subtitle": "Question and answer history",
+      "newChat": "New chat",
+      "clearChat": "Clear chat",
+      "session": "Session",
       "placeholder": "Ask about spending, budget, debt, investments, rates, etc.",
       "sending": "Sending...",
       "ask": "Ask",

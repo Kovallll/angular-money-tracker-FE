@@ -13,6 +13,30 @@
         <span class="panel-subtitle">{{ 'ai.chat.subtitle' | translate }}</span>
       </header>
 
+      <div class="chat-toolbar">
+        <button type="button" class="ghost-btn" (click)="createNewSession()" [disabled]="chatLoading()">
+          {{ 'ai.chat.newChat' | translate }}
+        </button>
+        <button type="button" class="ghost-btn" (click)="clearCurrentSession()" [disabled]="chatLoading()">
+          {{ 'ai.chat.clearChat' | translate }}
+        </button>
+      </div>
+
+      <div class="sessions-list">
+        @for (session of sessions(); track session.id) {
+          <button
+            type="button"
+            class="session-item"
+            [class.session-item--active]="selectedSessionId() === session.id"
+            (click)="selectSession(session.id)"
+            [disabled]="chatLoading()"
+          >
+            <span>{{ 'ai.chat.session' | translate }} · {{ formatSessionLabel(session) }}</span>
+            <small>{{ session.messagesCount }}</small>
+          </button>
+        }
+      </div>
+
       <div class="quick-questions">
         @for (item of quickQuestions; track item) {
           <button type="button" class="quick-chip" (click)="useQuickQuestion(item)" [disabled]="chatLoading()">

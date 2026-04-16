@@ -372,3 +372,21 @@ export interface AiChatResponse {
   references: AiChatReference[];
   usedFallback: boolean;
 }
+
+export interface AiChatHistoryMessage {
+  id: string;
+  sessionId: string;
+  role: 'user' | 'assistant';
+  message: string;
+  refs: AiChatReference[];
+  createdAt: string;
+}
+
+export interface AiChatSessionItem {
+  id: string;
+  channel: 'app' | 'telegram';
+  createdAt: string;
+  updatedAt: string;
+  lastMessageAt?: string | null;
+  messagesCount: number;
+}

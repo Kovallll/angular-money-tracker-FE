@@ -9,6 +9,7 @@
         [value]="currentPeriodicity"
         (selectionChange)="onPeriodicityChange($event.value)"
         [disabled]="loading()"
+        panelClass="analytics-settings-period-panel"
       >
         @for (opt of periodicityOptions; track opt.value) {
           <mat-option [value]="opt.value">{{ opt.label | translate }}</mat-option>
