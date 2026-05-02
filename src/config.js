@@ -1,1 +1,2 @@
-window.API_URL = "http://localhost:5000";
+window.API_URL = 'https://angular-money-tracker-fe.vercel.app';
+
