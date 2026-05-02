@@ -10,6 +10,8 @@ import { Select } from 'primeng/select';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { PriceCurrencyFieldComponent } from '@/shared/components/price-currency-field/price-currency-field.component';
 import { ActivatedRoute } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { I18nService } from '@/shared/services';
 
 @Component({
   selector: 'update-card-modal',
@@ -22,6 +24,7 @@ import { ActivatedRoute } from '@angular/router';
     MessageModule,
     Select,
     PriceCurrencyFieldComponent,
+    TranslateModule,
   ],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,6 +35,7 @@ export class UpdateCardModalComponent implements OnInit {
   private ref = inject(DynamicDialogRef);
   private route = inject(ActivatedRoute);
   readonly currencyService = inject(CurrencyService);
+  readonly i18n = inject(I18nService);
 
   id: number | null = null;
   card = signal<CreateCard>({
@@ -62,6 +66,14 @@ export class UpdateCardModalComponent implements OnInit {
     this.setCardCurrency(v);
   }
 
+  get paymentOptions() {
+    this.i18n.currentLang();
+    return [
+      { name: this.i18n.t('balances.paymentSystems.mastercard'), value: 'MasterCard' },
+      { name: this.i18n.t('balances.paymentSystems.visa'), value: 'Visa' },
+    ];
+  }
+
   onSubmit(form: NgForm) {
     if (form.valid && this.card?.() && this.id) {
       this.balancesHttpService.updateCard(this.id, this.card()!).subscribe({
@@ -69,8 +81,8 @@ export class UpdateCardModalComponent implements OnInit {
           this.messageService.add({
             key: 'toast',
             severity: 'success',
-            summary: 'Success',
-            detail: 'Card updated successfully',
+            summary: this.i18n.t('common.success'),
+            detail: this.i18n.t('balances.toast.cardUpdated'),
             life: 3000,
           });
           form.resetForm();
@@ -80,8 +92,8 @@ export class UpdateCardModalComponent implements OnInit {
           this.messageService.add({
             key: 'toast',
             severity: 'error',
-            summary: 'Error',
-            detail: 'Failed to update card',
+            summary: this.i18n.t('common.error'),
+            detail: this.i18n.t('balances.toast.updateCardError'),
             life: 3000,
           });
         },

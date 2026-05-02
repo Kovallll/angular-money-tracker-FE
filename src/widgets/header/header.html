@@ -26,6 +26,14 @@
     </div>
   </div>
   <div class="content header-actions">
+    <button
+      type="button"
+      class="header-quick-add-btn"
+      (click)="openQuickAddTransaction()"
+      [attr.aria-label]="'header.quickAddAria' | translate"
+    >
+      <app-icon material="add" [sizePx]="22" />
+    </button>
     @if (!isUltraCompact()) {
       <div class="lang-switch" role="group" [attr.aria-label]="'header.language' | translate">
         <button
@@ -62,7 +70,7 @@
 
       @if (compactMenuOpen()) {
         <div #compactMorePanel class="compact-more-panel">
-          <div class="compact-more-panel__section">
+          <div class="compact-more-panel__section compact-more-panel__section--top">
             <div class="lang-switch" role="group" [attr.aria-label]="'header.language' | translate">
               <button
                 type="button"
@@ -81,11 +89,11 @@
                 EN
               </button>
             </div>
-          </div>
-          <div class="compact-more-panel__section">
-            <app-currency-selector />
             <telegram-link />
             <notification />
+          </div>
+          <div class="compact-more-panel__section compact-more-panel__section--bottom">
+            <app-currency-selector />
             <export-report-button />
           </div>
         </div>

@@ -27,7 +27,9 @@
   },
   "header": {
     "hello": "Hello",
-    "language": "Language"
+    "language": "Language",
+    "quickAddTransaction": "Quick expense",
+    "quickAddAria": "Quick add transaction"
   },
   "menu": {
     "dashboard": "Dashboard",
@@ -541,14 +543,42 @@
     "deleteCardError": "Failed to delete card",
     "confirmDeleteTitle": "Confirm deletion",
     "confirmDeleteMessage": "Delete this card? Related data will not be deleted.",
+    "cardTypeLabel": "Card type",
+    "cardNumber": "Card number",
+    "paymentSystem": "Payment system",
+    "selectCardType": "Select card type",
+    "selectPaymentSystem": "Select payment system",
+    "placeholders": {
+      "bankName": "e.g. Sberbank",
+      "cardType": "Card type",
+      "cardNumber": "0000 0000 0000 0000",
+      "expiry": "MM/YY"
+    },
+    "errors": {
+      "bankNameRequired": "Bank name is required",
+      "cardTypeRequired": "Select card type",
+      "cardNumberRequired": "Enter card number",
+      "cardNumberDigits": "Enter 16 digits",
+      "balanceRequired": "Balance is required",
+      "paymentSystemRequired": "Select payment system"
+    },
+    "paymentSystems": {
+      "mastercard": "MasterCard",
+      "visa": "Visa"
+    },
     "cardType": {
       "credit": "Credit",
-      "debit": "Debit"
+      "debit": "Debit",
+      "prepaid": "Prepaid"
     },
     "toast": {
       "primaryCard": "Primary card",
       "primaryCardDetail": "This card is now used for automatic transactions.",
-      "setPrimaryError": "Could not set primary card."
+      "setPrimaryError": "Could not set primary card.",
+      "cardAdded": "Card added",
+      "addCardError": "Failed to add card",
+      "cardUpdated": "Card updated successfully",
+      "updateCardError": "Failed to update card"
     }
   },
   "transactions": {

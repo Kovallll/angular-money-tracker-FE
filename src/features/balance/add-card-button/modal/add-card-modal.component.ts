@@ -9,6 +9,8 @@ import { CurrencyService } from '@/shared/services/currency/currency.service';
 import { Select } from 'primeng/select';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { PriceCurrencyFieldComponent } from '@/shared/components/price-currency-field/price-currency-field.component';
+import { TranslatePipe } from '@ngx-translate/core';
+import { I18nService } from '@/shared/services';
 
 const CARD_NUMBER_DIGITS = 16;
 
@@ -23,6 +25,7 @@ const CARD_NUMBER_DIGITS = 16;
     MessageModule,
     Select,
     PriceCurrencyFieldComponent,
+    TranslatePipe,
   ],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,6 +35,7 @@ export class AddCardModalComponent implements OnInit {
   private readonly balancesHttpService = inject(BalancesHttpService);
   private readonly ref = inject(DynamicDialogRef);
   protected readonly currencyService = inject(CurrencyService);
+  protected readonly i18n = inject(I18nService);
 
   protected card: CreateCard = {
     bankName: '',
@@ -43,16 +47,22 @@ export class AddCardModalComponent implements OnInit {
     expiry: undefined,
   };
 
-  protected readonly cardTypeOptions = [
-    { label: 'Credit', value: 'credit' },
-    { label: 'Debit', value: 'debit' },
-    { label: 'Prepaid', value: 'prepaid' },
-  ];
+  protected get cardTypeOptions() {
+    this.i18n.currentLang();
+    return [
+      { label: this.i18n.t('balances.cardType.credit'), value: 'credit' },
+      { label: this.i18n.t('balances.cardType.debit'), value: 'debit' },
+      { label: this.i18n.t('balances.cardType.prepaid'), value: 'prepaid' },
+    ];
+  }
 
-  protected readonly paymentOptions = [
-    { label: 'MasterCard', value: 'MasterCard' },
-    { label: 'Visa', value: 'Visa' },
-  ];
+  protected get paymentOptions() {
+    this.i18n.currentLang();
+    return [
+      { label: this.i18n.t('balances.paymentSystems.mastercard'), value: 'MasterCard' },
+      { label: this.i18n.t('balances.paymentSystems.visa'), value: 'Visa' },
+    ];
+  }
 
   ngOnInit(): void {
     if (!this.card.currencyCode) {
@@ -85,8 +95,9 @@ export class AddCardModalComponent implements OnInit {
 
   protected getCardNumberError(control: NgModel | undefined): string {
     const v = control?.value;
-    if (v == null || String(v).trim() === '') return 'Enter card number';
-    return 'Enter 16 digits';
+    if (v == null || String(v).trim() === '')
+      return this.i18n.t('balances.errors.cardNumberRequired');
+    return this.i18n.t('balances.errors.cardNumberDigits');
   }
 
   onSubmit(form: NgForm) {
@@ -96,8 +107,8 @@ export class AddCardModalComponent implements OnInit {
           this.messageService.add({
             key: 'toast',
             severity: 'success',
-            summary: 'Success',
-            detail: 'Card added',
+            summary: this.i18n.t('common.success'),
+            detail: this.i18n.t('balances.toast.cardAdded'),
             life: 3000,
           });
           this.ref.close(true);
@@ -106,8 +117,8 @@ export class AddCardModalComponent implements OnInit {
           this.messageService.add({
             key: 'toast',
             severity: 'error',
-            summary: 'Error',
-            detail: 'Failed to add card',
+            summary: this.i18n.t('common.error'),
+            detail: this.i18n.t('balances.toast.addCardError'),
             life: 3000,
           });
         },

@@ -19,6 +19,8 @@ import { CurrencySelectorComponent } from '@/shared/components/currency-selector
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
 import { TranslatePipe } from '@ngx-translate/core';
 import { I18nService } from '@/shared/services';
+import { DialogService } from 'primeng/dynamicdialog';
+import { QuickAddTransactionModalComponent } from '@/features/transactions/quick-add-modal/quick-add-transaction-modal.component';
 
 @Component({
   selector: 'app-header',
@@ -34,6 +36,7 @@ import { I18nService } from '@/shared/services';
   templateUrl: './header.html',
   styleUrls: ['./header.scss'],
   host: { class: 'container' },
+  providers: [DialogService],
 })
 export class HeaderComponent implements OnInit {
   @ViewChild('compactMoreButton') compactMoreButton?: ElementRef<HTMLElement>;
@@ -46,7 +49,10 @@ export class HeaderComponent implements OnInit {
   readonly compactMenuOpen = signal(false);
   readonly isUltraCompact = signal(false);
 
-  constructor(private userService: UserService) {
+  constructor(
+    private userService: UserService,
+    private dialogService: DialogService,
+  ) {
     effect(() => {
       const lang = this.i18n.currentLang();
       this.date = new Date().toLocaleDateString(lang === 'ru' ? 'ru-RU' : 'en-US');
@@ -64,6 +70,18 @@ export class HeaderComponent implements OnInit {
     if (avatar.startsWith('http://') || avatar.startsWith('https://')) return avatar;
     const base = environment.apiUrl ?? '';
     return base ? `${base}/api${avatar.startsWith('/') ? avatar : '/' + avatar}` : avatar;
+  }
+
+  openQuickAddTransaction(): void {
+    this.compactMenuOpen.set(false);
+    this.dialogService.open(QuickAddTransactionModalComponent, {
+      header: this.i18n.t('header.quickAddTransaction'),
+      closable: true,
+      dismissableMask: true,
+      styleClass: 'modal',
+      width: 'min(100vw - 24px, 440px)',
+      focusOnShow: false,
+    });
   }
 
   switchLanguage(lang: 'ru' | 'en'): void {

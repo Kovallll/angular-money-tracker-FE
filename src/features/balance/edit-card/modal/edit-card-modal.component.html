@@ -3,7 +3,7 @@
   [showCloseButton]="false"
   [showCancel]="true"
   [showSave]="true"
-  saveLabel="Edit"
+  [saveLabel]="'common.save' | translate"
   [saveDisabled]="!!cardForm.invalid"
   (cancelRequest)="close()"
   (saveRequest)="onSubmit(cardForm)"
@@ -11,14 +11,14 @@
   <form #cardForm="ngForm" (ngSubmit)="onSubmit(cardForm)" class="app-modal-form">
     <div class="form-row">
       <div class="form-field">
-        <label for="bankName">Bank Name</label>
+        <label for="bankName">{{ 'balances.bankName' | translate }}</label>
         <div class="wrapper">
           <input
             class="input"
             pInputText
             type="text"
             id="bankName"
-            placeholder="Bank Name"
+            [placeholder]="'balances.placeholders.bankName' | translate"
             name="bankName"
             [(ngModel)]="card().bankName"
             #bankName="ngModel"
@@ -27,13 +27,13 @@
           />
           <div class="error-slot">
             @if (bankName.invalid && (bankName.touched || cardForm.submitted)) {
-              <small class="error">Bank Name is required.</small>
+              <small class="error">{{ 'balances.errors.bankNameRequired' | translate }}</small>
             }
           </div>
         </div>
       </div>
       <div class="form-field">
-        <label for="accountType">Card Type</label>
+        <label for="accountType">{{ 'balances.cardTypeLabel' | translate }}</label>
         <div class="wrapper">
           <input
             class="input"
@@ -41,7 +41,7 @@
             type="text"
             id="accountType"
             name="accountType"
-            placeholder="Card Type"
+            [placeholder]="'balances.placeholders.cardType' | translate"
             [(ngModel)]="card().cardType"
             #accountType="ngModel"
             required
@@ -49,13 +49,13 @@
           />
           <div class="error-slot">
             @if (accountType.invalid && (accountType.touched || cardForm.submitted)) {
-              <small class="error">Card Type is required.</small>
+              <small class="error">{{ 'balances.errors.cardTypeRequired' | translate }}</small>
             }
           </div>
         </div>
       </div>
       <div class="form-field">
-        <label for="accountNumber">Card Number</label>
+        <label for="accountNumber">{{ 'balances.cardNumber' | translate }}</label>
         <div class="wrapper">
           <input
             class="input"
@@ -63,7 +63,7 @@
             type="text"
             id="accountNumber"
             name="accountNumber"
-            placeholder="Card Number"
+            [placeholder]="'balances.placeholders.cardNumber' | translate"
             [(ngModel)]="card().cardNumber"
             #accountNumber="ngModel"
             required
@@ -71,13 +71,16 @@
           />
           <div class="error-slot">
             @if (accountNumber.invalid && (accountNumber.touched || cardForm.submitted)) {
-              <small class="error">Card Number is required.</small>
+              <small class="error">{{ 'balances.errors.cardNumberRequired' | translate }}</small>
             }
           </div>
         </div>
       </div>
       <div class="form-field">
-        <label for="expiry">Expiry <span class="optional">(optional)</span></label>
+        <label for="expiry"
+          >{{ 'balances.expiry' | translate }}
+          <span class="optional">({{ 'common.optional' | translate }})</span></label
+        >
         <div class="wrapper">
           <input
             class="input"
@@ -85,7 +88,7 @@
             type="text"
             id="expiry"
             name="expiry"
-            placeholder="MM/YY"
+            [placeholder]="'balances.placeholders.expiry' | translate"
             [ngModel]="card().expiry"
             (ngModelChange)="formatExpiry($event)"
             maxlength="5"
@@ -96,7 +99,7 @@
       <div class="form-field">
         <div class="wrapper">
           <app-price-currency-field
-            label="Balance"
+            [label]="'balances.balance' | translate"
             amountName="balance"
             [(amount)]="cardBalance"
             [(currencyCode)]="currencyCode"
@@ -104,33 +107,32 @@
           />
           <div class="error-slot">
             @if (cardForm.submitted && (card().cardBalance === null || card().cardBalance < 0)) {
-              <small class="error">Balance is required.</small>
+              <small class="error">{{ 'balances.errors.balanceRequired' | translate }}</small>
             }
           </div>
         </div>
       </div>
       <div class="form-field">
-        <label for="accountPayment">Payment System</label>
+        <label for="accountPayment">{{ 'balances.paymentSystem' | translate }}</label>
         <div class="wrapper">
           <p-select
             class="select"
-            [options]="[
-              { name: 'MasterCard', value: 'MasterCard' },
-              { name: 'Visa', value: 'Visa' },
-            ]"
+            [options]="paymentOptions"
             id="accountPayment"
             name="accountPayment"
             [(ngModel)]="card().cardName"
             optionLabel="name"
             optionValue="value"
-            placeholder="Select a Payment Method"
+            [placeholder]="'balances.selectPaymentSystem' | translate"
             required
             #accountPayment="ngModel"
             [invalid]="accountPayment.invalid && (accountPayment.touched || cardForm.submitted)"
           />
           <div class="error-slot">
             @if (accountPayment.invalid && (accountPayment.touched || cardForm.submitted)) {
-              <small class="error">Card Payment Method is required.</small>
+              <small class="error">{{
+                'balances.errors.paymentSystemRequired' | translate
+              }}</small>
             }
           </div>
         </div>

@@ -190,16 +190,94 @@
   }
 }
 
+.header-quick-add-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(145deg, rgba($accent, 0.85) 0%, rgba(40, 120, 200, 0.75) 100%);
+  color: $white;
+  cursor: pointer;
+  box-shadow:
+    0 2px 8px rgba($accent, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    filter 0.15s ease;
+
+  &:hover {
+    filter: brightness(1.06);
+    box-shadow:
+      0 4px 14px rgba($accent, 0.45),
+      inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  }
+
+  &:active {
+    transform: scale(0.96);
+  }
+
+  @include bp.mobile {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+  }
+}
+
+.header-actions app-currency-selector ::ng-deep .currency-selector.p-inputwrapper,
+.header-actions telegram-link ::ng-deep .tg-btn,
+.header-actions notification ::ng-deep .notification-icon,
+.header-actions export-report-button ::ng-deep .export-btn.p-button.p-button,
+.compact-more-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(155, 210, 255, 0.22);
+  box-shadow: none;
+}
+
+.header-actions app-currency-selector ::ng-deep .currency-selector .p-select-label,
+.header-actions app-currency-selector ::ng-deep .currency-selector .p-select-dropdown-icon {
+  color: $accent-soft;
+}
+
+.header-actions telegram-link ::ng-deep .tg-btn,
+.header-actions notification ::ng-deep .notification-icon,
+.header-actions export-report-button ::ng-deep .export-btn.p-button.p-button {
+  color: rgba($white, 0.9);
+}
+
+.header-actions export-report-button ::ng-deep .export-btn.p-button.p-button {
+  color: $accent-soft;
+}
+
+.header-actions app-currency-selector ::ng-deep .currency-selector.p-inputwrapper.p-focus,
+.header-actions app-currency-selector ::ng-deep .currency-selector.p-inputwrapper.p-inputwrapper-focus {
+  box-shadow:
+    0 0 0 1px rgba(155, 210, 255, 0.35) inset,
+    0 0 0 2px rgba(155, 210, 255, 0.2);
+}
+
+.header-actions telegram-link ::ng-deep .tg-btn.linked,
+.header-actions notification ::ng-deep .notification-icon--active {
+  background: rgba($accent-soft, 0.16);
+  color: $accent-soft;
+  box-shadow:
+    0 0 0 1px rgba($accent-soft, 0.45) inset,
+    0 0 14px rgba($accent-soft, 0.24);
+}
+
 /* Ultra compact: show one 3-dots button with all actions in popup */
 .compact-more-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
+  width: 32px;
+  height: 32px;
   border: none;
-  border-radius: 10px;
-  background: rgba($white, 0.08);
+  border-radius: 9px;
   color: rgba($white, 0.92);
   cursor: pointer;
 }
@@ -208,22 +286,84 @@
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
-  width: min(94vw, 280px);
-  padding: 10px;
-  border-radius: 12px;
+  max-width: calc(100vw - 16px);
+  width: max-content;
+  padding: 8px;
+  border-radius: 10px;
   background: rgba($secondary, 0.95);
   border: 1px solid $surface-12;
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.38);
   z-index: 25;
   display: grid;
-  gap: 8px;
+  gap: 6px;
 }
 
 .compact-more-panel__section {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.compact-more-panel__section--top {
+  justify-content: flex-end;
+}
+
+.compact-more-panel__section--bottom {
+  justify-content: flex-end;
+
+  app-currency-selector {
+    flex: 0 0 auto;
+  }
+
+  export-report-button {
+    margin-left: 0;
+  }
+}
+
+.compact-more-panel .lang-switch {
+  padding: 1px;
+}
+
+.compact-more-panel .lang-btn {
+  min-width: 28px;
+  height: 22px;
+  font-size: 10px;
+}
+
+.compact-more-panel app-currency-selector ::ng-deep .currency-selector.p-inputwrapper {
+  min-height: 28px;
+  padding: 0 7px;
+  border-radius: 7px;
+}
+
+.compact-more-panel app-currency-selector ::ng-deep .currency-selector .p-select-label {
+  font-size: 11px;
+}
+
+.compact-more-panel telegram-link ::ng-deep .tg-btn,
+.compact-more-panel notification ::ng-deep .notification-icon {
+  min-width: 30px;
+  min-height: 30px;
+}
+
+.compact-more-panel telegram-link ::ng-deep .tg-icon,
+.compact-more-panel notification ::ng-deep .notification-icon__bell {
+  width: 18px;
+  height: 18px;
+}
+
+.compact-more-panel export-report-button ::ng-deep .export-btn.p-button.p-button {
+  min-width: 30px;
+  min-height: 30px;
+  padding: 4px;
+  border-radius: 8px;
+
+  .p-button-icon {
+    font-size: 16px;
+    margin-right: 0;
+  }
 }
 
 @media (min-width: 400px) {

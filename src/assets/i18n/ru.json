@@ -27,7 +27,9 @@
   },
   "header": {
     "hello": "Привет",
-    "language": "Язык"
+    "language": "Язык",
+    "quickAddTransaction": "Быстрая трата",
+    "quickAddAria": "Быстро добавить транзакцию"
   },
   "menu": {
     "dashboard": "Дашборд",
@@ -541,14 +543,42 @@
     "deleteCardError": "Не удалось удалить карту",
     "confirmDeleteTitle": "Подтвердите удаление",
     "confirmDeleteMessage": "Удалить эту карту? Связанные данные не будут удалены.",
+    "cardTypeLabel": "Тип карты",
+    "cardNumber": "Номер карты",
+    "paymentSystem": "Платежная система",
+    "selectCardType": "Выберите тип карты",
+    "selectPaymentSystem": "Выберите платежную систему",
+    "placeholders": {
+      "bankName": "Например, Сбербанк",
+      "cardType": "Тип карты",
+      "cardNumber": "0000 0000 0000 0000",
+      "expiry": "MM/YY"
+    },
+    "errors": {
+      "bankNameRequired": "Название банка обязательно",
+      "cardTypeRequired": "Выберите тип карты",
+      "cardNumberRequired": "Введите номер карты",
+      "cardNumberDigits": "Введите 16 цифр",
+      "balanceRequired": "Баланс обязателен",
+      "paymentSystemRequired": "Выберите платежную систему"
+    },
+    "paymentSystems": {
+      "mastercard": "MasterCard",
+      "visa": "Visa"
+    },
     "cardType": {
       "credit": "Кредитная",
-      "debit": "Дебетовая"
+      "debit": "Дебетовая",
+      "prepaid": "Предоплаченная"
     },
     "toast": {
       "primaryCard": "Основная карта",
       "primaryCardDetail": "Теперь эта карта используется для автоматических транзакций.",
-      "setPrimaryError": "Не удалось назначить карту основной."
+      "setPrimaryError": "Не удалось назначить карту основной.",
+      "cardAdded": "Карта добавлена",
+      "addCardError": "Не удалось добавить карту",
+      "cardUpdated": "Карта успешно обновлена",
+      "updateCardError": "Не удалось обновить карту"
     }
   },
   "transactions": {

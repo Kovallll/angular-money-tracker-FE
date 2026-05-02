@@ -1,11 +1,12 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  DestroyRef,
   effect,
   inject,
   OnInit,
-  DestroyRef,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, NgForm } from '@angular/forms';
@@ -18,14 +19,12 @@ import {
   CategoriesHttpService,
   CategoryItem,
   CreateTransactionPayload,
-  GroupRoomsHttpService,
   StatisticsHttpService,
   TransactionsHttpService,
 } from '@/shared';
 import { CurrencyService } from '@/shared/services/currency/currency.service';
-import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { injectMutation, injectQuery, QueryClient } from '@tanstack/angular-query-experimental';
-import { DatePickerModule } from 'primeng/datepicker';
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { injectMutation, injectQuery } from '@tanstack/angular-query-experimental';
 import { Select } from 'primeng/select';
 import { PriceCurrencyFieldComponent } from '@/shared/components/price-currency-field/price-currency-field.component';
 import { AppIconComponent } from '@/shared/components/app-icon/app-icon.component';
@@ -44,16 +43,19 @@ import {
 } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 
+/**
+ * Минимальная форма: сумма, название, категория (с предсказанием).
+ * Карта — основная по умолчанию; тип — расход; оплата картой; дата — сегодня.
+ */
 @Component({
-  selector: 'add-card-modal',
-  templateUrl: './add-card-modal.component.html',
-  styleUrls: ['./add-card-modal.component.scss'],
+  selector: 'quick-add-transaction-modal',
+  templateUrl: './quick-add-transaction-modal.component.html',
+  styleUrls: ['./quick-add-transaction-modal.component.scss'],
   imports: [
     FormsModule,
     InputTextModule,
     AppModalShellComponent,
     MessageModule,
-    DatePickerModule,
     Select,
     PriceCurrencyFieldComponent,
     AppIconComponent,
@@ -62,63 +64,38 @@ import { HttpErrorResponse } from '@angular/common/http';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AddTransactionModalComponent implements OnInit {
+export class QuickAddTransactionModalComponent implements OnInit, AfterViewInit {
   private static readonly MIN_TITLE_LENGTH_FOR_PREDICT = 2;
-  /** Пауза после ввода перед запросом (мс). */
   private static readonly PREDICT_DEBOUNCE_MS = 800;
-  /** Минимальный интервал между запросами (мс), чтобы не получать 429. */
   private static readonly PREDICT_THROTTLE_MS = 2500;
+
   private messageService = inject(MessageService);
   private transactionsHttpService = inject(TransactionsHttpService);
   private ref = inject(DynamicDialogRef);
-  private dialogConfig = inject(DynamicDialogConfig, { optional: true });
-  private groupRoomsHttp = inject(GroupRoomsHttpService);
-  private categoriesHttpService = inject(CategoriesHttpService);
+  private readonly categoriesHttpService = inject(CategoriesHttpService);
   private balancesHttpService = inject(BalancesHttpService);
   private statisticsHttpService = inject(StatisticsHttpService);
-  private queryClient = inject(QueryClient);
   private cdr = inject(ChangeDetectorRef);
   private destroyRef = inject(DestroyRef);
   protected currencyService = inject(CurrencyService);
   protected i18n = inject(I18nService);
 
-  /** Стрим введённого названия для debounce + predict */
   private titleInput$ = new Subject<string>();
 
-  /** Идёт ли запрос предсказания категории */
   protected categorizerLoading = false;
-  /** Есть ли предугаданная категория (для подписи «предугадано» в заголовке) */
   protected isCategorySuggested = false;
-  /** Альтернативные категории от ML для тегов (id + title из списка пользователя) */
   protected suggestedAlternatives: { id: string | number; title: string }[] = [];
-  /** Cache key from last predict response (for feedback on submit). */
   private currentPredictionKey = '';
-  /** Category id we suggested (primary or selected alternative). */
   private currentPredictedCategoryId = '';
-  /** Prevents ML from overriding category after user changed it manually. */
   private userChangedCategoryManually = false;
-  /** Normalized title used for the latest prediction. */
   private lastPredictedTitle = '';
 
-  categories = injectQuery(() => {
-    const roomId = this.getGroupRoomId() ?? '';
-    return {
-      queryKey: ['categories', 'scope', roomId] as const,
-      queryFn: () =>
-        roomId
-          ? this.categoriesHttpService.fetchCategoriesByRoom(roomId)
-          : this.categoriesHttpService.getCategories(),
-    };
-  });
+  categories = injectQuery(() => ({
+    queryKey: ['categories', 'scope', ''] as const,
+    queryFn: () => this.categoriesHttpService.getCategories(),
+  }));
 
   cards = this.balancesHttpService.cards;
-
-  /** Group room: создаём group transaction вместо личной транзакции. */
-  protected getGroupRoomId(): string | undefined {
-    const d = this.dialogConfig?.data as { groupRoomId?: unknown } | undefined;
-    const v = d?.groupRoomId;
-    return typeof v === 'string' && v.trim() ? v.trim() : undefined;
-  }
 
   constructor() {
     effect(() => {
@@ -126,10 +103,6 @@ export class AddTransactionModalComponent implements OnInit {
       if (list.length === 0) return;
       const primary = list.find((c) => c.isPrimary) ?? list[0];
       if (!primary) return;
-      const room = this.getGroupRoomId();
-      const useCard =
-        !room || this.form.type === 'transfer' || (this.form.paymentMethod ?? 'card') === 'card';
-      if (!useCard) return;
       const current = this.form.cardId;
       const needSet = current === '' || current === null || current === undefined;
       if (needSet) {
@@ -139,30 +112,29 @@ export class AddTransactionModalComponent implements OnInit {
 
     this.titleInput$
       .pipe(
-        debounceTime(AddTransactionModalComponent.PREDICT_DEBOUNCE_MS),
-        throttleTime(AddTransactionModalComponent.PREDICT_THROTTLE_MS, asyncScheduler, {
+        debounceTime(QuickAddTransactionModalComponent.PREDICT_DEBOUNCE_MS),
+        throttleTime(QuickAddTransactionModalComponent.PREDICT_THROTTLE_MS, asyncScheduler, {
           leading: true,
           trailing: true,
         }),
         distinctUntilChanged(),
         filter(
           (text) =>
-            (text ?? '').trim().length >= AddTransactionModalComponent.MIN_TITLE_LENGTH_FOR_PREDICT,
+            (text ?? '').trim().length >=
+            QuickAddTransactionModalComponent.MIN_TITLE_LENGTH_FOR_PREDICT,
         ),
         switchMap((text) => {
           this.categorizerLoading = true;
           this.isCategorySuggested = false;
           this.suggestedAlternatives = [];
           this.cdr.markForCheck();
-          return this.statisticsHttpService
-            .predict(text.trim(), { roomId: this.getGroupRoomId() })
-            .pipe(
-              catchError(() => {
-                this.categorizerLoading = false;
-                this.cdr.markForCheck();
-                return of(null);
-              }),
-            );
+          return this.statisticsHttpService.predict(text.trim()).pipe(
+            catchError(() => {
+              this.categorizerLoading = false;
+              this.cdr.markForCheck();
+              return of(null);
+            }),
+          );
         }),
         takeUntilDestroyed(this.destroyRef),
       )
@@ -203,9 +175,6 @@ export class AddTransactionModalComponent implements OnInit {
       });
   }
 
-  /**
-   * Личные категории совпадают с ML по id; в комнате — свои UUID, поэтому дополнительно матчим по названию.
-   */
   private resolveCategoryFromPrediction(
     list: CategoryItem[],
     p: { category_id?: string; category_name?: string },
@@ -227,7 +196,7 @@ export class AddTransactionModalComponent implements OnInit {
       this.userChangedCategoryManually = false;
     }
     this.titleInput$.next(value ?? '');
-    if (normalized.length < AddTransactionModalComponent.MIN_TITLE_LENGTH_FOR_PREDICT) {
+    if (normalized.length < QuickAddTransactionModalComponent.MIN_TITLE_LENGTH_FOR_PREDICT) {
       this.resetPredictionState();
       this.cdr.markForCheck();
     } else {
@@ -287,52 +256,19 @@ export class AddTransactionModalComponent implements OnInit {
   }
 
   protected form: {
-    date: string | Date;
     title: string;
-    /** Category id (number from p-select, string in payload) */
     categoryId: string | number;
-    /** Card id for Select (number) and API (string via buildPayload). */
     cardId: string | number;
-    type: 'expense' | 'revenue' | 'transfer';
-    transferToCardId: string | number;
     amount: number;
     currencyCode: string;
-    description: string;
-    paymentMethod?: 'cash' | 'card';
-    /** When true (default), card balance changes; when false, transaction is recorded only. */
-    affectsCardBalance: boolean;
   } = {
-    date: this.formatDateLocal(new Date()) as string,
     title: '',
     categoryId: '',
     cardId: '' as string | number,
-    transferToCardId: '' as string | number,
-    type: 'expense',
     amount: 0,
     currencyCode: '',
-    description: '',
-    paymentMethod: undefined,
-    affectsCardBalance: true,
   };
 
-  protected get paymentMethodOptions() {
-    this.i18n.currentLang();
-    return [
-      { label: this.i18n.t('txModal.paymentMethods.cash'), value: 'cash' },
-      { label: this.i18n.t('txModal.paymentMethods.card'), value: 'card' },
-    ];
-  }
-
-  protected get typeOptions() {
-    this.i18n.currentLang();
-    return [
-      { label: this.i18n.t('txModal.types.expense'), value: 'expense' },
-      { label: this.i18n.t('txModal.types.revenue'), value: 'revenue' },
-      { label: this.i18n.t('txModal.types.transfer'), value: 'transfer' },
-    ];
-  }
-
-  /** YYYY-MM-DD in local timezone (avoids Mar 1 → Feb 28 shift) */
   private formatDateLocal(v: string | Date): string {
     if (v === null || v === '') return '';
     if (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v)) return v;
@@ -345,23 +281,15 @@ export class AddTransactionModalComponent implements OnInit {
     const f = this.form;
     const payload: CreateTransactionPayload = {
       cardId: String(f.cardId),
-      type: f.type,
+      type: 'expense',
       amount: Number(f.amount) || 0,
       currencyCode: f.currencyCode ?? this.currencyService.primaryCode(),
-      date: this.formatDateLocal(f.date),
-      title: f.title || undefined,
-      description: f.description || undefined,
-      paymentMethod: f.paymentMethod || undefined,
-      affectsCardBalance: f.affectsCardBalance,
+      date: this.formatDateLocal(new Date()),
+      title: f.title?.trim() ? f.title.trim() : undefined,
+      paymentMethod: 'card',
+      affectsCardBalance: true,
+      categoryId: String(f.categoryId),
     };
-    if (f.type === 'transfer') {
-      payload.transferToCardId = String(f.transferToCardId);
-      if (f.categoryId !== '' && f.categoryId != null) {
-        payload.categoryId = String(f.categoryId);
-      }
-    } else {
-      payload.categoryId = String(f.categoryId);
-    }
     if (this.currentPredictionKey && this.currentPredictedCategoryId) {
       payload.predictionKey = this.currentPredictionKey;
       payload.predictedCategoryId = this.currentPredictedCategoryId;
@@ -380,125 +308,34 @@ export class AddTransactionModalComponent implements OnInit {
     if (!this.form.currencyCode) {
       this.form.currencyCode = this.currencyService.primaryCode();
     }
-    if (this.getGroupRoomId()) {
-      this.form.paymentMethod = 'card';
-    }
     this.balancesHttpService.refresh();
     const cards = this.cards();
     const primaryCard = cards.find((c) => c.isPrimary) ?? cards[0];
     if (primaryCard && (this.form.cardId === '' || this.form.cardId == null)) {
-      const room = this.getGroupRoomId();
-      const useCard =
-        !room || this.form.type === 'transfer' || (this.form.paymentMethod ?? 'card') === 'card';
-      if (useCard) {
-        this.form.cardId = primaryCard.id;
-      }
+      this.form.cardId = primaryCard.id;
     }
   }
 
-  protected onTxTypeChange(value: 'expense' | 'revenue' | 'transfer'): void {
-    if (value === 'transfer') {
-      this.form.paymentMethod = 'card';
-    }
-    this.cdr.markForCheck();
+  ngAfterViewInit(): void {
+    queueMicrotask(() => {
+      document.getElementById('quickAmount')?.focus();
+    });
   }
 
   protected isSaveDisabled(form: NgForm | null | undefined): boolean {
+    if (this.mutation.isPending()) return true;
     if (!form) return true;
     const amount = Number(this.form.amount) || 0;
     if (amount <= 0) return true;
-    if (this.getGroupRoomId()) {
-      if (!(this.form.title ?? '').trim()) return true;
-      if (this.form.type === 'transfer') {
-        const to = Number(this.form.transferToCardId);
-        const from = Number(this.form.cardId);
-        if (!Number.isFinite(from) || from < 1) return true;
-        if (!Number.isFinite(to) || to < 1 || to === from) return true;
-        return !!form.invalid;
-      }
-      if (this.form.paymentMethod === 'cash') {
-        return !!form.invalid;
-      }
-      if (!this.form.cardId) return true;
-      return !!form.invalid;
-    }
-    if (this.form.type === 'transfer') {
-      const to = Number(this.form.transferToCardId);
-      const from = Number(this.form.cardId);
-      if (!Number.isFinite(to) || to < 1 || to === from) return true;
-      return form.invalid || !this.form.cardId || this.form.amount <= 0;
-    }
-    return form.invalid || !this.form.cardId || !this.form.categoryId || this.form.amount <= 0;
+    if (!this.form.cardId) return true;
+    if (!this.form.categoryId) return true;
+    return !!form.invalid;
   }
 
-  async onSubmit(form: NgForm) {
-    const roomId = this.getGroupRoomId();
-    if (roomId) {
-      form.form.markAllAsTouched();
-      if (form.invalid || this.form.amount <= 0) return;
-      const title = (this.form.title ?? '').trim();
-      const dateStr = this.formatDateLocal(this.form.date);
-      const useCard = this.form.type === 'transfer' || this.form.paymentMethod !== 'cash';
-      const cardNum = Number(this.form.cardId);
-      if (!title || !dateStr) return;
-      if (useCard && (!Number.isFinite(cardNum) || cardNum < 1)) return;
-      try {
-        await this.groupRoomsHttp.createRoomTransaction(roomId, {
-          title,
-          type: this.form.type,
-          affectsCardBalance: this.form.affectsCardBalance,
-          amount: Number(this.form.amount) || 0,
-          date: dateStr,
-          currencyCode: this.form.currencyCode || this.currencyService.primaryCode(),
-          ...(this.form.type !== 'transfer' && this.form.paymentMethod === 'cash'
-            ? { paymentMethod: 'cash' as const }
-            : {
-                paymentMethod: 'card' as const,
-                cardId: Math.trunc(cardNum),
-              }),
-          ...(this.form.type === 'transfer' &&
-          this.form.transferToCardId !== '' &&
-          this.form.transferToCardId != null
-            ? { transferToCardId: Math.trunc(Number(this.form.transferToCardId)) }
-            : {}),
-          ...(this.form.categoryId !== '' && this.form.categoryId != null
-            ? { categoryId: String(this.form.categoryId) }
-            : {}),
-          ...(this.form.description?.trim() ? { description: this.form.description.trim() } : {}),
-        });
-        this.balancesHttpService.refresh();
-        this.messageService.add({
-          key: 'toast',
-          severity: 'success',
-          summary: this.i18n.t('common.success'),
-          detail: this.i18n.t('txModal.toast.addSuccess'),
-          life: 3000,
-        });
-        void this.queryClient.invalidateQueries({ queryKey: ['groupTransactions', roomId] });
-        void this.queryClient.invalidateQueries({ queryKey: ['charts', 'room', roomId] });
-        void this.queryClient.invalidateQueries({ queryKey: ['roomContributions', roomId] });
-        this.ref.close(true);
-      } catch (err: unknown) {
-        this.messageService.add({
-          key: 'toast',
-          severity: 'error',
-          summary: this.i18n.t('common.error'),
-          detail: this.extractApiErrorMessage(err) ?? this.i18n.t('txModal.toast.addError'),
-          life: 3000,
-        });
-      }
-      return;
-    }
+  onSubmit(form: NgForm): void {
     const amountOk = Number(this.form.amount) > 0;
-    if (!amountOk || !this.form.cardId) return;
-    if (this.form.type === 'transfer') {
-      const to = Number(this.form.transferToCardId);
-      const from = Number(this.form.cardId);
-      if (!Number.isFinite(to) || to < 1 || to === from) return;
-      if (form.valid) this.mutation.mutate(this.buildPayload());
-      return;
-    }
-    if (form.valid && this.form.categoryId) {
+    if (!amountOk || !this.form.cardId || !this.form.categoryId) return;
+    if (form.valid) {
       this.mutation.mutate(this.buildPayload());
     }
   }

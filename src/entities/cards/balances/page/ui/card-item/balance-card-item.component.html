@@ -44,6 +44,7 @@
     </div>
   </div>
   <div class="card__number" [attr.aria-label]="'balances.accountNumber' | translate">
+    <span class="card__title" [attr.title]="card().bankName">{{ card().bankName }}</span>
     <span class="card__number-value">{{ card().cardNumber }}</span>
     <span class="card__number-label">{{ 'balances.accountNumber' | translate }}</span>
   </div>

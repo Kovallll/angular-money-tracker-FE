@@ -190,6 +190,21 @@
   }
 }
 
+.card__title {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  color: rgba($white, 0.8);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-bottom: 4px;
+
+  @include bp.tablet-and-up {
+    font-size: 14px;
+  }
+}
+
 .card__number-value {
   font-size: 15px;
   font-weight: 600;
@@ -349,3 +364,4 @@
     }
   }
 }
+

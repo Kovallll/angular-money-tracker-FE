@@ -1,0 +1,101 @@
+<app-modal-shell
+  [embedded]="true"
+  [showCloseButton]="false"
+  [showCancel]="true"
+  [showSave]="true"
+  [saveLabel]="'common.add' | translate"
+  [saveDisabled]="isSaveDisabled(quickForm)"
+  [saveLoading]="mutation.isPending()"
+  (cancelRequest)="close()"
+  (saveRequest)="onSubmit(quickForm)"
+>
+  <form #quickForm="ngForm" (ngSubmit)="onSubmit(quickForm)" class="app-modal-form quick-add-form">
+    <div class="form-field">
+      <app-price-currency-field
+        [label]="'txModal.amount' | translate"
+        amountName="quickAmount"
+        [(amount)]="form.amount"
+        [(currencyCode)]="form.currencyCode"
+        [showCurrency]="true"
+        [required]="true"
+      />
+      <div class="form-field-error">
+        @if (quickForm.submitted && (form.amount === null || form.amount < 0.01)) {
+          <p-message severity="error" size="small" variant="simple">{{
+            'txModal.errors.amountPositive' | translate
+          }}</p-message>
+        }
+      </div>
+    </div>
+
+    <div class="form-field">
+      <label for="quickTitle">{{ 'txModal.title' | translate }}</label>
+      <input
+        class="input"
+        pInputText
+        type="text"
+        id="quickTitle"
+        name="title"
+        [placeholder]="'txModal.titlePlaceholder' | translate"
+        [(ngModel)]="form.title"
+        (ngModelChange)="onTitleChange($event)"
+        autocomplete="off"
+        enterkeyhint="next"
+      />
+    </div>
+
+    <div class="form-field">
+      <label for="quickCategoryId"
+        >{{ 'txModal.category' | translate
+        }}{{ isCategorySuggested ? ' (' + ('txModal.predicted' | translate) + ')' : '' }}</label
+      >
+      <p-select
+        inputId="quickCategoryId"
+        name="categoryId"
+        [options]="categories.data() ?? []"
+        optionLabel="title"
+        optionValue="id"
+        [(ngModel)]="form.categoryId"
+        (ngModelChange)="onCategoryChange()"
+        [placeholder]="'txModal.selectCategory' | translate"
+        appendTo="body"
+        [loading]="categorizerLoading"
+        #categoryField="ngModel"
+        required
+      >
+        <ng-template let-item pTemplate="item">
+          <div class="icon-row">
+            <app-icon [icon]="item.icon" />
+            <span>{{ item.title }}</span>
+          </div>
+        </ng-template>
+      </p-select>
+      @if (categorizerLoading) {
+        <div class="form-field-hint categorizer-loading">
+          <span class="hint-text">{{ 'txModal.detectingCategory' | translate }}</span>
+        </div>
+      }
+      @if (suggestedAlternatives.length && !categorizerLoading) {
+        <div class="category-tags">
+          @for (alt of suggestedAlternatives; track alt.id) {
+            <button
+              type="button"
+              class="category-tag"
+              [class.selected]="form.categoryId === alt.id"
+              (click)="selectSuggestedCategory(alt.id)"
+            >
+              {{ alt.title }}
+            </button>
+          }
+        </div>
+      }
+      <div class="form-field-error">
+        @if (categoryField.invalid && (categoryField.touched || quickForm.submitted)) {
+          <p-message severity="error" size="small" variant="simple">{{
+            'txModal.errors.categoryRequired' | translate
+          }}</p-message>
+        }
+      </div>
+    </div>
+  </form>
+</app-modal-shell>
