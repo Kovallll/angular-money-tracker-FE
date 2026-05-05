@@ -69,9 +69,41 @@ export class UpdateCardModalComponent implements OnInit {
   get paymentOptions() {
     this.i18n.currentLang();
     return [
-      { name: this.i18n.t('balances.paymentSystems.mastercard'), value: 'MasterCard' },
-      { name: this.i18n.t('balances.paymentSystems.visa'), value: 'Visa' },
+      { label: this.i18n.t('balances.paymentSystems.mastercard'), value: 'MasterCard' },
+      { label: this.i18n.t('balances.paymentSystems.visa'), value: 'Visa' },
     ];
+  }
+
+  get cardTypeOptions() {
+    this.i18n.currentLang();
+    return [
+      { label: this.i18n.t('balances.cardType.credit'), value: 'credit' },
+      { label: this.i18n.t('balances.cardType.debit'), value: 'debit' },
+      { label: this.i18n.t('balances.cardType.prepaid'), value: 'prepaid' },
+      { label: this.i18n.t('balances.cardType.savings'), value: 'savings' },
+      { label: this.i18n.t('balances.cardType.cash'), value: 'cash' },
+    ];
+  }
+
+  private normalizeCardType(value: string | null | undefined): string {
+    const raw = String(value ?? '')
+      .trim()
+      .toLowerCase();
+    const map: Record<string, string> = {
+      credit: 'credit',
+      debit: 'debit',
+      prepaid: 'prepaid',
+      savings: 'savings',
+      cash: 'cash',
+      кредитная: 'credit',
+      дебетовая: 'debit',
+      предоплаченная: 'prepaid',
+      накопительный: 'savings',
+      накопительная: 'savings',
+      наличные: 'cash',
+      cashaccount: 'cash',
+    };
+    return map[raw] ?? raw;
   }
 
   onSubmit(form: NgForm) {
@@ -108,13 +140,17 @@ export class UpdateCardModalComponent implements OnInit {
     this.card.update((c) => ({ ...c, expiry: formatted }));
   }
 
+  onCardTypeChange(value: string): void {
+    this.card.update((c) => ({ ...c, cardType: value }));
+  }
+
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.id = id;
     this.balancesHttpService.getCard(id).subscribe((card) => {
       this.card.set({
         bankName: card.bankName,
-        cardType: card.cardType,
+        cardType: this.normalizeCardType(card.cardType),
         cardBalance: card.cardBalance,
         cardNumber: card.cardNumber,
         cardName: card.cardName,

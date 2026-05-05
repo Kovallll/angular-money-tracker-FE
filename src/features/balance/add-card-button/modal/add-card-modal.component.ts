@@ -53,6 +53,8 @@ export class AddCardModalComponent implements OnInit {
       { label: this.i18n.t('balances.cardType.credit'), value: 'credit' },
       { label: this.i18n.t('balances.cardType.debit'), value: 'debit' },
       { label: this.i18n.t('balances.cardType.prepaid'), value: 'prepaid' },
+      { label: this.i18n.t('balances.cardType.savings'), value: 'savings' },
+      { label: this.i18n.t('balances.cardType.cash'), value: 'cash' },
     ];
   }
 

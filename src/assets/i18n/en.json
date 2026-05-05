@@ -569,7 +569,9 @@
     "cardType": {
       "credit": "Credit",
       "debit": "Debit",
-      "prepaid": "Prepaid"
+      "prepaid": "Prepaid",
+      "savings": "Savings",
+      "cash": "Cash"
     },
     "toast": {
       "primaryCard": "Primary card",

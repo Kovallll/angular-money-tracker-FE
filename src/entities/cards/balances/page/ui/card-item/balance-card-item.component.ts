@@ -28,6 +28,35 @@ export class BalanceCardItemComponent {
   private i18n = inject(I18nService);
   settingPrimary = signal(false);
 
+  private normalizeCardType(value: string | null | undefined): string {
+    const raw = String(value ?? '')
+      .trim()
+      .toLowerCase();
+    const map: Record<string, string> = {
+      credit: 'credit',
+      debit: 'debit',
+      prepaid: 'prepaid',
+      savings: 'savings',
+      cash: 'cash',
+      кредитная: 'credit',
+      дебетовая: 'debit',
+      предоплаченная: 'prepaid',
+      накопительный: 'savings',
+      накопительная: 'savings',
+      наличные: 'cash',
+      cashaccount: 'cash',
+    };
+    return map[raw] ?? raw;
+  }
+
+  cardTypeLabel = computed(() => {
+    this.i18n.currentLang();
+    const key = this.normalizeCardType(this.card().cardType);
+    const i18nKey = `balances.cardType.${key}`;
+    const translated = this.i18n.t(i18nKey);
+    return translated !== i18nKey ? translated : this.card().cardType;
+  });
+
   /** Card balance in app primary currency (main line). */
   balancePrimary = computed(() => {
     const c = this.card();

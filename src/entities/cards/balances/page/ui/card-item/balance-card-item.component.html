@@ -1,7 +1,7 @@
 <article class="card" (click)="handleCheckDetails()">
   <div class="card__header">
     <div class="card__badges">
-      <span class="card__badge">{{ ('balances.cardType.' + card().cardType.toLowerCase()) | translate }}</span>
+      <span class="card__badge">{{ cardTypeLabel() }}</span>
       @if (card().isPrimary) {
         <span
           class="card__badge card__badge--primary"

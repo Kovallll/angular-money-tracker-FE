@@ -35,14 +35,16 @@
       <div class="form-field">
         <label for="accountType">{{ 'balances.cardTypeLabel' | translate }}</label>
         <div class="wrapper">
-          <input
-            class="input"
-            pInputText
-            type="text"
-            id="accountType"
+          <p-select
+            class="select"
+            inputId="accountType"
             name="accountType"
-            [placeholder]="'balances.placeholders.cardType' | translate"
-            [(ngModel)]="card().cardType"
+            [options]="cardTypeOptions"
+            optionLabel="label"
+            optionValue="value"
+            [placeholder]="'balances.selectCardType' | translate"
+            [ngModel]="card().cardType"
+            (ngModelChange)="onCardTypeChange($event)"
             #accountType="ngModel"
             required
             [invalid]="accountType.invalid && (accountType.touched || cardForm.submitted)"
@@ -121,7 +123,7 @@
             id="accountPayment"
             name="accountPayment"
             [(ngModel)]="card().cardName"
-            optionLabel="name"
+            optionLabel="label"
             optionValue="value"
             [placeholder]="'balances.selectPaymentSystem' | translate"
             required
