@@ -28,7 +28,8 @@ export class BudgetStatisticsService {
       const index = unit === 'day' ? date.diff(start, 'day') : date.diff(start, 'month');
 
       if (index >= 0 && index < labels.length) {
-        if (t.type === TransactionType.Revenue) {
+        const txType = String(t.type ?? '').toLowerCase();
+        if (txType === TransactionType.Revenue.toLowerCase() || txType === 'revenue') {
           revenue[index] += t.amount;
         } else {
           expenses[index] += t.amount;
